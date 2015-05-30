@@ -1,0 +1,8 @@
+  template <class T, class G, class IT>
+std::string xml_loader<T,G,IT>::getanystr(tinyxml2::XMLNode * node, std::string name)
+{
+  if(hasval(node, name))
+    return getstr(node, name);
+  else
+    return "";
+}

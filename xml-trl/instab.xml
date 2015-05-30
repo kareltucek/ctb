@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root item="y" tlversion="1.4.1"
+  line0="{*Name*}"
+  line1="{*Name*}"
+  childtype="instruction_list">
+  <Name type="Text" ref="y">root</Name>
+  <instruction_list item="y"
+    line0="{*Name*}"
+    line1="{*Name*}"
+    childtype="operation">
+    <Name type="Text" html="y" ref="y">instruction_list</Name>
+    <operation item="y"
+      line0="{*opid*}"
+      line1="{*opid*}"
+      childtype="instruction">
+      <opid type="Text" ref="y">ADDI</opid>
+      <input type="Boolean" format="1/0" init="0">0</input>
+      <output type="Boolean" format="1/0" init="0">0</output>
+      <out_type type="Text" html="y">INT</out_type>
+      <instruction item="y"
+        line0="{*width_in*}"
+        line1="{*width_in*}">
+        <width_in type="Number" format="#" init="1" ref="y">1</width_in>
+        <width_out type="Number" format="#" init="1">1</width_out>
+        <code type="Text">$1 + $2</code>
+      </instruction>
+      <instruction item="y">
+        <width_in>2</width_in>
+        <width_out>2</width_out>
+        <code>vector_add($1, $2)</code>
+      </instruction>
+    </operation>
+    <operation item="y">
+      <opid>STI</opid>
+      <input>0</input>
+      <output>1</output>
+      <out_type>VOID</out_type>
+      <instruction item="y">
+        <width_in>1</width_in>
+        <width_out>1</width_out>
+        <code>store($1)</code>
+      </instruction>
+    </operation>
+    <operation item="y">
+      <opid>LDI</opid>
+      <input>1</input>
+      <output>0</output>
+      <out_type>INT</out_type>
+      <instruction item="y">
+        <width_in>1</width_in>
+        <width_out>1</width_out>
+        <code>3</code>
+      </instruction>
+    </operation>
+  </instruction_list>
+  <type_list item="y"
+    line0="{*Name*}"
+    line1="{*Name*}"
+    childtype="type">
+    <Name type="Text" ref="y">type_list</Name>
+    <type item="y"
+      line0="{*typeid*}"
+      line1="{*typeid*}">
+      <typeid type="Text" ref="y">INT</typeid>
+      <type_version item="y"
+        line0="{*width*}"
+        line1="{*width*}">
+        <width type="Number" format="#" init="1" ref="y">1</width>
+        <code type="Text">int</code>
+      </type_version>
+    </type>
+    <type item="y">
+      <typeid>VOID</typeid>
+    </type>
+  </type_list>
+</root>

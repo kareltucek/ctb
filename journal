@@ -1,0 +1,53 @@
+Sat May  2 11:42:39 CEST 2015
+The basic idea is the following:
+
+Backend will serve as a library frontend. It will manage an instruction table, loading and processing of all data. It will be parametrized by a type of the instruction table and loader. Backend will forward arguments to the graph and instruction table functions.
+
+Loader will represent a single consistent input method. Loaders may be swapped over the backend. E.g. one loader may handle xml files while another plain text files. Loader will construct the instruction table and graph using their public methods. Instruction table may be replaced by a self-contained instruction table - in that case backend should be parametrized by a loader with an empty call to the method loading the instab.
+
+Writer represents a block of code and provides methods for simple generation and formating of code. It is basically a bit tweaked string.
+
+Instruction table will hold the code generation information.
+
+Graph will hold the graph with appropriate links to the instruction table. Graph may be split into Graph and Generator classes in future.
+
+Code for generation will be held as part of xml files and will use a shell like evaluation of parameters using printf like syntax with predefined meaning of arguments.
+
+Sat May  9 12:40:39 CEST 2015
+Today I've found a problem of the writer concept. The problem is that a simple writer can work only with one abstract level of aliases, which means that deeper evaluation has to be known to all levels (e.g. variable names and indexes have tobe distributed into the instruction table xml description, which though should describe instructions without carrying the resulting code as its own dependency). As an answer to this problem I decide to introduce a concept of a model. Model is a static extension to the writer class, representing a consistent output system. Exampli gratia we may have one model representing a bobox box or project or a testing (nonbobox) suit dedicated to the code generation. Model may have multiple levels and should be able to evaluate abstract aliases on multiple levels. For instance one level may carry a structure of file templates and provide a mechanism of putting these together. Another level may translate abstract instruction table arguments into actual variable names with corresponding indices. 
+
+Proposed implementation:
+- Make all generating graph funcions templated, taking an instance of a mode/writer, which it will then use for output.
+- Generalize alias evaluation by adding a static map to a model. Lets consider print("$output = $arg1", value). Model will have defined an alias of an $output to "$outname$outindex[j]", $outname to "out_list_", $outindex to "$3" and $arg1 to "$4". This will be evaluated by a recursive sequence of print calls out of which all will carry the same parameter list, so that the leaf arguments $3,$4 etc will be evaluated according to the caller's context while its abstract meaning will be given by the model.
+- Model will provide a main method, which will generate the resulting code. This method will be called by backend's process and will take a graph as its argument. The main method will then write its code and call graph's generate method parametrized by itself, so that the code generation made by graph will get evaluated by the alias definitions of the model itself.
+
+
+Mon May 11 20:33:37 CEST 2015
+Today I have refactored the writer class. Now it resolves aliases in arguments as well (a real variadic list hell). Furthermore I started implementing the SSE instructions. 
+
+I had sorted out type conversions. The data producer is always responsible for providing the data in all required widths. The output width is the main width specifier for a regular node.
+
+All instructions produced by one node are packed in the final ordering. Whe could change the ordering to produce less spill code by moving the induction variable above the tree crawler function -> then every node would have to remember the actual number of iterations produced and the crawler would have to respect these, possibly returning to any node multiple times, going through segments between merges. Compiler should be able to take care of this automatically.
+
+I consider adding a 'custom code' field into the xml structure to allow user to define his own call structure e.g. when he needs any temporary variables. There have already been problems with conversions, because it may not be possible to implement split instruction in a generic way (i.e. by a common template for both halves which are produced).
+
+Also I considered the control flow version of this problem. The proposed solution is to create one more graph, which will hold all components determined by conditional cuts. This will hold the code and various cut flags for every one of these. The final code will be produced by DFS on this graph. The generic part of output will have to be generalized using more templates somehow in order to take care of ingeneral control flow structures. 
+
+
+Tue May 12 16:45:32 CEST 2015
+New problem has occured with the right hand dollar sign. It will have to be resolved by a manual flag (we are out of control of how many times it may be processed and thus we dont shorten the $$ to $ until final output unless explicitly asked for. The problem occured when constructing intermediate names in the split/merge functionality.
+
+
+Thu May 14 12:30:39 CEST 2015
+Today I have split the original grap into generator and graph class. For this I have created a proxy class wrapper, which allows read-only access to foreign classes and write access to owners of an object. 
+
+
+// TODO
+conversions - find nontrivial conversion path
+output node ordering
+control flow support
+
+// TODO - minors
+general conversion interface
+optimize SSE
+

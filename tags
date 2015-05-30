@@ -1,0 +1,858 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	Development	//
+$1	.model_bobox.h.swp	/^/;"	v
+$1_box	templates/bobox_box.h	/^  $1_box(const bobox::box_parameters_pack &box_params) : bobox::basic_box(box_params) {}$/;"	f	class:$1_box	access:public	signature:(const bobox::box_parameters_pack &box_params)
+$1_box	templates/bobox_box.h	/^class $1_box : public bobox::basic_box {$/;"	c	inherits:bobox::basic_box
+$1_box::$1_box	templates/bobox_box.h	/^  $1_box(const bobox::box_parameters_pack &box_params) : bobox::basic_box(box_params) {}$/;"	f	class:$1_box	access:public	signature:(const bobox::box_parameters_pack &box_params)
+$1_box::BOBOX_BOX_INPUTS_LIST	templates/bobox_box.h	/^  BOBOX_BOX_INPUTS_LIST($2);$/;"	p	class:$1_box	access:public	signature:($2)
+$1_box::BOBOX_BOX_OUTPUTS_LIST	templates/bobox_box.h	/^  BOBOX_BOX_OUTPUTS_LIST($3);$/;"	p	class:$1_box	access:public	signature:($3)
+$1_box::model	templates/bobox_box.h	/^  typedef generic_model<$1_box> model;$/;"	t	class:$1_box	access:public
+$fdeclin	.model_bobox.h.swp	/^/;"	v
+A	instructions.o	/^/;"	v
+ADD	model.h	29;"	d
+ADD	model_bobox.h	22;"	d
+ADD	model_simple.h	22;"	d
+ARG	generator.h	121;"	d
+BOBOX_BOX_INPUTS_LIST	templates/bobox_box.h	/^  BOBOX_BOX_INPUTS_LIST($2);$/;"	p	class:$1_box	access:public	signature:($2)
+BOBOX_BOX_OUTPUTS_LIST	templates/bobox_box.h	/^  BOBOX_BOX_OUTPUTS_LIST($3);$/;"	p	class:$1_box	access:public	signature:($3)
+DATATYPES_GUARD	datatypes.h	2;"	d
+G	ctb	/^5/;"	v
+GENERATOR_GUARD	generator.h	3;"	d
+GRAPH_GUARD	graph.h	3;"	d
+I	graph.o	/^/;"	v
+INSTRUCTION_GUARD	instructions.h	3;"	d
+J	graph.o	/^/;"	v
+MODEL_BOBOX_GUARD	model_bobox.h	3;"	d
+MODEL_GUARD	model.h	3;"	d
+MODEL_SIMPLE_GUARD	model_simple.h	3;"	d
+O	backend.o	/^Æ/;"	v
+U	graph.o	/^/;"	v
+U	writer.o	/^/;"	v
+V	backend.o	/^/;"	v
+W	backend.o	/^ h/;"	v
+WRITER_GUARD	writer.h	3;"	d
+XMLCheckResult	xmlloader.h	6;"	d
+XMLLOADER_GUARD	xmlloader.h	2;"	d
+YBYB	ctb	/^ELF/;"	v
+acces	interface.snapshot	/^        writer acces; \/\/access generated for specific instruction width (we need to reorder )$/;"	m	class:graph::node	file:	access:private
+acces_map	generator.h	/^    acces_map_t acces_map;$/;"	m	class:generator::data_t	access:private
+acces_map_t	generator.h	/^    typedef std::map<int, writer<model_empty> > acces_map_t;$/;"	t	class:generator::data_t	access:private
+acces_width	interface.snapshot	/^        std::map<int, writer> acces_width;$/;"	m	class:graph::node	file:	access:private
+add	writer.h	/^    void add(std::string&& str, bool terminal) ;$/;"	p	class:writer	access:private	signature:(std::string&& str, bool terminal)
+add	writer.h	/^void writer<M>::add(std::string&& str, bool terminal)$/;"	f	class:writer	signature:(std::string&& str, bool terminal)
+addcode	instructions.h	/^        void addcode(int wi, int wo, const std::string& c);$/;"	p	class:instruction_table::operation	access:public	signature:(int wi, int wo, const std::string& c)
+addcode	instructions.h	/^void instruction_table<T>::operation::addcode(int wi, int wo, const std::string& c)$/;"	f	class:instruction_table::operation	signature:(int wi, int wo, const std::string& c)
+addcode_conversion	instructions.h	/^      void addcode_conversion(int from, int to, const std::string& c1, const std::string& c2);$/;"	p	struct:instruction_table::type	access:public	signature:(int from, int to, const std::string& c1, const std::string& c2)
+addcode_conversion	instructions.h	/^void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2)$/;"	f	class:instruction_table::type	signature:(int in, int out, const std::string& c1,const std::string& c2)
+addcode_type	instructions.h	/^      void addcode_type(int w, const std::string& c) ;$/;"	p	struct:instruction_table::type	access:public	signature:(int w, const std::string& c)
+addcode_type	instructions.h	/^void instruction_table<T>::type::addcode_type(int w, const std::string& c)$/;"	f	class:instruction_table::type	signature:(int w, const std::string& c)
+addedge	generator.h	/^  void addedge(vid_t aid, vid_t bid, int b_argpos) ;$/;"	p	class:generator	access:public	signature:(vid_t aid, vid_t bid, int b_argpos)
+addedge	generator.h	/^void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos)  $/;"	f	class:generator	signature:(vid_t aid, vid_t bid, int b_argpos)
+addedge	graph.h	/^  void addedge(I aid, I bid, int b_argpos = -1) ;$/;"	p	class:graph_generic	access:public	signature:(I aid, I bid, int b_argpos = -1)
+addedge	graph.h	/^void graph_generic<T,I,directed,O...>::addedge(I aid, I bid, int b_argpos)  $/;"	f	class:graph_generic	signature:(I aid, I bid, int b_argpos)
+addedge	interface.snapshot	/^    void addedge(t::vid_t a, t::vid_t b, int b_argpos) { };$/;"	f	class:graph	access:public	signature:(t::vid_t a, t::vid_t b, int b_argpos)
+addons	.exrc	/^set runtimepath=~\/.vim,\/var\/lib\/vim\/addons,\/usr\/share\/vim\/vimfiles,\/usr\/share\/vim\/vim73,\/usr\/share\/vim\/vimfiles\/after,\/var\/lib\/vim\/addons\/after,~\/.vim\/after$/;"	v
+addoperation	instructions.h	/^    operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f) ;$/;"	p	class:instruction_table	access:public	signature:(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)
+addoperation	instructions.h	/^typename instruction_table<T>::operation_t& instruction_table<T>::addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)$/;"	f	class:instruction_table	signature:(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)
+addtype	instructions.h	/^    type_t& addtype(typename T::tid_t t) ;$/;"	p	class:instruction_table	access:public	signature:(typename T::tid_t t)
+addtype	instructions.h	/^typename instruction_table<T>::type_t& instruction_table<T>::addtype(typename T::tid_t t)$/;"	f	class:instruction_table	signature:(typename T::tid_t t)
+addvert	generator.h	/^  template <typename...L> void addvert(vid_t v, id_t op, L... p) ;$/;"	p	class:generator	access:public	signature:(vid_t v, id_t op, L... p)
+addvert	generator.h	/^template <typename...L> void generator<T,IT>::addvert(vid_t v, id_t op, L... p)  $/;"	f	class:generator	signature:(vid_t v, id_t op, L... p)
+addvert	graph.h	/^  template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ;$/;"	p	class:graph_generic	access:public	signature:(I v, bool in , bool out , L&&... p)
+addvert	graph.h	/^void graph_generic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  $/;"	f	class:graph_generic	signature:(I v, bool bin, bool bout, L&&... p)
+addvert	interface.snapshot	/^    void addvert(T::vid v, T::opid_t, T::param_t p...); $/;"	p	class:graph	file:	access:public	signature:(T::vid v, T::opid_t, T::param_t p...)
+after	.exrc	/^set runtimepath=~\/.vim,\/var\/lib\/vim\/addons,\/usr\/share\/vim\/vimfiles,\/usr\/share\/vim\/vim73,\/usr\/share\/vim\/vimfiles\/after,\/var\/lib\/vim\/addons\/after,~\/.vim\/after$/;"	v
+alias	model.h	/^    static std::string alias(const std::string& a);$/;"	p	class:model_empty	access:public	signature:(const std::string& a)
+alias	model.h	/^std::string model_empty::alias(const std::string& a)$/;"	f	class:model_empty	signature:(const std::string& a)
+alias	model_bobox.h	/^    static std::string alias(const std::string& a);$/;"	p	class:model_bobox	access:public	signature:(const std::string& a)
+alias	model_bobox.h	/^std::string model_bobox::alias(const std::string& a)$/;"	f	class:model_bobox	signature:(const std::string& a)
+alias	model_simple.h	/^    static std::string alias(const std::string& a);$/;"	p	class:model_simple	access:public	signature:(const std::string& a)
+alias	model_simple.h	/^std::string model_simple::alias(const std::string& a)$/;"	f	class:model_simple	signature:(const std::string& a)
+aliases	model.h	/^    static aliastab_t aliases;$/;"	m	class:model_empty	access:protected
+aliases	model.h	/^std::map<std::string, std::string> model_empty::aliases;$/;"	m	class:model_empty
+aliases	model_bobox.h	/^    static aliastab_t aliases;$/;"	m	class:model_bobox	access:protected
+aliases	model_bobox.h	/^std::map<std::string, std::string> model_bobox::aliases;$/;"	m	class:model_bobox
+aliases	model_simple.h	/^    static aliastab_t aliases;$/;"	m	class:model_simple	access:protected
+aliases	model_simple.h	/^std::map<std::string, std::string> model_simple::aliases;$/;"	m	class:model_simple
+aliastab_t	model.h	/^    typedef std::map<std::string, std::string> aliastab_t;$/;"	t	class:model_empty	access:protected
+aliastab_t	model_bobox.h	/^    typedef std::map<std::string, std::string> aliastab_t;$/;"	t	class:model_bobox	access:protected
+aliastab_t	model_simple.h	/^    typedef std::map<std::string, std::string> aliastab_t;$/;"	t	class:model_simple	access:protected
+append	writer.h	/^    template <bool dolars = false, typename Types> writer<M>& append(Types str) ;$/;"	p	class:writer	access:public	signature:(Types str)
+append	writer.h	/^template <bool dolars , typename Types> writer<M>& writer<M>::append(Types str)$/;"	f	class:writer	signature:(Types str)
+backend	interface.snapshot	/^class backend $/;"	c	file:
+backend::instab	interface.snapshot	/^    instruction_table<T> instab;$/;"	m	class:backend	file:	access:private
+br_ct	datatypes.h	/^    template <typename U> struct br_ct  { typedef decltype(std::declval<T const>()[std::declval<U>()]) type; };$/;"	s	class:proxy_	access:private
+br_t	datatypes.h	/^    template <typename U> struct br_t { typedef decltype(std::declval<T      >()[std::declval<U>()]) type; };$/;"	s	class:proxy_	access:private
+c	ctb	/^ELF/;"	v
+calculate_distances	graph.h	/^  void calculate_distances();$/;"	p	class:graph_generic	access:public	signature:()
+calculate_distances	graph.h	/^void graph_generic<T,I,directed,O...>::calculate_distances()  $/;"	f	class:graph_generic	signature:()
+clear	instructions.h	/^    void clear() ; $/;"	p	class:instruction_table	access:public	signature:()
+clear	instructions.h	/^void instruction_table<T>::clear()  $/;"	f	class:instruction_table	signature:()
+clear	writer.h	/^    void clear() ;$/;"	p	class:writer	access:public	signature:()
+clear	writer.h	/^void writer<M>::clear()  $/;"	f	class:writer	signature:()
+cmdline	ctb.h	/^  int cmdline( int count, char ** args);$/;"	p	class:ctb	access:public	signature:( int count, char ** args)
+cmdline	ctb.h	/^int ctb<T,IT,L>::cmdline(int count, char ** args)$/;"	f	class:ctb	signature:(int count, char ** args)
+code	instructions.h	/^          std::string code;$/;"	m	struct:instruction_table::operation::instruction	access:public
+code	instructions.h	/^        std::string code;$/;"	m	struct:instruction_table::type::type_version	access:public
+code	interface.snapshot	/^        writer code; \/\/#debug $/;"	m	class:graph::node	file:	access:private
+code1	instructions.h	/^        std::string code1;$/;"	m	struct:instruction_table::type::conversion	access:public
+code2	instructions.h	/^        std::string code2;$/;"	m	struct:instruction_table::type::conversion	access:public
+col_in_$1	templates/bobox_decl_in.h	/^static const bobox::column_index_type col_in_$1( $1);$/;"	p	signature:( $1)
+col_out_$1	templates/bobox_decl_out.h	/^static const bobox::column_index_type col_out_$1( $1);$/;"	p	signature:( $1)
+completeopt	.exrc	/^set completeopt=menuone,menu,longest,preview$/;"	v
+conversion	instructions.h	/^        conversion(int in, int out, const std::string& c1, const std::string& c2);$/;"	p	struct:instruction_table::type::conversion	access:public	signature:(int in, int out, const std::string& c1, const std::string& c2)
+conversion	instructions.h	/^      struct conversion$/;"	s	struct:instruction_table::type	access:public
+conversion	instructions.h	/^instruction_table<T>::type::conversion::conversion(int i, int o, const std::string& c1, const std::string& c2) : width_in(i), width_out(o), code1(c1), code2(c2)$/;"	f	class:instruction_table::type::conversion	signature:(int i, int o, const std::string& c1, const std::string& c2)
+conversions	instructions.h	/^      std::vector<conversion> conversions;$/;"	m	struct:instruction_table::type	access:public
+cpo_save	.exrc	/^let s:cpo_save=&cpo$/;"	v
+crawl	graph.h	/^    template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL);$/;"	p	class:graph_generic::node	access:public	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL)
+crawl	graph.h	/^void graph_generic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)$/;"	f	class:graph_generic::node	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
+crawl_topological	graph.h	/^    void crawl_topological(std::function<void(node*)> f);$/;"	p	class:graph_generic::node	access:public	signature:(std::function<void(node*)> f)
+crawl_topological	graph.h	/^void graph_generic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)$/;"	f	class:graph_generic::node	signature:(std::function<void(node*)> f)
+ctb	ctb.h	/^class ctb $/;"	c
+ctb::cmdline	ctb.h	/^  int cmdline( int count, char ** args);$/;"	p	class:ctb	access:public	signature:( int count, char ** args)
+ctb::cmdline	ctb.h	/^int ctb<T,IT,L>::cmdline(int count, char ** args)$/;"	f	class:ctb	signature:(int count, char ** args)
+ctb::get_inner_name	ctb.h	/^  std::string get_inner_name(std::string fname);$/;"	p	class:ctb	access:private	signature:(std::string fname)
+ctb::get_inner_name	ctb.h	/^std::string ctb<T,IT,L>::get_inner_name(std::string f)$/;"	f	class:ctb	signature:(std::string f)
+ctb::help	ctb.h	/^  void help();$/;"	p	class:ctb	access:private	signature:()
+ctb::help	ctb.h	/^void ctb<T,IT,L>::help()$/;"	f	class:ctb	signature:()
+ctb::instab	ctb.h	/^  IT instab;$/;"	m	class:ctb	access:private
+ctb::load_instab	ctb.h	/^  template<typename...P> void load_instab(P...params) ;$/;"	p	class:ctb	access:public	signature:(P....params)
+ctb::load_instab	ctb.h	/^template<typename...P> void ctb<T,IT,L>::load_instab(P...params)$/;"	f	class:ctb	signature:(P....params)
+ctb::outpath	ctb.h	/^  std::string outpath;$/;"	m	class:ctb	access:private
+ctb::process	ctb.h	/^  template<typename M, typename...P> void process(std::string name, P...params) ;$/;"	p	class:ctb	access:public	signature:(std::string name, P...params)
+ctb::process	ctb.h	/^void ctb<T,IT,L>::process(std::string name, P...params)$/;"	f	class:ctb	signature:(std::string name, P...params)
+ctb::self_test	ctb.h	/^  static void self_test() ;$/;"	p	class:ctb	access:public	signature:()
+ctb::self_test	ctb.h	/^void ctb<T,IT,L>::self_test()$/;"	f	class:ctb	signature:()
+ctb::set_output_path	ctb.h	/^  void set_output_path(std::string);$/;"	p	class:ctb	access:public	signature:(std::string)
+ctb::set_output_path	ctb.h	/^void ctb<T,IT,L>::set_output_path(std::string p)$/;"	f	class:ctb	signature:(std::string p)
+ctb_GUARD	ctb.h	2;"	d
+ctb_default	ctb.h	/^typedef ctb<traits, instruction_table<traits>, loader_default> ctb_default;$/;"	t
+data	datatypes.h	/^    T data;$/;"	m	class:proxy_	access:private
+data	interface.snapshot	/^    std::vector<std::string> data; $/;"	m	class:writer	file:	access:private
+data	writer.h	/^    std::vector<std::string> data;$/;"	m	class:writer	access:private
+data_in_$1	templates/simple_decl_in.h	/^$2 * data_in_$1 = NULL;$/;"	v
+data_out_$1	templates/bobox_decl_in.h	/^const $2 * data_out_$1;$/;"	v
+data_out_$1	templates/bobox_decl_out.h	/^$2 * data_out_$1;$/;"	v
+data_out_$1	templates/simple_decl_out.h	/^$2 * data_out_$1 = NULL;$/;"	v
+data_t	generator.h	/^    template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);$/;"	p	class:generator::data_t	access:public	signature:( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p)
+data_t	generator.h	/^  class data_t$/;"	c	class:generator	access:private
+data_t	generator.h	/^generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(*o)$/;"	f	class:generator::data_t	signature:( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p)
+dec	instructions.h	/^    const operation_t& dec(typename T::opid_t type) const ;$/;"	p	class:instruction_table	access:public	signature:(typename T::opid_t type) const
+dec	instructions.h	/^const typename instruction_table<T>::operation_t& instruction_table<T>::dec(typename T::opid_t type)   const$/;"	f	class:instruction_table	signature:(typename T::opid_t type) const
+dec	interface.snapshot	/^    operation_t dec(T::opid_t type);$/;"	p	class:instruction_table	file:	access:public	signature:(T::opid_t type)
+dectype	instructions.h	/^    const type_t& dectype(typename T::tid_t type) const ;$/;"	p	class:instruction_table	access:public	signature:(typename T::tid_t type) const
+dectype	instructions.h	/^const typename instruction_table<T>::type_t& instruction_table<T>::dectype(typename T::tid_t type)   const$/;"	f	class:instruction_table	signature:(typename T::tid_t type) const
+distances	instructions.h	/^      mutable graph_distance_t distances;$/;"	m	struct:instruction_table::type	access:public
+dummy	datatypes.h	/^  dummy(D...t){};$/;"	f	struct:dummy	access:public	signature:(D....t)
+dummy	datatypes.h	/^struct dummy$/;"	s
+dummy::dummy	datatypes.h	/^  dummy(D...t){};$/;"	f	struct:dummy	access:public	signature:(D....t)
+dummy_friend	datatypes.h	/^struct dummy_friend$/;"	s
+e	backend.o	/^e,"¬/;"	v
+e	backend.o	/^e,«¢/;"	v
+e	ctb	/^d/;"	v
+env_in_$1	templates/bobox_decl_in.h	/^bobox::envelope_ptr_type env_in_$1;$/;"	v
+env_out_$1	templates/bobox_decl_out.h	/^bobox::mutable_envelope_ptr_type env_out_$1;$/;"	v
+eol	.exrc	/^set backspace=indent,eol,start$/;"	v
+fINPUT	datatypes.h	/^  fINPUT = 1, fOUTPUT = 2$/;"	e	enum:flags
+fOUTPUT	datatypes.h	/^  fINPUT = 1, fOUTPUT = 2$/;"	e	enum:flags
+fileencodings	.exrc	/^set fileencodings=ucs-bom,utf-8,default,latin1$/;"	v
+files	split.sh	/^our @files = @ARGV;$/;"	v
+fillchars	.exrc	/^set fillchars=fold:\\ $/;"	v
+flag_t	datatypes.h	/^  typedef int flag_t;$/;"	t	struct:traits	access:public
+flags	datatypes.h	/^enum flags $/;"	g
+flags	instructions.h	/^        typename T::flag_t flags;$/;"	m	class:instruction_table::operation	access:private
+flags	interface.snapshot	/^        T::flag_t flags;$/;"	m	class:instruction_table::operation	file:	access:private
+format	tags	/^!_TAG_FILE_FORMAT	2	\/extended format; --format=1 will not append ;" to lines\/$/;"	v
+friend_maker	datatypes.h	/^struct friend_maker$/;"	s
+friend_maker::type	datatypes.h	/^    typedef T type;$/;"	t	struct:friend_maker	access:public
+from_file	writer.h	/^    static std::string from_file(const std::string& filename);$/;"	p	class:writer	access:public	signature:(const std::string& filename)
+from_file	writer.h	/^std::string writer<M>::from_file(const std::string& filename)$/;"	f	class:writer	signature:(const std::string& filename)
+generate	generator.h	/^    template <class W> void generate(int granularity, W& w);$/;"	p	class:generator::data_t	access:public	signature:(int granularity, W& w)
+generate	generator.h	/^  template <class W> void generate(int granularity, W& w) ;$/;"	p	class:generator	access:public	signature:(int granularity, W& w)
+generate	generator.h	/^void generator<T,IT>::data_t::generate(int granularity, W& w)$/;"	f	class:generator::data_t	signature:(int granularity, W& w)
+generate	generator.h	/^void generator<T,IT>::generate(int packsize, W& w)$/;"	f	class:generator	signature:(int packsize, W& w)
+generate	model.h	/^    template <class G> static writer<model_empty> generate(int m,  G& graph, std::string name) ;$/;"	p	class:model_empty	access:public	signature:(int m, G& graph, std::string name)
+generate	model.h	/^writer<model_empty> model_empty::generate(int max_granularity, G& graph, std::string name)$/;"	f	class:model_empty	signature:(int max_granularity, G& graph, std::string name)
+generate	model_bobox.h	/^    template <class G> static writer<model_bobox> generate(int m,  G& generator, std::string name);$/;"	p	class:model_bobox	access:public	signature:(int m, G& generator, std::string name)
+generate	model_bobox.h	/^writer<model_bobox> model_bobox::generate(int max_granularity, G& generator, std::string name)$/;"	f	class:model_bobox	signature:(int max_granularity, G& generator, std::string name)
+generate	model_simple.h	/^    template <class G> static writer<model_simple> generate(int m,  G& generator, std::string name);$/;"	p	class:model_simple	access:public	signature:(int m, G& generator, std::string name)
+generate	model_simple.h	/^writer<model_simple> model_simple::generate(int granularity, G& generator, std::string name)$/;"	f	class:model_simple	signature:(int granularity, G& generator, std::string name)
+generated	interface.snapshot	/^        bool generated;$/;"	m	class:graph::node	file:	access:private
+generator	generator.h	/^  generator(const IT& i);$/;"	p	class:generator	access:public	signature:(const IT& i)
+generator	generator.h	/^class generator$/;"	c
+generator	generator.h	/^generator<T,IT>::generator(const IT & i) : instab(i), graph()$/;"	f	class:generator	signature:(const IT & i)
+generator::addedge	generator.h	/^  void addedge(vid_t aid, vid_t bid, int b_argpos) ;$/;"	p	class:generator	access:public	signature:(vid_t aid, vid_t bid, int b_argpos)
+generator::addedge	generator.h	/^void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos)  $/;"	f	class:generator	signature:(vid_t aid, vid_t bid, int b_argpos)
+generator::addvert	generator.h	/^  template <typename...L> void addvert(vid_t v, id_t op, L... p) ;$/;"	p	class:generator	access:public	signature:(vid_t v, id_t op, L... p)
+generator::addvert	generator.h	/^template <typename...L> void generator<T,IT>::addvert(vid_t v, id_t op, L... p)  $/;"	f	class:generator	signature:(vid_t v, id_t op, L... p)
+generator::data_t	generator.h	/^  class data_t$/;"	c	class:generator	access:private
+generator::data_t::acces_map	generator.h	/^    acces_map_t acces_map;$/;"	m	class:generator::data_t	access:private
+generator::data_t::acces_map_t	generator.h	/^    typedef std::map<int, writer<model_empty> > acces_map_t;$/;"	t	class:generator::data_t	access:private
+generator::data_t::data_t	generator.h	/^    template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);$/;"	p	class:generator::data_t	access:public	signature:( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p)
+generator::data_t::data_t	generator.h	/^generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(*o)$/;"	f	class:generator::data_t	signature:( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p)
+generator::data_t::generate	generator.h	/^    template <class W> void generate(int granularity, W& w);$/;"	p	class:generator::data_t	access:public	signature:(int granularity, W& w)
+generator::data_t::generate	generator.h	/^void generator<T,IT>::data_t::generate(int granularity, W& w)$/;"	f	class:generator::data_t	signature:(int granularity, W& w)
+generator::data_t::get_acces	generator.h	/^    template <class W> writer<model_empty> get_acces(int width, int gran, W& w);$/;"	p	class:generator::data_t	access:public	signature:(int width, int gran, W& w)
+generator::data_t::get_acces	generator.h	/^writer<model_empty> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)$/;"	f	class:generator::data_t	signature:(int width, int granularity, W& w)
+generator::data_t::get_inout_pos	generator.h	/^    int get_inout_pos() const;$/;"	p	class:generator::data_t	access:public	signature:() const
+generator::data_t::get_inout_pos	generator.h	/^int generator<T,IT>::data_t::get_inout_pos() const$/;"	f	class:generator::data_t	signature:() const
+generator::data_t::me	generator.h	/^    node_t* me;$/;"	m	class:generator::data_t	access:private
+generator::data_t::newname	generator.h	/^    std::string newname(std::string tag) ;$/;"	p	class:generator::data_t	access:private	signature:(std::string tag)
+generator::data_t::newname	generator.h	/^std::string generator<T,IT>::data_t::newname(std::string tag)$/;"	f	class:generator::data_t	signature:(std::string tag)
+generator::data_t::opid	generator.h	/^    proxy<id_t> opid;$/;"	m	class:generator::data_t	access:public
+generator::data_t::parameters	generator.h	/^    std::vector<param_t> parameters;$/;"	m	class:generator::data_t	access:private
+generator::data_t::push_params	generator.h	/^    template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);$/;"	p	class:generator::data_t	access:private	signature:(P&&, Ps&&... params)
+generator::data_t::push_params	generator.h	/^    void push_params();$/;"	p	class:generator::data_t	access:private	signature:()
+generator::data_t::push_params	generator.h	/^void generator<T,IT>::data_t::push_params()$/;"	f	class:generator::data_t	signature:()
+generator::data_t::push_params	generator.h	/^void generator<T,IT>::data_t::push_params(P&& p, Ps&&...params)$/;"	f	class:generator::data_t	signature:(P&& p, Ps&&...params)
+generator::generate	generator.h	/^  template <class W> void generate(int granularity, W& w) ;$/;"	p	class:generator	access:public	signature:(int granularity, W& w)
+generator::generate	generator.h	/^void generator<T,IT>::generate(int packsize, W& w)$/;"	f	class:generator	signature:(int packsize, W& w)
+generator::generator	generator.h	/^  generator(const IT& i);$/;"	p	class:generator	access:public	signature:(const IT& i)
+generator::generator	generator.h	/^generator<T,IT>::generator(const IT & i) : instab(i), graph()$/;"	f	class:generator	signature:(const IT & i)
+generator::get_width	generator.h	/^  int get_width(int upperbound = 10000000) ;$/;"	p	class:generator	access:public	signature:(int upperbound = 10000000)
+generator::get_width	generator.h	/^int generator<T,IT>::get_width(int upperbound)$/;"	f	class:generator	signature:(int upperbound)
+generator::graph	generator.h	/^  proxy<graph_t> graph;$/;"	m	class:generator	access:public
+generator::graph_t	generator.h	/^  typedef graph_generic<data_t, typename T::vid_t, true, generator> graph_t;$/;"	t	class:generator	access:private
+generator::id_t	generator.h	/^  typedef typename T::opid_t id_t;$/;"	t	class:generator	access:private
+generator::instab	generator.h	/^  proxy<const IT&> instab;$/;"	m	class:generator	access:public
+generator::node_t	generator.h	/^  typedef typename graph_t::node_t node_t;$/;"	t	class:generator	access:private
+generator::op_t	generator.h	/^  typedef typename IT::operation_t op_t;$/;"	t	class:generator	access:private
+generator::param_t	generator.h	/^  typedef typename T::param_t param_t;$/;"	t	class:generator	access:private
+generator::vid_t	generator.h	/^  typedef typename T::vid_t vid_t;$/;"	t	class:generator	access:private
+generator_default	generator.h	/^typedef generator<traits, instruction_table_default> generator_default; $/;"	t
+get_acces	generator.h	/^    template <class W> writer<model_empty> get_acces(int width, int gran, W& w);$/;"	p	class:generator::data_t	access:public	signature:(int width, int gran, W& w)
+get_acces	generator.h	/^writer<model_empty> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)$/;"	f	class:generator::data_t	signature:(int width, int granularity, W& w)
+get_access	interface.snapshot	/^        void get_access();$/;"	p	class:graph::node	file:	access:public	signature:()
+get_conv_string	instructions.h	/^        bool get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& type)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int from, int to, std::string& c1, std::string& c2, std::string& type) const
+get_conv_string	instructions.h	/^bool instruction_table<T>::operation::get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& t) const$/;"	f	class:instruction_table::operation	signature:(int from, int to, std::string& c1, std::string& c2, std::string& t) const
+get_conversion_graph	instructions.h	/^        const typename type::graph_distance_t& get_conversion_graph() const;$/;"	p	class:instruction_table::operation	access:public	signature:() const
+get_conversion_graph	instructions.h	/^const typename instruction_table<T>::type::graph_distance_t& instruction_table<T>::operation::get_conversion_graph() const$/;"	f	class:instruction_table::operation	signature:() const
+get_dist	graph.h	/^  int get_dist(I a, I b, I* c = NULL) const;$/;"	p	class:graph_generic	access:public	signature:(I a, I b, I* c = NULL) const
+get_dist	graph.h	/^int graph_generic<T,I,directed,O...>::get_dist(I a, I b, I* c) const$/;"	f	class:graph_generic	signature:(I a, I b, I* c) const
+get_in_count	interface.snapshot	/^        int get_in_count();$/;"	p	class:instruction_table::operation	file:	access:public	signature:()
+get_in_type	interface.snapshot	/^        T::tid_t get_in_type(int);$/;"	p	class:instruction_table::operation	file:	access:public	signature:(int)
+get_inner_name	ctb.h	/^  std::string get_inner_name(std::string fname);$/;"	p	class:ctb	access:private	signature:(std::string fname)
+get_inner_name	ctb.h	/^std::string ctb<T,IT,L>::get_inner_name(std::string f)$/;"	f	class:ctb	signature:(std::string f)
+get_inout_pos	generator.h	/^    int get_inout_pos() const;$/;"	p	class:generator::data_t	access:public	signature:() const
+get_inout_pos	generator.h	/^int generator<T,IT>::data_t::get_inout_pos() const$/;"	f	class:generator::data_t	signature:() const
+get_max_width	instructions.h	/^        int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int bound = 1000000000, int* in = NULL, int* out = NULL) const
+get_max_width	instructions.h	/^int instruction_table<T>::operation::get_max_width(int bound, int* in, int* out)const$/;"	f	class:instruction_table::operation	signature:(int bound, int* in, int* out) const
+get_max_width	interface.snapshot	/^        int get_max_width();$/;"	p	class:instruction_table::operation	file:	access:public	signature:()
+get_name	writer.h	/^    std::string get_name(const std::string& format, int& pos);$/;"	p	class:writer	access:private	signature:(const std::string& format, int& pos)
+get_name	writer.h	/^std::string writer<M>::get_name(const std::string& format, int& pos)$/;"	f	class:writer	signature:(const std::string& format, int& pos)
+get_op_string	instructions.h	/^        std::string get_op_string(int w = -1)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int w = -1) const
+get_op_string	instructions.h	/^std::string instruction_table<T>::operation::get_op_string(int w)const$/;"	f	class:instruction_table::operation	signature:(int w) const
+get_out_type	interface.snapshot	/^        T::tid_t get_out_type();$/;"	p	class:instruction_table::operation	file:	access:public	signature:()
+get_path	graph.h	/^    node * get_path(node * n);$/;"	p	class:graph_generic::node	access:private	signature:(node * n)
+get_path	graph.h	/^typename graph_generic<T,I,directed,O...>::node* graph_generic<T,I,directed,O...>::node::get_path(node * n)$/;"	f	class:graph_generic::node	signature:(node * n)
+get_string	.writer.h.swp	/^/;"	p	file:	signature:() const
+get_string	writer.h	/^    std::string get_string() const; \/\/does handle dolars internally!$/;"	p	class:writer	access:private	signature:() const
+get_string	writer.h	/^std::string writer<M>::get_string() const$/;"	f	class:writer	signature:() const
+get_type_string	instructions.h	/^        std::string get_type_string(int w = -1)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int w = -1) const
+get_type_string	instructions.h	/^std::string instruction_table<T>::operation::get_type_string(int w)const$/;"	f	class:instruction_table::operation	signature:(int w) const
+get_width	generator.h	/^  int get_width(int upperbound = 10000000) ;$/;"	p	class:generator	access:public	signature:(int upperbound = 10000000)
+get_width	generator.h	/^int generator<T,IT>::get_width(int upperbound)$/;"	f	class:generator	signature:(int upperbound)
+getanystr	xmlloader.h	/^    static std::string getanystr(tinyxml2::XMLNode * node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode * node, std::string name)
+getanystr	xmlloader.h	/^std::string xml_loader<T,G,IT>::getanystr(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+getint	xmlloader.h	/^    static int getint(tinyxml2::XMLNode * node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode * node, std::string name)
+getint	xmlloader.h	/^int xml_loader<T,G,IT>::getint(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+getnth	writer.h	/^    template <typename ... Types> const writer<M>& getnth(int i, const writer<M>& a, const Types&... params);$/;"	p	class:writer	access:private	signature:(int i, const writer<M>& a, const Types&... params)
+getnth	writer.h	/^    writer<M> getnth(int i);$/;"	p	class:writer	access:private	signature:(int i)
+getnth	writer.h	/^template <typename ... Types> const writer<M>& writer<M>::getnth(int i, const writer<M>& a, const Types&... params)$/;"	f	class:writer	signature:(int i, const writer<M>& a, const Types&... params)
+getnth	writer.h	/^writer<M> writer<M>::getnth(int i)$/;"	f	class:writer	signature:(int i)
+getstr	xmlloader.h	/^    static std::string getstr(tinyxml2::XMLNode * node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode * node, std::string name)
+getstr	xmlloader.h	/^std::string xml_loader<T,G,IT>::getstr(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+graph	generator.h	/^  proxy<graph_t> graph;$/;"	m	class:generator	access:public
+graph	interface.snapshot	/^    graph(const instruction_table& i) : instab(i) { };$/;"	f	class:graph	access:public	signature:(const instruction_table& i)
+graph	interface.snapshot	/^class graph $/;"	c	file:
+graph::addedge	interface.snapshot	/^    void addedge(t::vid_t a, t::vid_t b, int b_argpos) { };$/;"	f	class:graph	access:public	signature:(t::vid_t a, t::vid_t b, int b_argpos)
+graph::addvert	interface.snapshot	/^    void addvert(T::vid v, T::opid_t, T::param_t p...); $/;"	p	class:graph	file:	access:public	signature:(T::vid v, T::opid_t, T::param_t p...)
+graph::graph	interface.snapshot	/^    graph(const instruction_table& i) : instab(i) { };$/;"	f	class:graph	access:public	signature:(const instruction_table& i)
+graph::in	interface.snapshot	/^    std::vector<node*> in;$/;"	m	class:graph	file:	access:private
+graph::instab	interface.snapshot	/^    const instruction_table<T>& instab;$/;"	m	class:graph	file:	access:private
+graph::node	interface.snapshot	/^    class node$/;"	c	class:graph	file:	access:private
+graph::node::acces	interface.snapshot	/^        writer acces; \/\/access generated for specific instruction width (we need to reorder )$/;"	m	class:graph::node	file:	access:private
+graph::node::acces_width	interface.snapshot	/^        std::map<int, writer> acces_width;$/;"	m	class:graph::node	file:	access:private
+graph::node::code	interface.snapshot	/^        writer code; \/\/#debug $/;"	m	class:graph::node	file:	access:private
+graph::node::generated	interface.snapshot	/^        bool generated;$/;"	m	class:graph::node	file:	access:private
+graph::node::get_access	interface.snapshot	/^        void get_access();$/;"	p	class:graph::node	file:	access:public	signature:()
+graph::node::id	interface.snapshot	/^        T::vid id;$/;"	m	class:graph::node	file:	access:private
+graph::node::in	interface.snapshot	/^        std::vector<node*> in; \/\/$/;"	m	class:graph::node	file:	access:private
+graph::node::instab	interface.snapshot	/^        const instruction_table<T>& instab;$/;"	m	class:graph::node	file:	access:private
+graph::node::node	interface.snapshot	/^        node(const instruction_table<T>& i, T::opid_t, T::param_t...p); $/;"	p	class:graph::node	file:	access:public	signature:(const instruction_table<T>& i, T::opid_t, T::param_t...p)
+graph::node::op	interface.snapshot	/^        T::opid_t op;$/;"	m	class:graph::node	file:	access:private
+graph::node::out	interface.snapshot	/^        std::vector<node*> out;$/;"	m	class:graph::node	file:	access:private
+graph::node::parameters	interface.snapshot	/^        std::vector<T::param_t> parameters; \/\/e.g. an index of an input list of a load instruction$/;"	m	class:graph::node	file:	access:private
+graph::node::process	interface.snapshot	/^        void process(writer&, int width);$/;"	p	class:graph::node	file:	access:public	signature:(writer&, int width)
+graph::out	interface.snapshot	/^    std::vector<node*> out;$/;"	m	class:graph	file:	access:private
+graph::verts	interface.snapshot	/^    std::map<T::vid_t, node*> verts;$/;"	m	class:graph	file:	access:private
+graph_default	graph.h	/^typedef graph_generic<dummy,int,true> graph_default;$/;"	t
+graph_distance_t	instructions.h	/^      typedef graph_generic<dummy, int, false, type> graph_distance_t;$/;"	t	struct:instruction_table::type	access:public
+graph_generic	graph.h	/^  graph_generic();$/;"	p	class:graph_generic	access:public	signature:()
+graph_generic	graph.h	/^class graph_generic$/;"	c
+graph_generic	graph.h	/^graph_generic<T,I,directed,O...>::graph_generic() : in(), out(), verts(), index(0)$/;"	f	class:graph_generic	signature:()
+graph_generic::addedge	graph.h	/^  void addedge(I aid, I bid, int b_argpos = -1) ;$/;"	p	class:graph_generic	access:public	signature:(I aid, I bid, int b_argpos = -1)
+graph_generic::addedge	graph.h	/^void graph_generic<T,I,directed,O...>::addedge(I aid, I bid, int b_argpos)  $/;"	f	class:graph_generic	signature:(I aid, I bid, int b_argpos)
+graph_generic::addvert	graph.h	/^  template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ;$/;"	p	class:graph_generic	access:public	signature:(I v, bool in , bool out , L&&... p)
+graph_generic::addvert	graph.h	/^void graph_generic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  $/;"	f	class:graph_generic	signature:(I v, bool bin, bool bout, L&&... p)
+graph_generic::calculate_distances	graph.h	/^  void calculate_distances();$/;"	p	class:graph_generic	access:public	signature:()
+graph_generic::calculate_distances	graph.h	/^void graph_generic<T,I,directed,O...>::calculate_distances()  $/;"	f	class:graph_generic	signature:()
+graph_generic::get_dist	graph.h	/^  int get_dist(I a, I b, I* c = NULL) const;$/;"	p	class:graph_generic	access:public	signature:(I a, I b, I* c = NULL) const
+graph_generic::get_dist	graph.h	/^int graph_generic<T,I,directed,O...>::get_dist(I a, I b, I* c) const$/;"	f	class:graph_generic	signature:(I a, I b, I* c) const
+graph_generic::graph_generic	graph.h	/^  graph_generic();$/;"	p	class:graph_generic	access:public	signature:()
+graph_generic::graph_generic	graph.h	/^graph_generic<T,I,directed,O...>::graph_generic() : in(), out(), verts(), index(0)$/;"	f	class:graph_generic	signature:()
+graph_generic::index	graph.h	/^  int index;$/;"	m	class:graph_generic	access:private
+graph_generic::node	graph.h	/^  class node$/;"	c	class:graph_generic	access:private
+graph_generic::node::crawl	graph.h	/^    template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL);$/;"	p	class:graph_generic::node	access:public	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL)
+graph_generic::node::crawl	graph.h	/^void graph_generic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)$/;"	f	class:graph_generic::node	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
+graph_generic::node::crawl_topological	graph.h	/^    void crawl_topological(std::function<void(node*)> f);$/;"	p	class:graph_generic::node	access:public	signature:(std::function<void(node*)> f)
+graph_generic::node::crawl_topological	graph.h	/^void graph_generic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)$/;"	f	class:graph_generic::node	signature:(std::function<void(node*)> f)
+graph_generic::node::get_path	graph.h	/^    node * get_path(node * n);$/;"	p	class:graph_generic::node	access:private	signature:(node * n)
+graph_generic::node::get_path	graph.h	/^typename graph_generic<T,I,directed,O...>::node* graph_generic<T,I,directed,O...>::node::get_path(node * n)$/;"	f	class:graph_generic::node	signature:(node * n)
+graph_generic::node::id	graph.h	/^    proxy<I> id;$/;"	m	class:graph_generic::node	access:public
+graph_generic::node::in	graph.h	/^    proxy<std::vector<node*> > in;$/;"	m	class:graph_generic::node	access:public
+graph_generic::node::index	graph.h	/^    int index;$/;"	m	class:graph_generic::node	access:private
+graph_generic::node::init_map	graph.h	/^    bool init_map(int size);$/;"	p	class:graph_generic::node	access:private	signature:(int size)
+graph_generic::node::init_map	graph.h	/^bool graph_generic<T,I,directed,O...>::node::init_map(int size)$/;"	f	class:graph_generic::node	signature:(int size)
+graph_generic::node::lastpass	graph.h	/^    int lastpass;$/;"	m	class:graph_generic::node	access:private
+graph_generic::node::map	graph.h	/^    mutable std::vector<route> map;$/;"	m	class:graph_generic::node	access:private
+graph_generic::node::newid	graph.h	/^    int newid();$/;"	p	class:graph_generic::node	access:private	signature:()
+graph_generic::node::newid	graph.h	/^int graph_generic<T,I,directed,O...>::node::newid()$/;"	f	class:graph_generic::node	signature:()
+graph_generic::node::node	graph.h	/^    template <typename... L> node(I vid, int index, L&&... p);$/;"	p	class:graph_generic::node	access:private	signature:(I vid, int index, L&&... p)
+graph_generic::node::node	graph.h	/^graph_generic<T,I,directed,O...>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)$/;"	f	class:graph_generic::node	signature:(I vid, int idx, L&&... p)
+graph_generic::node::operator ->	graph.h	/^    proxy<T,O...>& operator->();$/;"	p	class:graph_generic::node	access:public	signature:()
+graph_generic::node::operator ->	graph.h	/^graph_generic<T,I,directed,O...>::node::proxy<T,O...>& graph_generic<T,I,directed,O...>::node::operator->()  $/;"	f	class:graph_generic::node	signature:()
+graph_generic::node::out	graph.h	/^    proxy<std::vector<node*> > out;$/;"	m	class:graph_generic::node	access:public
+graph_generic::node::parent	graph.h	/^    graph_generic* parent;$/;"	m	class:graph_generic::node	access:private
+graph_generic::node::route	graph.h	/^    typedef std::pair<node*, int> route;$/;"	t	class:graph_generic::node	access:private
+graph_generic::node::update_distances	graph.h	/^    bool update_distances();$/;"	p	class:graph_generic::node	access:private	signature:()
+graph_generic::node::update_distances	graph.h	/^bool graph_generic<T,I,directed,O...>::node::update_distances()$/;"	f	class:graph_generic::node	signature:()
+graph_generic::node_t	graph.h	/^  typedef node node_t;$/;"	t	class:graph_generic	access:public
+graph_generic::out	graph.h	/^  proxy<vertex_list_t> out;$/;"	m	class:graph_generic	access:public
+graph_generic::self_test	graph.h	/^  static void self_test();$/;"	p	class:graph_generic	access:public	signature:()
+graph_generic::self_test	graph.h	/^void graph_generic<T,I,directed,O...>::self_test()$/;"	f	class:graph_generic	signature:()
+graph_generic::vertex_container_t	graph.h	/^  typedef std::map<I, node*> vertex_container_t;$/;"	t	class:graph_generic	access:private
+graph_generic::vertex_list_t	graph.h	/^  typedef std::vector<node*> vertex_list_t;$/;"	t	class:graph_generic	access:private
+graph_generic::verts	graph.h	/^  proxy<vertex_container_t> verts;$/;"	m	class:graph_generic	access:public
+graph_t	generator.h	/^  typedef graph_generic<data_t, typename T::vid_t, true, generator> graph_t;$/;"	t	class:generator	access:private
+hasval	xmlloader.h	/^    static bool hasval(tinyxml2::XMLNode* node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode* node, std::string name)
+hasval	xmlloader.h	/^bool xml_loader<T,G,IT>::hasval(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+help	ctb.h	/^  void help();$/;"	p	class:ctb	access:private	signature:()
+help	ctb.h	/^void ctb<T,IT,L>::help()$/;"	f	class:ctb	signature:()
+helplang	.exrc	/^set helplang=en$/;"	v
+hor	.exrc	/^set foldopen=block,hor,mark,percent,quickfix,tag,undo$/;"	v
+id	graph.h	/^    proxy<I> id;$/;"	m	class:graph_generic::node	access:public
+id	interface.snapshot	/^        T::vid id;$/;"	m	class:graph::node	file:	access:private
+id_t	generator.h	/^  typedef typename T::opid_t id_t;$/;"	t	class:generator	access:private
+imbue_width	instructions.h	/^        void imbue_width(int w)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int w) const
+imbue_width	instructions.h	/^void instruction_table<T>::operation::imbue_width(int w)const$/;"	f	class:instruction_table::operation	signature:(int w) const
+imbue_width	interface.snapshot	/^        void imbue_width(int w);$/;"	p	class:instruction_table::operation	file:	access:public	signature:(int w)
+imbued_width	instructions.h	/^        mutable int imbued_width;$/;"	m	class:instruction_table::operation	access:private
+imbued_width	interface.snapshot	/^        mutable int imbued_width;$/;"	m	class:instruction_table::operation	file:	access:private
+in	graph.h	/^    proxy<std::vector<node*> > in;$/;"	m	class:graph_generic::node	access:public
+in	interface.snapshot	/^        std::vector<node*> in; \/\/$/;"	m	class:graph::node	file:	access:private
+in	interface.snapshot	/^    std::vector<node*> in;$/;"	m	class:graph	file:	access:private
+in_types	interface.snapshot	/^        std::vector<T::tid_t> in_types;$/;"	m	class:instruction_table::operation	file:	access:private
+index	graph.h	/^    int index;$/;"	m	class:graph_generic::node	access:private
+index	graph.h	/^  int index;$/;"	m	class:graph_generic	access:private
+init	model.h	/^    static void init();$/;"	p	class:model_empty	access:protected	signature:()
+init	model.h	/^void model_empty::init()$/;"	f	class:model_empty	signature:()
+init	model_bobox.h	/^    static void init();$/;"	p	class:model_bobox	access:protected	signature:()
+init	model_bobox.h	/^void model_bobox::init()$/;"	f	class:model_bobox	signature:()
+init	model_simple.h	/^    static void init();$/;"	p	class:model_simple	access:protected	signature:()
+init	model_simple.h	/^void model_simple::init()$/;"	f	class:model_simple	signature:()
+init_map	graph.h	/^    bool init_map(int size);$/;"	p	class:graph_generic::node	access:private	signature:(int size)
+init_map	graph.h	/^bool graph_generic<T,I,directed,O...>::node::init_map(int size)$/;"	f	class:graph_generic::node	signature:(int size)
+input_list_$1	.model_bobox.h.swp	/^/;"	v
+instab	ctb.h	/^  IT instab;$/;"	m	class:ctb	access:private
+instab	generator.h	/^  proxy<const IT&> instab;$/;"	m	class:generator	access:public
+instab	instructions.h	/^    std::map<typename T::opid_t, operation*> instab;$/;"	m	class:instruction_table	access:private
+instab	interface.snapshot	/^        const instruction_table<T>& instab;$/;"	m	class:graph::node	file:	access:private
+instab	interface.snapshot	/^    const instruction_table<T>& instab;$/;"	m	class:graph	file:	access:private
+instab	interface.snapshot	/^    instruction_table<T> instab;$/;"	m	class:backend	file:	access:private
+instab	interface.snapshot	/^    std::map<T::opid_t, operation> instab;$/;"	m	class:instruction_table	file:	access:private
+instruction	instructions.h	/^          instruction(int wi, int wo, const std::string& c);$/;"	p	struct:instruction_table::operation::instruction	access:public	signature:(int wi, int wo, const std::string& c)
+instruction	instructions.h	/^        struct instruction \/\/holds information for generation$/;"	s	class:instruction_table::operation	access:private
+instruction	instructions.h	/^instruction_table<T>::operation::instruction::instruction(int wi, int wo, const std::string& c) : code(c), width_in(wi), width_out(wo), width(std::max(wi, wo))$/;"	f	class:instruction_table::operation::instruction	signature:(int wi, int wo, const std::string& c)
+instruction	interface.snapshot	/^        struct instruction \/\/holds information for generation$/;"	s	class:instruction_table::operation	file:	access:private
+instruction_table	instructions.h	/^class instruction_table \/\/provides transition from opcode to abstract operation$/;"	c
+instruction_table	interface.snapshot	/^class instruction_table \/\/provides transition from opcode to abstract operation$/;"	c	file:
+instruction_table::addoperation	instructions.h	/^    operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f) ;$/;"	p	class:instruction_table	access:public	signature:(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)
+instruction_table::addoperation	instructions.h	/^typename instruction_table<T>::operation_t& instruction_table<T>::addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)$/;"	f	class:instruction_table	signature:(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)
+instruction_table::addtype	instructions.h	/^    type_t& addtype(typename T::tid_t t) ;$/;"	p	class:instruction_table	access:public	signature:(typename T::tid_t t)
+instruction_table::addtype	instructions.h	/^typename instruction_table<T>::type_t& instruction_table<T>::addtype(typename T::tid_t t)$/;"	f	class:instruction_table	signature:(typename T::tid_t t)
+instruction_table::clear	instructions.h	/^    void clear() ; $/;"	p	class:instruction_table	access:public	signature:()
+instruction_table::clear	instructions.h	/^void instruction_table<T>::clear()  $/;"	f	class:instruction_table	signature:()
+instruction_table::dec	instructions.h	/^    const operation_t& dec(typename T::opid_t type) const ;$/;"	p	class:instruction_table	access:public	signature:(typename T::opid_t type) const
+instruction_table::dec	instructions.h	/^const typename instruction_table<T>::operation_t& instruction_table<T>::dec(typename T::opid_t type)   const$/;"	f	class:instruction_table	signature:(typename T::opid_t type) const
+instruction_table::dec	interface.snapshot	/^    operation_t dec(T::opid_t type);$/;"	p	class:instruction_table	file:	access:public	signature:(T::opid_t type)
+instruction_table::dectype	instructions.h	/^    const type_t& dectype(typename T::tid_t type) const ;$/;"	p	class:instruction_table	access:public	signature:(typename T::tid_t type) const
+instruction_table::dectype	instructions.h	/^const typename instruction_table<T>::type_t& instruction_table<T>::dectype(typename T::tid_t type)   const$/;"	f	class:instruction_table	signature:(typename T::tid_t type) const
+instruction_table::instab	instructions.h	/^    std::map<typename T::opid_t, operation*> instab;$/;"	m	class:instruction_table	access:private
+instruction_table::instab	interface.snapshot	/^    std::map<T::opid_t, operation> instab;$/;"	m	class:instruction_table	file:	access:private
+instruction_table::operation	instructions.h	/^    class operation \/\/holds general operation traits$/;"	c	class:instruction_table	access:private
+instruction_table::operation	interface.snapshot	/^    class operation \/\/holds general operation traits$/;"	c	class:instruction_table	file:	access:private
+instruction_table::operation::addcode	instructions.h	/^        void addcode(int wi, int wo, const std::string& c);$/;"	p	class:instruction_table::operation	access:public	signature:(int wi, int wo, const std::string& c)
+instruction_table::operation::addcode	instructions.h	/^void instruction_table<T>::operation::addcode(int wi, int wo, const std::string& c)$/;"	f	class:instruction_table::operation	signature:(int wi, int wo, const std::string& c)
+instruction_table::operation::flags	instructions.h	/^        typename T::flag_t flags;$/;"	m	class:instruction_table::operation	access:private
+instruction_table::operation::flags	interface.snapshot	/^        T::flag_t flags;$/;"	m	class:instruction_table::operation	file:	access:private
+instruction_table::operation::get_conv_string	instructions.h	/^        bool get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& type)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int from, int to, std::string& c1, std::string& c2, std::string& type) const
+instruction_table::operation::get_conv_string	instructions.h	/^bool instruction_table<T>::operation::get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& t) const$/;"	f	class:instruction_table::operation	signature:(int from, int to, std::string& c1, std::string& c2, std::string& t) const
+instruction_table::operation::get_conversion_graph	instructions.h	/^        const typename type::graph_distance_t& get_conversion_graph() const;$/;"	p	class:instruction_table::operation	access:public	signature:() const
+instruction_table::operation::get_conversion_graph	instructions.h	/^const typename instruction_table<T>::type::graph_distance_t& instruction_table<T>::operation::get_conversion_graph() const$/;"	f	class:instruction_table::operation	signature:() const
+instruction_table::operation::get_in_count	interface.snapshot	/^        int get_in_count();$/;"	p	class:instruction_table::operation	file:	access:public	signature:()
+instruction_table::operation::get_in_type	interface.snapshot	/^        T::tid_t get_in_type(int);$/;"	p	class:instruction_table::operation	file:	access:public	signature:(int)
+instruction_table::operation::get_max_width	instructions.h	/^        int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int bound = 1000000000, int* in = NULL, int* out = NULL) const
+instruction_table::operation::get_max_width	instructions.h	/^int instruction_table<T>::operation::get_max_width(int bound, int* in, int* out)const$/;"	f	class:instruction_table::operation	signature:(int bound, int* in, int* out) const
+instruction_table::operation::get_max_width	interface.snapshot	/^        int get_max_width();$/;"	p	class:instruction_table::operation	file:	access:public	signature:()
+instruction_table::operation::get_op_string	instructions.h	/^        std::string get_op_string(int w = -1)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int w = -1) const
+instruction_table::operation::get_op_string	instructions.h	/^std::string instruction_table<T>::operation::get_op_string(int w)const$/;"	f	class:instruction_table::operation	signature:(int w) const
+instruction_table::operation::get_out_type	interface.snapshot	/^        T::tid_t get_out_type();$/;"	p	class:instruction_table::operation	file:	access:public	signature:()
+instruction_table::operation::get_type_string	instructions.h	/^        std::string get_type_string(int w = -1)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int w = -1) const
+instruction_table::operation::get_type_string	instructions.h	/^std::string instruction_table<T>::operation::get_type_string(int w)const$/;"	f	class:instruction_table::operation	signature:(int w) const
+instruction_table::operation::imbue_width	instructions.h	/^        void imbue_width(int w)const;$/;"	p	class:instruction_table::operation	access:public	signature:(int w) const
+instruction_table::operation::imbue_width	instructions.h	/^void instruction_table<T>::operation::imbue_width(int w)const$/;"	f	class:instruction_table::operation	signature:(int w) const
+instruction_table::operation::imbue_width	interface.snapshot	/^        void imbue_width(int w);$/;"	p	class:instruction_table::operation	file:	access:public	signature:(int w)
+instruction_table::operation::imbued_width	instructions.h	/^        mutable int imbued_width;$/;"	m	class:instruction_table::operation	access:private
+instruction_table::operation::imbued_width	interface.snapshot	/^        mutable int imbued_width;$/;"	m	class:instruction_table::operation	file:	access:private
+instruction_table::operation::in_types	interface.snapshot	/^        std::vector<T::tid_t> in_types;$/;"	m	class:instruction_table::operation	file:	access:private
+instruction_table::operation::instruction	instructions.h	/^        struct instruction \/\/holds information for generation$/;"	s	class:instruction_table::operation	access:private
+instruction_table::operation::instruction	interface.snapshot	/^        struct instruction \/\/holds information for generation$/;"	s	class:instruction_table::operation	file:	access:private
+instruction_table::operation::instruction::code	instructions.h	/^          std::string code;$/;"	m	struct:instruction_table::operation::instruction	access:public
+instruction_table::operation::instruction::instruction	instructions.h	/^          instruction(int wi, int wo, const std::string& c);$/;"	p	struct:instruction_table::operation::instruction	access:public	signature:(int wi, int wo, const std::string& c)
+instruction_table::operation::instruction::instruction	instructions.h	/^instruction_table<T>::operation::instruction::instruction(int wi, int wo, const std::string& c) : code(c), width_in(wi), width_out(wo), width(std::max(wi, wo))$/;"	f	class:instruction_table::operation::instruction	signature:(int wi, int wo, const std::string& c)
+instruction_table::operation::instruction::width	instructions.h	/^          int width;$/;"	m	struct:instruction_table::operation::instruction	access:public
+instruction_table::operation::instruction::width	interface.snapshot	/^          int width;$/;"	m	struct:instruction_table::operation::instruction	file:	access:public
+instruction_table::operation::instruction::width_in	instructions.h	/^          int width_in;$/;"	m	struct:instruction_table::operation::instruction	access:public
+instruction_table::operation::instruction::width_in	interface.snapshot	/^          int width_in;$/;"	m	struct:instruction_table::operation::instruction	file:	access:public
+instruction_table::operation::instruction::width_out	instructions.h	/^          int width_out;$/;"	m	struct:instruction_table::operation::instruction	access:public
+instruction_table::operation::instruction::width_out	interface.snapshot	/^          int width_out;$/;"	m	struct:instruction_table::operation::instruction	file:	access:public
+instruction_table::operation::is	instructions.h	/^        bool is(typename T::flag_t f) const ;$/;"	p	class:instruction_table::operation	access:public	signature:(typename T::flag_t f) const
+instruction_table::operation::is	instructions.h	/^bool instruction_table<T>::operation::is(typename T::flag_t f) const $/;"	f	class:instruction_table::operation	signature:(typename T::flag_t f) const
+instruction_table::operation::is	interface.snapshot	/^        bool is(T::flag_t f);$/;"	p	class:instruction_table::operation	file:	access:public	signature:(T::flag_t f)
+instruction_table::operation::mytype	instructions.h	/^        type* mytype;$/;"	m	class:instruction_table::operation	access:private
+instruction_table::operation::operation	instructions.h	/^        operation(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t);$/;"	p	class:instruction_table::operation	access:public	signature:(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t)
+instruction_table::operation::operation	instructions.h	/^instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t) : opid(i), mytype(t), out_type(ot), flags(f)$/;"	f	class:instruction_table::operation	signature:(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t)
+instruction_table::operation::opid	instructions.h	/^        typename T::opid_t opid;$/;"	m	class:instruction_table::operation	access:private
+instruction_table::operation::out_type	instructions.h	/^        typename T::tid_t out_type;$/;"	m	class:instruction_table::operation	access:private
+instruction_table::operation::out_type	interface.snapshot	/^        T::tid_t out_type;$/;"	m	class:instruction_table::operation	file:	access:private
+instruction_table::operation::typetab	interface.snapshot	/^        const typetable_t& typetab;$/;"	m	class:instruction_table::operation	file:	access:private
+instruction_table::operation::versions	instructions.h	/^        std::vector<instruction> versions;$/;"	m	class:instruction_table::operation	access:private
+instruction_table::operation::versions	interface.snapshot	/^        std::vector<instruction> versions;$/;"	m	class:instruction_table::operation	file:	access:private
+instruction_table::operation_t	instructions.h	/^    typedef operation operation_t; $/;"	t	class:instruction_table	access:public
+instruction_table::operation_t	interface.snapshot	/^    typedef const operation& operation_t;$/;"	t	class:instruction_table	file:	access:public
+instruction_table::type	instructions.h	/^    struct type$/;"	s	class:instruction_table	access:private
+instruction_table::type	interface.snapshot	/^    struct type $/;"	s	class:instruction_table	file:	access:private
+instruction_table::type::addcode_conversion	instructions.h	/^      void addcode_conversion(int from, int to, const std::string& c1, const std::string& c2);$/;"	p	struct:instruction_table::type	access:public	signature:(int from, int to, const std::string& c1, const std::string& c2)
+instruction_table::type::addcode_conversion	instructions.h	/^void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2)$/;"	f	class:instruction_table::type	signature:(int in, int out, const std::string& c1,const std::string& c2)
+instruction_table::type::addcode_type	instructions.h	/^      void addcode_type(int w, const std::string& c) ;$/;"	p	struct:instruction_table::type	access:public	signature:(int w, const std::string& c)
+instruction_table::type::addcode_type	instructions.h	/^void instruction_table<T>::type::addcode_type(int w, const std::string& c)$/;"	f	class:instruction_table::type	signature:(int w, const std::string& c)
+instruction_table::type::conversion	instructions.h	/^      struct conversion$/;"	s	struct:instruction_table::type	access:public
+instruction_table::type::conversion::code1	instructions.h	/^        std::string code1;$/;"	m	struct:instruction_table::type::conversion	access:public
+instruction_table::type::conversion::code2	instructions.h	/^        std::string code2;$/;"	m	struct:instruction_table::type::conversion	access:public
+instruction_table::type::conversion::conversion	instructions.h	/^        conversion(int in, int out, const std::string& c1, const std::string& c2);$/;"	p	struct:instruction_table::type::conversion	access:public	signature:(int in, int out, const std::string& c1, const std::string& c2)
+instruction_table::type::conversion::conversion	instructions.h	/^instruction_table<T>::type::conversion::conversion(int i, int o, const std::string& c1, const std::string& c2) : width_in(i), width_out(o), code1(c1), code2(c2)$/;"	f	class:instruction_table::type::conversion	signature:(int i, int o, const std::string& c1, const std::string& c2)
+instruction_table::type::conversion::width_in	instructions.h	/^        int width_in;$/;"	m	struct:instruction_table::type::conversion	access:public
+instruction_table::type::conversion::width_out	instructions.h	/^        int width_out;$/;"	m	struct:instruction_table::type::conversion	access:public
+instruction_table::type::conversions	instructions.h	/^      std::vector<conversion> conversions;$/;"	m	struct:instruction_table::type	access:public
+instruction_table::type::distances	instructions.h	/^      mutable graph_distance_t distances;$/;"	m	struct:instruction_table::type	access:public
+instruction_table::type::graph_distance_t	instructions.h	/^      typedef graph_generic<dummy, int, false, type> graph_distance_t;$/;"	t	struct:instruction_table::type	access:public
+instruction_table::type::type_version	instructions.h	/^      struct type_version$/;"	s	struct:instruction_table::type	access:public
+instruction_table::type::type_version::code	instructions.h	/^        std::string code;$/;"	m	struct:instruction_table::type::type_version	access:public
+instruction_table::type::type_version::type_version	instructions.h	/^        type_version(int w, const std::string& c);$/;"	p	struct:instruction_table::type::type_version	access:public	signature:(int w, const std::string& c)
+instruction_table::type::type_version::type_version	instructions.h	/^instruction_table<T>::type::type_version::type_version(int w, const std::string& c) : width(w), code(c)$/;"	f	class:instruction_table::type::type_version	signature:(int w, const std::string& c)
+instruction_table::type::type_version::width	instructions.h	/^        int width;$/;"	m	struct:instruction_table::type::type_version	access:public
+instruction_table::type::versions	instructions.h	/^      std::vector<type_version> versions;$/;"	m	struct:instruction_table::type	access:public
+instruction_table::type_t	instructions.h	/^    typedef type type_t; $/;"	t	class:instruction_table	access:public
+instruction_table::typetab	instructions.h	/^    typetable_t typetab;$/;"	m	class:instruction_table	access:private
+instruction_table::typetab	interface.snapshot	/^    typetable_t typetab;$/;"	m	class:instruction_table	file:	access:private
+instruction_table::typetable_t	instructions.h	/^    typedef std::map<typename T::tid_t, type*> typetable_t;$/;"	t	class:instruction_table	access:private
+instruction_table::typetable_t	interface.snapshot	/^    typedef std::map<T::tid_t, type> typetable_t;$/;"	t	class:instruction_table	file:	access:private
+instruction_table_default	instructions.h	/^typedef instruction_table<traits> instruction_table_default;$/;"	t
+is	instructions.h	/^        bool is(typename T::flag_t f) const ;$/;"	p	class:instruction_table::operation	access:public	signature:(typename T::flag_t f) const
+is	instructions.h	/^bool instruction_table<T>::operation::is(typename T::flag_t f) const $/;"	f	class:instruction_table::operation	signature:(typename T::flag_t f) const
+is	interface.snapshot	/^        bool is(T::flag_t f);$/;"	p	class:instruction_table::operation	file:	access:public	signature:(T::flag_t f)
+last_terminated	writer.h	/^    bool last_terminated;$/;"	m	class:writer	access:private
+lastpass	graph.h	/^    int lastpass;$/;"	m	class:graph_generic::node	access:private
+list_concat	writer.h	/^    writer& list_concat(const std::string& delim);$/;"	p	class:writer	access:public	signature:(const std::string& delim)
+list_concat	writer.h	/^writer<M> &writer<M>::list_concat(const std::string& delim)$/;"	f	class:writer	signature:(const std::string& delim)
+load_graph	xmlloader.h	/^    static void load_graph(G& graph, std::string filename) ;$/;"	p	class:xml_loader	access:public	signature:(G& graph, std::string filename)
+load_graph	xmlloader.h	/^void xml_loader<T,G,IT>::load_graph(G& graph, std::string filename)$/;"	f	class:xml_loader	signature:(G& graph, std::string filename)
+load_instab	ctb.h	/^  template<typename...P> void load_instab(P...params) ;$/;"	p	class:ctb	access:public	signature:(P....params)
+load_instab	ctb.h	/^template<typename...P> void ctb<T,IT,L>::load_instab(P...params)$/;"	f	class:ctb	signature:(P....params)
+load_instab	xmlloader.h	/^    static void load_instab(IT& instab, std::string filename) ;$/;"	p	class:xml_loader	access:public	signature:(IT& instab, std::string filename)
+load_instab	xmlloader.h	/^void xml_loader<T,G,IT>::load_instab(IT& instab, std::string filename)$/;"	f	class:xml_loader	signature:(IT& instab, std::string filename)
+loader_default	xmlloader.h	/^typedef xml_loader<traits, generator_default, instruction_table_default> loader_default;$/;"	t
+longest	.exrc	/^set completeopt=menuone,menu,longest,preview$/;"	v
+m5	graph.o	/^|8/;"	v
+main	interface.snapshot	/^int main()$/;"	f	signature:()
+main	main.cpp	/^int main(int count, char**args)$/;"	f	signature:(int count, char**args)
+main	output/test_simple.cpp	/^int main()$/;"	f	signature:()
+main	test.cpp	/^int main()$/;"	f	signature:()
+map	graph.h	/^    mutable std::vector<route> map;$/;"	m	class:graph_generic::node	access:private
+mark	.exrc	/^set foldopen=block,hor,mark,percent,quickfix,tag,undo$/;"	v
+maxarity	datatypes.h	/^  static const int maxarity = 3;$/;"	m	struct:traits	access:public
+maxarity	interface.snapshot	/^  const int maxarity = 3;$/;"	m	struct:traits	file:	access:public
+me	generator.h	/^    node_t* me;$/;"	m	class:generator::data_t	access:private
+menu	.exrc	/^set completeopt=menuone,menu,longest,preview$/;"	v
+model	templates/bobox_box.h	/^  typedef generic_model<$1_box> model;$/;"	t	class:$1_box	access:public
+model_bobox	model_bobox.h	/^class model_bobox : public model_empty$/;"	c	inherits:model_empty
+model_bobox::alias	model_bobox.h	/^    static std::string alias(const std::string& a);$/;"	p	class:model_bobox	access:public	signature:(const std::string& a)
+model_bobox::alias	model_bobox.h	/^std::string model_bobox::alias(const std::string& a)$/;"	f	class:model_bobox	signature:(const std::string& a)
+model_bobox::aliases	model_bobox.h	/^    static aliastab_t aliases;$/;"	m	class:model_bobox	access:protected
+model_bobox::aliases	model_bobox.h	/^std::map<std::string, std::string> model_bobox::aliases;$/;"	m	class:model_bobox
+model_bobox::aliastab_t	model_bobox.h	/^    typedef std::map<std::string, std::string> aliastab_t;$/;"	t	class:model_bobox	access:protected
+model_bobox::generate	model_bobox.h	/^    template <class G> static writer<model_bobox> generate(int m,  G& generator, std::string name);$/;"	p	class:model_bobox	access:public	signature:(int m, G& generator, std::string name)
+model_bobox::generate	model_bobox.h	/^writer<model_bobox> model_bobox::generate(int max_granularity, G& generator, std::string name)$/;"	f	class:model_bobox	signature:(int max_granularity, G& generator, std::string name)
+model_bobox::init	model_bobox.h	/^    static void init();$/;"	p	class:model_bobox	access:protected	signature:()
+model_bobox::init	model_bobox.h	/^void model_bobox::init()$/;"	f	class:model_bobox	signature:()
+model_empty	model.h	/^class model_empty$/;"	c
+model_empty::alias	model.h	/^    static std::string alias(const std::string& a);$/;"	p	class:model_empty	access:public	signature:(const std::string& a)
+model_empty::alias	model.h	/^std::string model_empty::alias(const std::string& a)$/;"	f	class:model_empty	signature:(const std::string& a)
+model_empty::aliases	model.h	/^    static aliastab_t aliases;$/;"	m	class:model_empty	access:protected
+model_empty::aliases	model.h	/^std::map<std::string, std::string> model_empty::aliases;$/;"	m	class:model_empty
+model_empty::aliastab_t	model.h	/^    typedef std::map<std::string, std::string> aliastab_t;$/;"	t	class:model_empty	access:protected
+model_empty::generate	model.h	/^    template <class G> static writer<model_empty> generate(int m,  G& graph, std::string name) ;$/;"	p	class:model_empty	access:public	signature:(int m, G& graph, std::string name)
+model_empty::generate	model.h	/^writer<model_empty> model_empty::generate(int max_granularity, G& graph, std::string name)$/;"	f	class:model_empty	signature:(int max_granularity, G& graph, std::string name)
+model_empty::init	model.h	/^    static void init();$/;"	p	class:model_empty	access:protected	signature:()
+model_empty::init	model.h	/^void model_empty::init()$/;"	f	class:model_empty	signature:()
+model_simple	model_simple.h	/^class model_simple : public model_empty$/;"	c	inherits:model_empty
+model_simple::alias	model_simple.h	/^    static std::string alias(const std::string& a);$/;"	p	class:model_simple	access:public	signature:(const std::string& a)
+model_simple::alias	model_simple.h	/^std::string model_simple::alias(const std::string& a)$/;"	f	class:model_simple	signature:(const std::string& a)
+model_simple::aliases	model_simple.h	/^    static aliastab_t aliases;$/;"	m	class:model_simple	access:protected
+model_simple::aliases	model_simple.h	/^std::map<std::string, std::string> model_simple::aliases;$/;"	m	class:model_simple
+model_simple::aliastab_t	model_simple.h	/^    typedef std::map<std::string, std::string> aliastab_t;$/;"	t	class:model_simple	access:protected
+model_simple::generate	model_simple.h	/^    template <class G> static writer<model_simple> generate(int m,  G& generator, std::string name);$/;"	p	class:model_simple	access:public	signature:(int m, G& generator, std::string name)
+model_simple::generate	model_simple.h	/^writer<model_simple> model_simple::generate(int granularity, G& generator, std::string name)$/;"	f	class:model_simple	signature:(int granularity, G& generator, std::string name)
+model_simple::init	model_simple.h	/^    static void init();$/;"	p	class:model_simple	access:protected	signature:()
+model_simple::init	model_simple.h	/^void model_simple::init()$/;"	f	class:model_simple	signature:()
+mytype	instructions.h	/^        type* mytype;$/;"	m	class:instruction_table::operation	access:private
+n	graph.o	/^n,J/;"	v
+n	graph.o	/^n,J/;"	v
+newid	graph.h	/^    int newid();$/;"	p	class:graph_generic::node	access:private	signature:()
+newid	graph.h	/^int graph_generic<T,I,directed,O...>::node::newid()$/;"	f	class:graph_generic::node	signature:()
+newname	generator.h	/^    std::string newname(std::string tag) ;$/;"	p	class:generator::data_t	access:private	signature:(std::string tag)
+newname	generator.h	/^std::string generator<T,IT>::data_t::newname(std::string tag)$/;"	f	class:generator::data_t	signature:(std::string tag)
+node	graph.h	/^    template <typename... L> node(I vid, int index, L&&... p);$/;"	p	class:graph_generic::node	access:private	signature:(I vid, int index, L&&... p)
+node	graph.h	/^  class node$/;"	c	class:graph_generic	access:private
+node	graph.h	/^graph_generic<T,I,directed,O...>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)$/;"	f	class:graph_generic::node	signature:(I vid, int idx, L&&... p)
+node	interface.snapshot	/^        node(const instruction_table<T>& i, T::opid_t, T::param_t...p); $/;"	p	class:graph::node	file:	access:public	signature:(const instruction_table<T>& i, T::opid_t, T::param_t...p)
+node	interface.snapshot	/^    class node$/;"	c	class:graph	file:	access:private
+node_t	generator.h	/^  typedef typename graph_t::node_t node_t;$/;"	t	class:generator	access:private
+node_t	graph.h	/^  typedef node node_t;$/;"	t	class:graph_generic	access:public
+op	interface.snapshot	/^        T::opid_t op;$/;"	m	class:graph::node	file:	access:private
+op_t	generator.h	/^  typedef typename IT::operation_t op_t;$/;"	t	class:generator	access:private
+operation	instructions.h	/^        operation(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t);$/;"	p	class:instruction_table::operation	access:public	signature:(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t)
+operation	instructions.h	/^    class operation \/\/holds general operation traits$/;"	c	class:instruction_table	access:private
+operation	instructions.h	/^instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t) : opid(i), mytype(t), out_type(ot), flags(f)$/;"	f	class:instruction_table::operation	signature:(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t)
+operation	interface.snapshot	/^    class operation \/\/holds general operation traits$/;"	c	class:instruction_table	file:	access:private
+operation_t	instructions.h	/^    typedef operation operation_t; $/;"	t	class:instruction_table	access:public
+operation_t	interface.snapshot	/^    typedef const operation& operation_t;$/;"	t	class:instruction_table	file:	access:public
+operator !=	writer.h	/^    bool operator!=(const writer& w) ;$/;"	p	class:writer	access:public	signature:(const writer& w)
+operator !=	writer.h	/^bool writer<M>::operator!=(const writer& w)$/;"	f	class:writer	signature:(const writer& w)
+operator *	datatypes.h	/^    const T& operator*() const { return data; }$/;"	f	class:proxy_	access:public	signature:() const
+operator ->	datatypes.h	/^    const result_t* operator->() const { return &data; }$/;"	f	class:proxy_	access:public	signature:() const
+operator ->	graph.h	/^    proxy<T,O...>& operator->();$/;"	p	class:graph_generic::node	access:public	signature:()
+operator ->	graph.h	/^graph_generic<T,I,directed,O...>::node::proxy<T,O...>& graph_generic<T,I,directed,O...>::node::operator->()  $/;"	f	class:graph_generic::node	signature:()
+operator =	.writer.h.swp	/^/;"	p	file:	signature:( const writer<N>& w)
+operator =	.writer.h.swp	/^/;"	p	file:	signature:( writer<N>&& w)
+operator =	writer.h	/^    template<typename N> writer& operator=( const writer<N>& w) ;$/;"	p	class:writer	access:public	signature:( const writer<N>& w)
+operator =	writer.h	/^    template<typename N> writer& operator=( writer<N>&& w) ;$/;"	p	class:writer	access:public	signature:( writer<N>&& w)
+operator =	writer.h	/^writer<M>& writer<M>::operator=(const writer<N>& w)$/;"	f	class:writer	signature:(const writer<N>& w)
+operator =	writer.h	/^writer<M>& writer<M>::operator=(writer<N>&& w)$/;"	f	class:writer	signature:(writer<N>&& w)
+operator ==	writer.h	/^    bool operator==(const writer& w) ;$/;"	p	class:writer	access:public	signature:(const writer& w)
+operator ==	writer.h	/^bool writer<M>::operator==(const writer& w)$/;"	f	class:writer	signature:(const writer& w)
+operator []	datatypes.h	/^    template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }$/;"	f	class:proxy_	access:public	signature:(U args) const
+operator const T&	datatypes.h	/^    operator const T&() const { return data; }$/;"	f	class:proxy_	access:public	signature:() const
+opid	generator.h	/^    proxy<id_t> opid;$/;"	m	class:generator::data_t	access:public
+opid	instructions.h	/^        typename T::opid_t opid;$/;"	m	class:instruction_table::operation	access:private
+opid_t	datatypes.h	/^  typedef std::string opid_t;$/;"	t	struct:traits	access:public
+opid_t	interface.snapshot	/^  typedef std::string opid_t;$/;"	t	struct:traits	file:	access:public
+out	graph.h	/^    proxy<std::vector<node*> > out;$/;"	m	class:graph_generic::node	access:public
+out	graph.h	/^  proxy<vertex_list_t> out;$/;"	m	class:graph_generic	access:public
+out	interface.snapshot	/^        std::vector<node*> out;$/;"	m	class:graph::node	file:	access:private
+out	interface.snapshot	/^    std::vector<node*> out;$/;"	m	class:graph	file:	access:private
+out_type	instructions.h	/^        typename T::tid_t out_type;$/;"	m	class:instruction_table::operation	access:private
+out_type	interface.snapshot	/^        T::tid_t out_type;$/;"	m	class:instruction_table::operation	file:	access:private
+outpath	ctb.h	/^  std::string outpath;$/;"	m	class:ctb	access:private
+output_list_$1	.model_bobox.h.swp	/^/;"	v
+output_list_$1	templates/bobox_send.h	/^send_poisoned( outputs::output_list_$1());$/;"	p	signature:()
+p	backend.o	/^p	Î/;"	v
+p	backend.o	/^p\/â/;"	v
+p	backend.o	/^p¢?/;"	v
+p	graph.o	/^pƒÔ/;"	v
+p	graph.o	/^pš5/;"	v
+p	graph.o	/^pß$/;"	v
+p	graph.o	/^pé1/;"	v
+param_t	datatypes.h	/^  typedef int param_t;$/;"	t	struct:traits	access:public
+param_t	generator.h	/^  typedef typename T::param_t param_t;$/;"	t	class:generator	access:private
+param_t	interface.snapshot	/^  typedef int param_t;$/;"	t	struct:traits	file:	access:public
+parameters	generator.h	/^    std::vector<param_t> parameters;$/;"	m	class:generator::data_t	access:private
+parameters	interface.snapshot	/^        std::vector<T::param_t> parameters; \/\/e.g. an index of an input list of a load instruction$/;"	m	class:graph::node	file:	access:private
+parent	graph.h	/^    graph_generic* parent;$/;"	m	class:graph_generic::node	access:private
+pass	datatypes.h	/^template <typename ... T> void pass(T...)$/;"	f	signature:(T....)
+percent	.exrc	/^set foldopen=block,hor,mark,percent,quickfix,tag,undo$/;"	v
+pos_in_$1	templates/bobox_decl_in.h	/^unsigned pos_in_$1 = 0;$/;"	v
+pos_in_$1	templates/simple_decl_in.h	/^unsigned pos_in_$1 = 0;$/;"	v
+pos_out_$1	templates/bobox_decl_out.h	/^unsigned pos_out_$1 = 0;$/;"	v
+pos_out_$1	templates/simple_decl_out.h	/^unsigned pos_out_$1 = 0;$/;"	v
+print	model.h	/^template<bool dolars = false, typename ... Types> std::string print (const Types&... params)$/;"	f	signature:(const Types&.... params)
+print	writer.h	/^    template<bool dolars = false, typename ... Types> writer& print (const std::string& format, const Types&... params) ; \/\/should accept at least string and another writer class e.g. print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	p	class:writer	access:public	signature:(const std::string& format, const Types&... params)
+print	writer.h	/^    template<bool dolars = false, typename ... Types> writer& print (const writer& format, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const writer& format, const Types&... params)
+print	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::print(const std::string& format, const Types&... params)  \/\/print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	f	class:writer	signature:(const std::string& format, const Types&... params)
+print	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::print(const writer& format, const Types&... params)$/;"	f	class:writer	signature:(const writer& format, const Types&... params)
+print_internal	writer.h	/^    template<bool dolars, typename ... Types> writer& print_internal (const std::string& format, const Types&... params) ; \/\/should accept at least string and another writer class e.g. print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	p	class:writer	access:private	signature:(const std::string& format, const Types&... params)
+print_internal	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::print_internal(const std::string& format, const Types&... params)  \/\/print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	f	class:writer	signature:(const std::string& format, const Types&... params)
+printf	interface.snapshot	/^    template<typename Types... Types> void printf(std::string format, Types...); \/\/should accept at least string and another writer class e.g. printf("a[%1] = a[%1] %% %2", i, j) -> "a[i] = a[i] % j$/;"	p	class:writer	file:	access:public	signature:(std::string format, Types...)
+printf	writer.h	/^    template<bool dolars = false, typename ... Types> writer& printf(const std::string& filename, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const std::string& filename, const Types&... params)
+printf	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::printf(const std::string& filename, const Types&... params)$/;"	f	class:writer	signature:(const std::string& filename, const Types&... params)
+printnth	writer.h	/^    template <typename ... Types> void printnth(int i, const int& num, const Types&... params) ;$/;"	p	class:writer	access:private	signature:(int i, const int& num, const Types&... params)
+printnth	writer.h	/^    template <typename ... Types> void printnth(int i, const std::string& str, const Types&... params) ;$/;"	p	class:writer	access:private	signature:(int i, const std::string& str, const Types&... params)
+printnth	writer.h	/^    template <typename ... Types> void printnth(int i, const writer& wrt, const Types&... params) ;$/;"	p	class:writer	access:private	signature:(int i, const writer& wrt, const Types&... params)
+printnth	writer.h	/^    void printnth(int i);$/;"	p	class:writer	access:private	signature:(int i)
+printnth	writer.h	/^template <typename ... Types> void writer<M>::printnth(int i, const int& num, const Types&... params)$/;"	f	class:writer	signature:(int i, const int& num, const Types&... params)
+printnth	writer.h	/^template <typename ... Types> void writer<M>::printnth(int i, const std::string& str, const Types&... params)$/;"	f	class:writer	signature:(int i, const std::string& str, const Types&... params)
+printnth	writer.h	/^template <typename ... Types> void writer<M>::printnth(int i, const writer& wrt, const Types&... params)$/;"	f	class:writer	signature:(int i, const writer& wrt, const Types&... params)
+printnth	writer.h	/^void writer<M>::printnth(int i)$/;"	f	class:writer	signature:(int i)
+printoptions	.exrc	/^set printoptions=paper:letter$/;"	v
+process	ctb.h	/^  template<typename M, typename...P> void process(std::string name, P...params) ;$/;"	p	class:ctb	access:public	signature:(std::string name, P...params)
+process	ctb.h	/^void ctb<T,IT,L>::process(std::string name, P...params)$/;"	f	class:ctb	signature:(std::string name, P...params)
+process	interface.snapshot	/^        void process(writer&, int width);$/;"	p	class:graph::node	file:	access:public	signature:(writer&, int width)
+process	writer.h	/^    void process(int& pos, const std::string& format) ;$/;"	p	class:writer	access:private	signature:(int& pos, const std::string& format)
+process	writer.h	/^void writer<M>::process(int& pos, const std::string& format)$/;"	f	class:writer	signature:(int& pos, const std::string& format)
+processed_in_$1	templates/simple_decl_in.h	/^unsigned processed_in_$1 = 0;$/;"	v
+processed_out_$1	templates/simple_decl_out.h	/^unsigned processed_out_$1 = 0;$/;"	v
+proxy_	datatypes.h	/^    template <typename...L> proxy_(L&&... args) : data((std::forward<L>(args))...){}$/;"	f	class:proxy_	access:public	signature:(L&&.... args)
+proxy_	datatypes.h	/^class proxy_ {$/;"	c
+proxy_::br_ct	datatypes.h	/^    template <typename U> struct br_ct  { typedef decltype(std::declval<T const>()[std::declval<U>()]) type; };$/;"	s	class:proxy_	access:private
+proxy_::br_ct::type	datatypes.h	/^    template <typename U> struct br_ct  { typedef decltype(std::declval<T const>()[std::declval<U>()]) type; };$/;"	t	struct:proxy_::br_ct	access:public
+proxy_::br_t	datatypes.h	/^    template <typename U> struct br_t { typedef decltype(std::declval<T      >()[std::declval<U>()]) type; };$/;"	s	class:proxy_	access:private
+proxy_::br_t::type	datatypes.h	/^    template <typename U> struct br_t { typedef decltype(std::declval<T      >()[std::declval<U>()]) type; };$/;"	t	struct:proxy_::br_t	access:public
+proxy_::data	datatypes.h	/^    T data;$/;"	m	class:proxy_	access:private
+proxy_::operator *	datatypes.h	/^    const T& operator*() const { return data; }$/;"	f	class:proxy_	access:public	signature:() const
+proxy_::operator ->	datatypes.h	/^    const result_t* operator->() const { return &data; }$/;"	f	class:proxy_	access:public	signature:() const
+proxy_::operator []	datatypes.h	/^    template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }$/;"	f	class:proxy_	access:public	signature:(U args) const
+proxy_::operator const T&	datatypes.h	/^    operator const T&() const { return data; }$/;"	f	class:proxy_	access:public	signature:() const
+proxy_::proxy_	datatypes.h	/^    template <typename...L> proxy_(L&&... args) : data((std::forward<L>(args))...){}$/;"	f	class:proxy_	access:public	signature:(L&&.... args)
+proxy_::r	datatypes.h	/^    const result_t& r() const { return data; }$/;"	f	class:proxy_	access:public	signature:() const
+proxy_::result_t	datatypes.h	/^    typedef typename std::remove_reference<T>::type result_t;$/;"	t	class:proxy_	access:private
+proxy_::rw	datatypes.h	/^    result_t& rw() { return data; }$/;"	f	class:proxy_	access:private	signature:()
+push	writer.h	/^    template<bool dolars = false, typename ... Types, typename Type> writer& push  (const Type& format, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const Type& format, const Types&... params)
+push	writer.h	/^template<bool dolars , typename ... Types, typename Type> writer<M>& writer<M>::push(const Type& format, const Types&... params)$/;"	f	class:writer	signature:(const Type& format, const Types&... params)
+push_params	generator.h	/^    template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);$/;"	p	class:generator::data_t	access:private	signature:(P&&, Ps&&... params)
+push_params	generator.h	/^    void push_params();$/;"	p	class:generator::data_t	access:private	signature:()
+push_params	generator.h	/^void generator<T,IT>::data_t::push_params()$/;"	f	class:generator::data_t	signature:()
+push_params	generator.h	/^void generator<T,IT>::data_t::push_params(P&& p, Ps&&...params)$/;"	f	class:generator::data_t	signature:(P&& p, Ps&&...params)
+pushf	writer.h	/^    template<bool dolars = false, typename ... Types> writer& pushf (const std::string& filename, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const std::string& filename, const Types&... params)
+pushf	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::pushf(const std::string& filename, const Types&... params)$/;"	f	class:writer	signature:(const std::string& filename, const Types&... params)
+quickfix	.exrc	/^set foldopen=block,hor,mark,percent,quickfix,tag,undo$/;"	v
+r	datatypes.h	/^    const result_t& r() const { return data; }$/;"	f	class:proxy_	access:public	signature:() const
+r5	graph.o	/^|8/;"	v
+result_t	datatypes.h	/^    typedef typename std::remove_reference<T>::type result_t;$/;"	t	class:proxy_	access:private
+route	graph.h	/^    typedef std::pair<node*, int> route;$/;"	t	class:graph_generic::node	access:private
+rw	datatypes.h	/^    result_t& rw() { return data; }$/;"	f	class:proxy_	access:private	signature:()
+s	graph.o	/^/;"	v
+self_test	ctb.h	/^  static void self_test() ;$/;"	p	class:ctb	access:public	signature:()
+self_test	ctb.h	/^void ctb<T,IT,L>::self_test()$/;"	f	class:ctb	signature:()
+self_test	graph.h	/^  static void self_test();$/;"	p	class:graph_generic	access:public	signature:()
+self_test	graph.h	/^void graph_generic<T,I,directed,O...>::self_test()$/;"	f	class:graph_generic	signature:()
+self_test	writer.h	/^    static void self_test() ;$/;"	p	class:writer	access:public	signature:()
+self_test	writer.h	/^void writer<M>::self_test()$/;"	f	class:writer	signature:()
+self_test	xmlloader.h	/^    static void self_test() ;$/;"	p	class:xml_loader	access:public	signature:()
+self_test	xmlloader.h	/^void xml_loader<T,G,IT>::self_test()$/;"	f	class:xml_loader	signature:()
+set_output_path	ctb.h	/^  void set_output_path(std::string);$/;"	p	class:ctb	access:public	signature:(std::string)
+set_output_path	ctb.h	/^void ctb<T,IT,L>::set_output_path(std::string p)$/;"	f	class:ctb	signature:(std::string p)
+size_in_$1	templates/bobox_decl_in.h	/^unsigned size_in_$1 = 0;$/;"	v
+size_in_$1	templates/simple_decl_in.h	/^unsigned size_in_$1 = 0;$/;"	v
+size_out_$1	templates/bobox_decl_out.h	/^unsigned size_out_$1 = 0;$/;"	v
+size_out_$1	templates/simple_decl_out.h	/^unsigned size_out_$1 = 0;$/;"	v
+t	graph.o	/^|8/;"	v
+tag	.exrc	/^set foldopen=block,hor,mark,percent,quickfix,tag,undo$/;"	v
+test_body	output-manual/graph.h	/^void test_body()$/;"	f	signature:()
+test_body	output/test_simple.h	/^void test_body()$/;"	f	signature:()
+test_body	templates/simple_box.h	/^void test_body() $/;"	f	signature:()
+tid_t	datatypes.h	/^  typedef std::string tid_t;$/;"	t	struct:traits	access:public
+tid_t	interface.snapshot	/^  typedef std::string tid_t;$/;"	t	struct:traits	file:	access:public
+to_writer	writer.h	/^    const writer<M>& to_writer(const writer<M>& r);$/;"	p	class:writer	access:private	signature:(const writer<M>& r)
+to_writer	writer.h	/^    writer<M> to_writer(const int& r);$/;"	p	class:writer	access:private	signature:(const int& r)
+to_writer	writer.h	/^    writer<M> to_writer(const std::string& r);$/;"	p	class:writer	access:private	signature:(const std::string& r)
+to_writer	writer.h	/^const writer<M>& writer<M>::to_writer(const writer<M>& r)$/;"	f	class:writer	signature:(const writer<M>& r)
+to_writer	writer.h	/^writer<M> writer<M>::to_writer(const int& r)$/;"	f	class:writer	signature:(const int& r)
+to_writer	writer.h	/^writer<M> writer<M>::to_writer(const std::string& r)$/;"	f	class:writer	signature:(const std::string& r)
+traits	datatypes.h	/^struct traits$/;"	s
+traits	interface.snapshot	/^struct traits$/;"	s	file:
+traits::flag_t	datatypes.h	/^  typedef int flag_t;$/;"	t	struct:traits	access:public
+traits::maxarity	datatypes.h	/^  static const int maxarity = 3;$/;"	m	struct:traits	access:public
+traits::maxarity	interface.snapshot	/^  const int maxarity = 3;$/;"	m	struct:traits	file:	access:public
+traits::opid_t	datatypes.h	/^  typedef std::string opid_t;$/;"	t	struct:traits	access:public
+traits::opid_t	interface.snapshot	/^  typedef std::string opid_t;$/;"	t	struct:traits	file:	access:public
+traits::param_t	datatypes.h	/^  typedef int param_t;$/;"	t	struct:traits	access:public
+traits::param_t	interface.snapshot	/^  typedef int param_t;$/;"	t	struct:traits	file:	access:public
+traits::tid_t	datatypes.h	/^  typedef std::string tid_t;$/;"	t	struct:traits	access:public
+traits::tid_t	interface.snapshot	/^  typedef std::string tid_t;$/;"	t	struct:traits	file:	access:public
+traits::vid_t	datatypes.h	/^  typedef std::string vid_t;$/;"	t	struct:traits	access:public
+traits::vid_t	interface.snapshot	/^  typedef std::string vid_t;$/;"	t	struct:traits	file:	access:public
+trim	writer.h	/^    void trim() ;$/;"	p	class:writer	access:private	signature:()
+trim	writer.h	/^void writer<M>::trim()$/;"	f	class:writer	signature:()
+type	datatypes.h	/^    template <typename U> struct br_ct  { typedef decltype(std::declval<T const>()[std::declval<U>()]) type; };$/;"	t	struct:proxy_::br_ct	access:public
+type	datatypes.h	/^    template <typename U> struct br_t { typedef decltype(std::declval<T      >()[std::declval<U>()]) type; };$/;"	t	struct:proxy_::br_t	access:public
+type	datatypes.h	/^    typedef T type;$/;"	t	struct:friend_maker	access:public
+type	instructions.h	/^    struct type$/;"	s	class:instruction_table	access:private
+type	interface.snapshot	/^    struct type $/;"	s	class:instruction_table	file:	access:private
+type_t	instructions.h	/^    typedef type type_t; $/;"	t	class:instruction_table	access:public
+type_version	instructions.h	/^        type_version(int w, const std::string& c);$/;"	p	struct:instruction_table::type::type_version	access:public	signature:(int w, const std::string& c)
+type_version	instructions.h	/^      struct type_version$/;"	s	struct:instruction_table::type	access:public
+type_version	instructions.h	/^instruction_table<T>::type::type_version::type_version(int w, const std::string& c) : width(w), code(c)$/;"	f	class:instruction_table::type::type_version	signature:(int w, const std::string& c)
+typetab	instructions.h	/^    typetable_t typetab;$/;"	m	class:instruction_table	access:private
+typetab	interface.snapshot	/^        const typetable_t& typetab;$/;"	m	class:instruction_table::operation	file:	access:private
+typetab	interface.snapshot	/^    typetable_t typetab;$/;"	m	class:instruction_table	file:	access:private
+typetable_t	instructions.h	/^    typedef std::map<typename T::tid_t, type*> typetable_t;$/;"	t	class:instruction_table	access:private
+typetable_t	interface.snapshot	/^    typedef std::map<T::tid_t, type> typetable_t;$/;"	t	class:instruction_table	file:	access:private
+update_distances	graph.h	/^    bool update_distances();$/;"	p	class:graph_generic::node	access:private	signature:()
+update_distances	graph.h	/^bool graph_generic<T,I,directed,O...>::node::update_distances()$/;"	f	class:graph_generic::node	signature:()
+versions	instructions.h	/^        std::vector<instruction> versions;$/;"	m	class:instruction_table::operation	access:private
+versions	instructions.h	/^      std::vector<type_version> versions;$/;"	m	struct:instruction_table::type	access:public
+versions	interface.snapshot	/^        std::vector<instruction> versions;$/;"	m	class:instruction_table::operation	file:	access:private
+vertex_container_t	graph.h	/^  typedef std::map<I, node*> vertex_container_t;$/;"	t	class:graph_generic	access:private
+vertex_list_t	graph.h	/^  typedef std::vector<node*> vertex_list_t;$/;"	t	class:graph_generic	access:private
+verts	graph.h	/^  proxy<vertex_container_t> verts;$/;"	m	class:graph_generic	access:public
+verts	interface.snapshot	/^    std::map<T::vid_t, node*> verts;$/;"	m	class:graph	file:	access:private
+vid_t	datatypes.h	/^  typedef std::string vid_t;$/;"	t	struct:traits	access:public
+vid_t	generator.h	/^  typedef typename T::vid_t vid_t;$/;"	t	class:generator	access:private
+vid_t	interface.snapshot	/^  typedef std::string vid_t;$/;"	t	struct:traits	file:	access:public
+vim73	.exrc	/^set runtimepath=~\/.vim,\/var\/lib\/vim\/addons,\/usr\/share\/vim\/vimfiles,\/usr\/share\/vim\/vim73,\/usr\/share\/vim\/vimfiles\/after,\/var\/lib\/vim\/addons\/after,~\/.vim\/after$/;"	v
+vimfiles	.exrc	/^set runtimepath=~\/.vim,\/var\/lib\/vim\/addons,\/usr\/share\/vim\/vimfiles,\/usr\/share\/vim\/vim73,\/usr\/share\/vim\/vimfiles\/after,\/var\/lib\/vim\/addons\/after,~\/.vim\/after$/;"	v
+width	instructions.h	/^          int width;$/;"	m	struct:instruction_table::operation::instruction	access:public
+width	instructions.h	/^        int width;$/;"	m	struct:instruction_table::type::type_version	access:public
+width	interface.snapshot	/^          int width;$/;"	m	struct:instruction_table::operation::instruction	file:	access:public
+width_in	instructions.h	/^          int width_in;$/;"	m	struct:instruction_table::operation::instruction	access:public
+width_in	instructions.h	/^        int width_in;$/;"	m	struct:instruction_table::type::conversion	access:public
+width_in	interface.snapshot	/^          int width_in;$/;"	m	struct:instruction_table::operation::instruction	file:	access:public
+width_out	instructions.h	/^          int width_out;$/;"	m	struct:instruction_table::operation::instruction	access:public
+width_out	instructions.h	/^        int width_out;$/;"	m	struct:instruction_table::type::conversion	access:public
+width_out	interface.snapshot	/^          int width_out;$/;"	m	struct:instruction_table::operation::instruction	file:	access:public
+write	writer.h	/^    void write(std::ostream& ss) ;$/;"	p	class:writer	access:public	signature:(std::ostream& ss)
+write	writer.h	/^void writer<M>::write(std::ostream& ss) $/;"	f	class:writer	signature:(std::ostream& ss)
+write_file	interface.snapshot	/^    void write_file(std::string filename); $/;"	p	class:writer	file:	access:public	signature:(std::string filename)
+write_file	writer.h	/^    void write_file(std::string filename) ; $/;"	p	class:writer	access:public	signature:(std::string filename)
+write_file	writer.h	/^void writer<M>::write_file(std::string filename)  $/;"	f	class:writer	signature:(std::string filename)
+write_indent	writer.h	/^    void write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak) ;$/;"	p	class:writer	access:private	signature:(std::ostream& ss, const std::string& str, int indent, int nobreak)
+write_indent	writer.h	/^void writer<M>::write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak)$/;"	f	class:writer	signature:(std::ostream& ss, const std::string& str, int indent, int nobreak)
+write_std	writer.h	/^    void write_std() ; $/;"	p	class:writer	access:public	signature:()
+write_std	writer.h	/^void writer<M>::write_std()  $/;"	f	class:writer	signature:()
+write_str	writer.h	/^    std::string write_str() ;$/;"	p	class:writer	access:public	signature:()
+write_str	writer.h	/^std::string writer<M>::write_str()$/;"	f	class:writer	signature:()
+writer	.writer.h.swp	/^/;"	v
+writer	interface.snapshot	/^class writer \/\/will provide methods for outputting the generated code - e.g. autoindent, output to files or stdout$/;"	c	file:
+writer	writer.h	/^    template<typename N> writer(const writer<N>& writer);$/;"	p	class:writer	access:public	signature:(const writer<N>& writer)
+writer	writer.h	/^    template<typename N> writer(writer<N>&& writer);$/;"	p	class:writer	access:public	signature:(writer<N>&& writer)
+writer	writer.h	/^    writer();$/;"	p	class:writer	access:public	signature:()
+writer	writer.h	/^    writer(const std::initializer_list<std::string>& init);\/*this one is literal! no parsing here*\/$/;"	p	class:writer	access:public	signature:(const std::initializer_list<std::string>& init)
+writer	writer.h	/^class writer \/\/will provide methods for outputting the generated code - e.g. autoindent, output to files or stdout$/;"	c
+writer	writer.h	/^writer<M>::writer() : data(), last_terminated(true)$/;"	f	class:writer	signature:()
+writer	writer.h	/^writer<M>::writer(const std::initializer_list<std::string>& init) : data(init), last_terminated(true)\/*the strings are taken literary - id est not formatted*\/$/;"	f	class:writer	signature:(const std::initializer_list<std::string>& init)
+writer	writer.h	/^writer<M>::writer(const writer<N>& w) : data(w.data), last_terminated(w.last_terminated)$/;"	f	class:writer	signature:(const writer<N>& w)
+writer	writer.h	/^writer<M>::writer(writer<N>&& w) : data(std::move(w.data)), last_terminated(w.last_terminated)$/;"	f	class:writer	signature:(writer<N>&& w)
+writer::add	writer.h	/^    void add(std::string&& str, bool terminal) ;$/;"	p	class:writer	access:private	signature:(std::string&& str, bool terminal)
+writer::add	writer.h	/^void writer<M>::add(std::string&& str, bool terminal)$/;"	f	class:writer	signature:(std::string&& str, bool terminal)
+writer::append	writer.h	/^    template <bool dolars = false, typename Types> writer<M>& append(Types str) ;$/;"	p	class:writer	access:public	signature:(Types str)
+writer::append	writer.h	/^template <bool dolars , typename Types> writer<M>& writer<M>::append(Types str)$/;"	f	class:writer	signature:(Types str)
+writer::clear	writer.h	/^    void clear() ;$/;"	p	class:writer	access:public	signature:()
+writer::clear	writer.h	/^void writer<M>::clear()  $/;"	f	class:writer	signature:()
+writer::data	interface.snapshot	/^    std::vector<std::string> data; $/;"	m	class:writer	file:	access:private
+writer::data	writer.h	/^    std::vector<std::string> data;$/;"	m	class:writer	access:private
+writer::from_file	writer.h	/^    static std::string from_file(const std::string& filename);$/;"	p	class:writer	access:public	signature:(const std::string& filename)
+writer::from_file	writer.h	/^std::string writer<M>::from_file(const std::string& filename)$/;"	f	class:writer	signature:(const std::string& filename)
+writer::get_name	writer.h	/^    std::string get_name(const std::string& format, int& pos);$/;"	p	class:writer	access:private	signature:(const std::string& format, int& pos)
+writer::get_name	writer.h	/^std::string writer<M>::get_name(const std::string& format, int& pos)$/;"	f	class:writer	signature:(const std::string& format, int& pos)
+writer::get_string	writer.h	/^    std::string get_string() const; \/\/does handle dolars internally!$/;"	p	class:writer	access:private	signature:() const
+writer::get_string	writer.h	/^std::string writer<M>::get_string() const$/;"	f	class:writer	signature:() const
+writer::getnth	writer.h	/^    template <typename ... Types> const writer<M>& getnth(int i, const writer<M>& a, const Types&... params);$/;"	p	class:writer	access:private	signature:(int i, const writer<M>& a, const Types&... params)
+writer::getnth	writer.h	/^    writer<M> getnth(int i);$/;"	p	class:writer	access:private	signature:(int i)
+writer::getnth	writer.h	/^template <typename ... Types> const writer<M>& writer<M>::getnth(int i, const writer<M>& a, const Types&... params)$/;"	f	class:writer	signature:(int i, const writer<M>& a, const Types&... params)
+writer::getnth	writer.h	/^writer<M> writer<M>::getnth(int i)$/;"	f	class:writer	signature:(int i)
+writer::last_terminated	writer.h	/^    bool last_terminated;$/;"	m	class:writer	access:private
+writer::list_concat	writer.h	/^    writer& list_concat(const std::string& delim);$/;"	p	class:writer	access:public	signature:(const std::string& delim)
+writer::list_concat	writer.h	/^writer<M> &writer<M>::list_concat(const std::string& delim)$/;"	f	class:writer	signature:(const std::string& delim)
+writer::operator !=	writer.h	/^    bool operator!=(const writer& w) ;$/;"	p	class:writer	access:public	signature:(const writer& w)
+writer::operator !=	writer.h	/^bool writer<M>::operator!=(const writer& w)$/;"	f	class:writer	signature:(const writer& w)
+writer::operator =	writer.h	/^    template<typename N> writer& operator=( const writer<N>& w) ;$/;"	p	class:writer	access:public	signature:( const writer<N>& w)
+writer::operator =	writer.h	/^    template<typename N> writer& operator=( writer<N>&& w) ;$/;"	p	class:writer	access:public	signature:( writer<N>&& w)
+writer::operator =	writer.h	/^writer<M>& writer<M>::operator=(const writer<N>& w)$/;"	f	class:writer	signature:(const writer<N>& w)
+writer::operator =	writer.h	/^writer<M>& writer<M>::operator=(writer<N>&& w)$/;"	f	class:writer	signature:(writer<N>&& w)
+writer::operator ==	writer.h	/^    bool operator==(const writer& w) ;$/;"	p	class:writer	access:public	signature:(const writer& w)
+writer::operator ==	writer.h	/^bool writer<M>::operator==(const writer& w)$/;"	f	class:writer	signature:(const writer& w)
+writer::print	writer.h	/^    template<bool dolars = false, typename ... Types> writer& print (const std::string& format, const Types&... params) ; \/\/should accept at least string and another writer class e.g. print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	p	class:writer	access:public	signature:(const std::string& format, const Types&... params)
+writer::print	writer.h	/^    template<bool dolars = false, typename ... Types> writer& print (const writer& format, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const writer& format, const Types&... params)
+writer::print	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::print(const std::string& format, const Types&... params)  \/\/print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	f	class:writer	signature:(const std::string& format, const Types&... params)
+writer::print	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::print(const writer& format, const Types&... params)$/;"	f	class:writer	signature:(const writer& format, const Types&... params)
+writer::print_internal	writer.h	/^    template<bool dolars, typename ... Types> writer& print_internal (const std::string& format, const Types&... params) ; \/\/should accept at least string and another writer class e.g. print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	p	class:writer	access:private	signature:(const std::string& format, const Types&... params)
+writer::print_internal	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::print_internal(const std::string& format, const Types&... params)  \/\/print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j$/;"	f	class:writer	signature:(const std::string& format, const Types&... params)
+writer::printf	interface.snapshot	/^    template<typename Types... Types> void printf(std::string format, Types...); \/\/should accept at least string and another writer class e.g. printf("a[%1] = a[%1] %% %2", i, j) -> "a[i] = a[i] % j$/;"	p	class:writer	file:	access:public	signature:(std::string format, Types...)
+writer::printf	writer.h	/^    template<bool dolars = false, typename ... Types> writer& printf(const std::string& filename, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const std::string& filename, const Types&... params)
+writer::printf	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::printf(const std::string& filename, const Types&... params)$/;"	f	class:writer	signature:(const std::string& filename, const Types&... params)
+writer::printnth	writer.h	/^    template <typename ... Types> void printnth(int i, const int& num, const Types&... params) ;$/;"	p	class:writer	access:private	signature:(int i, const int& num, const Types&... params)
+writer::printnth	writer.h	/^    template <typename ... Types> void printnth(int i, const std::string& str, const Types&... params) ;$/;"	p	class:writer	access:private	signature:(int i, const std::string& str, const Types&... params)
+writer::printnth	writer.h	/^    template <typename ... Types> void printnth(int i, const writer& wrt, const Types&... params) ;$/;"	p	class:writer	access:private	signature:(int i, const writer& wrt, const Types&... params)
+writer::printnth	writer.h	/^    void printnth(int i);$/;"	p	class:writer	access:private	signature:(int i)
+writer::printnth	writer.h	/^template <typename ... Types> void writer<M>::printnth(int i, const int& num, const Types&... params)$/;"	f	class:writer	signature:(int i, const int& num, const Types&... params)
+writer::printnth	writer.h	/^template <typename ... Types> void writer<M>::printnth(int i, const std::string& str, const Types&... params)$/;"	f	class:writer	signature:(int i, const std::string& str, const Types&... params)
+writer::printnth	writer.h	/^template <typename ... Types> void writer<M>::printnth(int i, const writer& wrt, const Types&... params)$/;"	f	class:writer	signature:(int i, const writer& wrt, const Types&... params)
+writer::printnth	writer.h	/^void writer<M>::printnth(int i)$/;"	f	class:writer	signature:(int i)
+writer::process	writer.h	/^    void process(int& pos, const std::string& format) ;$/;"	p	class:writer	access:private	signature:(int& pos, const std::string& format)
+writer::process	writer.h	/^void writer<M>::process(int& pos, const std::string& format)$/;"	f	class:writer	signature:(int& pos, const std::string& format)
+writer::push	writer.h	/^    template<bool dolars = false, typename ... Types, typename Type> writer& push  (const Type& format, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const Type& format, const Types&... params)
+writer::push	writer.h	/^template<bool dolars , typename ... Types, typename Type> writer<M>& writer<M>::push(const Type& format, const Types&... params)$/;"	f	class:writer	signature:(const Type& format, const Types&... params)
+writer::pushf	writer.h	/^    template<bool dolars = false, typename ... Types> writer& pushf (const std::string& filename, const Types&... params) ;$/;"	p	class:writer	access:public	signature:(const std::string& filename, const Types&... params)
+writer::pushf	writer.h	/^template<bool dolars, typename ... Types> writer<M>& writer<M>::pushf(const std::string& filename, const Types&... params)$/;"	f	class:writer	signature:(const std::string& filename, const Types&... params)
+writer::self_test	writer.h	/^    static void self_test() ;$/;"	p	class:writer	access:public	signature:()
+writer::self_test	writer.h	/^void writer<M>::self_test()$/;"	f	class:writer	signature:()
+writer::to_writer	writer.h	/^    const writer<M>& to_writer(const writer<M>& r);$/;"	p	class:writer	access:private	signature:(const writer<M>& r)
+writer::to_writer	writer.h	/^    writer<M> to_writer(const int& r);$/;"	p	class:writer	access:private	signature:(const int& r)
+writer::to_writer	writer.h	/^    writer<M> to_writer(const std::string& r);$/;"	p	class:writer	access:private	signature:(const std::string& r)
+writer::to_writer	writer.h	/^const writer<M>& writer<M>::to_writer(const writer<M>& r)$/;"	f	class:writer	signature:(const writer<M>& r)
+writer::to_writer	writer.h	/^writer<M> writer<M>::to_writer(const int& r)$/;"	f	class:writer	signature:(const int& r)
+writer::to_writer	writer.h	/^writer<M> writer<M>::to_writer(const std::string& r)$/;"	f	class:writer	signature:(const std::string& r)
+writer::trim	writer.h	/^    void trim() ;$/;"	p	class:writer	access:private	signature:()
+writer::trim	writer.h	/^void writer<M>::trim()$/;"	f	class:writer	signature:()
+writer::write	writer.h	/^    void write(std::ostream& ss) ;$/;"	p	class:writer	access:public	signature:(std::ostream& ss)
+writer::write	writer.h	/^void writer<M>::write(std::ostream& ss) $/;"	f	class:writer	signature:(std::ostream& ss)
+writer::write_file	interface.snapshot	/^    void write_file(std::string filename); $/;"	p	class:writer	file:	access:public	signature:(std::string filename)
+writer::write_file	writer.h	/^    void write_file(std::string filename) ; $/;"	p	class:writer	access:public	signature:(std::string filename)
+writer::write_file	writer.h	/^void writer<M>::write_file(std::string filename)  $/;"	f	class:writer	signature:(std::string filename)
+writer::write_indent	writer.h	/^    void write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak) ;$/;"	p	class:writer	access:private	signature:(std::ostream& ss, const std::string& str, int indent, int nobreak)
+writer::write_indent	writer.h	/^void writer<M>::write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak)$/;"	f	class:writer	signature:(std::ostream& ss, const std::string& str, int indent, int nobreak)
+writer::write_std	writer.h	/^    void write_std() ; $/;"	p	class:writer	access:public	signature:()
+writer::write_std	writer.h	/^void writer<M>::write_std()  $/;"	f	class:writer	signature:()
+writer::write_str	writer.h	/^    std::string write_str() ;$/;"	p	class:writer	access:public	signature:()
+writer::write_str	writer.h	/^std::string writer<M>::write_str()$/;"	f	class:writer	signature:()
+writer::writer	writer.h	/^    template<typename N> writer(const writer<N>& writer);$/;"	p	class:writer	access:public	signature:(const writer<N>& writer)
+writer::writer	writer.h	/^    template<typename N> writer(writer<N>&& writer);$/;"	p	class:writer	access:public	signature:(writer<N>&& writer)
+writer::writer	writer.h	/^    writer();$/;"	p	class:writer	access:public	signature:()
+writer::writer	writer.h	/^    writer(const std::initializer_list<std::string>& init);\/*this one is literal! no parsing here*\/$/;"	p	class:writer	access:public	signature:(const std::initializer_list<std::string>& init)
+writer::writer	writer.h	/^writer<M>::writer() : data(), last_terminated(true)$/;"	f	class:writer	signature:()
+writer::writer	writer.h	/^writer<M>::writer(const std::initializer_list<std::string>& init) : data(init), last_terminated(true)\/*the strings are taken literary - id est not formatted*\/$/;"	f	class:writer	signature:(const std::initializer_list<std::string>& init)
+writer::writer	writer.h	/^writer<M>::writer(const writer<N>& w) : data(w.data), last_terminated(w.last_terminated)$/;"	f	class:writer	signature:(const writer<N>& w)
+writer::writer	writer.h	/^writer<M>::writer(writer<N>&& w) : data(std::move(w.data)), last_terminated(w.last_terminated)$/;"	f	class:writer	signature:(writer<N>&& w)
+writer_default	model.h	/^typedef writer<model_empty> writer_default;$/;"	t
+xml_loader	xmlloader.h	/^class xml_loader$/;"	c
+xml_loader::getanystr	xmlloader.h	/^    static std::string getanystr(tinyxml2::XMLNode * node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::getanystr	xmlloader.h	/^std::string xml_loader<T,G,IT>::getanystr(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::getint	xmlloader.h	/^    static int getint(tinyxml2::XMLNode * node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::getint	xmlloader.h	/^int xml_loader<T,G,IT>::getint(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::getstr	xmlloader.h	/^    static std::string getstr(tinyxml2::XMLNode * node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::getstr	xmlloader.h	/^std::string xml_loader<T,G,IT>::getstr(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::hasval	xmlloader.h	/^    static bool hasval(tinyxml2::XMLNode* node, std::string name);$/;"	p	class:xml_loader	access:private	signature:(tinyxml2::XMLNode* node, std::string name)
+xml_loader::hasval	xmlloader.h	/^bool xml_loader<T,G,IT>::hasval(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
+xml_loader::load_graph	xmlloader.h	/^    static void load_graph(G& graph, std::string filename) ;$/;"	p	class:xml_loader	access:public	signature:(G& graph, std::string filename)
+xml_loader::load_graph	xmlloader.h	/^void xml_loader<T,G,IT>::load_graph(G& graph, std::string filename)$/;"	f	class:xml_loader	signature:(G& graph, std::string filename)
+xml_loader::load_instab	xmlloader.h	/^    static void load_instab(IT& instab, std::string filename) ;$/;"	p	class:xml_loader	access:public	signature:(IT& instab, std::string filename)
+xml_loader::load_instab	xmlloader.h	/^void xml_loader<T,G,IT>::load_instab(IT& instab, std::string filename)$/;"	f	class:xml_loader	signature:(IT& instab, std::string filename)
+xml_loader::self_test	xmlloader.h	/^    static void self_test() ;$/;"	p	class:xml_loader	access:public	signature:()
+xml_loader::self_test	xmlloader.h	/^void xml_loader<T,G,IT>::self_test()$/;"	f	class:xml_loader	signature:()
+y	ctb	/^/;"	v
