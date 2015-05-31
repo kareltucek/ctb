@@ -31,13 +31,13 @@ private:
     template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
     void push_params();
     std::string newname(std::string tag) ;
+    template <class W> writer<model_empty> get_acces(int width, int gran, W& w);
   public:
     template <typename A> using proxy = proxy_<A,data_t>;
     proxy<const op_t&> op;
     proxy<id_t> opid;
 
     template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
-    template <class W> writer<model_empty> get_acces(int width, int gran, W& w);
     template <class W> void generate(int granularity, W& w);
     int get_inout_pos() const;
   };
@@ -52,7 +52,7 @@ public:
   void addedge(vid_t aid, vid_t bid, int b_argpos) ;
 
   template <class W> void generate(int granularity, W& w) ;
-  int get_width(int upperbound = 10000000) ;
+  int get_broadest(int upperbound = 10000000) ;
 };
 
 typedef generator<traits, instruction_table_default> generator_default; 
@@ -219,7 +219,7 @@ std::string generator<T,IT>::data_t::newname(std::string tag)
 }
 
 template <class T, class IT>
-int generator<T,IT>::get_width(int upperbound)
+int generator<T,IT>::get_broadest(int upperbound)
 {
   int w = 0;
   if(graph->out->empty())

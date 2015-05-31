@@ -40,7 +40,7 @@ void ctb<T,IT,L>::process(std::string name, P...params)
 {
   generator<T,IT> g(instab);
   L::load_graph(g, params...);
-  auto m = M::generate(g.get_width(), g, name);
+  auto m = M::generate(g.get_broadest(), g, name);
   m.write_file(outpath+"/"+name+".h");
 }
 
