@@ -7,7 +7,7 @@ alternative mirror is at http://github.com/kareltucek/ctb
 About
 =====
 
-Ctb is a library which provides a system for conversion of a nonsequenced intermediate code representation of some pipeline into its realization on some target platform. The motivation is converting a graph representation of a CIL code to vectorized c++ modules which could then run in the bobox paralel environment (ctb = CIL to Bobox). 
+Ctb provides a system for conversion of a nonsequenced intermediate code representation of some pipeline into its realization on some target platform. The current motivation is converting a graph representation of a CIL code to vectorized c++ modules which could then run in the bobox paralel environment (ctb = CIL to Bobox). 
 
 Installation/Usage
 ==================
