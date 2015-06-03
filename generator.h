@@ -126,11 +126,11 @@ namespace ctb
       for(int i = 0; i < granularity/myin; i++)
       {
         if(op->is(fINPUT))
-          w.print("$input_code;", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), get_inout_pos(), ARG(1), ARG(2), ARG(3));
+          w.print("$inputcode;", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), get_inout_pos(), ARG(1), ARG(2), ARG(3));
         else if(op->is(fOUTPUT))
-          w.print("$output_code;", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), get_inout_pos(), ARG(1), ARG(2), ARG(3));
+          w.print("$outputcode;", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), get_inout_pos(), ARG(1), ARG(2), ARG(3));
         else
-          w.print("$inner_code", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), 0              , ARG(1), ARG(2), ARG(3));
+          w.print("$innercode", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), 0              , ARG(1), ARG(2), ARG(3));
       }
     }
 
@@ -157,8 +157,8 @@ namespace ctb
             {
               for(int i = 0; i < granularity/itr.first; i++)
               {
-                w.print("$conversion_code", t, W().print(acces, i*itr.first      ), c1, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
-                w.print("$conversion_code", t, W().print(acces, i*itr.first+width), c2, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                w.print("$conversioncode", t, W().print(acces, i*itr.first      ), c1, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                w.print("$conversioncode", t, W().print(acces, i*itr.first+width), c2, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
               }
               return acces;
             }
@@ -166,7 +166,7 @@ namespace ctb
             {
               for(int i = 0; i < granularity/width; i++)
               {
-                w.print("$conversion_code", t, W().print(acces, i*width          ), c1, get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                w.print("$conversioncode", t, W().print(acces, i*width          ), c1, get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
               }
               return acces;
             }

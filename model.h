@@ -53,9 +53,10 @@ namespace ctb
       return;
 
     //these are the basic defines for internal code generation i.e. obligatory ones
-    ADD("inner_code", "$type $name = $operation;");
-    ADD("output_code", "$operation;");
-    ADD("input_code", "$type $name = $operation;");
+    ADD("innercode", "$type $name = $operation;");
+    ADD("outputcode", "$operation;");
+    ADD("inputcode", "$type $name = $operation;");
+    ADD("conversioncode", "$type $name = $operation;");
 
     ADD("type", "$1");
     ADD("name", "$2");
