@@ -19,7 +19,7 @@ namespace ctb
    *   - operations
    *     operation represents a logical operation such as addition
    *     - instructions
-   *     instruction structure represents realization of its parent operation on data of some length
+   *       instruction structure represents realization of its parent operation on data of some length
    *     e.g. '$arg1 + $arg2'
    *   - types
    *     type represents again a logical type sucha as an integer
@@ -32,14 +32,14 @@ namespace ctb
    * \endcode
    *
    * All 'code' fields are supposed to be in form of rhs expressions, which are later substitued into abbreviations specified by the model_empty class (or its descendants). For special purposes there may later be a 'custom_code' field introduced, which will allow specification of the full code on user side. All code fields have a shell like expansion format defined by the writer class with abbreviations provided by the model hierarchy. At the time of writting this, the following abbreviations are available in code generation:
-   *  $type      - e.g. 'int'
-   *  $name      - name generated for the variable
-   *  $operation - operation::instruction::code
-   *  $cindex    - for input or output node this is the serial number of this node (e.g. id of the input list which is associated with the instruction in question)
-   *  $arg1      - access code obtained 'from the input edges'...
-   *  $arg2
-   *  $arg3
-   *  $vindex    - index of the generated code. E.g. for instruction width = 4 and data granularity 16 the generator will be called in order with this set to 0, 4, 8 and 12
+   *  - $type      - e.g. 'int'
+   *  - $name      - name generated for the variable
+   *  - $operation - operation::instruction::code
+   *  - $cindex    - for input or output node this is the serial number of this node (e.g. id of the input list which is associated with the instruction in question)
+   *  - $arg1      - access code obtained 'from the input edges'...
+   *  - $arg2
+   *  - $arg3
+   *  - $vindex    - index of the generated code. E.g. for instruction width = 4 and data granularity 16 the generator will be called in order with this set to 0, 4, 8 and 12
    *
    *  The input interface consists of the instruction_table::addtype and the instruction_table::add_operation create new operation/type with specified id and return a reference to it, which then can be used to fill in code snippets for realization of the code/snippets.
    *

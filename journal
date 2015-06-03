@@ -41,13 +41,14 @@ New problem has occured with the right hand dollar sign. It will have to be reso
 Thu May 14 12:30:39 CEST 2015
 Today I have split the original grap into generator and graph class. For this I have created a proxy class wrapper, which allows read-only access to foreign classes and write access to owners of an object. 
 
+Wed Jun  3 10:02:58 CEST 2015
+In the past two weeks I implemented a conversion path search and wrote some documentation.
 
 // TODO
-conversions - find nontrivial conversion path
-output node ordering
+//conversions - find nontrivial conversion path -implemented
+//output node ordering - dropped
 control flow support
 
 // TODO - minors
 general conversion interface
-optimize SSE
 

@@ -17,9 +17,9 @@ namespace ctb
    *
    * See the ctb::self_test() method for example usage.
    *
-   * There is also default method for parsing commandline options.
+   * There is also a default method for commandline option parsing.
    *
-   * Template parameters are a trait class, which specifies mostly internal id types, an instruction table class and a loader class. The following interfaces may be defined by user.
+   * Template parameters are a trait class, which specifies mostly internal id types, an instruction table class and a loader class. 
    * */
   template <class T, class IT, class L>
     class ctb 

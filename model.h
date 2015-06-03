@@ -9,11 +9,11 @@ namespace ctb
 {
 
   /**
-   * Model represents an output environment. It provide a means of separating muptiple layers of code generation abstraction. This class should be an ancestor of every model since it defines an abstract wrapper around the internal implementation.
+   * Model represents an output environment. It provides a means of separating muptiple layers of code generation abstraction. This class should be an ancestor of every model since it defines an abstract wrapper around the internal implementation.
    *
    * First thing it provides is an alias mechanism, which serves as a plugin to the writer class (which takes care of composing all strings together). 
    *
-   * Second thing defined in the model is a generation class. This one is supposed to direct the topmost layer of code generation, which is taking care of composition of code templates. It is provided an instance of a generator for generation of the actual code realization.
+   * Second thing defined in the model is a generation method. This one is supposed to direct the topmost level of code generation, which is taking care of composition of code templates. It is provided an instance of a generator for generation of the actual code realization.
    * */
 
   class model_empty
