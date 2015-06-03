@@ -2,6 +2,8 @@
 
 int main(int count, char**args)
 {
+  using namespace ctb;
+
   ctb_default b;
   try
   {

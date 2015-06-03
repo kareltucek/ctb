@@ -3,6 +3,8 @@
 
 int main()
 {
+  using namespace ctb;
+
   graph_default::self_test();
   writer_default::self_test();
   loader_default::self_test();
