@@ -4,7 +4,8 @@
 
 #include "graph.h"
 #include "instructions.h"
-#include "model.h"
+#include "model_maker.h"
+#include "model_generator.h"
 
 namespace ctb
 {
@@ -24,7 +25,7 @@ namespace ctb
         class data_t
         {
           private:
-            typedef std::map<int, writer<model_empty> > acces_map_t;
+            typedef std::map<int, writer<model_generator> > acces_map_t;
 
             node_t* me;
             acces_map_t acces_map;
@@ -33,7 +34,7 @@ namespace ctb
             template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
             void push_params();
             std::string newname(std::string tag) ;
-            template <class W> writer<model_empty> get_acces(int width, int gran, W& w);
+            template <class W> writer<model_generator> get_acces(int width, int gran, W& w);
           public:
             template <typename A> using proxy = proxy_<A,data_t>;
             proxy<const op_t&> op;
@@ -49,6 +50,7 @@ namespace ctb
         proxy<graph_t> graph;
 
         generator(const IT& i);
+        void set_instab(const IT& i);
 
         template <typename...L> void addvert(vid_t v, id_t op, L... p) ;
         void addedge(vid_t aid, vid_t bid, int b_argpos) ;
@@ -65,11 +67,18 @@ namespace ctb
       auto ptr = &instab->dec(op);
       graph.rw().addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
     }
+
   template <class T, class IT>
     template <typename... L>
     generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(*o)
     {
       push_params((std::forward<L>(p))...);
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::set_instab(const IT& i)
+    {
+      instab.rw() = i; 
     }
 
   template <class T, class IT>
@@ -136,7 +145,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    writer<model_empty> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)
+    writer<model_generator> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)
     {
       auto itr = acces_map.find(width);
       if(itr != acces_map.end())

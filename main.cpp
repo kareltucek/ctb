@@ -7,7 +7,7 @@ int main(int count, char**args)
   ctb_default b;
   try
   {
-  b.cmdline(count,args);
+    b.parse_command_stream(std::cin);
   }
   catch(const std::string& str)
   {

@@ -3,9 +3,10 @@ FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -W
 
 CXX=g++11
 
-all : test output/test_simple.h testdir ctb
+all : test output/test_simple.h 
+	#testdir ctb
 
-test : datatypes.h ctb.h instructions.h test.cpp writer.h xmlloader.h graph.h model.h model_simple.h model_bobox.h
+test : datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h model_maker.h model_simple.h model_bobox.h loader_csv.h Makefile
 	${CXX} ${FLAGS} test.cpp -DTEMPLATED -o test -l tinyxml2
 
 

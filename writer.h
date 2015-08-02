@@ -14,7 +14,7 @@
 namespace ctb
 {
   /**
-   * Writer ensures an user-friendly code output environment. It is basically a container of code, which takes care of autoformatting of the code generated and provides a shell-like expansion environment ('a text preprocessor'), which has a printf-like interface. Unlike printf the reference format is '$<number>', so the arguments may be reused and specified in a static order. These abbreviations are expanded on both sides i.e. if it is your goal, you may create an endless loop. 
+   * Writer ensures an user-friendly code output environment. It is basically a container of code, which takes care of autoformatting of the code generated and provides a shell-like expansion environment ('a text preprocessor'), which has a printf-like interface. Unlike printf the reference format is '$<number>', so the arguments may be reused and specified in a static order. These abbreviations are expanded on both sides i.e. in both format string and its argument i.e. if it is your goal, you may create an endless loop. 
    *
    * The writer class is parametrized by a model class, which provides a translation of references of the form '$<name>' to some new format string, which is then resolved recursively within the original context.
    */
@@ -52,6 +52,7 @@ namespace ctb
         writer(const std::initializer_list<std::string>& init);/*this one is literal! no parsing here*/
         template<bool dolars = false, typename ... Types> writer& print (const std::string& format, const Types&... params) ; /**should accept at least string and another writer class e.g. print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j*/
         template<bool dolars = false, typename ... Types> writer& print (const writer& format, const Types&... params) ;
+        template<bool dolars = false, typename ... Types> writer& print (int, const Types&... params) ;
         template<bool dolars = false, typename ... Types> writer& printf(const std::string& filename, const Types&... params) ; /** print, but the first argument is a filename of a file which is to be loaded instead of the format string */
         template<bool dolars = false, typename ... Types, typename Type> writer& push  (const Type& format, const Types&... params) ; /** explicit push on a new line. To be used with list_concat for simple creation of delimited lists.*/
         template<bool dolars = false, typename ... Types> writer& pushf (const std::string& filename, const Types&... params) ; /** pushf is again a file-loaded version of push */
@@ -165,34 +166,42 @@ namespace ctb
       int from = pos;
       while(pos < format.length())
       {
-        switch(format[pos])
+        if(format[pos] == '$')
         {
-          case '$':
-            if(pos == from)
-              break;
+          if(pos == from)
+          {
+            ++pos;
+          }
+          else
+          {
             add(std::move(format.substr(from, pos-from)), false);
             return;
-          case ':':
-            if((pos > 0 && format[pos-1] == ':') || ( format.size() > pos && format[pos+1] == ':'))
-              break;
-          case ';':
-          case '\n':
-          case '\r':
-          case '?':
-            ++pos;
-            add(std::move(format.substr(from, pos-from)), true);
-            return;
-          case '}':
-          case '{':
-            if(pos == from)
+          }
+        }
+        else
+        {
+          bool brbf, braf; //break before, break after
+          M::language::shouldbreak(pos, format, brbf, braf);
+
+          if(brbf) 
+          {
+            if( from == pos)
             {
               last_terminated = true;
-              ++pos;
             }
+            else
+            {
+              add(std::move(format.substr(from, pos-from)), true);
+              return;
+            }
+          }
+          ++pos;
+          if(braf)
+          {
             add(std::move(format.substr(from, pos-from)), true);
             return;
+          }
         }
-        ++pos;
       }
       if(pos != from)
         add(std::move(format.substr(from, pos-from)), false);
@@ -370,6 +379,13 @@ namespace ctb
     }
 
   template <class M>
+    template<bool dolars, typename ... Types> writer<M>& writer<M>::print(int num, const Types&... params)  
+    {
+      print<dolars>(std::to_string(num), params...); 
+      return *this;
+    }
+
+  template <class M>
     template<bool dolars, typename ... Types> writer<M>& writer<M>::print(const std::string& format, const Types&... params)  //print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j
     {
       print_internal<dolars>(format, to_writer(params)...); //the purpose of this circus is not forcing (constant) writers to make several copies during a single call
@@ -447,28 +463,13 @@ namespace ctb
       trim();
       int indent = 0;
       int nobreak = 0;
-      for(const auto& line : data)
+      for(auto itr = data.begin(); itr != data.end(); ++itr)
       {
-        if(line.find("for") == 0 && line.length() > 3 && (line[3] == ' ' || line[3] == '('))
-          nobreak = 2;
-        switch(line[line.length()-1])
-        {
-          case '}':
-            --indent;
-            write_indent(ss, line, indent, nobreak);
-            break;
-          case '{':
-            write_indent(ss, line, indent, nobreak );
-            ++indent;
-            break;
-          case ':':
-            write_indent(ss, line, indent-1, nobreak );
-            break;
-          default:
-            write_indent(ss, line, indent, nobreak );
-            break;
-        }
-        nobreak = 0;
+        int outindent;
+        M::language::shouldindent(*itr, outindent, indent, nobreak);
+        if(nobreak <= 0 && itr + 1 == data.end() && !last_terminated)
+          nobreak = 1;
+        write_indent(ss, *itr, outindent, nobreak);
       }
     }
 

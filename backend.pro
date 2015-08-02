@@ -28,7 +28,10 @@ HEADERS += \
     model_simple.h \
     output/test_simple.h \
     ctb.h \
-    generator.h
+    generator.h \
+    model_generator.h \
+    languages.h \
+    csvloader.h
 
 OTHER_FILES += \
     test

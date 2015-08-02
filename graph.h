@@ -1,4 +1,3 @@
-
 #ifndef GRAPH_GUARD
 #define GRAPH_GUARD
 
@@ -79,8 +78,7 @@ namespace ctb
       g.out.r().front()->crawl_topological([&](node* n){ assert(n->id.r() == results[i++]);});
       g.calculate_distances();
       assert(g.get_dist(1,4) == 2);
-
-
+      //  
       graph_generic<dummy, int, false> h;
       h.addvert(1, false, false);
       h.addvert(2, false, false);
@@ -108,7 +106,7 @@ namespace ctb
       auto vb = verts.r().find(b);
       if(va == verts->end() || vb == verts->end())
         throw "unknown vertex id";
-
+      //  
       if(c != NULL)
         *c = va->second->map[vb->second->index].first->id.r();
       return va->second->map[vb->second->index].second;
@@ -232,7 +230,23 @@ namespace ctb
       crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;} );
     }
 
-
+  /**
+   * g return defines whether a node should be processed at all (prevents recurse if false)(e.g. is supposed to return true once per every pass)
+   * f return defines whether we should enque childs 
+   * recurse  specifies whether we should search parent nodes (ensures topological pass in a dag)
+   * reverse  reverses the direction of everything (usefull only in directed graphs)
+   *
+   * the actual work is supposed to be done by the function f
+   *
+   * the flow is:
+   *   g ? return : ...
+   *   recurse ? search parents : ...
+   *   f ? enqueue childs : ...
+   *
+   * e.g. (with proper f and g)
+   * undirected crawl<false,false>(f{return updated || first pass},g{ return true }); performs belman ford algorithm
+   * directed   crawl<true, false>(f{return true}                 ,g{  true once  }); sorts a dag topologically (or respectively passes it topologically)
+   * */
   template <class T, class I, bool directed, class ... O>
     template <bool recurse, bool inverse>
     void graph_generic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)

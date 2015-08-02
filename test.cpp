@@ -1,4 +1,5 @@
 
+#include "loader_csv.h"
 #include "ctb.h"
 
 int main()
@@ -9,6 +10,7 @@ int main()
   writer_default::self_test();
   loader_default::self_test();
   ctb_default::self_test();
+  csvloader_default::self_test();
 
   return 0;
 }

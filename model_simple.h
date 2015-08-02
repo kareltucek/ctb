@@ -8,14 +8,16 @@
 
 namespace ctb
 {
-  /** see the model_empty */
-  class model_simple : public model_empty
+  /** see the model_generator */
+  class model_simple : public model_generator
   {
     protected:
       typedef std::map<std::string, std::string> aliastab_t;
       static aliastab_t aliases;
       static void init();
     public:
+      typedef language_cpp language;
+      static std::string get_name();
       static std::string alias(const std::string& a);
       template <class G> static writer<model_simple> generate(int m,  G& generator, std::string name);
   } ;
@@ -24,11 +26,16 @@ namespace ctb
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
 
+  std::string model_simple::get_name()
+  {
+    return "simple";
+  }
+
   std::string model_simple::alias(const std::string& a)
   {
     auto itr = aliases.find(a);
     if(itr == aliases.end())
-      return model_empty::alias(a);
+      return model_generator::alias(a);
     return itr->second;
   }
 
@@ -39,16 +46,16 @@ namespace ctb
     if(initialized)
       return;
 
-    model_empty::init();
+    model_generator::init();
 
     ADD("input", "data_in_$cindex[pos_in_$cindex+j]");
     ADD("output", "data_out_$cindex[pos_out_$cindex+j]");
 
-    ADD("fdeclin",  writer<model_empty>::from_file("templates/simple_decl_in.h"));
-    ADD("fdeclout", writer<model_empty>::from_file("templates/simple_decl_out.h"));
-    ADD("fenvin",   writer<model_empty>::from_file("templates/simple_env_in.h"));
-    ADD("fenvout",  writer<model_empty>::from_file("templates/simple_env_out.h"));
-    ADD("fbox",     writer<model_empty>::from_file("templates/simple_box.h"));
+    ADD("fdeclin",  writer<model_generator>::from_file("templates/simple_decl_in.h"));
+    ADD("fdeclout", writer<model_generator>::from_file("templates/simple_decl_out.h"));
+    ADD("fenvin",   writer<model_generator>::from_file("templates/simple_env_in.h"));
+    ADD("fenvout",  writer<model_generator>::from_file("templates/simple_env_out.h"));
+    ADD("fbox",     writer<model_generator>::from_file("templates/simple_box.h"));
 
     initialized = true;
   }

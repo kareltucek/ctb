@@ -1,4 +1,5 @@
 Sat May  2 11:42:39 CEST 2015
+=============================
 The basic idea is the following:
 
 Backend will serve as a library frontend. It will manage an instruction table, loading and processing of all data. It will be parametrized by a type of the instruction table and loader. Backend will forward arguments to the graph and instruction table functions.
@@ -14,6 +15,7 @@ Graph will hold the graph with appropriate links to the instruction table. Graph
 Code for generation will be held as part of xml files and will use a shell like evaluation of parameters using printf like syntax with predefined meaning of arguments.
 
 Sat May  9 12:40:39 CEST 2015
+=============================
 Today I've found a problem of the writer concept. The problem is that a simple writer can work only with one abstract level of aliases, which means that deeper evaluation has to be known to all levels (e.g. variable names and indexes have tobe distributed into the instruction table xml description, which though should describe instructions without carrying the resulting code as its own dependency). As an answer to this problem I decide to introduce a concept of a model. Model is a static extension to the writer class, representing a consistent output system. Exampli gratia we may have one model representing a bobox box or project or a testing (nonbobox) suit dedicated to the code generation. Model may have multiple levels and should be able to evaluate abstract aliases on multiple levels. For instance one level may carry a structure of file templates and provide a mechanism of putting these together. Another level may translate abstract instruction table arguments into actual variable names with corresponding indices. 
 
 Proposed implementation:
@@ -23,6 +25,7 @@ Proposed implementation:
 
 
 Mon May 11 20:33:37 CEST 2015
+=============================
 Today I have refactored the writer class. Now it resolves aliases in arguments as well (a real variadic list hell). Furthermore I started implementing the SSE instructions. 
 
 I had sorted out type conversions. The data producer is always responsible for providing the data in all required widths. The output width is the main width specifier for a regular node.
@@ -35,20 +38,61 @@ Also I considered the control flow version of this problem. The proposed solutio
 
 
 Tue May 12 16:45:32 CEST 2015
+=============================
 New problem has occured with the right hand dollar sign. It will have to be resolved by a manual flag (we are out of control of how many times it may be processed and thus we dont shorten the $$ to $ until final output unless explicitly asked for. The problem occured when constructing intermediate names in the split/merge functionality.
 
 
 Thu May 14 12:30:39 CEST 2015
-Today I have split the original grap into generator and graph class. For this I have created a proxy class wrapper, which allows read-only access to foreign classes and write access to owners of an object. 
+=============================
+Today I have split the original grap into a generator and a graph class. Also I have created a proxy class wrapper, which allows read-only access to foreign classes and write access to owners of an object. I failed to do this transparently (as I originally itended).
 
 Wed Jun  3 10:02:58 CEST 2015
+=============================
 In the past two weeks I implemented a conversion path search and wrote some documentation.
 
+Fri Jun 26 11:30:16 CEST 2015
+=============================
+Today I am considering how to actually import data. Some type abstraction seems to be necessary (e.g. to import all instructions of the same format (e.g. add_pi[u]{32|60|128}($arg1, $arg2)) by only one line. For this purpose csv format seems to be much more versatile, since it allows easy 'foreach' expansions. As the result I am implementing a csv importer with a perl expansion script.
+
+Also today I noticed a few problems with the writer design - mainly ingenerality. At the moment I would like to be able to use it simply with multiple output formats, but I have hardcoded syntax structure. 
+
+Next thing I ran into is a serious problem with loading system, which does not allow combining multiple loading systems. Fortunately fix seems to be simple.
+
+
+Sat Jul 25 10:56:04 CEST 2015
+=============================
+Yesterday I finished the csv preprocessor discussed in the pevious entry.
+
+Now I have arrived at another design problem. Instruction table does not 
+
+
+Thu Jul 30 10:01:27 CEST 2015
+=============================
+I am implementing a csv loader and exporter atm. Due to the need of exporting data most of members of instruction_table have to be made publicly readable. 
+
+The next thing to be done is generalization of the command line interface. The current one is totaly ingeneral. For this, the model/loader management will have to be improved. Establishing functional hash tables holding template-constructed functors seems to be a good idea for this.
+
+
+Sun Aug  2 19:49:21 CEST 2015
+=============================
+Note that model/loader template signatures have to take form of "typename...". All other parameters have to be packed.
+
+TODO
+====
 // TODO
 //conversions - find nontrivial conversion path -implemented
 //output node ordering - dropped
+//abstract output syntax formatting - done
+//stream support - hopefully done
+//export mechanics - hopefully done
 control flow support
 
 // TODO - minors
 general conversion interface
+ensure correct clearing 
+tag support
+custom code support
+allow custom combination of loaders
+switch to nonstatic loaders
+
 
