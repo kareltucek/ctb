@@ -4,6 +4,7 @@
 #include "graph.h"
 #include "generator.h"
 #include "loader_xml.h"
+#include "loader_csv.h"
 #include "model_maker.h"
 #include "model_bobox.h"
 #include "model_simple.h"

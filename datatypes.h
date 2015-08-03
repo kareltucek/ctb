@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <vector>
 #include <map>
+#include <sstream>
 
 namespace ctb
 {
