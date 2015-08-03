@@ -184,7 +184,12 @@ namespace ctb
   template <class T, class IT>
     void ctb<T,IT>::help_command_stream()
     {
-      std::cout << "Actions are to be specified by standard input one per line." << std::endl;
+      std::cout << "syntax: ctb [options]" << std::endl;
+      std::cout << "options:" << std::endl;
+      std::cout << "  -f <file>     read input from file instead from cin" << std::endl;
+      std::cout << "  -h            show some help" << std::endl;
+      std::cout << "" << std::endl;
+      std::cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << std::endl;
       std::cout << "Actions:" << std::endl;
       std::cout << "  loadinstab <loader> <file>" << std::endl;
       std::cout << "  loadgraph <loader <file>" << std::endl;
@@ -335,7 +340,10 @@ namespace ctb
         if(!words[0].empty() && words[0][0] == '#')
           return 0;
         if(words[0] == "help" || words[0] == "?")
+        {
           help_command_stream();
+          return 0;
+        }
         if(words.size() != 3)
           throw std::string("invalid number of arguments at line: ").append(line);
         switch(cmd_id_hash[words[1]])   
