@@ -14,6 +14,11 @@ namespace ctb
   /**
    * This class serves as a library interface.
    *
+   * TODO update this doc
+   *
+   * A custom loader or model has to be registered using the templated method register_model or register_loader in order to be usable from string driven environments.
+   *
+   * **DEPRECATED**
    * The main two methods are load_instab and process. Both these take list of parameters which is forwarded to the loader methods altogether with a reference to the object to be filled. The loader interface is not fixed except for the first argument.
    *
    * See the ctb::self_test() method for example usage.
@@ -22,7 +27,6 @@ namespace ctb
    *
    * Template parameters are a trait class, which specifies mostly internal id types, an instruction table class, a loader class and a commandline interface. 
    *
-   * A custom loader or model_maker.has to be registered using the templated method register_model or register_loader
    * */
 
 
@@ -33,13 +37,11 @@ namespace ctb
         typedef generator<T,IT> generator_t;
         IT instab;
         generator_t mygenerator;
-    void help_cmdline();
+    void help_cmdline_old();
     void help_command_stream();
         std::string get_inner_name(std::string fname);
 
         void fill();
-
-        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3, fidg=4};
 
         typedef std::tuple< std::function<void(std::istream&)>, std::function<void(std::istream&)>, std::function<void(std::ostream&)>, std::function<void(std::ostream&)>> loader_record;
         typedef std::function<std::string(std::string)> model_record;
@@ -61,7 +63,9 @@ namespace ctb
         template<class M> void register_model() ;
 
         int parse_command_stream(std::istream& );
-        int cmdline(int count, char ** args);
+        int parse_command(std::string);
+        int command_stream_cmdline(int count, char ** args);
+        int cmdline_old(int count, char ** args);
 
         static void self_test() ;
     } ;
@@ -169,7 +173,7 @@ namespace ctb
     }
 
   template <class T, class IT>
-    void ctb<T,IT>::help_cmdline()
+    void ctb<T,IT>::help_cmdline_old()
     {
       std::cout << "syntax: ctb [options] <instr table> <input file 1> <input file 2> ... " << std::endl;
       std::cout << "options:" << std::endl;
@@ -188,15 +192,19 @@ namespace ctb
       std::cout << "  exportinstab <loader <output file>" << std::endl;
       std::cout << "  exportgraph <loader <output file>" << std::endl;
       std::cout << "Loaders:" << std::endl;
-      std::cout << "  xml" << std::endl;
-      std::cout << "  csv" << std::endl;
+      for(auto l : hash_loader)
+      {
+        std::cout << "  " << l.first << std::endl;
+      }
       std::cout << "Models:" << std::endl;
-      std::cout << "  simple" << std::endl;
-      std::cout << "  bobox" << std::endl;
+      for(auto l : hash_model)
+      {
+        std::cout << "  " << l.first << std::endl;
+      }
     }
 
   template <class T, class IT>
-    int ctb<T,IT>::cmdline(int count, char ** args)
+    int ctb<T,IT>::cmdline_old(int count, char ** args)
     {
       int file = 0;
       char model = 's';
@@ -218,7 +226,7 @@ namespace ctb
                   model = 's';
                 else
                 {
-                  help_cmdline();
+                  help_cmdline_old();
                   return 1;
                 }
                 break;
@@ -227,7 +235,7 @@ namespace ctb
                 opath = args[i];
                 break;
               default:
-                help_cmdline();
+                help_cmdline_old();
                 return 1;
             }
             break;
@@ -261,20 +269,76 @@ namespace ctb
     }
 
   template <class T, class IT>
+    int ctb<T,IT>::command_stream_cmdline(int count, char ** args)
+    {
+      stringlist files;
+      for(int i = 1; i < count; ++i)
+      {
+        switch (args[i][0])
+        {
+          case '-':
+            for(int j = 0; args[i][j] != '\0'; ++j)
+            {
+              switch (args[i][j])
+              {
+                case 'f':
+                  if(i+1 >= count)
+                    throw "filename expected after -f switch";
+                  files.push_back( args[i+1] ); 
+                  break;
+                case 'h':
+                  help_command_stream();
+                  return 0;
+                default:
+                  help_command_stream();
+                  return 1;
+              }
+            }
+            break;
+          default:
+            help_command_stream();
+            return 1;
+        }
+      }
+      if(files.empty())
+      {
+        parse_command_stream(std::cin);
+      }
+      else
+      {
+        for( auto f : files)
+        {
+          std::ifstream s(f);
+          parse_command_stream(s);
+        }
+      }
+      return 0;
+    }
+
+  template <class T, class IT>
     int ctb<T,IT>::parse_command_stream(std::istream& stream)
     {
-      static std::map<std::string, functor_id> hash = {{"loadinstab", fidli}, {"loadgraph",fidlg}, {"exportinstab",fidei},{"exportgraph",fideg},{"generate",fidg}};
       std::string line;
       while(std::getline(stream, line))
       {
+        parse_command(line);
+      }
+      return 0;
+    }
+
+  template <class T, class IT>
+    int ctb<T,IT>::parse_command(std::string line)
+    {
         stringlist words = split(line, ' ',true);
         if(words.empty())
-          continue;
+          return 0;
         if(!words[0].empty() && words[0][0] == '#')
-          continue;
+          return 0;
+        if(words[0] == "help" || words[0] == "?")
+          help_command_stream();
         if(words.size() != 3)
           throw std::string("invalid number of arguments at line: ").append(line);
-        switch(hash[words[1]])   
+        switch(cmd_id_hash[words[1]])   
         {
           case fidli:
           case fidlg:
@@ -290,7 +354,7 @@ namespace ctb
           default:
             throw std::string("invalid parameter at line: ").append(line);
         }
-        switch(hash[words[0]])   
+        switch(cmd_id_hash[words[0]])   
         {
           case fidli:
             {
@@ -323,7 +387,6 @@ namespace ctb
             throw std::string("unknown action: "  ).append(line);
             break;
         }
-      }
       return 0;
     }
 

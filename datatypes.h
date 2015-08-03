@@ -153,6 +153,8 @@ namespace ctb
       template <typename...L> proxy_(L&&... args) : data((std::forward<L>(args))...){}
     };
 
+  enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3, fidg=4};
+  static std::map<std::string, functor_id> cmd_id_hash = {{"loadinstab", fidli}, {"loadgraph",fidlg}, {"exportinstab",fidei},{"exportgraph",fideg},{"generate",fidg}};
 
 };
 

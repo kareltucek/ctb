@@ -14,7 +14,7 @@ testdir :
 	./test && make -C output
 
 
-ctb : main.cpp
+ctb : main.cpp test
 	${CXX} ${FLAGS} main.cpp -DTEMPLATED -o ctb -l tinyxml2
 
 clean :
