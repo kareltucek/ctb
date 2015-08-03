@@ -130,7 +130,10 @@ namespace ctb
         /*IAPI*/ operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f) ;
         /*IAPI*/ type_t& addtype(typename T::tid_t t) ;
         void clear() ; 
+        ~instruction_table();
     } ;
+
+
 
   typedef instruction_table<traits> instruction_table_default;
 
@@ -285,8 +288,23 @@ namespace ctb
     }
 
   template <class T>
+    instruction_table<T>::~instruction_table()  
+    {
+      clear();
+    }
+
+  template <class T>
     void instruction_table<T>::clear()  
     {
+      for(auto d : typetab.rw())
+      {
+        delete d.second;
+      }
+      for(auto d : instab.rw())
+      {
+        delete d.second;
+      }
+
     }
 
   template class instruction_table<traits> ;

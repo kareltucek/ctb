@@ -123,12 +123,14 @@ namespace ctb
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::load_instab(P...params)
     {
+      instab.clear();
       L<T, generator_t, IT>::load_instab(instab, params...);
     }
 
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::load_graph(P...params)
     {
+      mygenerator.clear();
       L<T, generator_t, IT>::load_graph(mygenerator, params...);
     }
 

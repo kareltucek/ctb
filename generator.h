@@ -57,9 +57,17 @@ namespace ctb
 
         template <class W> void generate(int granularity, W& w) ;
         int get_broadest(int upperbound = 10000000) ;
+
+        void clear();
     };
 
   typedef generator<traits, instruction_table_default> generator_default; 
+
+  template <class T, class IT>
+    void generator<T,IT>::clear()  
+    {
+      graph.rw().clear();
+    }
 
   template <class T, class IT>
     template <typename...L> void generator<T,IT>::addvert(vid_t v, id_t op, L... p)  

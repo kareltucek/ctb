@@ -52,15 +52,32 @@ namespace ctb
         proxy<vertex_list_t> out;
         proxy<vertex_container_t> verts;
         graph_generic();
+        ~graph_generic();
         template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ;
         void addedge(I aid, I bid, int b_argpos = -1) ;
         void calculate_distances();
         int get_dist(I a, I b, I* c = NULL) const;
         static void self_test();
+        void clear();
     };
 
 
   typedef graph_generic<dummy,int,true> graph_default;
+
+  template <class T, class I, bool directed, class ... O>
+    graph_generic<T,I,directed,O...>::~graph_generic()
+    {
+      clear();
+    }
+  
+  template <class T, class I, bool directed, class ... O>
+    void graph_generic<T,I,directed,O...>::clear()
+    {
+      in.rw().clear();
+      out.rw().clear();
+      for(auto v : verts.rw())
+        delete v.second;
+    }
 
   template <class T, class I, bool directed, class ... O>
     void graph_generic<T,I,directed,O...>::self_test()
