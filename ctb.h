@@ -2,6 +2,7 @@
 #define ctb_GUARD
 
 #include "graph.h"
+#include "datatypes.h"
 #include "generator.h"
 #include "loader_xml.h"
 #include "loader_csv.h"
@@ -92,7 +93,7 @@ namespace ctb
     template<template <typename...> class L> void ctb<T,IT>::register_loader()
     {
       if(L<T,generator_t,IT>::get_name() == "")
-        throw "unnamed loader passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?";
+        error( "unnamed loader passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
       hash_loader[L<T,generator_t,IT>::get_name()] = loader_record(
           std::bind(&ctb<T,IT>::load_instab<L,std::istream&>  , this, std::placeholders::_1),
           std::bind(&ctb<T,IT>::load_graph<L,std::istream&>   , this, std::placeholders::_1),
@@ -104,7 +105,7 @@ namespace ctb
     template<class M> void ctb<T,IT>::register_model()
     {
       if(M::get_name() == "")
-        throw "unnamed model passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?";
+        error( "unnamed model passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
       hash_model[M::get_name()] = model_record(std::bind(&ctb::generate<M>, this, std::placeholders::_1)); 
     }
 
@@ -290,7 +291,7 @@ namespace ctb
               {
                 case 'f':
                   if(i+1 >= count)
-                    throw "filename expected after -f switch";
+                    error( "filename expected after -f switch");
                   files.push_back( args[i+1] ); 
                   break;
                 case 'h':
@@ -328,7 +329,17 @@ namespace ctb
       std::string line;
       while(std::getline(stream, line))
       {
+        try
+        {
         parse_command(line);
+        }
+        catch (error_struct& err)
+        {
+          if(err.second)
+            throw;
+          else
+            std::cerr << err.first << std::endl;
+        }
       }
       return 0;
     }
@@ -347,7 +358,7 @@ namespace ctb
           return 0;
         }
         if(words.size() != 3)
-          throw std::string("invalid number of arguments at line: ").append(line);
+          error( std::string("invalid number of arguments at line: ").append(line), false);
         switch(cmd_id_hash[words[1]])   
         {
           case fidli:
@@ -355,14 +366,14 @@ namespace ctb
           case fidei:
           case fideg:
             if(hash_loader.find(words[1]) == hash_loader.end())
-              throw std::string("loader not found (did you register it in ctb.h?): ").append(words[1]);
+              error( std::string("loader not found (did you register it in ctb.h?): ", false).append(words[1]));
             break;
           case fidg:
             if(hash_model.find(words[1]) == hash_model.end())
-              throw std::string("model not found (did you register it in ctb.h?): ").append(words[1]);
+              error( std::string("model not found (did you register it in ctb.h?): ", false).append(words[1]));
             break;
           default:
-            throw std::string("invalid parameter at line: ").append(line);
+            error( std::string("invalid parameter at line: ").append(line));
         }
         switch(cmd_id_hash[words[0]])   
         {
@@ -394,7 +405,7 @@ namespace ctb
             writer_plain::to_file(hash_model[words[1]](get_inner_name(words[2])),words[2]);
             break;
           default:
-            throw std::string("unknown action: "  ).append(line);
+            error( std::string("unknown action: "  ).append(line));
             break;
         }
       return 0;

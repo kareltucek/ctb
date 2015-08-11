@@ -4,7 +4,7 @@
 #include "tinyxml2.h"
 
 #ifndef XMLCheckResult
-#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { throw std::string("Error: ").append(std::to_string(a_eResult)); }
+#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { error(std::string("XML loader error: ").append(std::to_string(a_eResult))); }
 #endif
 
 namespace ctb
@@ -44,13 +44,13 @@ namespace ctb
   template <class T, class G, class IT>
     void xml_loader<T,G,IT>::export_instab(IT& instab, std::ostream& stream)
     {
-      throw "xml export not (yet) supported";
+      error( "xml export not (yet) supported");
     }
 
   template <class T, class G, class IT>
     void xml_loader<T,G,IT>::export_graph(G& graph, std::ostream& stream)
     {
-      throw "xml export not (yet) supported";
+      error( "xml export not (yet) supported");
     }
 
   template <class T, class G, class IT>

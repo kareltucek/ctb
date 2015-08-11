@@ -158,6 +158,8 @@ namespace ctb
     void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2)
     {
       conversions.rw().push_back(conversion(in, out, c1, c2));
+      distances.addvert(in, false, false);
+      distances.addvert(out, false, false);
       distances.addedge(in,out);
     }
 
@@ -222,7 +224,8 @@ namespace ctb
         if ( type.width == w)
           return type.code;
       }
-      throw std::string("type of width = ").append(std::to_string(w)).append(" at operation ").append(opid).append(" not found");
+      error( std::string("type of width = ").append(std::to_string(w)).append(" at operation ").append(opid).append(" not found"));
+      return "";
     }
 
   template <class T>
@@ -235,7 +238,8 @@ namespace ctb
         if ( ins.width_in == w)
           return ins.code;
       }
-      throw std::string("instruction of width_in = ").append(std::to_string(w)).append(" at operation ").append(opid).append(" not found");
+      error( std::string("instruction of width_in = ").append(std::to_string(w)).append(" at operation ").append(opid).append(" not found"));
+      return "";
     }
 
   template <class T>
@@ -304,7 +308,8 @@ namespace ctb
       {
         delete d.second;
       }
-
+      instab.rw().clear();
+      typetab.rw().clear();
     }
 
   template class instruction_table<traits> ;

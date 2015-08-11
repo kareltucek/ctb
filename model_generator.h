@@ -35,7 +35,10 @@ namespace ctb
   {
     auto itr = aliases.find(a);
     if(itr == aliases.end())
-      throw std::string("alias not found: ").append(a);
+    {
+      warn(std::string("warning: alias not found: ").append(a));
+      return std::string("$$").append(a);
+    }
     return itr->second;
   }
 
@@ -69,7 +72,8 @@ namespace ctb
   template <class G>
     writer<model_generator> model_generator::generate(int max_granularity, G& graph, std::string name)
     {
-      throw "empty model generator used";
+      error( "empty model generator used");
+      return writer<model_generator>();
     }
 
 };

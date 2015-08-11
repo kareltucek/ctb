@@ -77,22 +77,30 @@ Sun Aug  2 19:49:21 CEST 2015
 =============================
 Note that model/loader template signatures have to take form of "typename...". All other parameters have to be packed.
 
+
+Tue Aug 11 14:19:34 CEST 2015
+=============================
+Back again. Today I started testing of the csv loader and bumped into problems with ingenerality of the writer. The strings to be imported/exported tended to be expanded when they should not have been. As a result I had to implement explicit 'dolar_mode' control for both input and output actions of writer. 
+
+Another thing I have done is generalizing exception handling. I have created two global functions which would let me change mechanics of exception throwing simply and also have written multiple layers of error handling.
+
 TODO
 ====
 // TODO
 //conversions - find nontrivial conversion path -implemented
 //output node ordering - dropped
 //abstract output syntax formatting - done
-//stream support - hopefully done
 //export mechanics - hopefully done
 control flow support
 
 // TODO - minors
+//stream support - hopefully done
+//ensure correct clearing - done
+//allow custom combination of loaders - done
 general conversion interface
-ensure correct clearing 
 tag support
 custom code support
-allow custom combination of loaders
 switch to nonstatic loaders
+unit tests for export mechanics (and dependencies)
 
 

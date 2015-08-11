@@ -7,15 +7,12 @@ int main(int count, char**args)
   ctb_default b;
   try
   {
-    b.parse_command_stream(std::cin);
+    b.command_stream_cmdline(count, args);
   }
-  catch(const std::string& str)
+  catch(const error_struct& err)
   {
-    std::cerr << str << std::endl;
-  }
-  catch(const char* str)
-  {
-    std::cerr << str << std::endl;
+    std::cerr << err.first << std::endl;
+    return 1;
   }
   return 0;
 }

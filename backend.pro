@@ -31,7 +31,10 @@ HEADERS += \
     generator.h \
     model_generator.h \
     languages.h \
-    csvloader.h
+    csvloader.h \
+    loader_csv.h \
+    loader_xml.h \
+    model_maker.h
 
 OTHER_FILES += \
     test

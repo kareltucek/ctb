@@ -6,10 +6,23 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <iostream>
 
 namespace ctb
 {
   /** Datatypes contains various general helper functions and datatypes*/
+
+  typedef std::pair<std::string,bool> error_struct;
+
+  void error(const std::string& e, bool critical = true)
+  {
+    throw error_struct(e,critical);
+  }
+
+  void warn(std::string e)
+  {
+    std::cerr << e << std::endl;
+  }
 
   //various helper classes
   struct traits
@@ -73,6 +86,8 @@ namespace ctb
       else
         l.push_back(item.substr(begin, end-begin+1));
     }
+    if(str[str.length()-1] == d)
+      l.push_back("");
     return l;
   }
 
@@ -90,7 +105,7 @@ namespace ctb
         }
         else
         {
-          throw std::string("unknown flag found: ").append(w);
+          error( std::string("unknown flag found: ", false).append(w));
         }
       }
       return f;

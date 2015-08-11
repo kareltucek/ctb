@@ -122,7 +122,7 @@ namespace ctb
       auto va = verts.r().find(a);
       auto vb = verts.r().find(b);
       if(va == verts->end() || vb == verts->end())
-        throw "unknown vertex id";
+        error( "unknown vertex id");
       //  
       if(c != NULL)
         *c = va->second->map[vb->second->index].first->id.r();
@@ -185,7 +185,7 @@ namespace ctb
       typename vertex_container_t::iterator a = verts.rw().find(aid);
       typename vertex_container_t::iterator b = verts.rw().find(bid);
       if(a == verts->end() || b == verts->end())
-        throw "unknown vertex id";
+        error( "unknown vertex id");
       if(directed)
       {
         a->second->out.rw().push_back(b->second);

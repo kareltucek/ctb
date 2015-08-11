@@ -119,7 +119,7 @@ namespace ctb
     void generator<T,IT>::generate(int packsize, W& w)
     {
       if(graph->out->empty())
-        throw "graph is empty";
+        error( "graph is empty");
       else
         graph->out[0]->crawl_topological([&](node_t* n) {n->data.rw().generate(packsize, w); });
     }
@@ -132,9 +132,9 @@ namespace ctb
       int myin, myout;
       int mygran = op->get_max_width(granularity,&myin, &myout);
       if(granularity % mygran != 0)
-        throw std::string("granularities are relatively prime!");
+        error( std::string("granularities are relatively prime!"));
       if(myin != myout)
-        throw std::string("asymetric instructions not supported");
+        error( std::string("asymetric instructions not supported"));
       op->imbue_width(mygran);
       acces_map.clear();
 #define ARG(a) (a-1 < me->in->size() ? W().print(me->in[a-1]->data.rw().get_acces(myin, granularity, w), i*myout) : empty)
@@ -206,7 +206,8 @@ namespace ctb
 
       if(minsrc != -1)
       {
-        throw std::string("conversion path to ") + std::to_string(width) + " at " + (me->id.r()) +  " not found.";
+        error( std::string("conversion path to ") + std::to_string(width) + " at " + (me->id.r()) +  " not found.");
+        return writer<model_generator>();
       }
       else
       {
@@ -242,7 +243,7 @@ namespace ctb
     {
       int w = 0;
       if(graph->out->empty())
-        throw "graph is empty";
+        error( "graph is empty");
       else
         graph->out[0]->crawl_topological([&](node_t* n) {w = std::max(n->data->op->get_max_width(upperbound),w); });
       return w;

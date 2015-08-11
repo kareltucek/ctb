@@ -48,7 +48,10 @@ namespace ctb
     {
       auto itr = aliases.find(a);
       if(itr == aliases.end())
-        throw std::string("alias not found: ").append(a);
+      {
+        warn( std::string("warning: alias not found: ").append(a));
+        return std::string("$$").append(a);
+      }
       return itr->second;
     }
 
