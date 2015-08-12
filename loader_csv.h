@@ -214,7 +214,7 @@ namespace ctb
   template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::insert(IT& instab, std::string line)
     {
-      if(line.size() > 0 && line[0] == '#')
+      if(line.size() == 0 || line[0] == '#')
         return;
 
       stringlist data = split(line, D::value);

@@ -1,0 +1,308 @@
+instruction	double	ADD.double		1	1	$$arg1 + $$arg2
+instruction	float	ADD.float		1	1	$$arg1 + $$arg2
+instruction	int16_t	ADD.int16_t		1	1	$$arg1 + $$arg2
+instruction	int32_t	ADD.int32_t		1	1	$$arg1 + $$arg2
+instruction	int64_t	ADD.int64_t		1	1	$$arg1 + $$arg2
+instruction	int8_t	ADD.int8_t		1	1	$$arg1 + $$arg2
+instruction	uint16_t	ADD.uint16_t		1	1	$$arg1 + $$arg2
+instruction	uint32_t	ADD.uint32_t		1	1	$$arg1 + $$arg2
+instruction	uint64_t	ADD.uint64_t		1	1	$$arg1 + $$arg2
+instruction	uint8_t	ADD.uint8_t		1	1	$$arg1 + $$arg2
+instruction	bool	AND.bool		1	1	$$arg1 && $$arg2
+instruction	double	AND.double		1	1	$$arg1 & $$arg2
+instruction	float	AND.float		1	1	$$arg1 & $$arg2
+instruction	int16_t	AND.int16_t		1	1	$$arg1 & $$arg2
+instruction	int32_t	AND.int32_t		1	1	$$arg1 & $$arg2
+instruction	int64_t	AND.int64_t		1	1	$$arg1 & $$arg2
+instruction	int8_t	AND.int8_t		1	1	$$arg1 & $$arg2
+instruction	uint16_t	AND.uint16_t		1	1	$$arg1 & $$arg2
+instruction	uint32_t	AND.uint32_t		1	1	$$arg1 & $$arg2
+instruction	uint64_t	AND.uint64_t		1	1	$$arg1 & $$arg2
+instruction	uint8_t	AND.uint8_t		1	1	$$arg1 & $$arg2
+instruction	bool	CVRT.bool.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.bool.double		1	1	(double)$$arg1
+instruction	float	CVRT.bool.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.bool.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.bool.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.bool.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.bool.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.bool.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.bool.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.bool.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.bool.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.double.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.double.double		1	1	(double)$$arg1
+instruction	float	CVRT.double.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.double.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.double.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.double.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.double.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.double.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.double.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.double.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.double.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.float.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.float.double		1	1	(double)$$arg1
+instruction	float	CVRT.float.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.float.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.float.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.float.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.float.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.float.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.float.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.float.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.float.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.int16_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.int16_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.int16_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.int16_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.int16_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.int16_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.int16_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.int16_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.int16_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.int16_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.int16_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.int32_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.int32_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.int32_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.int32_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.int32_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.int32_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.int32_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.int32_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.int32_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.int32_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.int32_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.int64_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.int64_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.int64_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.int64_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.int64_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.int64_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.int64_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.int64_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.int64_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.int64_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.int64_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.int8_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.int8_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.int8_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.int8_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.int8_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.int8_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.int8_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.int8_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.int8_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.int8_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.int8_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.uint16_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.uint16_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.uint16_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.uint16_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.uint16_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.uint16_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.uint16_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.uint16_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.uint16_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.uint16_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.uint16_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.uint32_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.uint32_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.uint32_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.uint32_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.uint32_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.uint32_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.uint32_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.uint32_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.uint32_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.uint32_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.uint32_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.uint64_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.uint64_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.uint64_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.uint64_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.uint64_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.uint64_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.uint64_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.uint64_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.uint64_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.uint64_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.uint64_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	bool	CVRT.uint8_t.bool		1	1	(bool)$$arg1
+instruction	double	CVRT.uint8_t.double		1	1	(double)$$arg1
+instruction	float	CVRT.uint8_t.float		1	1	(float)$$arg1
+instruction	int16_t	CVRT.uint8_t.int16_t		1	1	(int16_t)$$arg1
+instruction	int32_t	CVRT.uint8_t.int32_t		1	1	(int32_t)$$arg1
+instruction	int64_t	CVRT.uint8_t.int64_t		1	1	(int64_t)$$arg1
+instruction	int8_t	CVRT.uint8_t.int8_t		1	1	(int8_t)$$arg1
+instruction	uint16_t	CVRT.uint8_t.uint16_t		1	1	(uint16_t)$$arg1
+instruction	uint32_t	CVRT.uint8_t.uint32_t		1	1	(uint32_t)$$arg1
+instruction	uint64_t	CVRT.uint8_t.uint64_t		1	1	(uint64_t)$$arg1
+instruction	uint8_t	CVRT.uint8_t.uint8_t		1	1	(uint8_t)$$arg1
+instruction	double	DIV.double		1	1	$$arg1 / $$arg2
+instruction	float	DIV.float		1	1	$$arg1 / $$arg2
+instruction	int16_t	DIV.int16_t		1	1	$$arg1 / $$arg2
+instruction	int32_t	DIV.int32_t		1	1	$$arg1 / $$arg2
+instruction	int64_t	DIV.int64_t		1	1	$$arg1 / $$arg2
+instruction	int8_t	DIV.int8_t		1	1	$$arg1 / $$arg2
+instruction	uint16_t	DIV.uint16_t		1	1	$$arg1 / $$arg2
+instruction	uint32_t	DIV.uint32_t		1	1	$$arg1 / $$arg2
+instruction	uint64_t	DIV.uint64_t		1	1	$$arg1 / $$arg2
+instruction	uint8_t	DIV.uint8_t		1	1	$$arg1 / $$arg2
+instruction	bool	EQ.bool		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.double		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.float		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.int16_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.int32_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.int64_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.int8_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.uint16_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.uint32_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.uint64_t		1	1	$$arg1 == $$arg2
+instruction	bool	EQ.uint8_t		1	1	$$arg1 == $$arg2
+instruction	bool	GE.double		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.float		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.int16_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.int32_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.int64_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.int8_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.uint16_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.uint32_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.uint64_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GE.uint8_t		1	1	$$arg1 >= $$arg2
+instruction	bool	GT.double		1	1	$$arg1 > $$arg2
+instruction	bool	GT.float		1	1	$$arg1 > $$arg2
+instruction	bool	GT.int16_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.int32_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.int64_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.int8_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.uint16_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.uint32_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.uint64_t		1	1	$$arg1 > $$arg2
+instruction	bool	GT.uint8_t		1	1	$$arg1 > $$arg2
+instruction	bool	LE.double		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.float		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.int16_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.int32_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.int64_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.int8_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.uint16_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.uint32_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.uint64_t		1	1	$$arg1 <= $$arg2
+instruction	bool	LE.uint8_t		1	1	$$arg1 <= $$arg2
+instruction	double	LSF.double		1	1	$$arg1 << $$arg2
+instruction	float	LSF.float		1	1	$$arg1 << $$arg2
+instruction	int16_t	LSF.int16_t		1	1	$$arg1 << $$arg2
+instruction	int32_t	LSF.int32_t		1	1	$$arg1 << $$arg2
+instruction	int64_t	LSF.int64_t		1	1	$$arg1 << $$arg2
+instruction	int8_t	LSF.int8_t		1	1	$$arg1 << $$arg2
+instruction	uint16_t	LSF.uint16_t		1	1	$$arg1 << $$arg2
+instruction	uint32_t	LSF.uint32_t		1	1	$$arg1 << $$arg2
+instruction	uint64_t	LSF.uint64_t		1	1	$$arg1 << $$arg2
+instruction	uint8_t	LSF.uint8_t		1	1	$$arg1 << $$arg2
+instruction	bool	LT.double		1	1	$$arg1 < $$arg2
+instruction	bool	LT.float		1	1	$$arg1 < $$arg2
+instruction	bool	LT.int16_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.int32_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.int64_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.int8_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.uint16_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.uint32_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.uint64_t		1	1	$$arg1 < $$arg2
+instruction	bool	LT.uint8_t		1	1	$$arg1 < $$arg2
+instruction	double	MOD.double		1	1	$$arg1 % $$arg2
+instruction	float	MOD.float		1	1	$$arg1 % $$arg2
+instruction	int16_t	MOD.int16_t		1	1	$$arg1 % $$arg2
+instruction	int32_t	MOD.int32_t		1	1	$$arg1 % $$arg2
+instruction	int64_t	MOD.int64_t		1	1	$$arg1 % $$arg2
+instruction	int8_t	MOD.int8_t		1	1	$$arg1 % $$arg2
+instruction	uint16_t	MOD.uint16_t		1	1	$$arg1 % $$arg2
+instruction	uint32_t	MOD.uint32_t		1	1	$$arg1 % $$arg2
+instruction	uint64_t	MOD.uint64_t		1	1	$$arg1 % $$arg2
+instruction	uint8_t	MOD.uint8_t		1	1	$$arg1 % $$arg2
+instruction	double	MUL.double		1	1	$$arg1 * $$arg2
+instruction	float	MUL.float		1	1	$$arg1 * $$arg2
+instruction	int16_t	MUL.int16_t		1	1	$$arg1 * $$arg2
+instruction	int32_t	MUL.int32_t		1	1	$$arg1 * $$arg2
+instruction	int64_t	MUL.int64_t		1	1	$$arg1 * $$arg2
+instruction	int8_t	MUL.int8_t		1	1	$$arg1 * $$arg2
+instruction	uint16_t	MUL.uint16_t		1	1	$$arg1 * $$arg2
+instruction	uint32_t	MUL.uint32_t		1	1	$$arg1 * $$arg2
+instruction	uint64_t	MUL.uint64_t		1	1	$$arg1 * $$arg2
+instruction	uint8_t	MUL.uint8_t		1	1	$$arg1 * $$arg2
+instruction	bool	NE.bool		1	1	$$arg1 != $$arg2
+instruction	bool	NE.double		1	1	$$arg1 != $$arg2
+instruction	bool	NE.float		1	1	$$arg1 != $$arg2
+instruction	bool	NE.int16_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.int32_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.int64_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.int8_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.uint16_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.uint32_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.uint64_t		1	1	$$arg1 != $$arg2
+instruction	bool	NE.uint8_t		1	1	$$arg1 != $$arg2
+instruction	bool	NOT.bool		1	1	! $$arg1
+instruction	double	NOT.double		1	1	~ $$arg1
+instruction	float	NOT.float		1	1	~ $$arg1
+instruction	int16_t	NOT.int16_t		1	1	~ $$arg1
+instruction	int32_t	NOT.int32_t		1	1	~ $$arg1
+instruction	int64_t	NOT.int64_t		1	1	~ $$arg1
+instruction	int8_t	NOT.int8_t		1	1	~ $$arg1
+instruction	uint16_t	NOT.uint16_t		1	1	~ $$arg1
+instruction	uint32_t	NOT.uint32_t		1	1	~ $$arg1
+instruction	uint64_t	NOT.uint64_t		1	1	~ $$arg1
+instruction	uint8_t	NOT.uint8_t		1	1	~ $$arg1
+instruction	bool	OR.bool		1	1	$$arg1 || $$arg2
+instruction	double	OR.double		1	1	$$arg1 | $$arg2
+instruction	float	OR.float		1	1	$$arg1 | $$arg2
+instruction	int16_t	OR.int16_t		1	1	$$arg1 | $$arg2
+instruction	int32_t	OR.int32_t		1	1	$$arg1 | $$arg2
+instruction	int64_t	OR.int64_t		1	1	$$arg1 | $$arg2
+instruction	int8_t	OR.int8_t		1	1	$$arg1 | $$arg2
+instruction	uint16_t	OR.uint16_t		1	1	$$arg1 | $$arg2
+instruction	uint32_t	OR.uint32_t		1	1	$$arg1 | $$arg2
+instruction	uint64_t	OR.uint64_t		1	1	$$arg1 | $$arg2
+instruction	uint8_t	OR.uint8_t		1	1	$$arg1 | $$arg2
+instruction	double	RSF.double		1	1	$$arg1 >> $$arg2
+instruction	float	RSF.float		1	1	$$arg1 >> $$arg2
+instruction	int16_t	RSF.int16_t		1	1	$$arg1 >> $$arg2
+instruction	int32_t	RSF.int32_t		1	1	$$arg1 >> $$arg2
+instruction	int64_t	RSF.int64_t		1	1	$$arg1 >> $$arg2
+instruction	int8_t	RSF.int8_t		1	1	$$arg1 >> $$arg2
+instruction	uint16_t	RSF.uint16_t		1	1	$$arg1 >> $$arg2
+instruction	uint32_t	RSF.uint32_t		1	1	$$arg1 >> $$arg2
+instruction	uint64_t	RSF.uint64_t		1	1	$$arg1 >> $$arg2
+instruction	uint8_t	RSF.uint8_t		1	1	$$arg1 >> $$arg2
+instruction	double	SUB.double		1	1	$$arg1 - $$arg2
+instruction	float	SUB.float		1	1	$$arg1 - $$arg2
+instruction	int16_t	SUB.int16_t		1	1	$$arg1 - $$arg2
+instruction	int32_t	SUB.int32_t		1	1	$$arg1 - $$arg2
+instruction	int64_t	SUB.int64_t		1	1	$$arg1 - $$arg2
+instruction	int8_t	SUB.int8_t		1	1	$$arg1 - $$arg2
+instruction	uint16_t	SUB.uint16_t		1	1	$$arg1 - $$arg2
+instruction	uint32_t	SUB.uint32_t		1	1	$$arg1 - $$arg2
+instruction	uint64_t	SUB.uint64_t		1	1	$$arg1 - $$arg2
+instruction	uint8_t	SUB.uint8_t		1	1	$$arg1 - $$arg2
+instruction	bool	XOR.bool		1	1	$$arg1 ^ $$arg2
+instruction	double	XOR.double		1	1	$$arg1 ^ $$arg2
+instruction	float	XOR.float		1	1	$$arg1 ^ $$arg2
+instruction	int16_t	XOR.int16_t		1	1	$$arg1 ^ $$arg2
+instruction	int32_t	XOR.int32_t		1	1	$$arg1 ^ $$arg2
+instruction	int64_t	XOR.int64_t		1	1	$$arg1 ^ $$arg2
+instruction	int8_t	XOR.int8_t		1	1	$$arg1 ^ $$arg2
+instruction	uint16_t	XOR.uint16_t		1	1	$$arg1 ^ $$arg2
+instruction	uint32_t	XOR.uint32_t		1	1	$$arg1 ^ $$arg2
+instruction	uint64_t	XOR.uint64_t		1	1	$$arg1 ^ $$arg2
+instruction	uint8_t	XOR.uint8_t		1	1	$$arg1 ^ $$arg2
+type_version	bool	1	bool
+type_version	double	1	double
+type_version	float	1	float
+type_version	int16_t	1	int16_t
+type_version	int32_t	1	int32_t
+type_version	int64_t	1	int64_t
+type_version	int8_t	1	int8_t
+type_version	uint16_t	1	uint16_t
+type_version	uint32_t	1	uint32_t
+type_version	uint64_t	1	uint64_t
+type_version	uint8_t	1	uint8_t
