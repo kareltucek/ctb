@@ -95,6 +95,9 @@ Also I have created basic C instruction table.
 
 Now I am working on tags and custom code support, because I need to type in tags while creating the sse instruction set.
 
+
+Thu Aug 13 14:44:01 CEST 2015
+=============================
 I am introducing new structure: a tagmaster. Motivation is described in tagmaster.h.
 
 TODO
