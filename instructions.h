@@ -72,6 +72,7 @@ namespace ctb
               const int rating;
               const bool satisfactory;
               conversion(int in, int out, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&,int r, bool s);
+              conversion() = delete;
             } ;
             struct type_version
             {
@@ -79,6 +80,7 @@ namespace ctb
               const std::string code;
               const std::string note;
               type_version(int w, const std::string& c,const std::string&);
+              type_version() = delete;
             } ;
            typename T::tag_handler_t& taghandler;
           public:
@@ -110,6 +112,7 @@ namespace ctb
               const int rating;
               const bool satisfactory;
               instruction(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r, bool satisfactory);
+              instruction() = delete;
             }
             ;//std::vector<typename T::tid_t> in_types
             typename T::tag_handler_t& taghandler;
@@ -147,6 +150,7 @@ namespace ctb
         /*IAPI*/ operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f) ;
         /*IAPI*/ type_t& addtype(typename T::tid_t t) ;
         void clear(bool tags = false) ;
+        bool empty();
         ~instruction_table();
     } ;
 
@@ -158,6 +162,12 @@ namespace ctb
     instruction_table<T>::type::type(typename T::tag_handler_t& th) : taghandler(th)
   {
   }
+
+    template <class T>
+    bool instruction_table<T>::empty()
+    {
+      return instab.r().empty();
+    }
 
   template <class T>
     instruction_table<T>::type::type_version::type_version(int w, const std::string& c,const std::string& n) : width(w), code(c), note(n)
@@ -220,7 +230,7 @@ namespace ctb
     int instruction_table<T>::operation::get_max_width(int bound, int* in, int* out)const
     {
       int w = 0;
-      for(auto ins : versions.r())
+      for(const auto& ins : versions.r())
       {
         if(ins.width <= bound && ins.width > w)
         {
@@ -245,11 +255,11 @@ namespace ctb
     {
       if(w == -1)
         w = imbued_width;
-      for( auto type : (mytype.r())->versions.r())
+      for( const auto& t : mytype.r()->versions.r())
       {
-        if ( type.width == w)
+        if ( t.width == w)
         {
-          c = type.code;
+          c = t.code;
           return true;
         }
       }
@@ -284,7 +294,7 @@ namespace ctb
     {
       bool s = false;
       int r = 0;
-      for( auto con : (mytype.r())->conversions.r())
+      for( auto con : mytype->conversions.r())
       {
         if (con.satisfactory && con.width_in == from && con.width_out == to && con.rating >= r)
         {
@@ -318,7 +328,10 @@ namespace ctb
     {
       if(instab.r().find(op) != instab.r().end())
         return *instab.rw().find(op)->second;
-      operation* ptr = new operation(op, t, f, typetab.r().find(t)->second, taghandler);
+      auto itr = typetab->find(t);
+      if(itr == typetab->end())
+        error(std::string("type '").append(t).append("' not found; at: '").append(op).append("' while constructing graph"));
+      operation* ptr = new operation(op, t, f, itr->second, taghandler);
       instab.rw()[op] = ptr;
       return *ptr;
     } 

@@ -52,7 +52,7 @@ namespace ctb
   typedef std::vector<std::string> stringlist;
 
 
-  bool fileexists(char *name)
+  bool fileexists(const char *name)
   {
     struct stat   buffer;
     return (stat (name, &buffer) == 0);
@@ -100,6 +100,25 @@ namespace ctb
       return f;
     }
 
+      template <typename S>
+  void openstream(S& stream, const std::string& name, bool check_existence = true)
+  {
+    stream.open(name);
+    if(!stream.is_open())
+    {
+      if(!fileexists(name.c_str()))
+      {
+        if(check_existence)
+          error(std::string("file does not exist: ").append(name));
+      }
+      else
+      {
+        error(std::string("file could not be opened: ").append(name));
+      }
+    }
+  }
+
+
   template<typename F>
     std::string flags_to_string(F f)
     {
@@ -117,6 +136,9 @@ namespace ctb
       }
       return b;
     }
+
+    std::string exec_path;
+
 
 
   int stoi(std::string str)

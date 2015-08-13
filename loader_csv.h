@@ -236,6 +236,7 @@ namespace ctb
         if(data[ciType] == "instruction")
         {
           int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
+          instab.addtype(data[ciOutType]);
           typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],f);
           operation.addcode(ctb::stoi(data[ciWIn]),ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],ctb::stoi(data[ciRating]));
         }

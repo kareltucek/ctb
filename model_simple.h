@@ -51,11 +51,11 @@ namespace ctb
     ADD("input", "data_in_$cindex[pos_in_$cindex+j]");
     ADD("output", "data_out_$cindex[pos_out_$cindex+j]");
 
-    ADD("fdeclin",  writer<model_generator>::from_file("templates/simple_decl_in.h"));
-    ADD("fdeclout", writer<model_generator>::from_file("templates/simple_decl_out.h"));
-    ADD("fenvin",   writer<model_generator>::from_file("templates/simple_env_in.h"));
-    ADD("fenvout",  writer<model_generator>::from_file("templates/simple_env_out.h"));
-    ADD("fbox",     writer<model_generator>::from_file("templates/simple_box.h"));
+    ADD("fdeclin",  writer<model_generator>::from_file(std::string().append(exec_path).append("templates/simple_decl_in.h")));
+    ADD("fdeclout", writer<model_generator>::from_file(std::string().append(exec_path).append("templates/simple_decl_out.h")));
+    ADD("fenvin",   writer<model_generator>::from_file(std::string().append(exec_path).append("templates/simple_env_in.h")));
+    ADD("fenvout",  writer<model_generator>::from_file(std::string().append(exec_path).append("templates/simple_env_out.h")));
+    ADD("fbox",     writer<model_generator>::from_file(std::string().append(exec_path).append("templates/simple_box.h")));
 
     initialized = true;
   }

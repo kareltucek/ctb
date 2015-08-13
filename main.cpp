@@ -14,6 +14,11 @@ int main(int count, char**args)
     std::cerr << err.first << std::endl;
     return 1;
   }
+  catch(std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+    return 1;
+  }
   return 0;
 }
 

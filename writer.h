@@ -500,7 +500,8 @@ namespace ctb
   template <class M, dolar_mode I, dolar_mode O>
     std::string writer<M,I,O>::from_file(const std::string& filename)
     {
-      std::ifstream ifs(filename);
+      std::ifstream ifs;
+      openstream(ifs,filename);
       std::string file( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>() ) );
       return file;
     }
@@ -624,6 +625,9 @@ namespace ctb
       writer g;
       g.print("line1;line2");
       assert(g==f);
+      writer h;
+      h.print("$1", "a");
+      assert(h.data[0]=="a");
     }
 };
 

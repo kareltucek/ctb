@@ -26,6 +26,7 @@ namespace ctb
         {
           private:
             typedef std::map<int, writer<model_generator> > acces_map_t;
+            friend class generator;
 
             node_t* me;
             acces_map_t acces_map;
@@ -33,11 +34,11 @@ namespace ctb
 
             template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
             void push_params();
-            std::string newname(std::string tag) ;
+            std::string newname(std::string tag, bool reset = false) ;
             template <class W> writer<model_generator> get_acces(int width, int gran, W& w);
           public:
-            template <typename A> using proxy = proxy_<A,data_t>;
-            proxy<const op_t&> op;
+            template <typename A> using proxy = proxy_<A,data_t,generator>;
+            proxy<const op_t*> op;
             proxy<id_t> opid;
 
             template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
@@ -59,9 +60,41 @@ namespace ctb
         int get_broadest(int upperbound = 10000000) ;
 
         void clear();
+        void reset();
+        void update(); /** In case instruction table is reloaded the operation pointers are no longer valid. This function updates them.*/
     };
 
-  typedef generator<traits, instruction_table_default> generator_default; 
+  typedef generator<traits, instruction_table_default> generator_default;
+
+  template <class T, class IT>
+    void generator<T,IT>::update()
+    {
+      for(auto itr = graph->verts->cbegin(); itr != graph->verts->cend(); ++itr)
+      {
+        data_t& n = itr->second->data.rw();
+        n.op.rw() = &instab->dec(n.opid.r());
+        /*
+        std::string a = n.opid.r();
+        instab->dec(a);
+        instab->dec(n.opid.r());
+        */
+      }
+      //graph.rw().crawl_topological([&](typename graph_t::node_t* n){n->data.op.rw() = instab->dec(n->data->opid.r());});
+    /*
+      for( auto op : graph->verts.r() )
+      {
+        std::string id = op.second->data->opid.r();
+        op.second->data.rw().op.rw() =
+            instab->dec(id);
+      }
+      */
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::reset()
+    {
+      data_t(NULL,NULL,id_t()).newname("", true); //resets id counter (want this for loader related testing)
+    }
 
   template <class T, class IT>
     void generator<T,IT>::clear()  
@@ -78,7 +111,7 @@ namespace ctb
 
   template <class T, class IT>
     template <typename... L>
-    generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(*o)
+    generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(o)
     {
       push_params((std::forward<L>(p))...);
     }
@@ -224,7 +257,7 @@ namespace ctb
       int minsrc = -1;
       for(auto itr : acces_map)
       {
-        int d = op.r().get_conversion_graph().get_dist(itr.first, width);
+        int d = op->get_conversion_graph().get_dist(itr.first, width);
         if(d < mindist)
         {
           mindist = d;
@@ -242,7 +275,7 @@ namespace ctb
         while(minsrc != width)
         {
           int next;
-          op.r().get_conversion_graph().get_dist(minsrc, width, &next);
+          op->get_conversion_graph().get_dist(minsrc, width, &next);
           get_acces(next, granularity, w);
           minsrc = next;
         }
@@ -260,9 +293,11 @@ namespace ctb
     }
 
   template <class T, class IT>
-    std::string generator<T,IT>::data_t::newname(std::string tag)
+    std::string generator<T,IT>::data_t::newname(std::string tag, bool reset)
     {
       static int id = 0;
+      if(reset)
+        id = -1;
       return print("var_$1_$2_$3_$$vindex", opid, id++, tag);
     }
 

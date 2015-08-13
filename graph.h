@@ -77,6 +77,7 @@ namespace ctb
       out.rw().clear();
       for(auto v : verts.rw())
         delete v.second;
+      verts.rw().clear();
     }
 
   template <class T, class I, bool directed, class ... O>
@@ -92,7 +93,7 @@ namespace ctb
       g.addedge(2,4);
       int i = 0;
       int results[] = {1,2,3,4};
-      g.out.r().front()->crawl_topological([&](node* n){ assert(n->id.r() == results[i++]);});
+      g.out->front()->crawl_topological([&](node* n){ assert(n->id.r() == results[i++]);});
       g.calculate_distances();
       assert(g.get_dist(1,4) == 2);
       //  
@@ -119,8 +120,8 @@ namespace ctb
   template <class T, class I, bool directed, class ... O>
     int graph_generic<T,I,directed,O...>::get_dist(I a, I b, I* c) const
     {
-      auto va = verts.r().find(a);
-      auto vb = verts.r().find(b);
+      auto va = verts->find(a);
+      auto vb = verts->find(b);
       if(va == verts->end() || vb == verts->end())
         error( "unknown vertex id");
       //  
@@ -138,11 +139,11 @@ namespace ctb
   template <class T, class I, bool directed, class ... O>
     void graph_generic<T,I,directed,O...>::calculate_distances()  
     {
-      if(verts.r().empty())
+      if(verts->empty())
         return;
       int size = this->index;
-      (*verts.r().begin()).second->template crawl<true, true>([=](node* n)->bool{ n->init_map(size); return true;}, [=](node*n)->bool{return n->map.size() != size;} );
-      (*verts.r().begin()).second->template crawl<directed, true>([=](node* n)->bool{ return n->update_distances();}, [=](node*n)->bool{return true;} );
+      verts->begin()->second->template crawl<true, true>([=](node* n)->bool{ n->init_map(size); return true;}, [=](node*n)->bool{return n->map.size() != size;} );
+      verts->begin()->second->template crawl<directed, true>([=](node* n)->bool{ return n->update_distances();}, [=](node*n)->bool{return true;} );
     }
 
 

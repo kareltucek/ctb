@@ -1,0 +1,7 @@
+loadinstab xml instab.xml
+exportinstab csv instab.csv
+loadgraph xml graph.xml
+generate simple output_xml.h
+loadinstab csv instab.csv
+generate simple output_csv.h
+

@@ -46,7 +46,8 @@ namespace ctb
 
         void help_cmdline_old();
         void help_command_stream();
-        std::string get_inner_name(std::string fname);
+        static std::string get_inner_name(std::string fname);
+        static std::string get_prefix(std::string fname);
 
         void fill();
 
@@ -76,6 +77,7 @@ namespace ctb
 
         static void self_test() ;
     } ;
+
 
 
   typedef ctb<traits, instruction_table<traits> > ctb_default;
@@ -132,12 +134,15 @@ namespace ctb
     {
       instab.clear();
       L<T, generator_t, IT>::load_instab(instab, params...);
+      mygenerator.update();
     }
 
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::load_graph(P...params)
     {
       mygenerator.clear();
+      if(instab.empty())
+        warn("Warning: loading graph while instruction table is empty. Graph construction depends on correct input/output flags!");
       L<T, generator_t, IT>::load_graph(mygenerator, params...);
     }
 
@@ -145,6 +150,7 @@ namespace ctb
     template <typename M>
     std::string ctb<T,IT>::generate(std::string name)
     {
+      mygenerator.reset();
       auto m = M::generate(mygenerator.get_broadest(), mygenerator, name);
       return m.write_str();
     }
@@ -166,6 +172,18 @@ namespace ctb
       b.load_instab<xml_loader>(std::ifstream("unit_test1/instab.xml"));
       writer_default::to_file( b.process<xml_loader, model_simple>( "test_simple", std::ifstream("unit_test1/graph.xml")), "unit_test1/test_simple.h");
       writer_default::to_file( b.process<xml_loader, model_bobox>( "test_bobox", std::ifstream("unit_test1/graph.xml")), "unit_test1/test_bobox.h");
+      assert(b.get_prefix("/test/test/last") == "/test/test/");
+    }
+
+  template <class T, class IT>
+    std::string ctb<T,IT>::get_prefix(std::string f)
+    {
+      int p = f.find_last_of("\\/");
+      if(p > -1)
+        f = f.substr(0, p).append("/");
+      else
+        error("cant figure out the executable path");
+      return f;
     }
 
   template <class T, class IT>
@@ -289,6 +307,7 @@ namespace ctb
   template <class T, class IT>
     int ctb<T,IT>::command_stream_cmdline(int count, char ** args)
     {
+      exec_path = get_prefix(args[0]);
       std::string allowed,excluded,required;
       stringlist files;
       for(int i = 1; i < count; ++i)
@@ -386,6 +405,8 @@ start:;
       return 0;
     }
 
+
+
     template <class T, class IT>
     int ctb<T,IT>::parse_command(std::string line)
     {
@@ -399,6 +420,10 @@ start:;
         help_command_stream();
         return 0;
       }
+      if(cmd_id_hash.find(words[0]) == cmd_id_hash.end())
+        error( std::string("invalid command: ").append(line), false);
+      std::ifstream filei;
+      std::ofstream fileo;
       switch(cmd_id_hash[words[0]])
       {
       case fidso:
@@ -425,36 +450,36 @@ start:;
       {
       case fidso:
       {
-        std::ifstream file(words[1]);
-        parse_command_stream(file);
+        openstream(filei,words[1]);
+        parse_command_stream(filei);
       }
         break;
       case fidli:
       {
-        std::ifstream file(words[2]);
-        std::get<fidli>(hash_loader[words[1]])(file);
+        openstream(filei,words[2]);
+        std::get<fidli>(hash_loader[words[1]])(filei);
       }
         break;
       case fidlg:
       {
-        std::ifstream file(words[2]);
-        std::get<fidlg>(hash_loader[words[1]])(file);
+        openstream(filei,words[2]);
+        std::get<fidlg>(hash_loader[words[1]])(filei);
       }
         break;
       case fidei:
       {
-        std::ofstream file(words[2]);
-        std::get<fidei>(hash_loader[words[1]])(file);
+        openstream(fileo,words[2],false);
+        std::get<fidei>(hash_loader[words[1]])(fileo);
       }
         break;
       case fideg:
       {
-        std::ofstream file(words[2]);
-        std::get<fideg>(hash_loader[words[1]])(file);
+        openstream(fileo,words[2],false);
+        std::get<fideg>(hash_loader[words[1]])(fileo);
       }
         break;
       case fidg:
-        writer_plain::to_file(hash_model[words[1]](get_inner_name(words[2])),words[2]);
+        writer_plain::to_file(words[2], hash_model[words[1]](get_inner_name(words[2])));
         break;
       default:
         error( std::string("unknown action: "  ).append(line));
