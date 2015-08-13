@@ -19,6 +19,10 @@ namespace ctb
    *
    * A custom loader or model has to be registered using the templated method register_model or register_loader in order to be usable from string driven environments.
    *
+   * side notes
+   * ==========
+   * TODO commandline interface depends on tagmasters features ingenerally!
+   *
    * **DEPRECATED**
    * The main two methods are load_instab and process. Both these take list of parameters which is forwarded to the loader methods altogether with a reference to the object to be filled. The loader interface is not fixed except for the first argument.
    *
@@ -26,28 +30,30 @@ namespace ctb
    *
    * There is also a default method for commandline option parsing. This comes in two versions since the original method turned out to be too ingeneral.
    *
-   * Template parameters are a trait class, which specifies mostly internal id types, an instruction table class, a loader class and a commandline interface. 
+   * Template parameters are a trait class, which specifies mostly internal id types, an instruction table class, a loader class and a commandline interface.
+   *
    *
    * */
 
 
   template <class T, class IT>
-    class ctb 
+    class ctb
     {
       private:
         typedef generator<T,IT> generator_t;
         IT instab;
         generator_t mygenerator;
-    void help_cmdline_old();
-    void help_command_stream();
+
+        void help_cmdline_old();
+        void help_command_stream();
         std::string get_inner_name(std::string fname);
 
         void fill();
 
         typedef std::tuple< std::function<void(std::istream&)>, std::function<void(std::istream&)>, std::function<void(std::ostream&)>, std::function<void(std::ostream&)>> loader_record;
         typedef std::function<std::string(std::string)> model_record;
-         std::map<std::string, loader_record> hash_loader;
-         std::map<std::string, model_record> hash_model;
+        std::map<std::string, loader_record> hash_loader;
+        std::map<std::string, model_record> hash_model;
       public:
         ctb();
         ctb(const ctb&) = delete;
@@ -74,13 +80,13 @@ namespace ctb
 
   typedef ctb<traits, instruction_table<traits> > ctb_default;
 
-    template <class T, class IT>
-   ctb<T,IT>::ctb() : instab(), mygenerator(instab), hash_model(), hash_loader()
-  {   
+  template <class T, class IT>
+    ctb<T,IT>::ctb() : instab(), mygenerator(instab), hash_model(), hash_loader()
+  {
     fill();
   }
 
-      template <class T, class IT>
+  template <class T, class IT>
     void ctb<T,IT>::fill()
     {
       register_model<model_simple>();
@@ -106,7 +112,7 @@ namespace ctb
     {
       if(M::get_name() == "")
         error( "unnamed model passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
-      hash_model[M::get_name()] = model_record(std::bind(&ctb::generate<M>, this, std::placeholders::_1)); 
+      hash_model[M::get_name()] = model_record(std::bind(&ctb::generate<M>, this, std::placeholders::_1));
     }
 
   template <class T, class IT>
@@ -157,9 +163,9 @@ namespace ctb
     void ctb<T,IT>::self_test()
     {
       ctb b;
-      b.load_instab<xml_loader>(std::ifstream("xml/instab.xml"));
-      writer_default::to_file( b.process<xml_loader, model_simple>( "test_simple", std::ifstream("xml/graph.xml")), "output/test_simple.h");
-      writer_default::to_file( b.process<xml_loader, model_bobox>( "test_bobox", std::ifstream("xml/graph.xml")), "output/test_bobox.h");
+      b.load_instab<xml_loader>(std::ifstream("unit_test1/instab.xml"));
+      writer_default::to_file( b.process<xml_loader, model_simple>( "test_simple", std::ifstream("unit_test1/graph.xml")), "unit_test1/test_simple.h");
+      writer_default::to_file( b.process<xml_loader, model_bobox>( "test_bobox", std::ifstream("unit_test1/graph.xml")), "unit_test1/test_bobox.h");
     }
 
   template <class T, class IT>
@@ -189,7 +195,10 @@ namespace ctb
     {
       std::cout << "syntax: ctb [options]" << std::endl;
       std::cout << "options:" << std::endl;
-      std::cout << "  -f <file>     read input from file instead from cin" << std::endl;
+      std::cout << "  -f <file>                   read input from file instead from cin" << std::endl;
+      std::cout << "  -r <comma separated tags>   require all of these tags" << std::endl;
+      std::cout << "  -a <comma separated tags>   require one of these tags ('allow')" << std::endl;
+      std::cout << "  -e <comma separated tags>   exclude code with any of these tags  " << std::endl;
       std::cout << "  -h            show some help" << std::endl;
       std::cout << "" << std::endl;
       std::cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << std::endl;
@@ -197,8 +206,9 @@ namespace ctb
       std::cout << "  loadinstab <loader> <file>" << std::endl;
       std::cout << "  loadgraph <loader <file>" << std::endl;
       std::cout << "  generate <output model> <output file>" << std::endl;
-      std::cout << "  exportinstab <loader <output file>" << std::endl;
-      std::cout << "  exportgraph <loader <output file>" << std::endl;
+      std::cout << "  exportinstab <loader> <output file>" << std::endl;
+      std::cout << "  exportgraph <loader> <output file>" << std::endl;
+      std::cout << "  source <file>" << std::endl;
       std::cout << "Loaders:" << std::endl;
       for(auto l : hash_loader)
       {
@@ -279,35 +289,66 @@ namespace ctb
   template <class T, class IT>
     int ctb<T,IT>::command_stream_cmdline(int count, char ** args)
     {
+      std::string allowed,excluded,required;
       stringlist files;
       for(int i = 1; i < count; ++i)
       {
         switch (args[i][0])
         {
-          case '-':
-            for(int j = 0; args[i][j] != '\0'; ++j)
+        case '-':
+          for(int j = 1; args[i][j] != '\0'; ++j)
+          {
+            switch (args[i][j])
             {
-              switch (args[i][j])
+            case 'f':
+            case 'a':
+            case 'e':
+            case 'r':
+              if(i+1 >= count)
+                error( std::string("argument expected after -").append(std::string(1,args[i][j])).append(" switch"));
+              if(args[i][j+1] != '\0')
+                warn( std::string("skipping some (misplaced) switches due to argument at: ").append(std::string(1,args[i][j])));
+              switch(args[i][j])
               {
-                case 'f':
-                  if(i+1 >= count)
-                    error( "filename expected after -f switch");
-                  files.push_back( args[i+1] ); 
-                  break;
-                case 'h':
-                  help_command_stream();
-                  return 0;
-                default:
-                  help_command_stream();
-                  return 1;
+              case 'a':
+                if(!allowed.empty())
+                  allowed.append(",");
+                allowed.append(args[i+1]);
+                break;
+              case 'e':
+                if(!excluded.empty())
+                  excluded.append(",");
+                excluded.append(args[i+1]);
+                break;
+              case 'r':
+                if(!required.empty())
+                  required.append(",");
+                required.append(args[i+1]);
+                break;
+              case 'f':
+                files.push_back( args[i+1] );
+                break;
               }
+              i+=1;
+              goto start;
+              break;
+            case 'h':
+              help_command_stream();
+              return 0;
+            default:
+              error( std::string("unknown switch: ").append(std::string(1,args[i][j])));
+              help_command_stream();
+              return 1;
             }
-            break;
-          default:
-            help_command_stream();
-            return 1;
+          }
+          break;
+        default:
+          help_command_stream();
+          return 1;
         }
+start:;
       }
+      instab.set_tags(typename T::tag_handler_t(required,allowed,excluded));
       if(files.empty())
       {
         parse_command_stream(std::cin);
@@ -323,98 +364,109 @@ namespace ctb
       return 0;
     }
 
-  template <class T, class IT>
+    template <class T, class IT>
     int ctb<T,IT>::parse_command_stream(std::istream& stream)
     {
       std::string line;
+      int i = 1;
       while(std::getline(stream, line))
       {
         try
         {
-        parse_command(line);
+          parse_command(line);
         }
         catch (error_struct& err)
         {
+          std::cerr << "line " << i << ": " << line << "\n    " << err.first << std::endl;
           if(err.second)
             throw;
-          else
-            std::cerr << err.first << std::endl;
         }
+        ++i;
       }
       return 0;
     }
 
-  template <class T, class IT>
+    template <class T, class IT>
     int ctb<T,IT>::parse_command(std::string line)
     {
-        stringlist words = split(line, ' ',true);
-        if(words.empty())
-          return 0;
-        if(!words[0].empty() && words[0][0] == '#')
-          return 0;
-        if(words[0] == "help" || words[0] == "?")
-        {
-          help_command_stream();
-          return 0;
-        }
+      stringlist words = split(line, ' ',true);
+      if(words.empty())
+        return 0;
+      if(!words[0].empty() && words[0][0] == '#')
+        return 0;
+      if(words[0] == "help" || words[0] == "?")
+      {
+        help_command_stream();
+        return 0;
+      }
+      switch(cmd_id_hash[words[0]])
+      {
+      case fidso:
+        if(words.size() != 2)
+          error( std::string("invalid number of arguments at line: ").append(line), false);
+        break;
+      case fidli:
+      case fidlg:
+      case fidei:
+      case fideg:
         if(words.size() != 3)
           error( std::string("invalid number of arguments at line: ").append(line), false);
-        switch(cmd_id_hash[words[1]])   
-        {
-          case fidli:
-          case fidlg:
-          case fidei:
-          case fideg:
-            if(hash_loader.find(words[1]) == hash_loader.end())
-              error( std::string("loader not found (did you register it in ctb.h?): ", false).append(words[1]));
-            break;
-          case fidg:
-            if(hash_model.find(words[1]) == hash_model.end())
-              error( std::string("model not found (did you register it in ctb.h?): ", false).append(words[1]));
-            break;
-          default:
-            error( std::string("invalid parameter at line: ").append(line));
-        }
-        switch(cmd_id_hash[words[0]])   
-        {
-          case fidli:
-            {
-            std::ifstream file(words[2]);
-            std::get<fidli>(hash_loader[words[1]])(file);
-            }
-            break;
-          case fidlg:
-            {
-              std::ifstream file(words[2]);
-              std::get<fidlg>(hash_loader[words[1]])(file);
-            }
-            break;
-          case fidei:
-            {
-              std::ofstream file(words[2]);
-              std::get<fidei>(hash_loader[words[1]])(file);
-            }
-            break;
-          case fideg:
-            {
-              std::ofstream file(words[2]);
-              std::get<fideg>(hash_loader[words[1]])(file);
-            }
-            break;
-          case fidg:
-            writer_plain::to_file(hash_model[words[1]](get_inner_name(words[2])),words[2]);
-            break;
-          default:
-            error( std::string("unknown action: "  ).append(line));
-            break;
-        }
+        if(hash_loader.find(words[1]) == hash_loader.end())
+          error( std::string("loader not found (did you register it in ctb.h?): ", false).append(words[1]));
+        break;
+      case fidg:
+        if(words.size() != 3)
+          error( std::string("invalid number of arguments at line: ").append(line), false);
+        if(hash_model.find(words[1]) == hash_model.end())
+          error( std::string("model not found (did you register it in ctb.h?): ", false).append(words[1]));
+        break;
+      }
+      switch(cmd_id_hash[words[0]])
+      {
+      case fidso:
+      {
+        std::ifstream file(words[1]);
+        parse_command_stream(file);
+      }
+        break;
+      case fidli:
+      {
+        std::ifstream file(words[2]);
+        std::get<fidli>(hash_loader[words[1]])(file);
+      }
+        break;
+      case fidlg:
+      {
+        std::ifstream file(words[2]);
+        std::get<fidlg>(hash_loader[words[1]])(file);
+      }
+        break;
+      case fidei:
+      {
+        std::ofstream file(words[2]);
+        std::get<fidei>(hash_loader[words[1]])(file);
+      }
+        break;
+      case fideg:
+      {
+        std::ofstream file(words[2]);
+        std::get<fideg>(hash_loader[words[1]])(file);
+      }
+        break;
+      case fidg:
+        writer_plain::to_file(hash_model[words[1]](get_inner_name(words[2])),words[2]);
+        break;
+      default:
+        error( std::string("unknown action: "  ).append(line));
+        break;
+      }
       return 0;
     }
 
 
 
-  template class ctb<traits, instruction_table<traits>> ;
+    template class ctb<traits, instruction_table<traits>> ;
 };
 
 
-#endif 
+                                             #endif

@@ -1,0 +1,37 @@
+logical	instruction	bool	AND.bool		1	1	$$arg1 && $$arg2		C	10
+logical	instruction	bool	EQ.bool		1	1	$$arg1 == $$arg2		C	10
+logical	instruction	bool	NE.bool		1	1	$$arg1 != $$arg2		C	10
+logical	instruction	bool	NOT.bool		1	1	! $$arg1        		C	10
+logical	instruction	bool	OR.bool		1	1	$$arg1 || $$arg 		C	10
+logical	instruction	bool	XOR.bool		1	1	$$arg1 ^ $$arg2 		C	10
+relational	instruction	bool	EQ.${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}		1	1	$$arg1 == $$arg2		C	10
+relational	instruction	bool	GE.${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}		1	1	$$arg1 >= $$arg2		C	10
+relational	instruction	bool	GT.${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}		1	1	$$arg1 > $$arg2		              C	10
+relational	instruction	bool	LE.${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}		1	1	$$arg1 <= $$arg2		C	10
+relational	instruction	bool	LT.${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}		1	1	$$arg1 < $$arg2		C	10
+relational	instruction	bool	NE.${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}		1	1	$$arg1 != $$arg2		C	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	ADD.$num		1	1	$$arg1 + $$arg2		C	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	DIV.$num		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	MOD.$num		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	MUL.$num		1	1	$$arg1 * $$arg2		C	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	SUB.$num		1	1	$$arg1 - $$arg2		C	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	XOR.$num		1	1	$$arg1 ^ $$arg2		C	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	NOT.$num		1	1	~ $$arg1       		C	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	LSF.$num		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	AND.$num		1	1	$$arg1 & $$arg2		C	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	OR.$num		1	1	$$arg1 | $$arg2		C	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	RSF.$num		1	1	$$arg1 >> $$arg2		C	10
+conversions	instruction	${t->double,float,bool,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	CVRT.${u->double,float,bool,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}.$t		1	1	($t)$$arg1		C	10
+IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}	LD.$t	input	1	1	$$input		C	10
+IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}	ST.$t	output	1	1	$$output = $$arg1		C	10		
+types	type_version	bool	1	bool		
+types	type_version	double	1	double		
+types	type_version	float	1	float		
+types	type_version	int16_t	1	int16_t		
+types	type_version	int32_t	1	int32_t		
+types	type_version	int64_t	1	int64_t		
+types	type_version	int8_t	1	int8_t		
+types	type_version	uint16_t	1	uint16_t		
+types	type_version	uint32_t	1	uint32_t		
+types	type_version	uint64_t	1	uint64_t		
+types	type_version	uint8_t	1	uint8_t		

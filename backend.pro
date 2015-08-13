@@ -34,7 +34,9 @@ HEADERS += \
     csvloader.h \
     loader_csv.h \
     loader_xml.h \
-    model_maker.h
+    model_maker.h \
+    proxy.h \
+    tagmaster.h
 
 OTHER_FILES += \
     test

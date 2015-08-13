@@ -1,0 +1,3 @@
+loadinstab csv C_table.csv
+exportinstab csv C_table_expanded.csv
+

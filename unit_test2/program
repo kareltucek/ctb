@@ -1,0 +1,5 @@
+loadinstab xml instab.xml
+exportinstab csv 1.csv
+loadinstab csv 1.csv
+exportinstab csv 2.csv
+

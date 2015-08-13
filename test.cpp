@@ -1,5 +1,5 @@
-
 #include "loader_csv.h"
+#include "tagmaster.h"
 #include "ctb.h"
 
 int main()
@@ -11,6 +11,7 @@ int main()
   loader_default::self_test();
   ctb_default::self_test();
   csvloader_default::self_test();
+  tagmaster_default::self_test();
 
   return 0;
 }

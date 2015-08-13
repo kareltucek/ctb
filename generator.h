@@ -135,19 +135,31 @@ namespace ctb
         error( std::string("granularities are relatively prime!"));
       if(myin != myout)
         error( std::string("asymetric instructions not supported"));
-      op->imbue_width(mygran);
+      //op->imbue_width(mygran);
       acces_map.clear();
 #define ARG(a) (a-1 < me->in->size() ? W().print(me->in[a-1]->data.rw().get_acces(myin, granularity, w), i*myout) : empty)
       W acces({newname(print("w$1",myout))});
       acces_map.insert(acces_map_t::value_type(myout, acces));
       for(int i = 0; i < granularity/myin; i++)
       {
-        if(op->is(fINPUT))
-          w.print("$inputcode;", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), get_inout_pos(), ARG(1), ARG(2), ARG(3));
-        else if(op->is(fOUTPUT))
-          w.print("$outputcode;", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), get_inout_pos(), ARG(1), ARG(2), ARG(3));
+        std::string type_string, op_c, op_cc;
+        op->get_type_string(mygran, type_string);
+        op->get_op_string(mygran, op_c, op_cc);
+        if(op_c.empty() && op_cc.empty())
+          warn(std::string("instruction code and custom code are both empty for ").append(opid));
+        if(op_c.empty())
+        {
+            w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), ARG(1), ARG(2), ARG(3));
+        }
         else
-          w.print("$innercode", op->get_type_string(), W().print(acces, i*myout), op->get_op_string(), 0              , ARG(1), ARG(2), ARG(3));
+        {
+          if(op->is(fINPUT))
+            w.print("$inputcode;" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
+          else if(op->is(fOUTPUT))
+            w.print("$outputcode;", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
+          else
+            w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0              , ARG(1), ARG(2), ARG(3));
+        }
       }
     }
 
@@ -165,17 +177,26 @@ namespace ctb
         //if a trivial path exists
         for(auto itr : acces_map)
         {
-          std::string c1, c2, t;
-          if(op->get_conv_string(itr.first, width, c1, c2, t))
+          std::string c1, c2, cc, t;
+          if(op->get_conv_string(itr.first, width, c1, c2, cc, t))
           {
+            if(c2.empty() && c1.empty() && cc.empty())
+              warn(std::string("all code strings are empty at ").append(opid));
             W acces({newname(print("conv_w$1",width))});
             acces_map.insert(acces_map_t::value_type(width, acces));
             if(itr.first > width)
             {
               for(int i = 0; i < granularity/itr.first; i++)
               {
-                w.print("$conversioncode", t, W().print(acces, i*itr.first      ), c1, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
-                w.print("$conversioncode", t, W().print(acces, i*itr.first+width), c2, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                if(cc.empty())
+                {
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ),    c1, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width),    c2, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                }
+                else
+                {
+                  w.print(cc, t, W().print(acces, i*itr.first ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                }
               }
               return acces;
             }
@@ -183,7 +204,14 @@ namespace ctb
             {
               for(int i = 0; i < granularity/width; i++)
               {
-                w.print("$conversioncode", t, W().print(acces, i*width          ), c1, get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                if(cc.empty())
+                {  
+                  w.print("$conversioncode", t, W().print(acces, i*width         ), c1, get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                }
+                else
+                {
+                  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                }
               }
               return acces;
             }

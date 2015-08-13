@@ -3,19 +3,20 @@ FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -W
 
 CXX=g++11
 
-all : test output/test_simple.h 
-	#testdir ctb
+all : test ctb testdir2 testdir1
 
-test : datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h model_maker.h model_simple.h model_bobox.h loader_csv.h Makefile
+test : datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h model_maker.h model_simple.h model_bobox.h loader_csv.h Makefile tagmaster.h proxy.h
 	${CXX} ${FLAGS} test.cpp -DTEMPLATED -o test -l tinyxml2
-
-
-testdir :
-	./test && make -C output
-
 
 ctb : main.cpp test
 	${CXX} ${FLAGS} main.cpp -DTEMPLATED -o ctb -l tinyxml2
+
+testdir1 : test
+	./test && make -C unit_test1
+
+testdir2 : ctb
+	make -C unit_test2
+
 
 clean :
 	rm *.o test ctb

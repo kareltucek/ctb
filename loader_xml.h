@@ -23,6 +23,7 @@ namespace ctb
         static std::string getstr(tinyxml2::XMLNode * node, std::string name);
         static std::string getanystr(tinyxml2::XMLNode * node, std::string name);
         static int getint(tinyxml2::XMLNode * node, std::string name);
+        static int getanyint(tinyxml2::XMLNode * node, std::string name);
         static bool hasval(tinyxml2::XMLNode* node, std::string name);
       public:
         static void load_graph(G& graph, std::istream& stream) ;
@@ -51,6 +52,15 @@ namespace ctb
     void xml_loader<T,G,IT>::export_graph(G& graph, std::ostream& stream)
     {
       error( "xml export not (yet) supported");
+    }
+
+  template <class T, class G, class IT>
+    int xml_loader<T,G,IT>::getanyint(tinyxml2::XMLNode * node, std::string name)
+    {
+      if(hasval(node, name))
+        return getint(node, name);
+      else
+        return 0;
     }
 
   template <class T, class G, class IT>
@@ -128,16 +138,16 @@ namespace ctb
       {
         typename IT::type_t& t = instab.addtype( getstr(itr, "typeid"));
         for(XMLElement * itr2 = itr->FirstChildElement("type_version"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_version"))
-          t.addcode_type((getint(itr2, "width")), getstr(itr2, "code"));
+          t.addcode_type(getint(itr2, "width"), getstr(itr2, "code"),getanystr(itr2,"note"));
         for(XMLElement * itr2 = itr->FirstChildElement("type_conversion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_conversion"))
-          t.addcode_conversion((getint(itr2, "width_in")), getint(itr2, "width_out"), getanystr(itr2, "code1"), getanystr(itr2, "code2"));
+          t.addcode_conversion(getint(itr2, "width_in"), getint(itr2, "width_out"), getanystr(itr2, "code1"), getanystr(itr2, "code2"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
       }
       for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
       {
         typename T::flag_t f = ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
         typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), f);
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
-          t.addcode((getint(itr2, "width_in")),(getint(itr2, "width_out")), getstr(itr2, "code"));
+          t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
       }
     }
 
@@ -147,9 +157,9 @@ namespace ctb
       instruction_table_default tab;
       generator_default g(tab);
       xml_loader l;
-      std::ifstream i_xml("xml/instab.xml");
+      std::ifstream i_xml("unit_test1/instab.xml");
       l.load_instab(tab, i_xml);
-      std::ifstream g_xml("xml/graph.xml");
+      std::ifstream g_xml("unit_test1/graph.xml");
       l.load_graph(g, g_xml);
     }
 

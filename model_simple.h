@@ -71,22 +71,29 @@ namespace ctb
       wrt olist;
 
       wrt decl;
+        std::string type_string;
       for( auto n : generator.graph->in.r())
       {
-        n->data->op->imbue_width(1);
-        decl.print("$fdeclin", n->data->get_inout_pos(), n->data->op->get_type_string());
+        n->data->op->get_type_string(1, type_string);
+        decl.print("$fdeclin", n->data->get_inout_pos(), type_string);
       }
       for(auto n : generator.graph->out.r())
       {
-        n->data->op->imbue_width(1);
-        decl.print("$fdeclout", n->data->get_inout_pos(), n->data->op->get_type_string());
+        n->data->op->get_type_string(1, type_string);
+        decl.print("$fdeclout", n->data->get_inout_pos(), type_string);
       }
 
       wrt envelopes;
       for(auto n : generator.graph->in.r())
-        envelopes.print("$fenvin", n->data->get_inout_pos(), n->data->op->get_type_string());
+      {
+        n->data->op->get_type_string(1, type_string);
+        envelopes.print("$fenvin", n->data->get_inout_pos(), type_string);
+      }
       for(auto n : generator.graph->out.r())
-        envelopes.print("$fenvout", n->data->get_inout_pos(),  n->data->op->get_type_string());
+      {
+        n->data->op->get_type_string(1, type_string);
+        envelopes.print("$fenvout", n->data->get_inout_pos(),  type_string);
+      }
 
       wrt minlist;
       minlist.print("std::numeric_limits<unsigned>::max()");

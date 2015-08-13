@@ -84,6 +84,19 @@ Back again. Today I started testing of the csv loader and bumped into problems w
 
 Another thing I have done is generalizing exception handling. I have created two global functions which would let me change mechanics of exception throwing simply and also have written multiple layers of error handling.
 
+
+Wed Aug 12 19:19:15 CEST 2015
+=============================
+I restructured the directory structure.
+
+Exception handling was improved in order to report helpfully errors in (csv) instruction tables.
+
+Also I have created basic C instruction table.
+
+Now I am working on tags and custom code support, because I need to type in tags while creating the sse instruction set.
+
+I am introducing new structure: a tagmaster. Motivation is described in tagmaster.h.
+
 TODO
 ====
 // TODO
@@ -102,5 +115,6 @@ tag support
 custom code support
 switch to nonstatic loaders
 unit tests for export mechanics (and dependencies)
+split commandline interface from programming interface (taskmaster conflicts at the moment)
 
 

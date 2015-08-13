@@ -69,7 +69,7 @@ namespace ctb
     {
       clear();
     }
-  
+
   template <class T, class I, bool directed, class ... O>
     void graph_generic<T,I,directed,O...>::clear()
     {

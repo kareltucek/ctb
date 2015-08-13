@@ -63,6 +63,8 @@ namespace ctb
    *            6 width out
    *            7 code
    *            8 code custom
+   *            9 tags
+   *            10 rating
    * for the type version:
    *          (logical type definition)
    *            2 type id
@@ -78,16 +80,18 @@ namespace ctb
    *            5 code 1
    *            6 code 2
    *            7 code custom
+   *            8 tags
+   *            9 rating
    *              
    *
    *
    * */
 
   template <char D>
-  struct delimiter
-  {
-    static const char value = D;
-  };
+    struct delimiter
+    {
+      static const char value = D;
+    };
 
   template <class T, class G, class IT, class D = delimiter<'\t'> >
     class csv_loader
@@ -96,7 +100,9 @@ namespace ctb
         struct csv_loader_tag{};
         typedef model_maker<csv_loader_tag, language_empty> model_pre;
         typedef typename writer<model_pre>::basic_importer preprocessor;
-        enum cols { cType = 0, cIn = 1, cOut = 2, cOpId = 3, cOutType = 4,};
+        enum cols_instruction {ciNote,ciType,ciOutType,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
+        enum cols_version     {cvNote,cvType,cvTId,cvW,cvCode};
+        enum cols_conversion  {ccNote,ccType,ccTId,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccTag,ccRating};
 
         //this may (should?) be later generalized into a separate class
         static std::vector<std::string> preprocessline(std::string line);
@@ -144,6 +150,7 @@ namespace ctb
         for(auto i : o.second->versions.r())
         {
           writer_plain::basic_ignorant_exporter w;
+          w.push(i.note);
           w.push("instruction");
           w.push(o.second->out_type);
           w.push(o.second->opid);
@@ -151,6 +158,9 @@ namespace ctb
           w.push(std::to_string(i.width_in));
           w.push(std::to_string(i.width_out));
           w.push(i.code);
+          w.push(i.code_custom);
+          w.push(i.tags);
+          w.push(i.rating);
           s << w.list_concat("\t").write_str() << std::endl;
         }
       }
@@ -159,6 +169,7 @@ namespace ctb
         for(auto v : t.second->versions.r())
         {
           writer_plain::basic_ignorant_exporter w;
+          w.push(v.note);
           w.push("type_version");
           w.push(t.second->tid);
           w.push(std::to_string(v.width));
@@ -168,12 +179,16 @@ namespace ctb
         for(auto v : t.second->conversions.r())
         {
           writer_plain::basic_ignorant_exporter w;
+          w.push(v.note);
           w.push("type_conversion");
           w.push(t.second->tid);
           w.push(std::to_string(v.width_in));
           w.push(std::to_string(v.width_out));
           w.push(v.code1);
           w.push(v.code2);
+          w.push(v.code_custom);
+          w.push(v.tags);
+          w.push(v.rating);
           s << w.list_concat("\t").write_str() << std::endl;
         }
       }
@@ -207,7 +222,7 @@ namespace ctb
 
       instruction_table_default tab;
       csvloader_default l;
-      std::ifstream s("xml/instab.csv");
+      std::ifstream s("unit_test1/instab.csv");
       l.load_instab(tab, s);
     }
 
@@ -217,27 +232,27 @@ namespace ctb
       if(line.size() == 0 || line[0] == '#')
         return;
 
-      stringlist data = split(line, D::value);
-      if(data[0] == "instruction")
-      {
-        int f = string_to_flags<typename T::flag_t>(data[3]);
-        typename IT::operation_t& operation = instab.addoperation(data[2],data[1],f);
-        operation.addcode(ctb::stoi(data[4]),ctb::stoi(data[5]),data[6]);
-      }
-      else if (data[0] == "type_version")
-      {
-        typename IT::type_t& type = instab.addtype(data[1]);
-        type.addcode_type(ctb::stoi(data[2]), data[3]);
-      }
-      else if(data[0] == "type_conversion")
-      {
-        typename IT::type_t& type = instab.addtype(data[1]);
-        type.addcode_conversion(ctb::stoi(data[2]), ctb::stoi(data[3]),data[4],data[5]);
-      }
-      else
-      {
-        error( std::string("unknown line type at: ").append(line));
-      }
+        stringlist data = split(line, D::value);
+        if(data[ciType] == "instruction")
+        {
+          int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
+          typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],f);
+          operation.addcode(ctb::stoi(data[ciWIn]),ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],ctb::stoi(data[ciRating]));
+        }
+        else if (data[cvType] == "type_version")
+        {
+          typename IT::type_t& type = instab.addtype(data[cvTId]);
+          type.addcode_type(ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
+        }
+        else if(data[ccType] == "type_conversion")
+        {
+          typename IT::type_t& type = instab.addtype(data[ccTId]);
+          type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
+        }
+        else
+        {
+          error( std::string("unknown line type "), false);
+        }
     }
 
 
@@ -245,11 +260,26 @@ namespace ctb
     void csv_loader<T,G,IT,D>::process(IT& instab, std::istream& s)
     {
       std::string line;
+      int i = 1;
       while(std::getline(s, line))
       {
         auto lines = preprocessline(line);
         for( auto l : lines)
-          insert(instab, l);
+        {
+          try
+          {
+            insert(instab, l);
+          }
+        catch(const error_struct& e)
+        {
+          error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.first ), false);
+        }
+        catch(std::exception& e)
+        {
+            error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.what() ), false);
+          }
+        }
+        ++i;
       }
     }
 

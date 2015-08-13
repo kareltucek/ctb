@@ -278,7 +278,7 @@ namespace ctb
     }
 
   template <class M, dolar_mode I, dolar_mode O>
-  template <dolar_mode dolars> 
+    template <dolar_mode dolars> 
     void writer<M,I,O>::write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak)
     {
       static int mynobreak = -1;
@@ -544,7 +544,7 @@ namespace ctb
     }
 
   template <class M, dolar_mode I, dolar_mode O>
-  template <dolar_mode dolars> 
+    template <dolar_mode dolars> 
     void writer<M,I,O>::write_file(std::string filename)  
     {
       std::ofstream f(filename);
@@ -553,7 +553,7 @@ namespace ctb
     }
 
   template <class M, dolar_mode I, dolar_mode O>
-  template <dolar_mode dolars> 
+    template <dolar_mode dolars> 
     std::string writer<M,I,O>::write_str()
     {
       std::stringstream os;
@@ -562,7 +562,7 @@ namespace ctb
     }
 
   template <class M, dolar_mode I, dolar_mode O>
-  template <dolar_mode dolars> 
+    template <dolar_mode dolars> 
     void writer<M,I,O>::write_std()  
     {
       write<dolars>(std::cout);
