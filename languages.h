@@ -54,6 +54,7 @@ namespace ctb
       static void shouldindent( const std::string& line, int& outindent, int& indent, int& nobreak)
       {  
         outindent = indent;
+        nobreak = 0;
 
         if(line.find("for") == 0 && line.length() > 3 && (line[3] == ' ' || line[3] == '('))
           nobreak = 2;
@@ -72,7 +73,6 @@ namespace ctb
             outindent = indent;
             break;
         }
-        nobreak = 0;
       };
   } ;
 

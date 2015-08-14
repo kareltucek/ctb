@@ -107,7 +107,7 @@ namespace ctb
         template <typename ... Types> void printnth(int i, const std::string& str, const Types&... params) ;
         template <typename ... Types> void printnth(int i, const int& num, const Types&... params) ;
         template <typename ... Types> void printnth(int i, const writer& wrt, const Types&... params) ;
-        template <dolar_mode dolars> void write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak) ;
+        template <dolar_mode dolars> void write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak) const ;
         std::string get_name(const std::string& format, int& pos);
         template <class N, dolar_mode A, dolar_mode B, class Q> friend class writer;
         template<dolar_mode dolars, bool preprocess, typename ... Types> writer& print_internal (const std::string& format, const Types&... params) ; 
@@ -143,11 +143,11 @@ namespace ctb
         /*printing*/ template<dolar_mode dolars = I, typename ... Types> writer& pushf (const std::string& filename, const Types&... params) ; /** pushf is again a file-loaded version of push */
         /*printing*/ template<dolar_mode dolars = I, typename Types> writer<M,I,O,P>& append(Types str) ;
 
-        /*output*/   template<dolar_mode dolars = O> void write(std::ostream& ss) ;
-        /*output*/   template<dolar_mode dolars = O> void write_file(std::string filename) ;
-        /*output*/   template<dolar_mode dolars = O> void write_std() ;
-        /*output*/   template<dolar_mode dolars = O> std::string write_str() ;
-        /*output*/   template<dolar_mode dolars = O> std::string write_line(int i) ;
+        /*output*/   template<dolar_mode dolars = O> void write(std::ostream& ss) const ;
+        /*output*/   template<dolar_mode dolars = O> void write_file(std::string filename) const ;
+        /*output*/   template<dolar_mode dolars = O> void write_std() const ;
+        /*output*/   template<dolar_mode dolars = O> std::string write_str() const ;
+        /*output*/   template<dolar_mode dolars = O> std::string write_line(int i) const ;
 
         /*others*/   writer& list_concat(const std::string& delim);
         /*others*/   void clear() ;
@@ -164,6 +164,12 @@ namespace ctb
   typedef aliasenv_maker<empty_tag, language_cpp> aliasenv_empty_cpp;
   typedef writer<aliasenv_empty_cpp> writer_default;
   typedef writer<aliasenv_empty> writer_plain;
+
+    template <class M, dolar_mode I, dolar_mode O, class P>
+    std::string to_string(const writer<M,I,O,P>& w)
+    {
+      return w.write_str();
+    }
 
   template<bool dolars = false, typename ... Types> std::string print (const Types&... params)
   {
@@ -390,7 +396,7 @@ namespace ctb
 
   template <class M, dolar_mode I, dolar_mode O, class P>
     template <dolar_mode dolars> 
-    void writer<M,I,O,P>::write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak)
+    void writer<M,I,O,P>::write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak) const
     {
       static int mynobreak = -1;
 
@@ -670,6 +676,10 @@ namespace ctb
   template <class M, dolar_mode I, dolar_mode O, class P>
     template<dolar_mode dolars, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print(const Types&... params)  
     {
+    #ifdef TESTOVANI
+      std::tuple<const Types&...> t(params...);
+      std::string format = ctb::to_string(std::get<0>(t));
+    #endif
       return print_branch<dolars>(P(), params...); //here the P determines whether we want function with or without postprocessing (we need it to stop infinite recursion)
     }
 
@@ -740,7 +750,7 @@ namespace ctb
   
     template <class M, dolar_mode I, dolar_mode O, class P>
     template <dolar_mode dolars>
-  std::string writer<M,I,O,P>::write_line(int i)
+  std::string writer<M,I,O,P>::write_line(int i) const
   {
     int indent = 0; 
     int nobreak = i == data.size() - 1 && !last_terminated ? 1 : 0;
@@ -751,11 +761,11 @@ namespace ctb
 
   template <class M, dolar_mode I, dolar_mode O, class P>
     template <dolar_mode dolars>
-    void writer<M,I,O,P>::write(std::ostream& ss) 
+    void writer<M,I,O,P>::write(std::ostream& ss)  const
     {
       if(data.empty())
         return;
-      trim();
+      //trim();
       int indent = 0;
       int nobreak = 0;
       for(auto itr = data.begin(); itr != data.end(); ++itr)
@@ -770,7 +780,7 @@ namespace ctb
 
   template <class M, dolar_mode I, dolar_mode O, class P>
     template <dolar_mode dolars> 
-    void writer<M,I,O,P>::write_file(std::string filename)  
+    void writer<M,I,O,P>::write_file(std::string filename)   const
     {
       std::ofstream f(filename);
       write<dolars>(f);
@@ -779,7 +789,7 @@ namespace ctb
 
   template <class M, dolar_mode I, dolar_mode O, class P>
     template <dolar_mode dolars> 
-    std::string writer<M,I,O,P>::write_str()
+    std::string writer<M,I,O,P>::write_str() const
     {
       std::stringstream os;
       write<dolars>(os);
@@ -788,7 +798,7 @@ namespace ctb
 
   template <class M, dolar_mode I, dolar_mode O, class P>
     template <dolar_mode dolars> 
-    void writer<M,I,O,P>::write_std()  
+    void writer<M,I,O,P>::write_std()   const
     {
       write<dolars>(std::cout);
     }

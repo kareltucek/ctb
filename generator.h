@@ -187,9 +187,9 @@ namespace ctb
         else
         {
           if(op->is(fINPUT))
-            w.print("$inputcode;" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
+            w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
           else if(op->is(fOUTPUT))
-            w.print("$outputcode;", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
+            w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
           else
             w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0              , ARG(1), ARG(2), ARG(3));
         }

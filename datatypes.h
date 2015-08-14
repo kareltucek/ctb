@@ -127,7 +127,15 @@ namespace ctb
 
   std::string exec_path;
 
+  std::string to_string(std::string str)
+  {
+    return str;
+  }
 
+  std::string to_string(int i)
+  {
+    return std::to_string(i);
+  }
 
   int stoi(std::string str)
   {

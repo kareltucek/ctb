@@ -24,7 +24,6 @@ HEADERS += \
     datatypes.h \
     backend.h \
     model.h \
-    model_bobox.h \
     model_simple.h \
     output/test_simple.h \
     ctb.h \
@@ -36,7 +35,11 @@ HEADERS += \
     loader_xml.h \
     model_maker.h \
     proxy.h \
-    tagmaster.h
+    tagmaster.h \
+    aliasenv_simple.h \
+    aliasenv_maker.h \
+    aliasenv_generator.h \
+    aliasenv_bobox.h
 
 OTHER_FILES += \
     test
