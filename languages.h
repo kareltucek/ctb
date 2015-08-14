@@ -6,10 +6,17 @@ namespace ctb
   class language_empty
   {
     public:
-      static void shouldbreak(const int& pos, const std::string&, bool& brbf, bool& braf)
+      static void shouldbreak(const int& pos, const std::string& format, bool& brbf, bool& braf)
       { 
         brbf=false;
         braf=false;
+        switch(format[pos])
+        {
+          case '\n':
+          case '\r':
+            braf = true;
+            break;
+        }
       };
       static void shouldindent( const std::string&, int& outindent, int& indent, int& nobreak)
       {  

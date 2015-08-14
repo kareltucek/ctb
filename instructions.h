@@ -33,7 +33,7 @@ namespace ctb
    *       e.g. _mm_unpacklo_epi32($arg1,$arg2)
    * \endcode
    *
-   * All 'code' fields are supposed to be in form of rhs expressions, which are later substitued into abbreviations specified by the model_generator class (or its descendants). For special purposes there may later be a 'code_custom' field introduced, which will allow specification of the full code on user side. All code fields have a shell like expansion format defined by the writer class with abbreviations provided by the model_maker.hierarchy. At the time of writting this, the following abbreviations are available in code generation:
+   * All 'code' fields are supposed to be in form of rhs expressions, which are later substitued into abbreviations specified by the aliasenv_generator class (or its descendants). For special purposes there may later be a 'code_custom' field introduced, which will allow specification of the full code on user side. All code fields have a shell like expansion format defined by the writer class with abbreviations provided by the aliasenv_maker.hierarchy. At the time of writting this, the following abbreviations are available in code generation:
    *  - $type      - e.g. 'int'
    *  - $name      - name generated for the variable
    *  - $operation - operation::instruction::code
@@ -82,7 +82,7 @@ namespace ctb
               type_version(int w, const std::string& c,const std::string&);
               type_version() = delete;
             } ;
-           typename T::tag_handler_t& taghandler;
+            typename T::tag_handler_t& taghandler;
           public:
             type() = delete;
             type(typename T::tag_handler_t& taghandler);
@@ -163,7 +163,7 @@ namespace ctb
   {
   }
 
-    template <class T>
+  template <class T>
     bool instruction_table<T>::empty()
     {
       return instab.r().empty();
@@ -243,12 +243,12 @@ namespace ctb
     }
 
   /*
-  template <class T>
-    void instruction_table<T>::operation::imbue_width(int w)const
-    {
-      imbued_width = w;
-    }
-    */
+     template <class T>
+     void instruction_table<T>::operation::imbue_width(int w)const
+     {
+     imbued_width = w;
+     }
+     */
 
   template <class T>
     bool instruction_table<T>::operation::get_type_string(int w, std::string& c)const
@@ -353,12 +353,12 @@ namespace ctb
       clear();
     }
 
-    template <class T>
-      template <class U>
-  void instruction_table<T>::set_tags(U&& t)
-  {
-    taghandler = std::forward<U>(t);
-  }
+  template <class T>
+    template <class U>
+    void instruction_table<T>::set_tags(U&& t)
+    {
+      taghandler = std::forward<U>(t);
+    }
 
   template <class T>
     void instruction_table<T>::clear(bool tags)

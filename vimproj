@@ -12,10 +12,10 @@ tabfind graph.h
 
 tabfind instructions.h
 
-tabfind model_maker.h
-tabfind model_generator.h
-tabfind model_bobox.h
-tabfind model_simple.h
+tabfind aliasenv_maker.h
+tabfind aliasenv_generator.h
+tabfind aliasenv_bobox.h
+tabfind aliasenv_simple.h
 
 tabfind test.cpp
 

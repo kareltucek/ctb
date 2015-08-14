@@ -6,9 +6,9 @@
 
 namespace ctb
 {
-  /** Tagmaster serves for operation with tags or more generally flags. Intuitive way of dealing with tags/flags requires them to be encoded as a comma separated list, but for machine processing a mask is much more suitable.
+  /** Tagmaster serves for managin tags or more generally flags. Intuitive way of dealing with tags/flags requires them to be encoded as a comma separated list, but for machine processing a binary mask is much more suitable.
    *
-   * The tagmaster is written (mainly) for keeping track of tags in the meaning of different versions of instructions on different hardware. For this purpose it is not clear how should tag requirements be defined. Thus tagmaster is a general structure which is passed as a part of traits. Instance of this class is meant to be constructed on the operator's side and passed to instruction table. which will use its method to determine whether an instruction is tolerable.
+   * The tagmaster is written (mainly) for the purpose of keeping track of tags in the meaning of different versions of instructions on different hardware. For this purpose it is not clear how should tag requirements be defined. Thus tagmaster is a general structure which is passed as a part of traits. Instance of this class is meant to be constructed on the operator's side and passed to instruction table. which will use its method to determine whether an instruction is satisfactory or not.
    *
    * This structure thus contains:
    *   Method which can respond to serie of tags saying whether it is satisfactory or not.
@@ -17,7 +17,7 @@ namespace ctb
    *
    * Type F should be initializable by 0 to an empty mask, by 1 to a minimal mask and should support << & | ! == and != operators.
    *
-   * Since the mask mappings are time-order dependent, we need a unique tag map. Since there is possibility of needing multiple (different) instances at the same time, we cant afford static table.
+   * Since the mask mappings are time-order dependent, we need a unique instance tag map. Since there is possibility of needing multiple (different) instances at the same time, we cant afford static table.
    * */
 
   template<typename F>

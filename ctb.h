@@ -6,9 +6,9 @@
 #include "generator.h"
 #include "loader_xml.h"
 #include "loader_csv.h"
-#include "model_maker.h"
-#include "model_bobox.h"
-#include "model_simple.h"
+#include "aliasenv_maker.h"
+#include "aliasenv_bobox.h"
+#include "aliasenv_simple.h"
 
 namespace ctb
 {
@@ -17,7 +17,7 @@ namespace ctb
    *
    * TODO update this doc
    *
-   * A custom loader or model has to be registered using the templated method register_model or register_loader in order to be usable from string driven environments.
+   * A custom loader or aliasenv has to be registered using the templated method register_aliasenv or register_loader in order to be usable from string driven environments.
    *
    * side notes
    * ==========
@@ -52,9 +52,9 @@ namespace ctb
         void fill();
 
         typedef std::tuple< std::function<void(std::istream&)>, std::function<void(std::istream&)>, std::function<void(std::ostream&)>, std::function<void(std::ostream&)>> loader_record;
-        typedef std::function<std::string(std::string)> model_record;
+        typedef std::function<std::string(std::string)> aliasenv_record;
         std::map<std::string, loader_record> hash_loader;
-        std::map<std::string, model_record> hash_model;
+        std::map<std::string, aliasenv_record> hash_aliasenv;
       public:
         ctb();
         ctb(const ctb&) = delete;
@@ -68,7 +68,7 @@ namespace ctb
         template<template <typename ...> class L, typename M, typename...P> std::string process(std::string name, P...params) ;
 
         template<template <typename ... > class L> void register_loader() ;
-        template<class M> void register_model() ;
+        template<class M> void register_aliasenv() ;
 
         int parse_command_stream(std::istream& );
         int parse_command(std::string);
@@ -83,7 +83,7 @@ namespace ctb
   typedef ctb<traits, instruction_table<traits> > ctb_default;
 
   template <class T, class IT>
-    ctb<T,IT>::ctb() : instab(), mygenerator(instab), hash_model(), hash_loader()
+    ctb<T,IT>::ctb() : instab(), mygenerator(instab), hash_aliasenv(), hash_loader()
   {
     fill();
   }
@@ -91,8 +91,8 @@ namespace ctb
   template <class T, class IT>
     void ctb<T,IT>::fill()
     {
-      register_model<model_simple>();
-      register_model<model_bobox>();
+      register_aliasenv<aliasenv_simple>();
+      register_aliasenv<aliasenv_bobox>();
       register_loader<csv_loader>();
       register_loader<xml_loader>();
     }
@@ -110,11 +110,11 @@ namespace ctb
     }
 
   template <class T, class IT>
-    template<class M> void ctb<T,IT>::register_model()
+    template<class M> void ctb<T,IT>::register_aliasenv()
     {
       if(M::get_name() == "")
-        error( "unnamed model passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
-      hash_model[M::get_name()] = model_record(std::bind(&ctb::generate<M>, this, std::placeholders::_1));
+        error( "unnamed aliasenv passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
+      hash_aliasenv[M::get_name()] = aliasenv_record(std::bind(&ctb::generate<M>, this, std::placeholders::_1));
     }
 
   template <class T, class IT>
@@ -170,8 +170,8 @@ namespace ctb
     {
       ctb b;
       b.load_instab<xml_loader>(std::ifstream("unit_test1/instab.xml"));
-      writer_default::to_file( b.process<xml_loader, model_simple>( "test_simple", std::ifstream("unit_test1/graph.xml")), "unit_test1/test_simple.h");
-      writer_default::to_file( b.process<xml_loader, model_bobox>( "test_bobox", std::ifstream("unit_test1/graph.xml")), "unit_test1/test_bobox.h");
+      writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple>( "test_simple", std::ifstream("unit_test1/graph.xml")) );
+      writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox>( "test_bobox", std::ifstream("unit_test1/graph.xml")) );
       assert(b.get_prefix("/test/test/last") == "/test/test/");
     }
 
@@ -204,7 +204,7 @@ namespace ctb
     {
       std::cout << "syntax: ctb [options] <instr table> <input file 1> <input file 2> ... " << std::endl;
       std::cout << "options:" << std::endl;
-      std::cout << "    -m  {simple|bobox}    output model specification" << std::endl;
+      std::cout << "    -m  {simple|bobox}    output aliasenv specification" << std::endl;
       std::cout << "    -o  <directory>       output directory" << std::endl;
     }
 
@@ -223,7 +223,7 @@ namespace ctb
       std::cout << "Actions:" << std::endl;
       std::cout << "  loadinstab <loader> <file>" << std::endl;
       std::cout << "  loadgraph <loader <file>" << std::endl;
-      std::cout << "  generate <output model> <output file>" << std::endl;
+      std::cout << "  generate <output aliasenv> <output file>" << std::endl;
       std::cout << "  exportinstab <loader> <output file>" << std::endl;
       std::cout << "  exportgraph <loader> <output file>" << std::endl;
       std::cout << "  source <file>" << std::endl;
@@ -232,8 +232,8 @@ namespace ctb
       {
         std::cout << "  " << l.first << std::endl;
       }
-      std::cout << "Models:" << std::endl;
-      for(auto l : hash_model)
+      std::cout << "aliasenvs:" << std::endl;
+      for(auto l : hash_aliasenv)
       {
         std::cout << "  " << l.first << std::endl;
       }
@@ -243,7 +243,7 @@ namespace ctb
     int ctb<T,IT>::cmdline_old(int count, char ** args)
     {
       int file = 0;
-      char model = 's';
+      char aliasenv = 's';
       std::vector<char*> files;
       char* instab_file = NULL;
       std::string opath = "output/";
@@ -257,9 +257,9 @@ namespace ctb
               case 'm':
                 i++;
                 if(strcmp(args[i], "bobox") == 0)
-                  model = 'b';
+                  aliasenv = 'b';
                 else if(strcmp(args[i], "simple") == 0)
-                  model = 's';
+                  aliasenv = 's';
                 else
                 {
                   help_cmdline_old();
@@ -290,13 +290,13 @@ namespace ctb
         std::string cont;
         std::ifstream streamf(f);
         std::istream& stream = streamf;
-        switch(model)
+        switch(aliasenv)
         {
           case 's':
-            cont = process<xml_loader,model_simple,std::istream&>(get_inner_name(f), stream);
+            cont = process<xml_loader,aliasenv_simple,std::istream&>(get_inner_name(f), stream);
             break;
           case 'b':
-            cont = process<xml_loader,model_bobox,std::istream&>(get_inner_name(f), stream);
+            cont = process<xml_loader,aliasenv_bobox,std::istream&>(get_inner_name(f), stream);
             break;
         }
         writer_default::to_file(opath + "/" + get_inner_name(f) + ".h", cont);
@@ -314,56 +314,56 @@ namespace ctb
       {
         switch (args[i][0])
         {
-        case '-':
-          for(int j = 1; args[i][j] != '\0'; ++j)
-          {
-            switch (args[i][j])
+          case '-':
+            for(int j = 1; args[i][j] != '\0'; ++j)
             {
-            case 'f':
-            case 'a':
-            case 'e':
-            case 'r':
-              if(i+1 >= count)
-                error( std::string("argument expected after -").append(std::string(1,args[i][j])).append(" switch"));
-              if(args[i][j+1] != '\0')
-                warn( std::string("skipping some (misplaced) switches due to argument at: ").append(std::string(1,args[i][j])));
-              switch(args[i][j])
+              switch (args[i][j])
               {
-              case 'a':
-                if(!allowed.empty())
-                  allowed.append(",");
-                allowed.append(args[i+1]);
-                break;
-              case 'e':
-                if(!excluded.empty())
-                  excluded.append(",");
-                excluded.append(args[i+1]);
-                break;
-              case 'r':
-                if(!required.empty())
-                  required.append(",");
-                required.append(args[i+1]);
-                break;
-              case 'f':
-                files.push_back( args[i+1] );
-                break;
+                case 'f':
+                case 'a':
+                case 'e':
+                case 'r':
+                  if(i+1 >= count)
+                    error( std::string("argument expected after -").append(std::string(1,args[i][j])).append(" switch"));
+                  if(args[i][j+1] != '\0')
+                    warn( std::string("skipping some (misplaced) switches due to argument at: ").append(std::string(1,args[i][j])));
+                  switch(args[i][j])
+                  {
+                    case 'a':
+                      if(!allowed.empty())
+                        allowed.append(",");
+                      allowed.append(args[i+1]);
+                      break;
+                    case 'e':
+                      if(!excluded.empty())
+                        excluded.append(",");
+                      excluded.append(args[i+1]);
+                      break;
+                    case 'r':
+                      if(!required.empty())
+                        required.append(",");
+                      required.append(args[i+1]);
+                      break;
+                    case 'f':
+                      files.push_back( args[i+1] );
+                      break;
+                  }
+                  i+=1;
+                  goto start;
+                  break;
+                case 'h':
+                  help_command_stream();
+                  return 0;
+                default:
+                  error( std::string("unknown switch: ").append(std::string(1,args[i][j])));
+                  help_command_stream();
+                  return 1;
               }
-              i+=1;
-              goto start;
-              break;
-            case 'h':
-              help_command_stream();
-              return 0;
-            default:
-              error( std::string("unknown switch: ").append(std::string(1,args[i][j])));
-              help_command_stream();
-              return 1;
             }
-          }
-          break;
-        default:
-          help_command_stream();
-          return 1;
+            break;
+          default:
+            help_command_stream();
+            return 1;
         }
 start:;
       }
@@ -383,7 +383,7 @@ start:;
       return 0;
     }
 
-    template <class T, class IT>
+  template <class T, class IT>
     int ctb<T,IT>::parse_command_stream(std::istream& stream)
     {
       std::string line;
@@ -407,7 +407,7 @@ start:;
 
 
 
-    template <class T, class IT>
+  template <class T, class IT>
     int ctb<T,IT>::parse_command(std::string line)
     {
       stringlist words = split(line, ' ',true);
@@ -426,72 +426,72 @@ start:;
       std::ofstream fileo;
       switch(cmd_id_hash[words[0]])
       {
-      case fidso:
-        if(words.size() != 2)
-          error( std::string("invalid number of arguments at line: ").append(line), false);
-        break;
-      case fidli:
-      case fidlg:
-      case fidei:
-      case fideg:
-        if(words.size() != 3)
-          error( std::string("invalid number of arguments at line: ").append(line), false);
-        if(hash_loader.find(words[1]) == hash_loader.end())
-          error( std::string("loader not found (did you register it in ctb.h?): ", false).append(words[1]));
-        break;
-      case fidg:
-        if(words.size() != 3)
-          error( std::string("invalid number of arguments at line: ").append(line), false);
-        if(hash_model.find(words[1]) == hash_model.end())
-          error( std::string("model not found (did you register it in ctb.h?): ", false).append(words[1]));
-        break;
+        case fidso:
+          if(words.size() != 2)
+            error( std::string("invalid number of arguments at line: ").append(line), false);
+          break;
+        case fidli:
+        case fidlg:
+        case fidei:
+        case fideg:
+          if(words.size() != 3)
+            error( std::string("invalid number of arguments at line: ").append(line), false);
+          if(hash_loader.find(words[1]) == hash_loader.end())
+            error( std::string("loader not found (did you register it in ctb.h?): ", false).append(words[1]));
+          break;
+        case fidg:
+          if(words.size() != 3)
+            error( std::string("invalid number of arguments at line: ").append(line), false);
+          if(hash_aliasenv.find(words[1]) == hash_aliasenv.end())
+            error( std::string("aliasenv not found (did you register it in ctb.h?): ", false).append(words[1]));
+          break;
       }
       switch(cmd_id_hash[words[0]])
       {
-      case fidso:
-      {
-        openstream(filei,words[1]);
-        parse_command_stream(filei);
-      }
-        break;
-      case fidli:
-      {
-        openstream(filei,words[2]);
-        std::get<fidli>(hash_loader[words[1]])(filei);
-      }
-        break;
-      case fidlg:
-      {
-        openstream(filei,words[2]);
-        std::get<fidlg>(hash_loader[words[1]])(filei);
-      }
-        break;
-      case fidei:
-      {
-        openstream(fileo,words[2],false);
-        std::get<fidei>(hash_loader[words[1]])(fileo);
-      }
-        break;
-      case fideg:
-      {
-        openstream(fileo,words[2],false);
-        std::get<fideg>(hash_loader[words[1]])(fileo);
-      }
-        break;
-      case fidg:
-        writer_plain::to_file(words[2], hash_model[words[1]](get_inner_name(words[2])));
-        break;
-      default:
-        error( std::string("unknown action: "  ).append(line));
-        break;
+        case fidso:
+          {
+            openstream(filei,words[1]);
+            parse_command_stream(filei);
+          }
+          break;
+        case fidli:
+          {
+            openstream(filei,words[2]);
+            std::get<fidli>(hash_loader[words[1]])(filei);
+          }
+          break;
+        case fidlg:
+          {
+            openstream(filei,words[2]);
+            std::get<fidlg>(hash_loader[words[1]])(filei);
+          }
+          break;
+        case fidei:
+          {
+            openstream(fileo,words[2],false);
+            std::get<fidei>(hash_loader[words[1]])(fileo);
+          }
+          break;
+        case fideg:
+          {
+            openstream(fileo,words[2],false);
+            std::get<fideg>(hash_loader[words[1]])(fileo);
+          }
+          break;
+        case fidg:
+          writer_plain::to_file(words[2], hash_aliasenv[words[1]](get_inner_name(words[2])));
+          break;
+        default:
+          error( std::string("unknown action: "  ).append(line));
+          break;
       }
       return 0;
     }
 
 
 
-    template class ctb<traits, instruction_table<traits>> ;
+  template class ctb<traits, instruction_table<traits>> ;
 };
 
 
-                                             #endif
+#endif

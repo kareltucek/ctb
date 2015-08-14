@@ -4,10 +4,11 @@ CXX=g++11
 
 test : test_simple.h
 	${CXX} ${FLAGS} test_simple.cpp -DTEMPLATED -o test -l tinyxml2
+	./test
 
 
 clean :
-	rm *.o test
+	-rm test test_simple.h
 
 
 

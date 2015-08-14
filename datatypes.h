@@ -8,26 +8,15 @@
 #include <sstream>
 #include <iostream>
 #include "proxy.h"
+#include "errorhandling.h"
 
 namespace ctb
 {
   /** Datatypes contains various general helper functions and datatypes*/
   //various helper classes
 
-  typedef std::pair<std::string,bool> error_struct;
-
-  void error(const std::string& e, bool critical = true)
-  {
-    throw error_struct(e,critical);
-  }
-
-  void warn(std::string e)
-  {
-    std::cerr << e << std::endl;
-  }
-
   template<typename F>
-  class tagmaster;
+    class tagmaster;
 
   struct traits
   {
@@ -100,23 +89,22 @@ namespace ctb
       return f;
     }
 
-      template <typename S>
-  void openstream(S& stream, const std::string& name, bool check_existence = true)
-  {
-    stream.open(name);
-    if(!stream.is_open())
+  template <typename S>
+    void openstream(S& stream, const std::string& name, bool check_existence = true)
     {
-      if(!fileexists(name.c_str()))
+      stream.open(name);
+      if(!stream.is_open())
       {
-        if(check_existence)
-          error(std::string("file does not exist: ").append(name));
-      }
-      else
-      {
-        error(std::string("file could not be opened: ").append(name));
+        if(!fileexists(name.c_str()) && check_existence)
+        {
+            error(std::string("file does not exist: ").append(name));
+        }
+        else
+        {
+          error(std::string("file could not be opened: ").append(name));
+        }
       }
     }
-  }
 
 
   template<typename F>
@@ -137,7 +125,7 @@ namespace ctb
       return b;
     }
 
-    std::string exec_path;
+  std::string exec_path;
 
 
 

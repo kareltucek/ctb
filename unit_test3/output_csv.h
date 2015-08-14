@@ -33,7 +33,7 @@ void test_body()
     i < 100 ;
     i++)
     {
-              if ( pos_in_2 == size_in_2 )
+      if ( pos_in_2 == size_in_2 )
       {
         size_in_2 = rand()%100;
         if(data_in_2 != NULL)delete [] data_in_2;

@@ -100,6 +100,11 @@ Thu Aug 13 14:44:01 CEST 2015
 =============================
 I am introducing new structure: a tagmaster. Motivation is described in tagmaster.h.
 
+
+Fri Aug 14 11:55:03 CEST 2015
+=============================
+It seems to be a good moment to generalize writer once more. I am moving cartesian expansion directly into the writer. Next thing I am doing is implementing an expansion of arithmetic expressions (I will need it anyway). For that a new class parser have been written. Again many things are moving around due to these 'details'.
+
 TODO
 ====
 // TODO

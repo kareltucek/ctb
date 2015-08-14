@@ -4,8 +4,8 @@
 
 #include "graph.h"
 #include "instructions.h"
-#include "model_maker.h"
-#include "model_generator.h"
+#include "aliasenv_maker.h"
+#include "aliasenv_generator.h"
 
 namespace ctb
 {
@@ -25,7 +25,7 @@ namespace ctb
         class data_t
         {
           private:
-            typedef std::map<int, writer<model_generator> > acces_map_t;
+            typedef std::map<int, writer<aliasenv_generator> > acces_map_t;
             friend class generator;
 
             node_t* me;
@@ -35,7 +35,7 @@ namespace ctb
             template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
             void push_params();
             std::string newname(std::string tag, bool reset = false) ;
-            template <class W> writer<model_generator> get_acces(int width, int gran, W& w);
+            template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w);
           public:
             template <typename A> using proxy = proxy_<A,data_t,generator>;
             proxy<const op_t*> op;
@@ -74,20 +74,20 @@ namespace ctb
         data_t& n = itr->second->data.rw();
         n.op.rw() = &instab->dec(n.opid.r());
         /*
-        std::string a = n.opid.r();
-        instab->dec(a);
-        instab->dec(n.opid.r());
-        */
+           std::string a = n.opid.r();
+           instab->dec(a);
+           instab->dec(n.opid.r());
+           */
       }
       //graph.rw().crawl_topological([&](typename graph_t::node_t* n){n->data.op.rw() = instab->dec(n->data->opid.r());});
-    /*
-      for( auto op : graph->verts.r() )
-      {
-        std::string id = op.second->data->opid.r();
-        op.second->data.rw().op.rw() =
-            instab->dec(id);
-      }
-      */
+      /*
+         for( auto op : graph->verts.r() )
+         {
+         std::string id = op.second->data->opid.r();
+         op.second->data.rw().op.rw() =
+         instab->dec(id);
+         }
+         */
     }
 
   template <class T, class IT>
@@ -182,7 +182,7 @@ namespace ctb
           warn(std::string("instruction code and custom code are both empty for ").append(opid));
         if(op_c.empty())
         {
-            w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), ARG(1), ARG(2), ARG(3));
+          w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), ARG(1), ARG(2), ARG(3));
         }
         else
         {
@@ -198,7 +198,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    writer<model_generator> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)
+    writer<aliasenv_generator> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)
     {
       auto itr = acces_map.find(width);
       if(itr != acces_map.end())
@@ -268,7 +268,7 @@ namespace ctb
       if(minsrc != -1)
       {
         error( std::string("conversion path to ") + std::to_string(width) + " at " + (me->id.r()) +  " not found.");
-        return writer<model_generator>();
+        return writer<aliasenv_generator>();
       }
       else
       {

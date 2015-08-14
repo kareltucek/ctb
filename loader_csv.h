@@ -9,7 +9,7 @@
 #include <sstream>
 #include "datatypes.h"
 #include "generator.h"
-#include "model_maker.h"
+#include "aliasenv_maker.h"
 
 
 namespace ctb
@@ -17,25 +17,6 @@ namespace ctb
 
   /** 
    * CSV loader is designed for simplier creation of instruction tables. Specifically it implements a "cartesian" expansion, which simplifies definition of instructions of a shared form.
-   *
-   *
-   * cartesian expansion
-   * -------------------
-   *
-   * Expansion is in form ${ identifier -> value1, value2 ...}, where the ${ ... } will be stored in memory and replaced by $identifier. Later $identifier will be substitued by values in entire string.
-   *
-   * in example
-   *
-   *   ${ color -> red, blue } $animal; nice ${ animal -> dog,cat }; 
-   *
-   * will produce lines
-   *    
-   *   red dog; nice dog
-   *   red cat; nice cat
-   *   blue dog; nice dog
-   *   blue cat; nice cat
-   *
-   * these lines will then be parsed and loaded as a plain csv
    *
    *
    * format description
@@ -97,17 +78,11 @@ namespace ctb
     class csv_loader
     {
       private:
-        struct csv_loader_tag{};
-        typedef model_maker<csv_loader_tag, language_empty> model_pre;
-        typedef typename writer<model_pre>::basic_importer preprocessor;
         enum cols_instruction {ciNote,ciType,ciOutType,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
         enum cols_version     {cvNote,cvType,cvTId,cvW,cvCode};
         enum cols_conversion  {ccNote,ccType,ccTId,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccTag,ccRating};
 
-        //this may (should?) be later generalized into a separate class
-        static std::vector<std::string> preprocessline(std::string line);
-        template <typename I> static void shake(I itr, I itre, std::string line, std::vector<std::string>& output);
-
+        static writer_plain preprocessline(std::string line);
         static void process(IT& instab, std::istream& s);
         static void insert(IT& instab, std::string line);
 
@@ -213,12 +188,8 @@ namespace ctb
       stringlist d = split("\t\t", '\t');
       assert(d.size() == 3);
 
-      stringlist b = csvloader_default::preprocessline("${color-> red,blue} ${animal->cat,dog} $color");
-      i=0;
-      assert(b[i++] == "red cat red");
-      assert(b[i++] == "red dog red");
-      assert(b[i++] == "blue cat blue");
-      assert(b[i++] == "blue dog blue");
+      auto e = preprocessline("${animal->cat,dog,fly}");
+      assert(e.strings().size() >= 3);
 
       instruction_table_default tab;
       csvloader_default l;
@@ -232,28 +203,28 @@ namespace ctb
       if(line.size() == 0 || line[0] == '#')
         return;
 
-        stringlist data = split(line, D::value);
-        if(data[ciType] == "instruction")
-        {
-          int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
-          instab.addtype(data[ciOutType]);
-          typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],f);
-          operation.addcode(ctb::stoi(data[ciWIn]),ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],ctb::stoi(data[ciRating]));
-        }
-        else if (data[cvType] == "type_version")
-        {
-          typename IT::type_t& type = instab.addtype(data[cvTId]);
-          type.addcode_type(ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
-        }
-        else if(data[ccType] == "type_conversion")
-        {
-          typename IT::type_t& type = instab.addtype(data[ccTId]);
-          type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
-        }
-        else
-        {
-          error( std::string("unknown line type "), false);
-        }
+      stringlist data = split(line, D::value);
+      if(data[ciType] == "instruction")
+      {
+        int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
+        instab.addtype(data[ciOutType]);
+        typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],f);
+        operation.addcode(ctb::stoi(data[ciWIn]),ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],ctb::stoi(data[ciRating]));
+      }
+      else if (data[cvType] == "type_version")
+      {
+        typename IT::type_t& type = instab.addtype(data[cvTId]);
+        type.addcode_type(ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
+      }
+      else if(data[ccType] == "type_conversion")
+      {
+        typename IT::type_t& type = instab.addtype(data[ccTId]);
+        type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
+      }
+      else
+      {
+        error( std::string("unknown line type "), false);
+      }
     }
 
 
@@ -264,19 +235,20 @@ namespace ctb
       int i = 1;
       while(std::getline(s, line))
       {
-        auto lines = preprocessline(line);
-        for( auto l : lines)
+        writer_plain lines = preprocessline(line);
+        for(int i = 0; i < lines.size(); i++)
         {
+          std::string l = lines.write_line(i);
           try
           {
             insert(instab, l);
           }
-        catch(const error_struct& e)
-        {
-          error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.first ), false);
-        }
-        catch(std::exception& e)
-        {
+          catch(const error_struct& e)
+          {
+            error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.first ), false);
+          }
+          catch(std::exception& e)
+          {
             error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.what() ), false);
           }
         }
@@ -285,40 +257,10 @@ namespace ctb
     }
 
   template <class T, class G, class IT, class D>
-    std::vector<std::string> csv_loader<T,G,IT,D>::preprocessline(std::string line)
+    writer_plain csv_loader<T,G,IT,D>::preprocessline(std::string line)
     {
-      typedef std::pair<std::string, std::vector<std::string> > sub_t; //substitution
-      typedef std::vector<sub_t> subtab_t;
-      subtab_t subtab;
-      std::smatch m;
-      std::regex e ("\\$\\{ *([^ }]+) *->([^}]+)\\}");
-      while (std::regex_search (line,m,e)) 
-      {
-        subtab.push_back(sub_t(m[1], split(m[2], ',')));
-        line = std::regex_replace(line, e, "$$$1", std::regex_constants::format_first_only);
-      }
-      std::vector<std::string> results;
-      shake(subtab.begin(), subtab.end(), line, results);
-      return results;
+      return writer_plain().print(line.append("\n"));
     }
-
-  template <class T, class G, class IT, class D>
-    template <typename I>
-    void csv_loader<T,G,IT,D>::shake(I itr, I itre, std::string line, std::vector<std::string>& output)
-    {
-      if(itr == itre)
-        output.push_back(preprocessor().print(line).write_str());
-      else
-      {
-        for(auto val : itr->second)
-        {
-          model_pre::access(itr->first) = val;
-          shake(itr + 1, itre, line, output);
-        }
-      }
-
-    }
-
 
   template class csv_loader<traits, generator_default, instruction_table_default> ;
 }
