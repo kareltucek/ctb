@@ -23,11 +23,11 @@ namespace ctb
    *  - By calling template procedures directly
    *
    *  All data structures are stored inside an instance of the ctb class. Loading, exporting and generating can be done by methods:
-   *    load_instab
-   *    load_graph
-   *    export_instab
-   *    export_graph
-   *    generate
+   *    -load_instab
+   *    -load_graph
+   *    -export_instab
+   *    -export_graph
+   *    -generate
    *  Where L stands for a loader class, P stands for Parameters defined on the loader side and M stands for a model(==aliasenv). For all currently implemented versions these are io streams, and unfortunatelly the current registration procedure is static. So you probably should stick with it in case you want to write a custom loader.
    *
    * TODO update this doc
@@ -47,12 +47,12 @@ namespace ctb
    *
    * Generation - related overview
    * -----------------------------
-   * graph - is basically a base of generator
-   * instruction table - defines instructions and serves primarily to the generator
-   * generator - stores the pipeline network and generates an instruction code
-   * writer - serves for storing, autoformatting, printing and preprocessing code. Takes aliasenv (and language) as a plugin. 
-   * aliasenv - defines internal generation environment, but also drives the topmost layers of generation.
-   * language - defines formatting and is passed as a part of aliasenv
+   * - graph - is basically a base of generator
+   * - instruction table - defines instructions and serves primarily to the generator
+   * - generator - stores the pipeline network and generates an instruction code
+   * - writer - serves for storing, autoformatting, printing and preprocessing code. Takes aliasenv (and language) as a plugin. 
+   * - aliasenv - defines internal generation environment, but also drives the topmost layers of generation.
+   * - language - defines formatting and is passed as a part of aliasenv
    *
    * In hierarchy the highest is aliasenv. What is a bit confusing is a fact that aliasenv both drives everything that happens and at the same time serves as a plugin for the writer (and thus indirectly to generator and itself).
    * thus:

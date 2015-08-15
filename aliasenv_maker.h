@@ -14,9 +14,9 @@ namespace ctb
    *
    * This is a generalization of the aliasenv_generator class. aliasenv maker produces dynamicly constructable aliasenv, which can be used for creating a general-purpose writers with custom alias tables.
    *
-   * T = tag (needed for distinguishing *static* alias tables)
-   * L = language
-   * R = report when not found (when handling strings on meta level we may want misses
+   * - T = tag (needed for distinguishing *static* alias tables)
+   * - L = language
+   * - R = report when not found (when handling strings on meta level we may want misses
    * */
 
 

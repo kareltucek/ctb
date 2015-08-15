@@ -29,13 +29,17 @@ About documentation
 -------------------
 Code is documented in a markdown like, doxygen friendly notation directly in the source files. Every file contains an introductory section with structure definitions which provides abstract description of the structures defined.
 
-Where to begin
---------------
+Where to continue
+-----------------
 Good places to begin with are:
 - ctb.h documentation - there is a nice paragraph describings how things work together
 - aliasenv_generator.h to get an idea how the generation is driven
 - getting familiar with what generator, aliasenv, writer and instruction_table classes actually do in order to get a full image of how generating works
 - unit test examples
+
+TODOs
+-----
+Todos are scattered throughout entire project. One a bit more centralized place where these can be found is end of the 'journal'.
 
 Customization
 -------------

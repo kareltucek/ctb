@@ -15,8 +15,8 @@ namespace ctb
    *
    *  Template arguments
    *  ------------------
-   *  T - traits
-   *  IT - instruction table type
+   *  - T - traits
+   *  - IT - instruction table type
    *  */
   template <class T, class IT>
     class generator

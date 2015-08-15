@@ -18,10 +18,10 @@ namespace ctb
    *
    *  Template arguments
    *  ------------------
-   *  T - vertex data type to be stored as the 'data' member of the node structure
-   *  I - vertex id type
-   *  directed - whether graph is to be directed. If directed = false I believe all edges will be inserted bidirectionally (and probably there will be different algorithms for distance or searching)
-   *  O... - classes to have a read-write access to the 'data' member
+   *  - T - vertex data type to be stored as the 'data' member of the node structure
+   *  - I - vertex id type
+   *  - directed - whether graph is to be directed. If directed = false I believe all edges will be inserted bidirectionally (and probably there will be different algorithms for distance or searching)
+   *  - O... - classes to have a read-write access to the 'data' member
    *
    *  Services provided
    *  -----------------

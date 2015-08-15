@@ -23,14 +23,15 @@ namespace ctb
    * --------------------
    * Lines of the csv are of the following types:
    *
-   *   instruction code
-   *   type specification
-   *   type conversion code
+   *   -instruction code
+   *   -type specification
+   *   -type conversion code
    *
    * I.e. only leaf structures are represented. All other structures are inserted implicitly. This format *does* contain duplicities.
    *
    * the default delimiter is tab
    *
+   * \code{txt}
    * field:
    *          0 note = arbitrary note. Since csv is outputted depending on the instruction table structure, you may use this field for sorting the table...
    *          1 type = {instruction,type_version,type_conversion}
@@ -64,6 +65,7 @@ namespace ctb
    *            7 code custom
    *            8 tags
    *            9 rating
+   * \endcode
    *
    * for more detailed description please see the xml loader documentation
    *

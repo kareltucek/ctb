@@ -16,6 +16,13 @@
 
 namespace ctb
 {
+  enum dolar_mode { dEat, dLet, dExpand, dIgnore };
+
+  struct static_true{};
+  struct static_false{};
+
+  template <class M, dolar_mode I, dolar_mode O, class P> class writer_tag { };
+
   /**
    * general description
    * ===================
@@ -28,10 +35,10 @@ namespace ctb
    * -------------------------
    *
    * Dolar_mode specifies how $ should be treated. These are specified separately for input (from print to stored internal representation) and output (from internal representation to output). Typically one will want dLet as input and dEat as output, which will result in $$a -> $$a -> $a. Modes are:
-   *   dEat - this transforms $$ to $ on the fly and expands $
-   *   dLet - will expand $ and ignore $$
-   *   dExpand - will take all $ and transform them into $$
-   *   dIgnore - will ignore all $ and $$
+   *   - dEat - this transforms $$ to $ on the fly and expands $
+   *   - dLet - will expand $ and ignore $$
+   *   - dExpand - will take all $ and transform them into $$
+   *   - dIgnore - will ignore all $ and $$
    *
    *   Thus typical combination will be dLet+dEat for import operations and dLet+dExpand or dIgnore+dExpand for export (import and export of text which contains 'deeper' level expansions - e.g. for preprocessing of csv files which already contain dolar records).
    *
@@ -63,15 +70,17 @@ namespace ctb
    * Expansion is in form ${ identifier -> value1, value2 ...}, where the ${ ... } will be stored in memory and replaced by $identifier. Later $identifier will be substitued by values in entire string.
    *
    * in example
-   *
+   * \code{txt}  
    *   ${ color -> red, blue } $animal; nice ${ animal -> dog,cat }; 
+   * \endcode
    *
    * will produce lines
-   *    
+   * \code{txt}  
    *   red dog; nice dog
    *   red cat; nice cat
    *   blue dog; nice dog
    *   blue cat; nice cat
+   * \endcode
    *
    * these lines will then be parsed and loaded as a plain csv
    *
@@ -86,13 +95,6 @@ namespace ctb
    * Formatting is driven by a 'language' plugin structure, which is passed in as a part of a model(==aliasenv). Formatting takes place at two different places. First when strings are printed into the internal storage - during this phase, formatting takes care of cutting the input stream into ('formatted') pieces. Second part is output part, when the strings are indented.
    *
    */
-
-  enum dolar_mode { dEat, dLet, dExpand, dIgnore };
-
-  struct static_true{};
-  struct static_false{};
-
-  template <class M, dolar_mode I, dolar_mode O, class P> class writer_tag { };
 
   template <class M, dolar_mode I = dLet, dolar_mode O = dEat, class P = static_true>
     class writer //will provide methods for outputting the generated code - e.g. autoindent, output to files or stdout

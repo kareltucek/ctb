@@ -13,13 +13,13 @@ namespace ctb
    * Languages thus provide two callbacks:
    *
    * shouldbreak:
-   *  brbf = break before ('position' in 'format')
-   *  braf = break after  (-||-)
+   *  - brbf = break before ('position' in 'format')
+   *  - braf = break after  (-||-)
    *
    * shouldindent:
-   *  indent = logical indent - this one is persistent during parsing, so you can record brace structure using these
-   *  outindent = indent to be applied for the line provided - may differ from the logical indent e.g. typically for case which is one level to the left from the indent defined by braces.
-   *  nobreak = if set to nonzero value, the last 'nobreak' newlines will be ignored. May be useful for fixing abnormalities such as semicolons in for cycle. 
+   *  - indent = logical indent - this one is persistent during parsing, so you can record brace structure using these
+   *  - outindent = indent to be applied for the line provided - may differ from the logical indent e.g. typically for case which is one level to the left from the indent defined by braces.
+   *  - nobreak = if set to nonzero value, the last 'nobreak' newlines will be ignored. May be useful for fixing abnormalities such as semicolons in for cycle. 
    *
    *  TODO: generalize type of persistent structure to be language-side defined
    *
