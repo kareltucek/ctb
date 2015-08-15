@@ -5,8 +5,19 @@
 
 namespace ctb
 {
-  /** 
+  /**
+   * General description
+   * -------------------
    * Proxy class provides a more or less conceptually correct implementation of public-read-only class fields. Originaly its syntax was supposed to be absolutely transparent. Unfortunately it ended up not being transparent at all.
+   *
+   * At the moment read only access should work or all types by simple use of '->' operator.
+   * [] operator is automatically forwarded as constant reference.
+   * Read-write access can be gained using the rw() method. This limitation is due to the fact that compiler chooses version of method prior to checking access privileges.
+   *
+   * Template parameters
+   * -------------------
+   * T is the datatype proxied.
+   * A,B,C... are types which will have read-write access to the data stored. This is meant to have syntax of a variadic list, unfortunately there seems to be no way of befriending a variadic list.
    * */
 
   template <typename T>

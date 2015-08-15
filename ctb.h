@@ -13,17 +13,68 @@
 namespace ctb
 {
   /**
+   * General description
+   * -------------------
    * This class serves as a library interface.
    *
+   * This library can be used in 3 different manners:
+   *  - From commandline - in this case, generation is controlled in command - like fashion - refer to the doc obtained by ./ctb -h or in the typename ctb::help_command_stream() method
+   *  - From programmin environment using text commands
+   *  - By calling template procedures directly
+   *
+   *  All data structures are stored inside an instance of the ctb class. Loading, exporting and generating can be done by methods:
+   *    load_instab
+   *    load_graph
+   *    export_instab
+   *    export_graph
+   *    generate
+   *  Where L stands for a loader class, P stands for Parameters defined on the loader side and M stands for a model(==aliasenv). For all currently implemented versions these are io streams, and unfortunatelly the current registration procedure is static. So you probably should stick with it in case you want to write a custom loader.
+   *
    * TODO update this doc
+   * TODO loader registration unfortunatelly enforces static API
+   *
+   * Usage
+   * -----
    *
    * A custom loader or aliasenv has to be registered using the templated method register_aliasenv or register_loader in order to be usable from string driven environments.
    *
+   * The instruction generation takes place in the generator class and is driven from an aliasenv::generate method.
+   *
+   * A standard workflow will be:
+   * loadinstab (using) xml (loader from file ) <yourpath>
+   * loadgraph (using) xml (loader from file ) <yourpath>
+   * generate (using) bobox (model(==environment) to file) <yourpath>
+   *
+   * Generation - related overview
+   * -----------------------------
+   * graph - is basically a base of generator
+   * instruction table - defines instructions and serves primarily to the generator
+   * generator - stores the pipeline network and generates an instruction code
+   * writer - serves for storing, autoformatting, printing and preprocessing code. Takes aliasenv (and language) as a plugin. 
+   * aliasenv - defines internal generation environment, but also drives the topmost layers of generation.
+   * language - defines formatting and is passed as a part of aliasenv
+   *
+   * In hierarchy the highest is aliasenv. What is a bit confusing is a fact that aliasenv both drives everything that happens and at the same time serves as a plugin for the writer (and thus indirectly to generator and itself).
+   * thus:
+   * \code{txt}
+   * aliasenv::generate(gets generator)
+   *  -> creates writer and starts composing code
+   *  -> uses generator to generate actual instruction code
+   *
+   * generator (contains pipeline (DAG) description, gets instruction table)
+   *  -> when asked, searches its graph and generates instructions into a supplemented writer
+   *
+   * writer (represents a generated stringlist, gets language and aliasenv)
+   *  -> receives print("format", a, b, c, d) calls, expands the format using aliases defined in aliasenv and adds the resulting string to its data.
+   * \endcode
+   *
    * side notes
-   * ==========
+   * ----------
    * TODO commandline interface depends on tagmasters features ingenerally!
+   * TODO split command line interface from programming interface
    *
    * **DEPRECATED**
+   * **the following text discusses mostly the environment called here 'cmdline_old' 
    * The main two methods are load_instab and process. Both these take list of parameters which is forwarded to the loader methods altogether with a reference to the object to be filled. The loader interface is not fixed except for the first argument.
    *
    * See the ctb::self_test() method for example usage.

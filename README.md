@@ -25,16 +25,28 @@ The default project accepts a xml representation of an instruction table (which 
 
 For further information refer to the 'ctb --help' or the ctb class documentation. For input file format refer to the example files under 'xml/' and the xml loader documentation.
 
+About documentation
+-------------------
+Code is documented in a markdown like, doxygen friendly notation directly in the source files. Every file contains an introductory section with structure definitions which provides abstract description of the structures defined.
+
+Where to begin
+--------------
+Good places to begin with are:
+- ctb.h documentation - there is a nice paragraph describings how things work together
+- aliasenv_generator.h to get an idea how the generation is driven
+- getting familiar with what generator, aliasenv, writer and instruction_table classes actually do in order to get a full image of how generating works
+- unit test examples
+
 Customization
 -------------
 
-In order to change the input interface, you will need to parametrize the ctb class by your custom loader class. See the example loader class and interface description of the instruction table/generator classes. 
+In order to change the input interface, you will need to register a custom loader in the ctb class. See the example loader class and interface description of the instruction table/generator classes. 
 
 In case you have a generic way of generating the target instructions, you may want to parametrize the ctb by a custom implementation of the instruction table. In that case you still need to provide a loader function, but the interface between the instruction table (respectively its input) is not fixed (e.g. the loader method may be empty).
 
 In order to change the output architecture, you are supposed to provide different instruction tables.
 
-In order to specify a different output environment (e.g. different lanuage/execution environment (such as bobox)), you will need to provide your custom descendant of the model class and to call the ctb::process with this class as a template parameter.
+In order to specify a different output environment (e.g. different lanuage/execution environment (such as bobox)), you will need to provide your custom descendant of the model(==aliasenv) class.
 
 
 

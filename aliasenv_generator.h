@@ -9,11 +9,21 @@ namespace ctb
 {
 
   /**
-   * aliasenv represents an output environment. It provides a means of separating muptiple layers of code generation abstraction. This class should be an ancestor of every aliasenv since it defines an abstract wrapper around the internal implementation.
+   * Alias environments
+   * ------------------
+   * aliasenv represents an output environment. It provides a means of separating muptiple layers of code generation abstraction. 
    *
-   * First thing it provides is an alias mechanism, which serves as a plugin to the writer class (which takes care of composing all strings together). 
+   * First thing an aliasenv generally provides is an alias mechanism, which serves as a plugin to the writer class (which takes care of composing all strings together). 
    *
-   * Second thing defined in the aliasenv is a generation method. This one is supposed to direct the topmost level of code generation, which is taking care of composition of code templates. It is provided an instance of a generator for generation of the actual code realization.
+   * Second thing defined in an aliasenv is a generation method. This one is supposed to direct the topmost level of code generation, which is taking care of composition of code templates. It is provided an instance of a generator for generation of the actual code realization.
+   *
+   * More generally aliasenv defines only some preprocessor-like nevironment which may be used for import and export actions. See usages of aliasenv_maker.
+   * 
+   * Aliasenv_generator
+   * ------------------
+   * This concrete class describes internal workings of the instruction generator.
+   *
+   * This one should be an ancestor of every aliasenv used for code generation since it defines an abstract wrapper around the internal implementation.
    * */
 
   class aliasenv_generator 

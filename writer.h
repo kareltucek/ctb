@@ -27,22 +27,22 @@ namespace ctb
    * dolar import/export modes
    * -------------------------
    *
-   * Dolar_mode specifies how $ should be treated. These are specified separately for input and output. Typically one will want dLet as input and dEat as output, which will result in $$a -> $$a -> $a. Modes are:
+   * Dolar_mode specifies how $ should be treated. These are specified separately for input (from print to stored internal representation) and output (from internal representation to output). Typically one will want dLet as input and dEat as output, which will result in $$a -> $$a -> $a. Modes are:
    *   dEat - this transforms $$ to $ on the fly and expands $
    *   dLet - will expand $ and ignore $$
    *   dExpand - will take all $ and transform them into $$
    *   dIgnore - will ignore all $ and $$
    *
-   *   Thus typical combination will be dLet+dEat for import operations and dLet+dExpand for export (import and export of text which contains 'deeper' level expansions - e.g. for preprocessing of csv files which already contain dolar records).
+   *   Thus typical combination will be dLet+dEat for import operations and dLet+dExpand or dIgnore+dExpand for export (import and export of text which contains 'deeper' level expansions - e.g. for preprocessing of csv files which already contain dolar records).
    *
    * the P parameter
    * ---------------
-   * Determines whether postprocessing is allowed. Without this there would be an infinite preprocessing->postprocessing template recursion since postprocessing uses preprocessing of a recursively constructed writer.
+   * Determines whether postprocessing (cartesian and arithmetic expansion) is allowed. Without this there would be an infinite preprocessing->postprocessing template recursion since postprocessing uses preprocessing of a recursively constructed writer.
    *
    * The execution scheme is the following
    * -------------------------------------
-   * 1. number and alias expansion - first print_internal with 'preprocess = true' prints output to an intermediate member string 'buffer' then the commit method is called
-   * 2. cartesian expansion - (solved from body of commit) takes the buffer string, finds all substitutions, constructs a new generic aliasenv and writer with which it will print a new serie of strings and returns them as a stringlist
+   * 1. number and alias expansion - first print_internal with 'preprocess = true' prints output to an intermediate member string called 'buffer', then the commit method is called
+   * 2. cartesian expansion - (performed from the body of the commit method) takes the buffer string, finds all substitutions, constructs a new generic aliasenv and writer with which it will print a new serie of strings and return them as a stringlist
    * 3. returned stringlist is then printed into data with 'preprocess = false' 
    * 5. arithmetic expression expansion takes place during this printing phase
    * 6. during the last phase of this printing formatting takes place
@@ -77,9 +77,13 @@ namespace ctb
    *
    * arithmetic expression expansion
    * -------------------------------
-   * $[ <arithmetic expression> ] resolved to a calculated integer value
+   * $[ <arithmetic expression> ] resolves to a calculated integer value
    * supported operands are: [0-9]+, (, ), -, +, *, / 
    * (operators are always binary)
+   *
+   * formatting
+   * ----------
+   * Formatting is driven by a 'language' plugin structure, which is passed in as a part of a model(==aliasenv). Formatting takes place at two different places. First when strings are printed into the internal storage - during this phase, formatting takes care of cutting the input stream into ('formatted') pieces. Second part is output part, when the strings are indented.
    *
    */
 

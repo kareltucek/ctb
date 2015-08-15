@@ -13,6 +13,16 @@
 namespace ctb
 {
   /**
+   * Where to search
+   * ---------------
+   * Note that this doc is a bit deprecated. For up-to-date information please see relevant files:
+   * - loader_xml.h - for formal description of fields
+   * - aliasenv_generator.h - for up-to-date aliases which are available *inside* the generation environment (i.e. $name like abbreviations which may be used inside of code/code1/code2/code_custom fields.
+   * - writer.h - for full syntax supported by preprocessor
+   * - ctb.h on how instruction table is supposed to be loaded and used
+   *
+   * General description
+   * -------------------
    * This class holds information for conversion of instructions from graph op codes to actual code.
    *
    * The logical structure is the following:
@@ -32,6 +42,8 @@ namespace ctb
    *       two code lines are provided for split of an instruction
    *       e.g. _mm_unpacklo_epi32($arg1,$arg2)
    * \endcode
+   * 
+   * All relevant structures have also a 'note', 'tags' and 'rating' fields. Tags serve for switching hardware-supported/unsupported sets of instructions on and off. Rating serves for choosing better variant when multiple are available (such as a new, mostly unsupported instruction versus an old slow workaround). Note is an arbitrary user note.
    *
    * All 'code' fields are supposed to be in form of rhs expressions, which are later substitued into abbreviations specified by the aliasenv_generator class (or its descendants). For special purposes there may later be a 'code_custom' field introduced, which will allow specification of the full code on user side. All code fields have a shell like expansion format defined by the writer class with abbreviations provided by the aliasenv_maker.hierarchy. At the time of writting this, the following abbreviations are available in code generation:
    *  - $type      - e.g. 'int'
@@ -46,6 +58,10 @@ namespace ctb
    *  The input interface consists of the instruction_table::addtype and the instruction_table::add_operation create new operation/type with specified id and return a reference to it, which then can be used to fill in code snippets for realization of the code/snippets.
    *
    *  The output interface consists of two 'decode' methods, which return either type of operation. The data retrieval interface is the interface of the operation class, which provides retrieval of all codes, including the type-related stuff.
+   *
+   *  template arguments
+   *  ------------------
+   *  T - traits
    * */
 
   template <class T>

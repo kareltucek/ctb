@@ -10,11 +10,62 @@
 namespace ctb
 {
   /**
+   * General description
+   * -------------------
    * Instruction_table format honors the structure of the instruction_table class. See that one for more information.
    *
    * Graph is implemented in the most straightforward way possible, which I believe does not need a further comment.
    *
-   * See the test files under 'xml/'.
+   * See the test files under 'unit_test1/'.
+   *
+   * Xml format notes
+   * ----------------
+   * \code{txt}
+   * instab format:
+   *  root
+   *    instruction_list
+   *      operation
+   *        input (flag boolean)
+   *        output (flag boolean)
+   *        opid (identifier of logical operation (such as 'integer addition' - e.g. ADDI)
+   *        out_type (typeid of returned type)
+   *        instruction
+   *          width_in (width of vector this instruction accepts (e.g. 4 integers))
+   *          width_out (-||-)
+   *          code (inner code which is to be used as a part of predefined template - e.g. "$arg1 + $arg2")
+   *          code_custom (if nonempty, will be used *instead* of 'code' . Custom code does not use a predefined template - e.g. "$name = $arg1 + $arg2;" - can be used if default template does not fit (e.g. function call on output instead of assignment))
+   *          note (an arbitrary note of yours - may be useful for debug or for sorting of your csv files)
+   *          tags (comma separated list of tags for this specific code - meant for turning off and on usage of specific instruction sets (such as using only sse <= 2)
+   *          rating (if more than one instruction fits, the one with higher rating isused)
+   *    type_list
+   *      type
+   *        typeid (-||-)
+   *        type_version
+   *          width (width of vector this type represents - e.g. for int[4] this is 4)
+   *          code (-||-)
+   *          note (-||-)
+   *        type_conversion (conversion can glue or split types of some width to two different versions of the same type with different width)
+   *          width_in 
+   *          width_out
+   *          code1 (for gluing this is the result, for splitting this should expand to code generating the first half)
+   *          code2 (this to the second half)
+   *          code_custom (again nonmanaged version)
+   *          note (-||-)
+   *          tags (-||-)
+   *          rating (-||-)
+   *
+   * graph format:
+   *  graph_list
+   *    graph
+   *      vertex
+   *        param (reserved for special parameters such as input and output index of LD and ST instructions)
+   *        vid (a unique string)
+   *        opid (instab operation id)
+   *      edge
+   *        from (vid)
+   *        to  (vid)
+   *        to_pos (to which slot the input should go - for distinguishing 'a-b' from 'b-a'
+   * \endcode
    * */
   template <class T, class G, class IT>
     class xml_loader

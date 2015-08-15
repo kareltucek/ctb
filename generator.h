@@ -9,6 +9,15 @@
 
 namespace ctb
 {
+  /** General description
+   *  -------------------
+   *  Generator is an extension to the graph structure which serves for generating actual instruction code from a graph. Since the motivation of all the written functions is totaly clear to me, the question of 'what should be documented here' is quite unclear on the other hand. Please ask for comments at adress kareltucek centrum cz.
+   *
+   *  Template arguments
+   *  ------------------
+   *  T - traits
+   *  IT - instruction table type
+   *  */
   template <class T, class IT>
     class generator
     {

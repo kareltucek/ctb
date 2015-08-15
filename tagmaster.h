@@ -11,8 +11,8 @@ namespace ctb
    * The tagmaster is written (mainly) for the purpose of keeping track of tags in the meaning of different versions of instructions on different hardware. For this purpose it is not clear how should tag requirements be defined. Thus tagmaster is a general structure which is passed as a part of traits. Instance of this class is meant to be constructed on the operator's side and passed to instruction table. which will use its method to determine whether an instruction is satisfactory or not.
    *
    * This structure thus contains:
-   *   Method which can respond to serie of tags saying whether it is satisfactory or not.
-   *   Data on which the satisfactionability depends
+   *   Method which can respond to series of tags saying whether it is satisfactory or not.
+   *   Data on which the satisfactionability depends (these may be arbitrary)
    *   A system which can generically translate tags to masks.
    *
    * Type F should be initializable by 0 to an empty mask, by 1 to a minimal mask and should support << & | ! == and != operators.

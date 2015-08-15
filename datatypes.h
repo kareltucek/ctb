@@ -12,7 +12,10 @@
 
 namespace ctb
 {
-  /** Datatypes contains various general helper functions and datatypes*/
+  /** Datatypes contains various general helper functions and datatypes
+   *
+   * Some (most) of these should later be (theoretically) moved into separate units.
+   * */
   //various helper classes
 
   template<typename F>

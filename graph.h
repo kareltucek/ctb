@@ -11,6 +11,27 @@
 
 namespace ctb
 {
+  /**
+   * General description
+   * -------------------
+   *  Graph is a general implementation of a graph structure, which has some support for handling DAG networks or for solving 'shortest path' problem in a general graph. 
+   *
+   *  Template arguments
+   *  ------------------
+   *  T - vertex data type to be stored as the 'data' member of the node structure
+   *  I - vertex id type
+   *  directed - whether graph is to be directed. If directed = false I believe all edges will be inserted bidirectionally (and probably there will be different algorithms for distance or searching)
+   *  O... - classes to have a read-write access to the 'data' member
+   *
+   *  Services provided
+   *  -----------------
+   *  graph:
+   *    - standard access
+   *    - distance/path search
+   *  node:
+   *    - generic crawler, which starts at the node from which it was initiated. E.g. to apply function to all nodes, pick an arbitrary vertex from 'verts' or 'in' or 'out' and call crawl_topological...
+   * */
+
   //contained Type, Id type, Owner types
   template <class T, class I, bool directed, class ... O>
     class graph_generic
@@ -23,8 +44,8 @@ namespace ctb
             graph_generic* parent;
             typedef std::pair<node*, int> route;
             mutable std::vector<route> map;
-            int index;
-            int lastpass;
+            int index; /** I believe this is used as an identifier in maps*/
+            int lastpass; /** is used mostly for keeping track of whether or not we've visited this node in current crawl*/
             int newid();
             friend class graph_generic;
             template <typename... L> node(I vid, int index, L&&... p);
@@ -33,13 +54,13 @@ namespace ctb
             node * get_path(node * n);
           public:
             template <class A, class...B> using proxy = proxy_<A,node,graph_generic,B...>;
-            proxy<T, O...> data;
+            proxy<T, O...> data; /**vertex user data*/
             proxy<I> id;
             proxy<std::vector<node*> > out;
             proxy<std::vector<node*> > in;
-            proxy<T,O...>& operator->();
-            template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL);
-            void crawl_topological(std::function<void(node*)> f);
+            proxy<T,O...>& operator->(); /**provides diect access to the data member*/
+            template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
+            void crawl_topological(std::function<void(node*)> f); /** this is an overload of crawl for topological search*/
         };
 
         typedef std::map<I, node*> vertex_container_t;
@@ -53,10 +74,10 @@ namespace ctb
         proxy<vertex_container_t> verts;
         graph_generic();
         ~graph_generic();
-        template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ;
-        void addedge(I aid, I bid, int b_argpos = -1) ;
-        void calculate_distances();
-        int get_dist(I a, I b, I* c = NULL) const;
+        template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
+        void addedge(I aid, I bid, int b_argpos = -1) ; /** self describing I believe*/
+        void calculate_distances(); /**performs bellman-ford algorithm */
+        int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
         void clear();
     };

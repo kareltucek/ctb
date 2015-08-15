@@ -27,12 +27,13 @@ namespace ctb
    *   type specification
    *   type conversion code
    *
-   * I.e. only leaf structures are represented. All other structures are inserted implicitly. This format may contain duplicities.
+   * I.e. only leaf structures are represented. All other structures are inserted implicitly. This format *does* contain duplicities.
    *
    * the default delimiter is tab
    *
-   *
-   * field: 1 type = {instruction,type_version,type_conversion}     
+   * field:
+   *          0 note = arbitrary note. Since csv is outputted depending on the instruction table structure, you may use this field for sorting the table...
+   *          1 type = {instruction,type_version,type_conversion}
    *
    * for the instruction type:
    *          (operation definition)
@@ -63,7 +64,8 @@ namespace ctb
    *            7 code custom
    *            8 tags
    *            9 rating
-   *              
+   *
+   * for more detailed description please see the xml loader documentation
    *
    *
    * */
