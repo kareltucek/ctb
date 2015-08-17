@@ -33,3 +33,8 @@
 # Debug files
 *.dSYM/
 
+test
+ctb
+unit_test1/test
+unit_test3/test
+

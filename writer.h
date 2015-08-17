@@ -82,7 +82,16 @@ namespace ctb
    *   blue cat; nice cat
    * \endcode
    *
-   * these lines will then be parsed and loaded as a plain csv
+   * Expansion can also take tuples. In that case only first alias is used at the position of braces e.g.
+   * \code{txt}
+   *  ${ color,animal ->blue,dog,red,cat}ish $animal
+   *  \endcode
+   *  will produce:
+   *  \code{txt}
+   *  blueish dog
+   *  redish cat
+   *  \endcode
+   *
    *
    * arithmetic expression expansion
    * -------------------------------
@@ -97,7 +106,7 @@ namespace ctb
    */
 
   template <class M, dolar_mode I = dLet, dolar_mode O = dEat, class P = static_true>
-    class writer //will provide methods for outputting the generated code - e.g. autoindent, output to files or stdout
+    class writer 
     {
       private:
         stringlist data; /**holds (formatted) data*/
@@ -505,15 +514,16 @@ namespace ctb
     {
       typedef typename aliasenv_maker<writer_tag<M,I,O,P>, language_empty>::noreport aliasenv_pre;
       aliasenv_pre::clear();
-      typedef std::pair<std::string, std::vector<std::string> > sub_t; //substitution
+      typedef std::pair<std::vector<std::string>, std::vector<std::string> > sub_t; //substitution
       typedef std::vector<sub_t> subtab_t;
       subtab_t subtab;
       std::smatch m;
       std::regex e ("\\$\\{ *([^ }]+) *->([^}]+)\\}");
-      while (std::regex_search (line,m,e)) 
+      std::regex f ("\\$\\{ *([^ },]+)[^}]*->([^}]+)\\}");
+      while (std::regex_search (line,m,e))
       {
-        subtab.push_back(sub_t(m[1], split(m[2], ',')));
-        line = std::regex_replace(line, e, "$$$1", std::regex_constants::format_first_only);
+        subtab.push_back(sub_t(split(m[1],','), split(m[2], ',')));
+        line = std::regex_replace(line, f, "$$$1", std::regex_constants::format_first_only);
       }
       std::vector<std::string> results;
       shake<subtab_t::iterator,aliasenv_pre>(subtab.begin(), subtab.end(), line, results);
@@ -529,9 +539,13 @@ namespace ctb
         output.push_back(preprocessor().print(line).write_str());
       else
       {
-        for(auto val : itr->second)
+        for(auto vali = itr->second.begin(); vali != itr->second.end();)
         {
-          N::access(itr->first) = val;
+          for(auto aliasi = itr->first.begin(); aliasi != itr->first.end() && vali != itr->second.end(); ++aliasi)
+          {
+            N::access(*aliasi) = *vali;
+            ++vali;
+          }
           shake<J,N>(itr + 1, itre, line, output);
         }
       }
@@ -831,12 +845,16 @@ namespace ctb
   template <class M, dolar_mode I, dolar_mode O, class P>
     void writer<M,I,O,P>::cartesian_test()
     {
-      stringlist b = preprocessline("${color-> red,blue} ${animal->cat,dog} $color");
       int i=0;
+      stringlist b = preprocessline("${color-> red,blue} ${animal->cat,dog} $color");
       assert(b[i++] == "red cat red");
       assert(b[i++] == "red dog red");
       assert(b[i++] == "blue cat blue");
       assert(b[i++] == "blue dog blue");
+      i=0;
+      stringlist c = preprocessline("${color,animal->blue,cat,red,dog} $animal");
+      assert(c[i++] == "blue cat");
+      assert(c[i++] == "red dog");
     }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
