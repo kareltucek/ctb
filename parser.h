@@ -107,7 +107,7 @@ namespace ctb
     {
       diagnosis(s, err.first, exp-start);
     }
-    catch(const std::exception& err)
+    catch(std::exception& err)
     {
       diagnosis(s, err.what(), exp-start);
     }

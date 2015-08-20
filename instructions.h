@@ -101,12 +101,13 @@ namespace ctb
             typename T::tag_handler_t& taghandler;
           public:
             type() = delete;
-            type(typename T::tag_handler_t& taghandler);
+            type(typename T::tag_handler_t& taghandler, int bitwidth);
             typedef graph_generic<dummy, int, false, type> graph_distance_t;
             //TODO index this a bit intelligently...
             /*EAPI*/proxy<std::vector<type_version>> versions;
             /*EAPI*/proxy<std::vector<conversion>> conversions;
             /*EAPI*/proxy<typename T::tid_t> tid;
+            /*EAPI*/proxy<int> bitwidth;
             /*IAPI*/void addcode_type(int w, const std::string& c,const std::string&) ;
             /*IAPI*/void addcode_conversion(int from, int to, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&,int r);
             mutable graph_distance_t distances; //technically taken just a cache
@@ -121,7 +122,7 @@ namespace ctb
               int width;
               int width_in;
               int width_out;
-              std::string code;
+              const std::string code;
               const std::string code_custom;
               const std::string note;
               const std::string tags;
@@ -136,6 +137,7 @@ namespace ctb
             /*EAPI*/proxy<std::vector<instruction>> versions;
             /*EAPI*/proxy<type*> mytype;
             /*EAPI*/proxy<typename T::tid_t> out_type;
+            /*EAPI*/proxy<typename std::vector<typename T::tid_t>> in_types;
             /*EAPI*/proxy<typename T::flag_t> flags;
             /*EAPI*/proxy<typename T::opid_t> opid;
             /*IAPI*/void addcode(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r);
@@ -146,7 +148,7 @@ namespace ctb
             /*API*/bool get_op_string(int w, std::string& c, std::string& cc )const;
             /*API*/bool get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string&cc, std::string& type)const;
             /*API*/const typename type::graph_distance_t& get_conversion_graph() const;
-            operation(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t, typename T::tag_handler_t& th);
+            operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, typename T::tag_handler_t& th);
             operation() = delete;
         }
         ;
@@ -163,8 +165,8 @@ namespace ctb
         /*API*/ template <typename U> void set_tags(U&& tag_container);
         /*API*/ const operation_t& dec(typename T::opid_t type) const ;
         /*API*/ const type_t& dectype(typename T::tid_t type) const ;
-        /*IAPI*/ operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f) ;
-        /*IAPI*/ type_t& addtype(typename T::tid_t t) ;
+        /*IAPI*/ operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, const std::vector<typename T::tid_t>&it, typename T::flag_t f) ;
+        /*IAPI*/ type_t& addtype(typename T::tid_t t, int bitwidth = 0) ;
         void clear(bool tags = false) ;
         bool empty();
         ~instruction_table();
@@ -175,7 +177,7 @@ namespace ctb
   typedef instruction_table<traits> instruction_table_default;
 
   template <class T>
-    instruction_table<T>::type::type(typename T::tag_handler_t& th) : taghandler(th)
+    instruction_table<T>::type::type(typename T::tag_handler_t& th, int bw) : taghandler(th), bitwidth(bw)
   {
   }
 
@@ -219,7 +221,7 @@ namespace ctb
   }
 
   template <class T>
-    instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, typename T::flag_t f, type* t, typename T::tag_handler_t& th) : opid(i), mytype(t), out_type(ot), flags(f), taghandler(th)
+    instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, typename T::tag_handler_t& th) : opid(i), mytype(t), out_type(ot), flags(f), taghandler(th), in_types(it)
   {
   }
 
@@ -340,24 +342,29 @@ namespace ctb
     }
 
   template <class T>
-    typename instruction_table<T>::operation_t& instruction_table<T>::addoperation(typename T::opid_t op, typename T::tid_t t, typename T::flag_t f)
+    typename instruction_table<T>::operation_t& instruction_table<T>::addoperation(typename T::opid_t op, typename T::tid_t t, const std::vector<typename T::tid_t>& it, typename T::flag_t f)
     {
       if(instab.r().find(op) != instab.r().end())
         return *instab.rw().find(op)->second;
       auto itr = typetab->find(t);
       if(itr == typetab->end())
         error(std::string("type '").append(t).append("' not found; at: '").append(op).append("' while constructing graph"));
-      operation* ptr = new operation(op, t, f, itr->second, taghandler);
+      operation* ptr = new operation(op, t, it, f, itr->second, taghandler);
       instab.rw()[op] = ptr;
       return *ptr;
     } 
 
   template <class T>
-    typename instruction_table<T>::type_t& instruction_table<T>::addtype(typename T::tid_t t)
+    typename instruction_table<T>::type_t& instruction_table<T>::addtype(typename T::tid_t t, int bitwidth)
     {
       if(typetab.r().find(t) != typetab.r().end())
-        return *typetab.rw().find(t)->second;
-      type* ptr = new type(taghandler);
+      {
+        type_t& ret = *typetab.rw().find(t)->second;
+        if(bitwidth != 0)
+          ret.bitwidth.rw() = bitwidth;
+        return ret;
+      }
+      type* ptr = new type(taghandler, bitwidth);
       ptr->tid = t;
       typetab.rw()[t] = ptr;
       return *ptr;

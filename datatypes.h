@@ -130,6 +130,7 @@ namespace ctb
 
   std::string exec_path;
 
+
   std::string to_string(std::string str)
   {
     return str;
@@ -157,8 +158,6 @@ namespace ctb
 
 
 
-  enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3, fidg=4, fidso=5};
-  static std::map<std::string, functor_id> cmd_id_hash = {{"source",fidso},{"loadinstab", fidli}, {"loadgraph",fidlg}, {"exportinstab",fidei},{"exportgraph",fideg},{"generate",fidg}};
 
 };
 

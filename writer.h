@@ -18,8 +18,8 @@ namespace ctb
 {
   enum dolar_mode { dEat, dLet, dExpand, dIgnore };
 
-  struct static_true{};
-  struct static_false{};
+  struct static_true{ const static bool value = true;};
+  struct static_false{ const static bool value = false;};
 
   template <class M, dolar_mode I, dolar_mode O, class P> class writer_tag { };
 
@@ -144,6 +144,8 @@ namespace ctb
         /*operators*/typedef writer<M, I, O, static_true> postprocess_allow;
         /*operators*/typedef writer<M, I, O, static_false> postprocess_deny;
         /*operators*/writer();
+        /*operators*/ writer(const stringlist& writer);
+        /*operators*/ writer(stringlist&& writer);
         /*operators*/template<typename N> writer(const writer<N>& writer);
         /*operators*/template<typename N> writer(writer<N>&& writer);
         /*operators*/template<typename N> writer& operator=( writer<N>&& w) ;
@@ -226,6 +228,16 @@ namespace ctb
         }
       }
       return buffer;
+    }
+
+  template <class M, dolar_mode I, dolar_mode O, class P>
+    writer<M,I,O,P>::writer(const stringlist& s) : data(s), last_terminated(true)
+    {
+    }
+
+  template <class M, dolar_mode I, dolar_mode O, class P>
+    writer<M,I,O,P>::writer(stringlist&& s) : data(std::move(s)), last_terminated(true)
+    {
     }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
@@ -591,7 +603,7 @@ namespace ctb
         }
         else if(from + 1 < format.length() && format[from] == '$' && (format[from+1] == '[' || format[from+1] == '{')) //handle $[] and ${}
         {
-          if(format[from+1] == '[' && !preprocess)
+          if(format[from+1] == '[' && !preprocess && P::value)
           {
             int start = from+2;
             from += 2;
@@ -898,6 +910,9 @@ namespace ctb
       h.print("$1", "a");
       assert(h.data[0]=="a");
       cartesian_test();
+      writer k;
+      k.print("$[${w->1}]");
+      assert(k.data[0] == "1");
     }
 };
 

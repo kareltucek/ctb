@@ -39,21 +39,23 @@ namespace ctb
    * for the instruction type:
    *          (operation definition)
    *            2 output type
-   *            3 opid
-   *            4 flags = comma separated list of {input,output}
+   *            3 input types (in-order comma separated list)
+   *            4 opid
+   *            5 flags = comma separated list of {input,output}
    *          (instruction definition)
-   *            5 width in
-   *            6 width out
-   *            7 code
-   *            8 code custom
-   *            9 tags
-   *            10 rating
+   *            6 width in
+   *            7 width out
+   *            8 code
+   *            9 code custom
+   *            10 tags
+   *            11 rating
    * for the type version:
    *          (logical type definition)
    *            2 type id
+   *            3 bitwidth
    *          (version definition)
-   *            3 width
-   *            4 code
+   *            4 width
+   *            5 code
    * for the type conversion:
    *          (logical type definition)
    *            2 type id
@@ -82,9 +84,9 @@ namespace ctb
     class csv_loader
     {
       private:
-        enum cols_instruction {ciNote,ciType,ciOutType,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
-        enum cols_version     {cvNote,cvType,cvTId,cvW,cvCode};
-        enum cols_conversion  {ccNote,ccType,ccTId,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccTag,ccRating};
+        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
+        enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode};
+        enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccTag,ccRating};
 
         static writer_plain preprocessline(std::string line);
         static void process(IT& instab, std::istream& s);
@@ -132,6 +134,7 @@ namespace ctb
           w.push(i.note);
           w.push("instruction");
           w.push(o.second->out_type);
+          w.push(writer_plain(o.second->in_types.r()).list_concat(",").write_str());
           w.push(o.second->opid);
           w.push(flags_to_string(o.second->flags));
           w.push(std::to_string(i.width_in));
@@ -151,6 +154,7 @@ namespace ctb
           w.push(v.note);
           w.push("type_version");
           w.push(t.second->tid);
+          w.push(t.second->bitwidth);
           w.push(std::to_string(v.width));
           w.push(v.code);
           s << w.list_concat("\t").write_str() << std::endl;
@@ -161,6 +165,7 @@ namespace ctb
           w.push(v.note);
           w.push("type_conversion");
           w.push(t.second->tid);
+          w.push(t.second->bitwidth);
           w.push(std::to_string(v.width_in));
           w.push(std::to_string(v.width_out));
           w.push(v.code1);
@@ -212,17 +217,17 @@ namespace ctb
       {
         int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
         instab.addtype(data[ciOutType]);
-        typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],f);
+        typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],split(data[ciInTypes],','),f);
         operation.addcode(ctb::stoi(data[ciWIn]),ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],ctb::stoi(data[ciRating]));
       }
       else if (data[cvType] == "type_version")
       {
-        typename IT::type_t& type = instab.addtype(data[cvTId]);
+        typename IT::type_t& type = instab.addtype(data[cvTId],ctb::stoi(data[cvBW]));
         type.addcode_type(ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
       }
       else if(data[ccType] == "type_conversion")
       {
-        typename IT::type_t& type = instab.addtype(data[ccTId]);
+        typename IT::type_t& type = instab.addtype(data[ccTId],ctb::stoi(data[ccBW]));
         type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
       }
       else

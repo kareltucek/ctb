@@ -29,6 +29,7 @@ namespace ctb
    *        output (flag boolean)
    *        opid (identifier of logical operation (such as 'integer addition' - e.g. ADDI)
    *        out_type (typeid of returned type)
+   *        in_types (list of parameter types; note that this serves mainly for generation of test cases - generation itself is weakly typed)
    *        instruction
    *          width_in (width of vector this instruction accepts (e.g. 4 integers))
    *          width_out (-||-)
@@ -42,6 +43,7 @@ namespace ctb
    *        typeid (-||-)
    *        type_version
    *          width (width of vector this type represents - e.g. for int[4] this is 4)
+   *          bitwidth (hardware bitwidth - will allo limitting the vector width based on bitwidth (otherwise a 128bit vector of bools would iniciate creation of 64 double registers in single instruction)
    *          code (-||-)
    *          note (-||-)
    *        type_conversion (conversion can glue or split types of some width to two different versions of the same type with different width)
@@ -74,7 +76,7 @@ namespace ctb
         static std::string getstr(tinyxml2::XMLNode * node, std::string name);
         static std::string getanystr(tinyxml2::XMLNode * node, std::string name);
         static int getint(tinyxml2::XMLNode * node, std::string name);
-        static int getanyint(tinyxml2::XMLNode * node, std::string name);
+        static int getanyint(tinyxml2::XMLNode * node, std::string name, int def = 0);
         static bool hasval(tinyxml2::XMLNode* node, std::string name);
       public:
         static void load_graph(G& graph, std::istream& stream) ;
@@ -106,12 +108,12 @@ namespace ctb
     }
 
   template <class T, class G, class IT>
-    int xml_loader<T,G,IT>::getanyint(tinyxml2::XMLNode * node, std::string name)
+    int xml_loader<T,G,IT>::getanyint(tinyxml2::XMLNode * node, std::string name, int def)
     {
       if(hasval(node, name))
         return getint(node, name);
       else
-        return 0;
+        return def;
     }
 
   template <class T, class G, class IT>
@@ -187,7 +189,7 @@ namespace ctb
       XMLNode * typelist = root->FirstChildElement("type_list");
       for(XMLElement * itr = typelist->FirstChildElement("type"); itr != NULL; itr = itr->NextSiblingElement("type"))
       {
-        typename IT::type_t& t = instab.addtype( getstr(itr, "typeid"));
+        typename IT::type_t& t = instab.addtype( getstr(itr, "typeid"), getanyint(itr,"bitwidth",32));
         for(XMLElement * itr2 = itr->FirstChildElement("type_version"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_version"))
           t.addcode_type(getint(itr2, "width"), getstr(itr2, "code"),getanystr(itr2,"note"));
         for(XMLElement * itr2 = itr->FirstChildElement("type_conversion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_conversion"))
@@ -196,7 +198,7 @@ namespace ctb
       for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
       {
         typename T::flag_t f = ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
-        typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), f);
+        typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), split(getanystr(itr,"in_types"),','), f);
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
           t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
       }

@@ -105,6 +105,14 @@ Fri Aug 14 11:55:03 CEST 2015
 =============================
 It seems to be a good moment to generalize writer once more. I am moving cartesian expansion directly into the writer. Next thing I am doing is implementing an expansion of arithmetic expressions (I will need it anyway). For that a new class parser have been written. Again many things are moving around due to these 'details'.
 
+Tue Aug 18 12:49:30 CEST 2015
+=============================
+I have been working on sse instruction table for some time.
+
+Now we will need a way of testing these tables. My approach is creating a new loader, which will search through an instruction table as if it were a graph and generate a graph. 
+
+I should have written this entire project in perl... Generalizing command line parser using functors atm... (I need to make test graph accessible from text environment, but for that I need a little different api).
+
 TODO
 ====
 // TODO
@@ -118,11 +126,13 @@ control flow support
 //stream support - hopefully done
 //ensure correct clearing - done
 //allow custom combination of loaders - done
+//tag support - done
+//custom code support - done
+//unit tests for export mechanics (and dependencies) - done
 general conversion interface
-tag support
-custom code support
 switch to nonstatic loaders
-unit tests for export mechanics (and dependencies)
 split commandline interface from programming interface (taskmaster conflicts at the moment)
+solve template ingenerality of register methods
+generic id type handling
 
 
