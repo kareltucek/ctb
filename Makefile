@@ -3,7 +3,7 @@ FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -W
 
 CXX=g++11
 
-all : test ctb testdir1 testdir2 testdir3
+all : test ctb testdir1 testdir2 testdir3 ssedir
 
 test : datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h
 	${CXX} ${FLAGS} test.cpp -DTEMPLATED -l tinyxml2 -o test
@@ -19,6 +19,9 @@ testdir2 : ctb
 
 testdir3 : ctb
 	make -C unit_test3
+
+ssedir : ctb
+	make -C sse_set
 
 
 clean :

@@ -1,318 +1,739 @@
-arithetic_std	instruction	double	ADD.double		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	double	DIV.double		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	double	MOD.double		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	double	MUL.double		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	double	SUB.double		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	float	ADD.float		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	float	DIV.float		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	float	MOD.float		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	float	MUL.float		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	float	SUB.float		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	int16_t	ADD.int16_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	int16_t	DIV.int16_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	int16_t	MOD.int16_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	int16_t	MUL.int16_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	int16_t	SUB.int16_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	int32_t	ADD.int32_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	int32_t	DIV.int32_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	int32_t	MOD.int32_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	int32_t	MUL.int32_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	int32_t	SUB.int32_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	int64_t	ADD.int64_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	int64_t	DIV.int64_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	int64_t	MOD.int64_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	int64_t	MUL.int64_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	int64_t	SUB.int64_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	int8_t	ADD.int8_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	int8_t	DIV.int8_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	int8_t	MOD.int8_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	int8_t	MUL.int8_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	int8_t	SUB.int8_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	uint16_t	ADD.uint16_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	uint16_t	DIV.uint16_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	uint16_t	MOD.uint16_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	uint16_t	MUL.uint16_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	uint16_t	SUB.uint16_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	uint32_t	ADD.uint32_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	uint32_t	DIV.uint32_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	uint32_t	MOD.uint32_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	uint32_t	MUL.uint32_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	uint32_t	SUB.uint32_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	uint64_t	ADD.uint64_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	uint64_t	DIV.uint64_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	uint64_t	MOD.uint64_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	uint64_t	MUL.uint64_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	uint64_t	SUB.uint64_t		1	1	$$arg1 - $$arg2		C	10
-arithetic_std	instruction	uint8_t	ADD.uint8_t		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	uint8_t	DIV.uint8_t		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	uint8_t	MOD.uint8_t		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	uint8_t	MUL.uint8_t		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	uint8_t	SUB.uint8_t		1	1	$$arg1 - $$arg2		C	10
-arithmetic_bin	instruction	int16_t	AND.int16_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	int16_t	LSF.int16_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	int16_t	NOT.int16_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	int16_t	OR.int16_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	int16_t	RSF.int16_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	int16_t	XOR.int16_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	int32_t	AND.int32_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	int32_t	LSF.int32_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	int32_t	NOT.int32_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	int32_t	OR.int32_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	int32_t	RSF.int32_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	int32_t	XOR.int32_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	int64_t	AND.int64_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	int64_t	LSF.int64_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	int64_t	NOT.int64_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	int64_t	OR.int64_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	int64_t	RSF.int64_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	int64_t	XOR.int64_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	int8_t	AND.int8_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	int8_t	LSF.int8_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	int8_t	NOT.int8_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	int8_t	OR.int8_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	int8_t	RSF.int8_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	int8_t	XOR.int8_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	uint16_t	AND.uint16_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	uint16_t	LSF.uint16_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	uint16_t	NOT.uint16_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	uint16_t	OR.uint16_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	uint16_t	RSF.uint16_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	uint16_t	XOR.uint16_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	uint32_t	AND.uint32_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	uint32_t	LSF.uint32_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	uint32_t	NOT.uint32_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	uint32_t	OR.uint32_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	uint32_t	RSF.uint32_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	uint32_t	XOR.uint32_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	uint64_t	AND.uint64_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	uint64_t	LSF.uint64_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	uint64_t	NOT.uint64_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	uint64_t	OR.uint64_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	uint64_t	RSF.uint64_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	uint64_t	XOR.uint64_t		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	uint8_t	AND.uint8_t		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	uint8_t	LSF.uint8_t		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	uint8_t	NOT.uint8_t		1	1	~ $$arg1		C	10
-arithmetic_bin	instruction	uint8_t	OR.uint8_t		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	uint8_t	RSF.uint8_t		1	1	$$arg1 >> $$arg2		C	10
-arithmetic_bin	instruction	uint8_t	XOR.uint8_t		1	1	$$arg1 ^ $$arg2		C	10
-conversions	instruction	bool	CVRT.bool.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.double.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.float.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.int16_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.int32_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.int64_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.int8_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.uint16_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.uint32_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.uint64_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	bool	CVRT.uint8_t.bool		1	1	(bool)$$arg1		C	10
-conversions	instruction	double	CVRT.bool.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.double.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.float.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.int16_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.int32_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.int64_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.int8_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.uint16_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.uint32_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.uint64_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	double	CVRT.uint8_t.double		1	1	(double)$$arg1		C	10
-conversions	instruction	float	CVRT.bool.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.double.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.float.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.int16_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.int32_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.int64_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.int8_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.uint16_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.uint32_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.uint64_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	float	CVRT.uint8_t.float		1	1	(float)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.bool.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.double.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.float.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.int16_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.int32_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.int64_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.int8_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.uint16_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.uint32_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.uint64_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int16_t	CVRT.uint8_t.int16_t		1	1	(int16_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.bool.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.double.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.float.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.int16_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.int32_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.int64_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.int8_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.uint16_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.uint32_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.uint64_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int32_t	CVRT.uint8_t.int32_t		1	1	(int32_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.bool.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.double.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.float.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.int16_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.int32_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.int64_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.int8_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.uint16_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.uint32_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.uint64_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int64_t	CVRT.uint8_t.int64_t		1	1	(int64_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.bool.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.double.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.float.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.int16_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.int32_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.int64_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.int8_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.uint16_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.uint32_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.uint64_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	int8_t	CVRT.uint8_t.int8_t		1	1	(int8_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.bool.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.double.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.float.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.int16_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.int32_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.int64_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.int8_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.uint16_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.uint32_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.uint64_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint16_t	CVRT.uint8_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.bool.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.double.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.float.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.int16_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.int32_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.int64_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.int8_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.uint16_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.uint32_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.uint64_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint32_t	CVRT.uint8_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.bool.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.double.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.float.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.int16_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.int32_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.int64_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.int8_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.uint16_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.uint32_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.uint64_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint64_t	CVRT.uint8_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.bool.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.double.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.float.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.int16_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.int32_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.int64_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.int8_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.uint16_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.uint32_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.uint64_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-conversions	instruction	uint8_t	CVRT.uint8_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
-IO	instruction	bool	LD.bool	input	1	1	$$input		C	10
-IO	instruction	bool	ST.bool	output	1	1	$$output = $$arg1		C	10
-IO	instruction	double	LD.double	input	1	1	$$input		C	10
-IO	instruction	double	ST.double	output	1	1	$$output = $$arg1		C	10
-IO	instruction	float	LD.float	input	1	1	$$input		C	10
-IO	instruction	float	ST.float	output	1	1	$$output = $$arg1		C	10
-IO	instruction	int16_t	LD.int16_t	input	1	1	$$input		C	10
-IO	instruction	int16_t	ST.int16_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	int32_t	LD.int32_t	input	1	1	$$input		C	10
-IO	instruction	int32_t	ST.int32_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	int64_t	LD.int64_t	input	1	1	$$input		C	10
-IO	instruction	int64_t	ST.int64_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	int8_t	LD.int8_t	input	1	1	$$input		C	10
-IO	instruction	int8_t	ST.int8_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	uint16_t	LD.uint16_t	input	1	1	$$input		C	10
-IO	instruction	uint16_t	ST.uint16_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	uint32_t	LD.uint32_t	input	1	1	$$input		C	10
-IO	instruction	uint32_t	ST.uint32_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	uint64_t	LD.uint64_t	input	1	1	$$input		C	10
-IO	instruction	uint64_t	ST.uint64_t	output	1	1	$$output = $$arg1		C	10
-IO	instruction	uint8_t	LD.uint8_t	input	1	1	$$input		C	10
-IO	instruction	uint8_t	ST.uint8_t	output	1	1	$$output = $$arg1		C	10
-logical	instruction	bool	AND.bool		1	1	$$arg1 && $$arg2		C	10
-logical	instruction	bool	EQ.bool		1	1	$$arg1 == $$arg2		C	10
-logical	instruction	bool	NE.bool		1	1	$$arg1 != $$arg2		C	10
-logical	instruction	bool	NOT.bool		1	1	! $$arg1		C	10
-logical	instruction	bool	OR.bool		1	1	$$arg1 || $$arg		C	10
-logical	instruction	bool	XOR.bool		1	1	$$arg1 ^ $$arg2		C	10
-relational	instruction	bool	EQ.double		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.float		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.int16_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.int32_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.int64_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.int8_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.uint16_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.uint32_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.uint64_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	EQ.uint8_t		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	bool	GE.double		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.float		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.int16_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.int32_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.int64_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.int8_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.uint16_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.uint32_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.uint64_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GE.uint8_t		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	bool	GT.double		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.float		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.int16_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.int32_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.int64_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.int8_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.uint16_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.uint32_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.uint64_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	GT.uint8_t		1	1	$$arg1 > $$arg2		C	10
-relational	instruction	bool	LE.double		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.float		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.int16_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.int32_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.int64_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.int8_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.uint16_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.uint32_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.uint64_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LE.uint8_t		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	bool	LT.double		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.float		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.int16_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.int32_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.int64_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.int8_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.uint16_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.uint32_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.uint64_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	LT.uint8_t		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	bool	NE.double		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.float		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.int16_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.int32_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.int64_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.int8_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.uint16_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.uint32_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.uint64_t		1	1	$$arg1 != $$arg2		C	10
-relational	instruction	bool	NE.uint8_t		1	1	$$arg1 != $$arg2		C	10
-types	type_version	bool	1	bool
-types	type_version	double	1	double
-types	type_version	float	1	float
-types	type_version	int16_t	1	int16_t
-types	type_version	int32_t	1	int32_t
-types	type_version	int64_t	1	int64_t
-types	type_version	int8_t	1	int8_t
-types	type_version	uint16_t	1	uint16_t
-types	type_version	uint32_t	1	uint32_t
-types	type_version	uint64_t	1	uint64_t
-types	type_version	uint8_t	1	uint8_t
+arithetic_std	instruction	double	double,double	ADD.double		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	double	double,double	ADD.double$$w_t		2	2	_mm_add_pd($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	float	float,float	ADD.float		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	float	float,float	ADD.float$$w_t		4	4	_mm_add_ps($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	float	float,float	ADD.float$$w_t		2	2	_mm_add_ps($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int16_t	int16_t,int16_t	ADD.int16_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	ADD.int16_t		8	8	_mm_add_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	ADD.int16_t		4	4	_mm_add_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	ADD.int16_t		2	2	_mm_add_epi16($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int32_t	int32_t,int32_t	ADD.int32_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	int32_t	int32_t,int32_t	ADD.int32_t		4	4	_mm_add_epi32($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int32_t	int32_t,int32_t	ADD.int32_t		2	2	_mm_add_epi32($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int64_t	int64_t,int64_t	ADD.int64_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	int64_t	int64_t,int64_t	ADD.int64_t		2	2	_mm_add_epi64($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int8_t	int8_t,int8_t	ADD.int8_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	ADD.int8_t		16	16	_mm_add_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	ADD.int8_t		8	8	_mm_add_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	ADD.int8_t		4	4	_mm_add_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	ADD.int8_t		2	2	_mm_add_epi8($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint16_t	uint16_t,uint16_t	ADD.uint16_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	ADD.uint16_t		8	8	_mm_add_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	ADD.uint16_t		4	4	_mm_add_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	ADD.uint16_t		2	2	_mm_add_epi16($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint32_t	uint32_t,uint32_t	ADD.uint32_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	uint32_t	uint32_t,uint32_t	ADD.uint32_t		4	4	_mm_add_epi32($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint32_t	uint32_t,uint32_t	ADD.uint32_t		2	2	_mm_add_epi32($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint64_t	uint64_t,uint64_t	ADD.uint64_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	uint64_t	uint64_t,uint64_t	ADD.uint64_t		2	2	_mm_add_epi64($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint8_t	uint8_t,uint8_t	ADD.uint8_t		1	1	$$arg1 + $$arg2		C	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	ADD.uint8_t		16	16	_mm_add_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	ADD.uint8_t		8	8	_mm_add_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	ADD.uint8_t		4	4	_mm_add_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	ADD.uint8_t		2	2	_mm_add_epi8($$arg1,$$arg2)		sse	10
+logical	instruction	bool	bool,bool	AND.bool		1	1	$$arg1 && $$arg2		C	10
+sse_logical	instruction	bool	bool,bool	AND.bool		1	1	$$arg1 & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	AND.bool		2	2	$$arg1 & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	AND.bool		4	4	$$arg1 & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	AND.bool		8	8	$$arg1 & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	AND.bool		16	16	$$arg1 & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	AND.bool		32	32	$$arg1 & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	AND.bool		64	64	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_logical	instruction	bool	bool,bool	AND.bool		128	128	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int16_t	int16_t,int16_t	AND.int16_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	AND.int16_t		8	8	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	AND.int16_t		4	4	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	AND.int16_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int32_t	int32_t,int32_t	AND.int32_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	int32_t	int32_t,int32_t	AND.int32_t		4	4	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int32_t	int32_t,int32_t	AND.int32_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int64_t	int64_t,int64_t	AND.int64_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	int64_t	int64_t,int64_t	AND.int64_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int8_t	int8_t,int8_t	AND.int8_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	AND.int8_t		16	16	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	AND.int8_t		8	8	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	AND.int8_t		4	4	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	AND.int8_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	AND.uint16_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	AND.uint16_t		8	8	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	AND.uint16_t		4	4	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	AND.uint16_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	AND.uint32_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	AND.uint32_t		4	4	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	AND.uint32_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	AND.uint64_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	AND.uint64_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	AND.uint8_t		1	1	$$arg1 & $$arg2		C	10
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	AND.uint8_t		16	16	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	AND.uint8_t		8	8	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	AND.uint8_t		4	4	_mm_and_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	AND.uint8_t		2	2	_mm_and_si128($$arg1,$$arg2)		sse	5
+conversions	instruction	bool	bool	CVRT.bool.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	bool	CVRT.bool.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	bool	CVRT.bool.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	bool	CVRT.bool.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	bool	CVRT.bool.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	bool	CVRT.bool.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	bool	CVRT.bool.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	bool	CVRT.bool.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	bool	CVRT.bool.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	bool	CVRT.bool.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	bool	CVRT.bool.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	double	CVRT.double.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	double	CVRT.double.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	double	CVRT.double.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	double	CVRT.double.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	double	CVRT.double.int32_t		1	1	(int32_t)$$arg1		C	10
+sse_conversions	instruction	int32_t	double	CVRT.double.int32_t		2	2	_mm_cvtpd_epi32($$arg1)		sse	10
+conversions	instruction	int64_t	double	CVRT.double.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	double	CVRT.double.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	double	CVRT.double.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	double	CVRT.double.uint32_t		1	1	(uint32_t)$$arg1		C	10
+sse_conversions	instruction	uint32_t	double	CVRT.double.uint32_t		2	2	_mm_cvtpd_epi32($$arg1)		sse	10
+conversions	instruction	uint64_t	double	CVRT.double.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	double	CVRT.double.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	float	CVRT.float.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	float	CVRT.float.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	float	CVRT.float.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	float	CVRT.float.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	float	CVRT.float.int32_t		1	1	(int32_t)$$arg1		C	10
+sse_conversions	instruction	int32_t	float	CVRT.float.int32_t		2	2	_mm_cvtps_epi32($$arg1)		sse	10
+sse_conversions	instruction	int32_t	float	CVRT.float.int32_t		4	4	_mm_cvtps_epi32($$arg1)		sse	10
+conversions	instruction	int64_t	float	CVRT.float.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	float	CVRT.float.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	float	CVRT.float.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	float	CVRT.float.uint32_t		1	1	(uint32_t)$$arg1		C	10
+sse_conversions	instruction	uint32_t	float	CVRT.float.uint32_t		2	2	_mm_cvtps_epi32($$arg1)		sse	10
+sse_conversions	instruction	uint32_t	float	CVRT.float.uint32_t		4	4	_mm_cvtps_epi32($$arg1)		sse	10
+conversions	instruction	uint64_t	float	CVRT.float.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	float	CVRT.float.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	int16_t	CVRT.int16_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	int16_t	CVRT.int16_t.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	int16_t	CVRT.int16_t.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	int16_t	CVRT.int16_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	int16_t	CVRT.int16_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	int16_t	CVRT.int16_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	int16_t	CVRT.int16_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	int16_t	CVRT.int16_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	int16_t	CVRT.int16_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	int16_t	CVRT.int16_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	int16_t	CVRT.int16_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	int32_t	CVRT.int32_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	int32_t	CVRT.int32_t.double		1	1	(double)$$arg1		C	10
+sse_conversions	instruction	double	int32_t	CVRT.int32_t.double		2	2	_mm_cvtepi32_pd($$arg1)		sse	10
+conversions	instruction	float	int32_t	CVRT.int32_t.float		1	1	(float)$$arg1		C	10
+sse_conversions	instruction	float	int32_t	CVRT.int32_t.float		2	2	_mm_cvtepi32_ps($$arg1)		sse	10
+sse_conversions	instruction	float	int32_t	CVRT.int32_t.float		4	4	_mm_cvtepi32_ps($$arg1)		sse	10
+conversions	instruction	int16_t	int32_t	CVRT.int32_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	int32_t	CVRT.int32_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	int32_t	CVRT.int32_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	int32_t	CVRT.int32_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	int32_t	CVRT.int32_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	int32_t	CVRT.int32_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	int32_t	CVRT.int32_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	int32_t	CVRT.int32_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	int64_t	CVRT.int64_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	int64_t	CVRT.int64_t.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	int64_t	CVRT.int64_t.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	int64_t	CVRT.int64_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	int64_t	CVRT.int64_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	int64_t	CVRT.int64_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	int64_t	CVRT.int64_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	int64_t	CVRT.int64_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	int64_t	CVRT.int64_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	int64_t	CVRT.int64_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	int64_t	CVRT.int64_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	int8_t	CVRT.int8_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	int8_t	CVRT.int8_t.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	int8_t	CVRT.int8_t.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	int8_t	CVRT.int8_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	int8_t	CVRT.int8_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	int8_t	CVRT.int8_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	int8_t	CVRT.int8_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	int8_t	CVRT.int8_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	int8_t	CVRT.int8_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	int8_t	CVRT.int8_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	int8_t	CVRT.int8_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	uint16_t	CVRT.uint16_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	uint16_t	CVRT.uint16_t.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	uint16_t	CVRT.uint16_t.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	uint16_t	CVRT.uint16_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	uint16_t	CVRT.uint16_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	uint16_t	CVRT.uint16_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	uint16_t	CVRT.uint16_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	uint16_t	CVRT.uint16_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	uint16_t	CVRT.uint16_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	uint16_t	CVRT.uint16_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	uint16_t	CVRT.uint16_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	uint32_t	CVRT.uint32_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	uint32_t	CVRT.uint32_t.double		1	1	(double)$$arg1		C	10
+sse_conversions	instruction	double	uint32_t	CVRT.uint32_t.double		2	2	_mm_cvtepi32_pd($$arg1)		sse	10
+conversions	instruction	float	uint32_t	CVRT.uint32_t.float		1	1	(float)$$arg1		C	10
+sse_conversions	instruction	float	uint32_t	CVRT.uint32_t.float		2	2	_mm_cvtepi32_ps($$arg1)		sse	10
+sse_conversions	instruction	float	uint32_t	CVRT.uint32_t.float		4	4	_mm_cvtepi32_ps($$arg1)		sse	10
+conversions	instruction	int16_t	uint32_t	CVRT.uint32_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	uint32_t	CVRT.uint32_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	uint32_t	CVRT.uint32_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	uint32_t	CVRT.uint32_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	uint32_t	CVRT.uint32_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	uint32_t	CVRT.uint32_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	uint32_t	CVRT.uint32_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	uint32_t	CVRT.uint32_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	uint64_t	CVRT.uint64_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	uint64_t	CVRT.uint64_t.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	uint64_t	CVRT.uint64_t.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	uint64_t	CVRT.uint64_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	uint64_t	CVRT.uint64_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	uint64_t	CVRT.uint64_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	uint64_t	CVRT.uint64_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	uint64_t	CVRT.uint64_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	uint64_t	CVRT.uint64_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	uint64_t	CVRT.uint64_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	uint64_t	CVRT.uint64_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+conversions	instruction	bool	uint8_t	CVRT.uint8_t.bool		1	1	(bool)$$arg1		C	10
+conversions	instruction	double	uint8_t	CVRT.uint8_t.double		1	1	(double)$$arg1		C	10
+conversions	instruction	float	uint8_t	CVRT.uint8_t.float		1	1	(float)$$arg1		C	10
+conversions	instruction	int16_t	uint8_t	CVRT.uint8_t.int16_t		1	1	(int16_t)$$arg1		C	10
+conversions	instruction	int32_t	uint8_t	CVRT.uint8_t.int32_t		1	1	(int32_t)$$arg1		C	10
+conversions	instruction	int64_t	uint8_t	CVRT.uint8_t.int64_t		1	1	(int64_t)$$arg1		C	10
+conversions	instruction	int8_t	uint8_t	CVRT.uint8_t.int8_t		1	1	(int8_t)$$arg1		C	10
+conversions	instruction	uint16_t	uint8_t	CVRT.uint8_t.uint16_t		1	1	(uint16_t)$$arg1		C	10
+conversions	instruction	uint32_t	uint8_t	CVRT.uint8_t.uint32_t		1	1	(uint32_t)$$arg1		C	10
+conversions	instruction	uint64_t	uint8_t	CVRT.uint8_t.uint64_t		1	1	(uint64_t)$$arg1		C	10
+conversions	instruction	uint8_t	uint8_t	CVRT.uint8_t.uint8_t		1	1	(uint8_t)$$arg1		C	10
+arithetic_std	instruction	double	double,double	DIV.double		1	1	$$arg1 / $$arg2		C	10
+sse_arithetic_std	instruction	double	double,double	DIV.double$$w_t		2	2	_mm_div_pd($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	float	float,float	DIV.float		1	1	$$arg1 / $$arg2		C	10
+sse_arithetic_std	instruction	float	float,float	DIV.float$$w_t		4	4	_mm_div_ps($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	float	float,float	DIV.float$$w_t		2	2	_mm_div_ps($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int16_t	int16_t,int16_t	DIV.int16_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	int32_t	int32_t,int32_t	DIV.int32_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	int64_t	int64_t,int64_t	DIV.int64_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	int8_t	int8_t,int8_t	DIV.int8_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	uint16_t	uint16_t,uint16_t	DIV.uint16_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	uint32_t	uint32_t,uint32_t	DIV.uint32_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	uint64_t	uint64_t,uint64_t	DIV.uint64_t		1	1	$$arg1 / $$arg2		C	10
+arithetic_std	instruction	uint8_t	uint8_t,uint8_t	DIV.uint8_t		1	1	$$arg1 / $$arg2		C	10
+logical	instruction	bool	bool,bool	EQ.bool		1	1	$$arg1 == $$arg2		C	10
+sse_logical	instruction	bool	bool,bool	EQ.bool		1	1	~($$arg1 ^ $$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		2	2	~($$arg1 ^ $$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		4	4	~($$arg1 ^ $$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		8	8	~($$arg1 ^ $$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		16	16	~($$arg1 ^ $$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		32	32	~($$arg1 ^ $$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		64	64	_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2))		sse	5
+sse_logical	instruction	bool	bool,bool	EQ.bool		128	128	_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2))		sse	5
+relational	instruction	bool	double,double	EQ.double		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	double,double	EQ.double		2	2	_mm_cmpeq_pd($$arg1,$$arg2)		sse	10
+relational	instruction	bool	float,float	EQ.float		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	float,float	EQ.float		4	4	_mm_cmpeq_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	float,float	EQ.float		2	2	_mm_cmpeq_ps($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int16_t,int16_t	EQ.int16_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	int16_t,int16_t	EQ.int16_t		8	8	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	EQ.int16_t		4	4	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	EQ.int16_t		2	2	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int32_t,int32_t	EQ.int32_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	int32_t,int32_t	EQ.int32_t		4	4	_mm_cmpeq_epi32($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int32_t,int32_t	EQ.int32_t		2	2	_mm_cmpeq_epi32($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int64_t,int64_t	EQ.int64_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	int64_t,int64_t	EQ.int64_t		2	2	_mm_cmpeq_epi64($$arg1,$$arg2)		sse4.1	10
+relational	instruction	bool	int8_t,int8_t	EQ.int8_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	int8_t,int8_t	EQ.int8_t		16	16	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	EQ.int8_t		8	8	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	EQ.int8_t		4	4	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	EQ.int8_t		2	2	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint16_t,uint16_t	EQ.uint16_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	uint16_t,uint16_t	EQ.uint16_t		8	8	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	EQ.uint16_t		4	4	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	EQ.uint16_t		2	2	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint32_t,uint32_t	EQ.uint32_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	uint32_t,uint32_t	EQ.uint32_t		4	4	_mm_cmpeq_epi32($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint32_t,uint32_t	EQ.uint32_t		2	2	_mm_cmpeq_epi32($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint64_t,uint64_t	EQ.uint64_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	uint64_t,uint64_t	EQ.uint64_t		2	2	_mm_cmpeq_epi64($$arg1,$$arg2)		sse4.1	10
+relational	instruction	bool	uint8_t,uint8_t	EQ.uint8_t		1	1	$$arg1 == $$arg2		C	10
+sse_relational	instruction	bool	uint8_t,uint8_t	EQ.uint8_t		16	16	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	EQ.uint8_t		8	8	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	EQ.uint8_t		4	4	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	EQ.uint8_t		2	2	_mm_cmpeq_epi8($$arg1,$$arg2)		sse	10
+sse_logical	instruction	bool	bool,bool	GE.bool		1	1	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	GE.bool		2	2	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	GE.bool		4	4	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	GE.bool		8	8	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	GE.bool		16	16	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	GE.bool		32	32	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	GE.bool		64	64	_mm_or_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+sse_logical	instruction	bool	bool,bool	GE.bool		128	128	_mm_or_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+relational	instruction	bool	double,double	GE.double		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	double,double	GE.double		2	2	_mm_cmpge_pd($$arg1,$$arg2)		sse	10
+relational	instruction	bool	float,float	GE.float		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	float,float	GE.float		4	4	_mm_cmpge_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	float,float	GE.float		2	2	_mm_cmpge_ps($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int16_t,int16_t	GE.int16_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	int16_t,int16_t	GE.int16_t		8	8	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	GE.int16_t		4	4	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	GE.int16_t		2	2	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
+relational	instruction	bool	int32_t,int32_t	GE.int32_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	int32_t,int32_t	GE.int32_t		4	4	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmpgt_epi32($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int32_t,int32_t	GE.int32_t		2	2	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmpgt_epi32($$arg1,$$arg2))		sse	10
+relational	instruction	bool	int64_t,int64_t	GE.int64_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	int64_t,int64_t	GE.int64_t		2	2	_mm_or_si128(_mm_cmpeq_epi64($$arg1,$$arg2),_mm_cmpgt_epi64($$arg1,$$arg2))		sse4.1	10
+relational	instruction	bool	int8_t,int8_t	GE.int8_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	int8_t,int8_t	GE.int8_t		16	16	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	GE.int8_t		8	8	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	GE.int8_t		4	4	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	GE.int8_t		2	2	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint16_t,uint16_t	GE.uint16_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	uint16_t,uint16_t	GE.uint16_t		8	8	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	GE.uint16_t		4	4	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	GE.uint16_t		2	2	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint32_t,uint32_t	GE.uint32_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	uint32_t,uint32_t	GE.uint32_t		4	4	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmpgt_epi32($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint32_t,uint32_t	GE.uint32_t		2	2	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmpgt_epi32($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint64_t,uint64_t	GE.uint64_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	uint64_t,uint64_t	GE.uint64_t		2	2	_mm_or_si128(_mm_cmpeq_epi64($$arg1,$$arg2),_mm_cmpgt_epi64($$arg1,$$arg2))		sse4.1	10
+relational	instruction	bool	uint8_t,uint8_t	GE.uint8_t		1	1	$$arg1 >= $$arg2		C	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GE.uint8_t		16	16	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GE.uint8_t		8	8	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GE.uint8_t		4	4	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GE.uint8_t		2	2	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmpgt_epi8($$arg1,$$arg2))		sse	10
+sse_logical	instruction	bool	bool,bool	GT.bool		1	1	$$arg1 & (~$$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	GT.bool		2	2	$$arg1 & (~$$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	GT.bool		4	4	$$arg1 & (~$$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	GT.bool		8	8	$$arg1 & (~$$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	GT.bool		16	16	$$arg1 & (~$$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	GT.bool		32	32	$$arg1 & (~$$arg2)		C	5
+sse_logical	instruction	bool	bool,bool	GT.bool		64	64	_mm_and_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),$$arg2))		sse	5
+sse_logical	instruction	bool	bool,bool	GT.bool		128	128	_mm_and_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),$$arg2))		sse	5
+relational	instruction	bool	double,double	GT.double		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	double,double	GT.double		2	2	_mm_cmpgt_pd($$arg1,$$arg2)		sse	10
+relational	instruction	bool	float,float	GT.float		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	float,float	GT.float		4	4	_mm_cmpgt_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	float,float	GT.float		2	2	_mm_cmpgt_ps($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int16_t,int16_t	GT.int16_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	int16_t,int16_t	GT.int16_t		8	8	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	GT.int16_t		4	4	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	GT.int16_t		2	2	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int32_t,int32_t	GT.int32_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	int32_t,int32_t	GT.int32_t		4	4	_mm_cmpgt_epi32($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int32_t,int32_t	GT.int32_t		2	2	_mm_cmpgt_epi32($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int64_t,int64_t	GT.int64_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	int64_t,int64_t	GT.int64_t		2	2	_mm_cmpgt_epi64($$arg1,$$arg2)		sse4.1	10
+relational	instruction	bool	int8_t,int8_t	GT.int8_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	int8_t,int8_t	GT.int8_t		16	16	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	GT.int8_t		8	8	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	GT.int8_t		4	4	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	GT.int8_t		2	2	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint16_t,uint16_t	GT.uint16_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	uint16_t,uint16_t	GT.uint16_t		8	8	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	GT.uint16_t		4	4	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	GT.uint16_t		2	2	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint32_t,uint32_t	GT.uint32_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	uint32_t,uint32_t	GT.uint32_t		4	4	_mm_cmpgt_epi32($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint32_t,uint32_t	GT.uint32_t		2	2	_mm_cmpgt_epi32($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint64_t,uint64_t	GT.uint64_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	uint64_t,uint64_t	GT.uint64_t		2	2	_mm_cmpgt_epi64($$arg1,$$arg2)		sse4.1	10
+relational	instruction	bool	uint8_t,uint8_t	GT.uint8_t		1	1	$$arg1 > $$arg2		C	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GT.uint8_t		16	16	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GT.uint8_t		8	8	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GT.uint8_t		4	4	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	GT.uint8_t		2	2	_mm_cmpgt_epi8($$arg1,$$arg2)		sse	10
+IO	instruction	bool		LD.bool	input	1	1	$$input		C	10
+IO	instruction	double		LD.double	input	1	1	$$input		C	10
+sse_IO	instruction	double		LD.double	input	2	2	_mm_loadu_pd((const __m128l*)&$$input)		sse	10
+IO	instruction	float		LD.float	input	1	1	$$input		C	10
+sse_IO	instruction	float		LD.float	input	4	4	_mm_loadu_ps((const __m128*)&$$input)		sse	10
+IO	instruction	int16_t		LD.int16_t	input	1	1	$$input		C	10
+sse_IO	instruction	int16_t		LD.int16_t	input	8	8	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	int32_t		LD.int32_t	input	1	1	$$input		C	10
+sse_IO	instruction	int32_t		LD.int32_t	input	4	4	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	int64_t		LD.int64_t	input	1	1	$$input		C	10
+sse_IO	instruction	int64_t		LD.int64_t	input	2	2	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	int8_t		LD.int8_t	input	1	1	$$input		C	10
+sse_IO	instruction	int8_t		LD.int8_t	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	uint16_t		LD.uint16_t	input	1	1	$$input		C	10
+sse_IO	instruction	uint16_t		LD.uint16_t	input	8	8	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	uint32_t		LD.uint32_t	input	1	1	$$input		C	10
+sse_IO	instruction	uint32_t		LD.uint32_t	input	4	4	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	uint64_t		LD.uint64_t	input	1	1	$$input		C	10
+sse_IO	instruction	uint64_t		LD.uint64_t	input	2	2	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+IO	instruction	uint8_t		LD.uint8_t	input	1	1	$$input		C	10
+sse_IO	instruction	uint8_t		LD.uint8_t	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+sse_logical	instruction	bool	bool,bool	LE.bool		1	1	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	LE.bool		2	2	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	LE.bool		4	4	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	LE.bool		8	8	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	LE.bool		16	16	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	LE.bool		32	32	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
+sse_logical	instruction	bool	bool,bool	LE.bool		64	64	_mm_or_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+sse_logical	instruction	bool	bool,bool	LE.bool		128	128	_mm_or_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+relational	instruction	bool	double,double	LE.double		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	double,double	LE.double		2	2	_mm_cmple_pd($$arg1,$$arg2)		sse	10
+relational	instruction	bool	float,float	LE.float		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	float,float	LE.float		4	4	_mm_cmple_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	float,float	LE.float		2	2	_mm_cmple_ps($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int16_t,int16_t	LE.int16_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	int16_t,int16_t	LE.int16_t		8	8	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	LE.int16_t		4	4	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	LE.int16_t		2	2	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
+relational	instruction	bool	int32_t,int32_t	LE.int32_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	int32_t,int32_t	LE.int32_t		4	4	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmplt_epi32($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int32_t,int32_t	LE.int32_t		2	2	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmplt_epi32($$arg1,$$arg2))		sse	10
+relational	instruction	bool	int64_t,int64_t	LE.int64_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	int64_t,int64_t	LE.int64_t		2	2	_mm_or_si128(_mm_cmpeq_epi64($$arg1,$$arg2),_mm_cmplt_epi64($$arg1,$$arg2))		sse4.1	10
+relational	instruction	bool	int8_t,int8_t	LE.int8_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	int8_t,int8_t	LE.int8_t		16	16	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	LE.int8_t		8	8	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	LE.int8_t		4	4	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	LE.int8_t		2	2	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint16_t,uint16_t	LE.uint16_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	uint16_t,uint16_t	LE.uint16_t		8	8	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	LE.uint16_t		4	4	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	LE.uint16_t		2	2	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint32_t,uint32_t	LE.uint32_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	uint32_t,uint32_t	LE.uint32_t		4	4	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmplt_epi32($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint32_t,uint32_t	LE.uint32_t		2	2	_mm_or_si128(_mm_cmpeq_epi32($$arg1,$$arg2),_mm_cmplt_epi32($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint64_t,uint64_t	LE.uint64_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	uint64_t,uint64_t	LE.uint64_t		2	2	_mm_or_si128(_mm_cmpeq_epi64($$arg1,$$arg2),_mm_cmplt_epi64($$arg1,$$arg2))		sse4.1	10
+relational	instruction	bool	uint8_t,uint8_t	LE.uint8_t		1	1	$$arg1 <= $$arg2		C	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LE.uint8_t		16	16	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LE.uint8_t		8	8	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LE.uint8_t		4	4	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LE.uint8_t		2	2	_mm_or_si128(_mm_cmpeq_epi8($$arg1,$$arg2),_mm_cmplt_epi8($$arg1,$$arg2))		sse	10
+arithmetic_bin	instruction	int16_t	int16_t,int16_t	LSF.int16_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	int32_t	int32_t,int32_t	LSF.int32_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	int64_t	int64_t,int64_t	LSF.int64_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	int8_t	int8_t,int8_t	LSF.int8_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	LSF.uint16_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	LSF.uint32_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	LSF.uint64_t		1	1	$$arg1 << $$arg2		C	10
+arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	LSF.uint8_t		1	1	$$arg1 << $$arg2		C	10
+sse_logical	instruction	bool	bool,bool	LT.bool		1	1	(~$$arg1) & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	LT.bool		2	2	(~$$arg1) & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	LT.bool		4	4	(~$$arg1) & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	LT.bool		8	8	(~$$arg1) & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	LT.bool		16	16	(~$$arg1) & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	LT.bool		32	32	(~$$arg1) & $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	LT.bool		64	64	_mm_and_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),$$arg1))		sse	5
+sse_logical	instruction	bool	bool,bool	LT.bool		128	128	_mm_and_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),$$arg1))		sse	5
+relational	instruction	bool	double,double	LT.double		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	double,double	LT.double		2	2	_mm_cmplt_pd($$arg1,$$arg2)		sse	10
+relational	instruction	bool	float,float	LT.float		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	float,float	LT.float		4	4	_mm_cmplt_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	float,float	LT.float		2	2	_mm_cmplt_ps($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int16_t,int16_t	LT.int16_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	int16_t,int16_t	LT.int16_t		8	8	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	LT.int16_t		4	4	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	LT.int16_t		2	2	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int32_t,int32_t	LT.int32_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	int32_t,int32_t	LT.int32_t		4	4	_mm_cmplt_epi32($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int32_t,int32_t	LT.int32_t		2	2	_mm_cmplt_epi32($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int64_t,int64_t	LT.int64_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	int64_t,int64_t	LT.int64_t		2	2	_mm_cmplt_epi64($$arg1,$$arg2)		sse4.1	10
+relational	instruction	bool	int8_t,int8_t	LT.int8_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	int8_t,int8_t	LT.int8_t		16	16	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	LT.int8_t		8	8	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	LT.int8_t		4	4	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	LT.int8_t		2	2	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint16_t,uint16_t	LT.uint16_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	uint16_t,uint16_t	LT.uint16_t		8	8	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	LT.uint16_t		4	4	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	LT.uint16_t		2	2	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint32_t,uint32_t	LT.uint32_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	uint32_t,uint32_t	LT.uint32_t		4	4	_mm_cmplt_epi32($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint32_t,uint32_t	LT.uint32_t		2	2	_mm_cmplt_epi32($$arg1,$$arg2)		sse	10
+relational	instruction	bool	uint64_t,uint64_t	LT.uint64_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	uint64_t,uint64_t	LT.uint64_t		2	2	_mm_cmplt_epi64($$arg1,$$arg2)		sse4.1	10
+relational	instruction	bool	uint8_t,uint8_t	LT.uint8_t		1	1	$$arg1 < $$arg2		C	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LT.uint8_t		16	16	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LT.uint8_t		8	8	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LT.uint8_t		4	4	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	LT.uint8_t		2	2	_mm_cmplt_epi8($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	double	double,double	MOD.double		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	float	float,float	MOD.float		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	int16_t	int16_t,int16_t	MOD.int16_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	int32_t	int32_t,int32_t	MOD.int32_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	int64_t	int64_t,int64_t	MOD.int64_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	int8_t	int8_t,int8_t	MOD.int8_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	uint16_t	uint16_t,uint16_t	MOD.uint16_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	uint32_t	uint32_t,uint32_t	MOD.uint32_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	uint64_t	uint64_t,uint64_t	MOD.uint64_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	uint8_t	uint8_t,uint8_t	MOD.uint8_t		1	1	$$arg1 % $$arg2		C	10
+arithetic_std	instruction	double	double,double	MUL.double		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	double	double,double	MUL.double$$w_t		2	2	_mm_mul_pd($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	float	float,float	MUL.float		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	float	float,float	MUL.float$$w_t		4	4	_mm_mul_ps($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	float	float,float	MUL.float$$w_t		2	2	_mm_mul_ps($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int16_t	int16_t,int16_t	MUL.int16_t		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	MUL.int16_t		2	2	_mm_mul_epi16($$arg1,$$arg2)		sse4.1	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	MUL.int16_t		2	2	_mm_shuffle_epi32(_mm_mul_epi16($$arg1, $$arg2), _MM_SHUFFLE (0,0,2,0))		sse	5
+arithetic_std	instruction	int32_t	int32_t,int32_t	MUL.int32_t		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	int32_t	int32_t,int32_t	MUL.int32_t		2	2	_mm_mul_epi32($$arg1,$$arg2)		sse4.1	10
+sse_arithetic_std	instruction	int32_t	int32_t,int32_t	MUL.int32_t		2	2	_mm_shuffle_epi32(_mm_mul_epi32($$arg1, $$arg2), _MM_SHUFFLE (0,0,2,0))		sse	5
+arithetic_std	instruction	int64_t	int64_t,int64_t	MUL.int64_t		1	1	$$arg1 * $$arg2		C	10
+arithetic_std	instruction	int8_t	int8_t,int8_t	MUL.int8_t		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	MUL.int8_t		2	2	_mm_mul_epi8($$arg1,$$arg2)		sse4.1	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	MUL.int8_t		2	2	_mm_shuffle_epi32(_mm_mul_epi8($$arg1, $$arg2), _MM_SHUFFLE (0,0,2,0))		sse	5
+arithetic_std	instruction	uint16_t	uint16_t,uint16_t	MUL.uint16_t		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	MUL.uint16_t		2	2	_mm_mul_epu16($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint32_t	uint32_t,uint32_t	MUL.uint32_t		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	uint32_t	uint32_t,uint32_t	MUL.uint32_t		2	2	_mm_mul_epu32($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint64_t	uint64_t,uint64_t	MUL.uint64_t		1	1	$$arg1 * $$arg2		C	10
+arithetic_std	instruction	uint8_t	uint8_t,uint8_t	MUL.uint8_t		1	1	$$arg1 * $$arg2		C	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	MUL.uint8_t		2	2	_mm_mul_epu8($$arg1,$$arg2)		sse	10
+logical	instruction	bool	bool,bool	NE.bool		1	1	$$arg1 != $$arg2		C	10
+sse_logical	instruction	bool	bool,bool	NE.bool		1	1	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	NE.bool		2	2	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	NE.bool		4	4	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	NE.bool		8	8	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	NE.bool		16	16	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	NE.bool		32	32	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	NE.bool		64	64	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_logical	instruction	bool	bool,bool	NE.bool		128	128	_mm_xor_si128($$arg1,$$arg2)		sse	5
+relational	instruction	bool	double,double	NE.double		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	double,double	NE.double		2	2	_mm_cmpneq_pd($$arg1,$$arg2)		sse	10
+relational	instruction	bool	float,float	NE.float		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	float,float	NE.float		4	4	_mm_cmpneq_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	bool	float,float	NE.float		2	2	_mm_cmpneq_ps($$arg1,$$arg2)		sse	10
+relational	instruction	bool	int16_t,int16_t	NE.int16_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	int16_t,int16_t	NE.int16_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	NE.int16_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int16_t,int16_t	NE.int16_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
+relational	instruction	bool	int32_t,int32_t	NE.int32_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	int32_t,int32_t	NE.int32_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi32($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int32_t,int32_t	NE.int32_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi32($$arg1,$$arg2))		sse	10
+relational	instruction	bool	int64_t,int64_t	NE.int64_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	int64_t,int64_t	NE.int64_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi64($$arg1,$$arg2))		sse4.1	10
+relational	instruction	bool	int8_t,int8_t	NE.int8_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	int8_t,int8_t	NE.int8_t		16	16	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	NE.int8_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	NE.int8_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	int8_t,int8_t	NE.int8_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint16_t,uint16_t	NE.uint16_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	uint16_t,uint16_t	NE.uint16_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	NE.uint16_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint16_t,uint16_t	NE.uint16_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint32_t,uint32_t	NE.uint32_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	uint32_t,uint32_t	NE.uint32_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi32($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint32_t,uint32_t	NE.uint32_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi32($$arg1,$$arg2))		sse	10
+relational	instruction	bool	uint64_t,uint64_t	NE.uint64_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	uint64_t,uint64_t	NE.uint64_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi64($$arg1,$$arg2))		sse4.1	10
+relational	instruction	bool	uint8_t,uint8_t	NE.uint8_t		1	1	$$arg1 != $$arg2		C	10
+sse_relational	instruction	bool	uint8_t,uint8_t	NE.uint8_t		16	16	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	NE.uint8_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	NE.uint8_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+sse_relational	instruction	bool	uint8_t,uint8_t	NE.uint8_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi8($$arg1,$$arg2))		sse	10
+logical	instruction	bool	bool	NOT.bool		1	1	! $$arg1		C	10
+sse_logical	instruction	bool	bool	NOT.bool		1	1	~$$arg1		C	5
+sse_logical	instruction	bool	bool	NOT.bool		2	2	~$$arg1		C	5
+sse_logical	instruction	bool	bool	NOT.bool		4	4	~$$arg1		C	5
+sse_logical	instruction	bool	bool	NOT.bool		8	8	~$$arg1		C	5
+sse_logical	instruction	bool	bool	NOT.bool		16	16	~$$arg1		C	5
+sse_logical	instruction	bool	bool	NOT.bool		32	32	~$$arg1		C	5
+sse_logical	instruction	bool	bool	NOT.bool		64	64	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_logical	instruction	bool	bool	NOT.bool		128	128	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	int16_t	int16_t	NOT.int16_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	int16_t	int16_t	NOT.int16_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t	NOT.int16_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t	NOT.int16_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	int32_t	int32_t	NOT.int32_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	int32_t	int32_t	NOT.int32_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	int32_t	int32_t	NOT.int32_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	int64_t	int64_t	NOT.int64_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	int64_t	int64_t	NOT.int64_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	int8_t	int8_t	NOT.int8_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	int8_t	int8_t	NOT.int8_t		16	16	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t	NOT.int8_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t	NOT.int8_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t	NOT.int8_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	uint16_t	uint16_t	NOT.uint16_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	uint16_t	uint16_t	NOT.uint16_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t	NOT.uint16_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t	NOT.uint16_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	uint32_t	uint32_t	NOT.uint32_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	uint32_t	uint32_t	NOT.uint32_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	uint32_t	uint32_t	NOT.uint32_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	uint64_t	uint64_t	NOT.uint64_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	uint64_t	uint64_t	NOT.uint64_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+arithmetic_bin	instruction	uint8_t	uint8_t	NOT.uint8_t		1	1	~ $$arg1		C	10
+sse_arithmetic_bin	instruction	uint8_t	uint8_t	NOT.uint8_t		16	16	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t	NOT.uint8_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t	NOT.uint8_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t	NOT.uint8_t		2	2	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
+logical	instruction	bool	bool,bool	OR.bool		1	1	$$arg1 || $$arg		C	10
+sse_logical	instruction	bool	bool,bool	OR.bool		1	1	$$arg1 | $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	OR.bool		2	2	$$arg1 | $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	OR.bool		4	4	$$arg1 | $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	OR.bool		8	8	$$arg1 | $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	OR.bool		16	16	$$arg1 | $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	OR.bool		32	32	$$arg1 | $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	OR.bool		64	64	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_logical	instruction	bool	bool,bool	OR.bool		128	128	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int16_t	int16_t,int16_t	OR.int16_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	OR.int16_t		8	8	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	OR.int16_t		4	4	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	OR.int16_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int32_t	int32_t,int32_t	OR.int32_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	int32_t	int32_t,int32_t	OR.int32_t		4	4	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int32_t	int32_t,int32_t	OR.int32_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int64_t	int64_t,int64_t	OR.int64_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	int64_t	int64_t,int64_t	OR.int64_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int8_t	int8_t,int8_t	OR.int8_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	OR.int8_t		16	16	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	OR.int8_t		8	8	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	OR.int8_t		4	4	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	OR.int8_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	OR.uint16_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	OR.uint16_t		8	8	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	OR.uint16_t		4	4	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	OR.uint16_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	OR.uint32_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	OR.uint32_t		4	4	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	OR.uint32_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	OR.uint64_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	OR.uint64_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	OR.uint8_t		1	1	$$arg1 | $$arg2		C	10
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	OR.uint8_t		16	16	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	OR.uint8_t		8	8	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	OR.uint8_t		4	4	_mm_or_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	OR.uint8_t		2	2	_mm_or_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int16_t	int16_t,int16_t	RSF.int16_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	int32_t	int32_t,int32_t	RSF.int32_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	int64_t	int64_t,int64_t	RSF.int64_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	int8_t	int8_t,int8_t	RSF.int8_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	RSF.uint16_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	RSF.uint32_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	RSF.uint64_t		1	1	$$arg1 >> $$arg2		C	10
+arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	RSF.uint8_t		1	1	$$arg1 >> $$arg2		C	10
+IO	instruction	bool	bool	ST.bool	output	1	1	$$output = $$arg1		C	10
+IO	instruction	double	double	ST.double	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	double	double	ST.double	output	2	2	_mm_storeu_pd((const __m128l*)&$$output,$$arg1)		sse	10
+IO	instruction	float	float	ST.float	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	float	float	ST.float	output	4	4	_mm_storeu_ps((const __m128*)&$$output,$$arg1)		sse	10
+IO	instruction	int16_t	int16_t	ST.int16_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	int16_t	int16_t	ST.int16_t	output	8	8	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	int32_t	int32_t	ST.int32_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	int32_t	int32_t	ST.int32_t	output	4	4	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	int64_t	int64_t	ST.int64_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	int64_t	int64_t	ST.int64_t	output	2	2	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	int8_t	int8_t	ST.int8_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	int8_t	int8_t	ST.int8_t	output	16	16	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	uint16_t	uint16_t	ST.uint16_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	uint16_t	uint16_t	ST.uint16_t	output	8	8	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	uint32_t	uint32_t	ST.uint32_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	uint32_t	uint32_t	ST.uint32_t	output	4	4	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	uint64_t	uint64_t	ST.uint64_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	uint64_t	uint64_t	ST.uint64_t	output	2	2	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+IO	instruction	uint8_t	uint8_t	ST.uint8_t	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	uint8_t	uint8_t	ST.uint8_t	output	16	16	_mm_storeu_si128((const __m128i*)&$$output,$$arg1)		sse	10
+arithetic_std	instruction	double	double,double	SUB.double		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	double	double,double	SUB.double$$w_t		2	2	_mm_sub_pd($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	float	float,float	SUB.float		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	float	float,float	SUB.float$$w_t		4	4	_mm_sub_ps($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	float	float,float	SUB.float$$w_t		2	2	_mm_sub_ps($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int16_t	int16_t,int16_t	SUB.int16_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	SUB.int16_t		8	8	_mm_sub_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	SUB.int16_t		4	4	_mm_sub_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int16_t	int16_t,int16_t	SUB.int16_t		2	2	_mm_sub_epi16($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int32_t	int32_t,int32_t	SUB.int32_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	int32_t	int32_t,int32_t	SUB.int32_t		4	4	_mm_sub_epi32($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int32_t	int32_t,int32_t	SUB.int32_t		2	2	_mm_sub_epi32($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int64_t	int64_t,int64_t	SUB.int64_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	int64_t	int64_t,int64_t	SUB.int64_t		2	2	_mm_sub_epi64($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	int8_t	int8_t,int8_t	SUB.int8_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	SUB.int8_t		16	16	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	SUB.int8_t		8	8	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	SUB.int8_t		4	4	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	int8_t	int8_t,int8_t	SUB.int8_t		2	2	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint16_t	uint16_t,uint16_t	SUB.uint16_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	SUB.uint16_t		8	8	_mm_sub_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	SUB.uint16_t		4	4	_mm_sub_epi16($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint16_t	uint16_t,uint16_t	SUB.uint16_t		2	2	_mm_sub_epi16($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint32_t	uint32_t,uint32_t	SUB.uint32_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	uint32_t	uint32_t,uint32_t	SUB.uint32_t		4	4	_mm_sub_epi32($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint32_t	uint32_t,uint32_t	SUB.uint32_t		2	2	_mm_sub_epi32($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint64_t	uint64_t,uint64_t	SUB.uint64_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	uint64_t	uint64_t,uint64_t	SUB.uint64_t		2	2	_mm_sub_epi64($$arg1,$$arg2)		sse	10
+arithetic_std	instruction	uint8_t	uint8_t,uint8_t	SUB.uint8_t		1	1	$$arg1 - $$arg2		C	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	SUB.uint8_t		16	16	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	SUB.uint8_t		8	8	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	SUB.uint8_t		4	4	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+sse_arithetic_std	instruction	uint8_t	uint8_t,uint8_t	SUB.uint8_t		2	2	_mm_sub_epi8($$arg1,$$arg2)		sse	10
+logical	instruction	bool	bool,bool	XOR.bool		1	1	$$arg1 ^ $$arg2		C	10
+sse_logical	instruction	bool	bool,bool	XOR.bool		1	1	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		2	2	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		4	4	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		8	8	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		16	16	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		32	32	$$arg1 ^ $$arg2		C	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		64	64	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_logical	instruction	bool	bool,bool	XOR.bool		128	128	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int16_t	int16_t,int16_t	XOR.int16_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	XOR.int16_t		8	8	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	XOR.int16_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int16_t	int16_t,int16_t	XOR.int16_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int32_t	int32_t,int32_t	XOR.int32_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	int32_t	int32_t,int32_t	XOR.int32_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int32_t	int32_t,int32_t	XOR.int32_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int64_t	int64_t,int64_t	XOR.int64_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	int64_t	int64_t,int64_t	XOR.int64_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	int8_t	int8_t,int8_t	XOR.int8_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	XOR.int8_t		16	16	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	XOR.int8_t		8	8	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	XOR.int8_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	int8_t	int8_t,int8_t	XOR.int8_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	XOR.uint16_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	XOR.uint16_t		8	8	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	XOR.uint16_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint16_t	uint16_t,uint16_t	XOR.uint16_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	XOR.uint32_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	XOR.uint32_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint32_t	uint32_t,uint32_t	XOR.uint32_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	XOR.uint64_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	uint64_t	uint64_t,uint64_t	XOR.uint64_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR.uint8_t		1	1	$$arg1 ^ $$arg2		C	10
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR.uint8_t		16	16	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR.uint8_t		8	8	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR.uint8_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
+sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR.uint8_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+types	type_version	bool	1	1	bool
+sse_types	type_version	bool	1	2	uint
+sse_types	type_version	bool	1	4	uint
+sse_types	type_version	bool	1	8	uint
+sse_types	type_version	bool	1	16	uint
+sse_types	type_version	bool	1	32	uint
+sse_types	type_version	bool	1	64	__m128i
+sse_types	type_version	bool	1	128	__m128i
+types	type_version	double	64	1	double
+sse_types	type_version	double	64	2	__m128d
+types	type_version	float	32	1	float
+sse_types	type_version	float	32	2	__m128d
+sse_types	type_version	float	32	4	__m128d
+types	type_version	int16_t	16	1	int16_t
+sse_types	type_version	int16_t	16	8	__m128i
+sse_types	type_version	int16_t	16	4	__m128i
+sse_types	type_version	int16_t	16	2	__m128i
+types	type_version	int32_t	32	1	int32_t
+sse_types	type_version	int32_t	32	4	__m128i
+sse_types	type_version	int32_t	32	2	__m128i
+types	type_version	int64_t	64	1	int64_t
+sse_types	type_version	int64_t	64	2	__m128i
+types	type_version	int8_t	8	1	int8_t
+sse_types	type_version	int8_t	8	16	__m128i
+sse_types	type_version	int8_t	8	8	__m128i
+sse_types	type_version	int8_t	8	4	__m128i
+sse_types	type_version	int8_t	8	2	__m128i
+types	type_version	uint16_t	16	1	uint16_t
+sse_types	type_version	uint16_t	16	8	__m128i
+sse_types	type_version	uint16_t	16	4	__m128i
+sse_types	type_version	uint16_t	16	2	__m128i
+types	type_version	uint32_t	32	1	uint32_t
+sse_types	type_version	uint32_t	32	4	__m128i
+sse_types	type_version	uint32_t	32	2	__m128i
+types	type_version	uint64_t	64	1	uint64_t
+sse_types	type_version	uint64_t	64	2	__m128i
+types	type_version	uint8_t	8	1	uint8_t
+sse_types	type_version	uint8_t	8	16	__m128i
+sse_types	type_version	uint8_t	8	8	__m128i
+sse_types	type_version	uint8_t	8	4	__m128i
+sse_types	type_version	uint8_t	8	2	__m128i

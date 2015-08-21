@@ -16,8 +16,13 @@ namespace ctb
 {
 
   /** 
-   * CSV loader is designed for simplier creation of instruction tables. Specifically it implements a "cartesian" expansion, which simplifies definition of instructions of a shared form.
+   * General loader api
+   * ------------------
+   * see documentation of the xml loader
    *
+   * General description
+   * -------------------
+   * CSV loader is designed for simplier creation of instruction tables. Specifically it implements a "cartesian" expansion, which simplifies definition of instructions of a shared form.
    *
    * format description
    * --------------------
@@ -94,10 +99,10 @@ namespace ctb
 
         static std::map<std::string, int> flags;
       public:
-        static void load_graph(G& graph, std::istream&) ;
-        static void load_instab(IT& instab, std::istream&) ;
-        static void export_graph(G& instab, std::ostream&) ;
-        static void export_instab(IT& instab, std::ostream&) ;
+        void load_graph(G& graph, std::istream&) ;
+        void load_instab(IT& instab, std::istream&) ;
+        void export_graph(G& instab, std::ostream&) ;
+        void export_instab(IT& instab, std::ostream&) ;
         static std::string get_name();
         static void self_test() ;
     } ;

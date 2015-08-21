@@ -10,9 +10,15 @@
 namespace ctb
 {
   /**
+   * General loader api
+   * ------------------
+   * A loader is supposed to provide:
+   * - A static get_name() method, which returns a string identifier (which serves for registration in command driven environments).
+   * - Four methods for import and export of graph and instruction table. These should be present even when the corresponding operation is unsupported (e.g. throwing an exception). The first argument is supposed to be a reference to the object in question. Other arguments are up to the programmer as long as he plans using the loader directly from a programming environment or as long as he is comfortable with writting his own handling commands. Otherwise api is fixed with second argument being either input or output stream. 
+   *
    * General description
    * -------------------
-   * Instruction_table format honors the structure of the instruction_table class. See that one for more information.
+   * Instruction_table xml format honors the structure of the instruction_table class. See that one for more information.
    *
    * Graph is implemented in the most straightforward way possible, which I believe does not need a further comment.
    *
@@ -79,10 +85,10 @@ namespace ctb
         static int getanyint(tinyxml2::XMLNode * node, std::string name, int def = 0);
         static bool hasval(tinyxml2::XMLNode* node, std::string name);
       public:
-        static void load_graph(G& graph, std::istream& stream) ;
-        static void load_instab(IT& instab, std::istream& stream) ;
-        static void export_graph(G& graph, std::ostream& stream) ;
-        static void export_instab(IT& instab, std::ostream& stream) ;
+        void load_graph(G& graph, std::istream& stream) ;
+        void load_instab(IT& instab, std::istream& stream) ;
+        void export_graph(G& graph, std::ostream& stream) ;
+        void export_instab(IT& instab, std::ostream& stream) ;
         static std::string get_name();
         static void self_test() ;
     } ;

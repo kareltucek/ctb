@@ -530,8 +530,8 @@ namespace ctb
       typedef std::vector<sub_t> subtab_t;
       subtab_t subtab;
       std::smatch m;
-      std::regex e ("\\$\\{ *([^ }]+) *->([^}]+)\\}");
-      std::regex f ("\\$\\{ *([^ },]+)[^}]*->([^}]+)\\}");
+      static const std::regex e ("\\$\\{ *([^ }]+) *->([^}]+)\\}");
+      static const std::regex f ("\\$\\{ *([^ },]+)[^}]*->([^}]+)\\}");
       while (std::regex_search (line,m,e))
       {
         subtab.push_back(sub_t(split(m[1],','), split(m[2], ',')));

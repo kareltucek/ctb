@@ -182,20 +182,23 @@ namespace ctb
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::export_instab(P...params)
     {
-      L<T, generator_t, IT>::export_instab(instab, params...);
+      L<T, generator_t, IT> loader;
+      loader.export_instab(instab, params...);
     }
 
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::export_graph(P...params)
     {
-      L<T, generator_t, IT>::export_graph(mygenerator, params...);
+      L<T, generator_t, IT> loader;
+      loader.export_graph(mygenerator, params...);
     }
 
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::load_instab(P...params)
     {
       instab.clear();
-      L<T, generator_t, IT>::load_instab(instab, params...);
+      L<T, generator_t, IT> loader;
+      loader.load_instab(instab, params...);
       mygenerator.update();
     }
 
@@ -205,7 +208,8 @@ namespace ctb
       mygenerator.clear();
       if(instab.empty())
         warn("Warning: loading graph while instruction table is empty. Graph construction depends on correct input/output flags!");
-      L<T, generator_t, IT>::load_graph(mygenerator, params...);
+      L<T, generator_t, IT> loader;
+      loader.load_graph(mygenerator, params...);
     }
 
   template <class T, class IT>
@@ -222,7 +226,8 @@ namespace ctb
     std::string ctb<T,IT>::process(std::string name, P...params)
     {
       generator_t g(instab);
-      L<T, generator_t, IT>::load_graph(g, params...);
+      L<T, generator_t, IT> l;
+     l.load_graph(g, params...);
       auto m = M::generate(g.get_broadest(), g, name);
       return m.write_str();
     }
@@ -415,8 +420,8 @@ namespace ctb
                   help_command_stream();
                   return 0;
                 default:
-                  error( std::string("unknown switch: ").append(std::string(1,args[i][j])));
                   help_command_stream();
+                  error( std::string("unknown switch: ").append(std::string(1,args[i][j])));
                   return 1;
               }
             }
@@ -502,7 +507,8 @@ start:;
     {
       if(args.size() != 1)
         error( std::string("invalid number of arguments "), false);
-      test_loader<T,generator_t,IT>::load_graph(mygenerator,instab);
+      test_loader<T,generator_t,IT> l;
+      l.load_graph(mygenerator,instab);
     }
 
   template <class T, class IT>
@@ -544,7 +550,9 @@ start:;
         return 0;
       if(hash_command.find(words[0]) == hash_command.end())
         error( std::string("invalid command: ").append(line), false);
+      std::cout << "processing command " << words[0] << "...";
       (hash_command[words[0]].first)(std::move(words));
+      std::cout << "... done!" << std::endl;
       return 0;
     }
 
