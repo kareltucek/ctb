@@ -7,6 +7,8 @@ namespace ctb
 {
   /*
    * This class serves for generating cartesian product of arbitrary number of sets of the same type. I am writting this explicitly since it is not the first time I need this feature.
+   *
+   * The cartesian multiplier is basically an iterator which dereferences to a list of iterators. Respectively it is an iterator which can be used directly to obtain iterators of iterators of the sets over which we are constructing the cartesian product.h
    * */
 
   template <typename T>

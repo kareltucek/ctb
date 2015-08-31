@@ -39,7 +39,10 @@ HEADERS += \
     aliasenv_simple.h \
     aliasenv_maker.h \
     aliasenv_generator.h \
-    aliasenv_bobox.h
+    aliasenv_bobox.h \
+    loader_test.h \
+    errorhandling.h \
+    cartesian_multiplier.h
 
 OTHER_FILES += \
     test

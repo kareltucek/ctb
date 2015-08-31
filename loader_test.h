@@ -23,6 +23,9 @@ namespace ctb
    * Note that due to the nondeterministic nature of the generation in respect to vector widths there is no guarantee that a generated graph will test all width versions of an instruction.
    *  - For testing all (width-wise) instruction versions, generate and test code for all possible widths. 
    *  - For testing all width-conversions, you will need to generate a graph of maximal width with only minimal load/store widths. You can achieve this by using the tag system. This may need some altering of the table thus it is not done automatically.
+   *
+   * TODO: fix the following note.
+   * Note that this version ignores outputs which cannott be connected directly to an output node. Correction seems to need construction of a shortest path to an output node and construction of such a path (including its dependencies). Does not seem to be worthwile at the moment, since standard instruction set should be able to output all types.
    * */
 
   template <class T, class G, class IT> 
