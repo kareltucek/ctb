@@ -164,6 +164,8 @@ cartesian_multiplier& operator++();
           }
         }
 
+        assert(c==d);
+
       }
   
 };
