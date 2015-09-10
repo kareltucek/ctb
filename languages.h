@@ -83,6 +83,7 @@ namespace ctb
         {
           case '}':
             --indent;
+            outindent = indent;
             break;
           case '{':
             ++indent;

@@ -32,20 +32,41 @@ namespace ctb
       typedef std::map<std::string, std::string> aliastab_t;
       static aliastab_t aliases;
       static void init();
+      static bool check_pos_alias(const std::string& name, const std::string& a, int offset);
     public:
       typedef language_empty language;
-      static std::string alias(const std::string& a, bool* s = NULL);
+      static std::string alias(const std::string& a, bool* s = NULL, int n = -1);
       template <class G> static writer<aliasenv_generator> generate(int m,  G& graph, std::string name) ;
   };
 
   std::map<std::string, std::string> aliasenv_generator::aliases;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
-  std::string aliasenv_generator::alias(const std::string& a, bool* s)
+
+  bool aliasenv_generator::check_pos_alias(const std::string& name, const std::string& a, int offset)
+  {
+    bool aredigits = true;
+    for(int i = name.length(); i < a.length(); ++i)
+      aredigits &= isdigit(a[i]);
+    if(aredigits && a.length() > name.length() && a.substr(0,name.length()) == name) // >3 ensures at least one digit to exist
+    {
+      ADD(a, std::string("$").append(std::to_string(offset+std::stoi(a.substr(name.length(),a.length()-name.length())))));
+      return true;
+    }
+    return false;
+  }
+
+
+  std::string aliasenv_generator::alias(const std::string& a, bool* s, int n)
   {
     auto itr = aliases.find(a);
     if(itr == aliases.end())
     {
+      if(check_pos_alias("arg", a, 7))
+        return alias(a,s,n);
+      if(check_pos_alias("name", a, 8))
+        return alias(a,s,n);
+
       if(s != NULL)
         *s = false;
       else
@@ -75,11 +96,13 @@ namespace ctb
     ADD("operation", "$3");
 
     ADD("cindex", "$4");
-    ADD("arg1", "$5");
-    ADD("arg2", "$6");
-    ADD("arg3", "$7");
+    ADD("iindex", "$5");
+    ADD("oindex", "$6");
+    ADD("vindex", "$7");
+    ADD("arg1", "$8");
+    ADD("arg2", "$9");
+    ADD("arg3", "$10");
 
-    ADD("vindex", "$1");
 
     initialized = true;
   }

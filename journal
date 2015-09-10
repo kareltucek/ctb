@@ -113,6 +113,29 @@ Now we will need a way of testing these tables. My approach is creating a new lo
 
 I should have written this entire project in perl... Generalizing command line parser using functors atm... (I need to make test graph accessible from text environment, but for that I need a little different api).
 
+
+Tue Sep  8 22:10:03 CEST 2015
+=============================
+During the last two weeks I have been writting the C sse table and its testing environment.
+
+Regarding the C tables, one problem I arrived at a few days ago is a bool structure. Bools and data have to be organized in an 'alternating' structure in canonical order. Reordering wont work because doubles are always in canonical order. Nonalternating structure will cause conflicts in cases like (int_8<2> < int_8<2>) == (double<2> > double <2>). As the result I am impelementing two boolean types. One for logical operations with numbers - noncompressed byte boolean type - and one compressed for pure boolean operations - 128 bool vectors. (Oh yeah, I know I have been told about this problem already!)
+
+Graph testing loader has been written. Also a 'compile test' was added. This option will cause generator to generate only the first vector instruction. This will prevent situations like 128 times the same error.
+
+Also I have written some two formal A4 pages on solving the control flow problem. I believe DAGs with trivial split and join operations are solveable without greater problems. Unfortunately overhead of such code is significant. I dont believe this algorithm to be advantegous with the x86 sse instruction set.
+
+Thu Sep 10 14:41:18 CEST 2015
+=============================
+Today I have been writting support for generic splits/joins. I had to add 3 indexes to the standard variables available in the generator's alias environment:
+  - output vector index
+  - input vector index
+  - internal vector index = iteration over the generic elements = difference of output and input indices.
+Getting this sorted out took me a while...
+
+Note that this change changes semantics of custom code for splits and joins. Semanticaly logical is using custom join with generic splits, but the inverse operations are supported too.
+
+Also I had to add a real 'dynamic' list support to the writer environment. Now writer accepts stringlists in its parameters. These are indexed in order as if these lists were flattened. This probably is not the best idea since it still prevents usage of multiple lists in a single call. This was needed for the custom join and split.
+
 TODO
 ====
 // TODO
@@ -120,7 +143,10 @@ TODO
 //output node ordering - dropped
 //abstract output syntax formatting - done
 //export mechanics - hopefully done
+//general conversion interface - hopefully done (not yet tested)
 control flow support
+autoconversion for internal types (bool<->ssebool)
+bool <-> conversion instructions
 
 // TODO - minors
 //stream support - hopefully done
@@ -129,10 +155,9 @@ control flow support
 //tag support - done
 //custom code support - done
 //unit tests for export mechanics (and dependencies) - done
-general conversion interface
-switch to nonstatic loaders
+//solve template ingenerality of register methods - this conflict has never existed
+//switch to nonstatic loaders - done
 split commandline interface from programming interface (taskmaster conflicts at the moment)
-solve template ingenerality of register methods
 generic id type handling
 
 

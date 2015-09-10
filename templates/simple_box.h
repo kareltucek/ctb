@@ -2,8 +2,10 @@
 #include <iostream>
 #include <ctime>
 #include <assert.h>
+#include <stdint.h>
 #include <limits>
 #include <emmintrin.h>
+#include <smmintrin.h>
 
 
 void test_body() 
@@ -19,7 +21,8 @@ void test_body()
       {
         $5
 
-          auto batch_size = $6;
+          std::size_t batch_size;
+        batch_size = $6;
 
         std::size_t j = 0;
         for ( ; j + $10 <= batch_size; j += $10)

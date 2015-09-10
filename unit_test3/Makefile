@@ -5,7 +5,7 @@ CXX=g++11
 all : test
 
 
-output_csv.h : ../ctb
+output_csv.h : ../ctb instab.xml graph.xml
 	../ctb -f ./program && diff output_xml.h output_csv.h
 
 

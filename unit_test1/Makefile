@@ -4,10 +4,13 @@ CXX=g++11
 
 all : test run
 
+test_simple.h : ../ctb ../test instab.xml graph.xml
+	cd ..; ./test
+
 test : test_simple.h
 	${CXX} ${FLAGS} test_simple.cpp -DTEMPLATED -o test -l tinyxml2
 
-run :
+run : 
 	diff test_simple.h test_simple.h.reference
 	./test
 

@@ -13,6 +13,11 @@ namespace ctb
     throw error_struct(e,critical);
   }
 
+  void warning(std::string e)
+  {
+    std::cerr << e << std::endl;
+  }
+
   void warn(std::string e)
   {
     std::cerr << e << std::endl;

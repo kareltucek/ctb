@@ -1,9 +1,9 @@
 #FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0 
-FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5
+FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline
 
 CXX=g++11
 
-all : test ctb testdir1 testdir2 testdir3 ssedir
+all : test ctb testdir1 testdir2 testdir3 ssedir testdir4
 
 test : datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h
 	${CXX} ${FLAGS} test.cpp -DTEMPLATED -l tinyxml2 -o test
@@ -20,6 +20,9 @@ testdir2 : ctb
 testdir3 : ctb
 	make -C unit_test3
 
+testdir4 : ctb
+	make -C unit_test4
+
 ssedir : ctb
 	make -C sse_set
 
@@ -29,6 +32,7 @@ clean :
 	-make -C unit_test2 clean
 	-make -C unit_test1 clean
 	-make -C unit_test3 clean
+	-make -C unit_test4 clean
 
 
 

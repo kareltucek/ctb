@@ -45,5 +45,6 @@ HEADERS += \
     cartesian_multiplier.h
 
 OTHER_FILES += \
-    test
+    test \
+    sse_set/C_table.csv
 

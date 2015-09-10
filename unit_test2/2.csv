@@ -9,9 +9,9 @@
 	type_version	FLOAT	32	1	float
 	type_version	FLOAT	32	4	__m128
 	type_version	FLOAT	32	2	__m128
-	type_conversion	FLOAT	32	2	4	_mm_movelh_ps($$arg1, $$arg2)				0
+	type_conversion	FLOAT	32	2	4	_mm_movelh_ps($$arg1, $$arg2)					0
 	type_version	INT	32	1	int
 	type_version	INT	32	2	__m128i
 	type_version	INT	32	4	__m128i
-	type_conversion	INT	32	2	4	_mm_unpacklo_epi32($$arg1,$$arg2)				0
-	type_conversion	INT	32	4	2	$$arg1	_mm_srli_si128($$arg1,4)			0
+	type_conversion	INT	32	2	4	_mm_unpacklo_epi32($$arg1,$$arg2)					0
+	type_conversion	INT	32	4	2	$$arg1	_mm_srli_si128($$arg1,4)				0

@@ -44,17 +44,18 @@ namespace ctb
             template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
             void push_params();
             std::string newname(std::string tag, bool reset = false) ;
-            template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w);
+            template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w, bool c);
           public:
             template <typename A> using proxy = proxy_<A,data_t,generator>;
             proxy<const op_t*> op;
             proxy<id_t> opid;
 
             template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
-            template <class W> void generate(int granularity, W& w);
+            template <class W> void generate(int granularity, W& w, bool c);
             int get_inout_pos() const;
         };
 
+        bool compiletest; /*abbreviated as plain 'c'*/
       public:
         proxy<const IT&> instab;
         proxy<graph_t> graph;
@@ -67,6 +68,8 @@ namespace ctb
 
         template <class W> void generate(int granularity, W& w) ;
         int get_broadest(int upperbound = 10000000) ;
+
+        void set_compiletest(bool);
 
         void clear();
         void reset();
@@ -97,6 +100,12 @@ namespace ctb
          instab->dec(id);
          }
          */
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::set_compiletest(bool c)
+    {
+      compiletest = c;
     }
 
   template <class T, class IT>
@@ -163,23 +172,32 @@ namespace ctb
       if(graph->out->empty())
         error( "graph is empty");
       else
-        graph->out[0]->crawl_topological([&](node_t* n) {n->data.rw().generate(packsize, w); });
+        graph.rw().crawl_topological([&](node_t* n) {n->data.rw().generate(packsize, w, compiletest); });
     }
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::data_t::generate(int granularity, W& w)
+    void generator<T,IT>::data_t::generate(int granularity, W& w, bool c)
     {
+      try
+      {
       W empty;
       int myin, myout;
       int mygran = op->get_max_width(granularity,&myin, &myout);
+      if(mygran == 0)
+        error( std::string("suitable width not found!"));
       if(granularity % mygran != 0)
         error( std::string("granularities are relatively prime!"));
       if(myin != myout)
         error( std::string("asymetric instructions not supported"));
+      if(me->in->size() != op->in_types->size())
+        error( std::string("count of input nodes does not match operation specification"));
+      for(int i = 0; i < me->in->size(); ++i)
+        if(me->in[i]->data->op->out_type.r() != op->in_types[i])
+          error( std::string("argument ").append(std::to_string(i)).append(" does not match defined input type: got ").append(me->in[i]->data->op->out_type.r()).append(" wanted ").append(op->in_types[i]));
       //op->imbue_width(mygran);
       acces_map.clear();
-#define ARG(a) (a-1 < me->in->size() ? W().print(me->in[a-1]->data.rw().get_acces(myin, granularity, w), i*myout) : empty)
+#define ARG(a) (a-1 < me->in->size() ? W().print(me->in[a-1]->data.rw().get_acces(myin, granularity, w, c), i*myout) : empty)
       W acces({newname(print("w$1",myout))});
       acces_map.insert(acces_map_t::value_type(myout, acces));
       for(int i = 0; i < granularity/myin; i++)
@@ -191,23 +209,35 @@ namespace ctb
           warn(std::string("instruction code and custom code are both empty for ").append(opid));
         if(op_c.empty())
         {
-          w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), ARG(1), ARG(2), ARG(3));
+          w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
         }
         else
         {
           if(op->is(fINPUT))
-            w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
+            w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
           else if(op->is(fOUTPUT))
-            w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), ARG(1), ARG(2), ARG(3));
+            w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
           else
-            w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0              , ARG(1), ARG(2), ARG(3));
+            w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0             , myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
         }
+        if(c)
+          break;
       }
+    }
+    catch (error_struct& err)
+    {
+      std::stringstream s;
+      s << "while processing node " << me->id.r() << " with opcode " << opid.r() << "\n    " << err.first;
+      if(err.second)
+        error(s.str(), true);
+      else
+        std::cerr << s.str() << std::endl;
+    }
     }
 
   template <class T, class IT>
     template <class W>
-    writer<aliasenv_generator> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w)
+    writer<aliasenv_generator> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w, bool c)
     {
       auto itr = acces_map.find(width);
       if(itr != acces_map.end())
@@ -219,7 +249,7 @@ namespace ctb
         //if a trivial path exists
         for(auto itr : acces_map)
         {
-          std::string c1, c2, cc, t;
+          std::string c1, c2, cc, cg, t;
           if(op->get_conv_string(itr.first, width, c1, c2, cc, t))
           {
             if(c2.empty() && c1.empty() && cc.empty())
@@ -228,17 +258,32 @@ namespace ctb
             acces_map.insert(acces_map_t::value_type(width, acces));
             if(itr.first > width)
             {
+              //SPLITS
               for(int i = 0; i < granularity/itr.first; i++)
               {
-                if(cc.empty())
+                if(!c1.empty())
                 {
-                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ),    c1, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
-                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width),    c2, get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
+                  if(width != itr.first/2)
+                    error("basic halving code used for split where width_in != 2*width_out");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ),    c1, get_inout_pos(), i*itr.first, i*itr.first      , 0    , W().print(itr.second, i*itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width),    c2, get_inout_pos(), i*itr.first, i*itr.first+width, width, W().print(itr.second, i*itr.first), "", "");
+                }
+                else if(!cc.empty())
+                {
+                  stringlist sl;
+                  for(int j = 0; j < itr.first/width; ++j)
+                    sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
+                  w.print(cc, t, W().print(acces, i*itr.first ), "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first, 0, W().print(itr.second, i*itr.first), sl);
+                }
+                else if(!cg.empty())
+                {
+                  for(int j = 0; j < itr.first/width; ++j)
+                      w.print(cg, t, W().print(acces, i*itr.first+j*width),    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
                 }
                 else
-                {
-                  w.print(cc, t, W().print(acces, i*itr.first ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*itr.first), "", "");
-                }
+                  error("conversion with all codes empty encountered!", false);
+                if(c)
+                  break;
               }
               return acces;
             }
@@ -246,14 +291,27 @@ namespace ctb
             {
               for(int i = 0; i < granularity/width; i++)
               {
-                if(cc.empty())
+                if(!c1.empty())
                 {  
-                  w.print("$conversioncode", t, W().print(acces, i*width         ), c1, get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*width         ), c1, get_inout_pos(), i*width, i*width, 0, W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                }
+                else if(!cc.empty())
+                {
+                  stringlist sl;
+                  for(int j = 0; j < itr.first/width; ++j)
+                    sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
+                  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), i*width, i*width, 0, sl);
+                //  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                }
+                else if(!cg.empty())
+                {
+                  for(int j = 0; j < itr.first/width; ++j)
+                    w.print(cg, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), i*width, i*width+j*itr.first, j*itr.first, W().print(itr.second, i*width+j*itr.first), "", "");
                 }
                 else
-                {
-                  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
-                }
+                  error("conversion with all codes empty encountered!", false);
+                if(c)
+                  break;
               }
               return acces;
             }
@@ -274,7 +332,7 @@ namespace ctb
         }
       }
 
-      if(minsrc != -1)
+      if(minsrc == -1)
       {
         error( std::string("conversion path to ") + std::to_string(width) + " at " + (me->id.r()) +  " not found.");
         return writer<aliasenv_generator>();
@@ -285,10 +343,10 @@ namespace ctb
         {
           int next;
           op->get_conversion_graph().get_dist(minsrc, width, &next);
-          get_acces(next, granularity, w);
+          get_acces(next, granularity, w, c);
           minsrc = next;
         }
-        return get_acces(width, granularity, w);
+        return get_acces(width, granularity, w, c);
       }
     };
 
@@ -307,7 +365,7 @@ namespace ctb
       static int id = 0;
       if(reset)
         id = -1;
-      return print("var_$1_$2_$3_$$vindex", opid, id++, tag);
+      return print("var_$1_$2_$3_$$1", opid, id++, tag);
     }
 
   template <class T, class IT>
@@ -317,7 +375,7 @@ namespace ctb
       if(graph->out->empty())
         error( "graph is empty");
       else
-        graph->out[0]->crawl_topological([&](node_t* n) {w = std::max(n->data->op->get_max_width(upperbound),w); });
+        graph.rw().crawl_topological([&](node_t* n) { w = std::max(n->data->op->get_max_width(upperbound),w);  });
       return w;
     }
 };

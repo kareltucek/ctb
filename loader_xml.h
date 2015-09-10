@@ -52,12 +52,13 @@ namespace ctb
    *          bitwidth (hardware bitwidth - will allo limitting the vector width based on bitwidth (otherwise a 128bit vector of bools would iniciate creation of 64 double registers in single instruction)
    *          code (-||-)
    *          note (-||-)
-   *        type_conversion (conversion can glue or split types of some width to two different versions of the same type with different width)
+   *        type_conversion (conversion can glue or split types of some width to two different versions of the same type with different width)(see instruction table doc for concrete semantics)
    *          width_in 
    *          width_out
    *          code1 (for gluing this is the result, for splitting this should expand to code generating the first half)
    *          code2 (this to the second half)
-   *          code_custom (again nonmanaged version)
+   *          code_custom (again nonmanaged version (is not expanded nontrivially))
+   *          code_generic (again nonmanaged version)
    *          note (-||-)
    *          tags (-||-)
    *          rating (-||-)
@@ -199,7 +200,7 @@ namespace ctb
         for(XMLElement * itr2 = itr->FirstChildElement("type_version"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_version"))
           t.addcode_type(getint(itr2, "width"), getstr(itr2, "code"),getanystr(itr2,"note"));
         for(XMLElement * itr2 = itr->FirstChildElement("type_conversion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_conversion"))
-          t.addcode_conversion(getint(itr2, "width_in"), getint(itr2, "width_out"), getanystr(itr2, "code1"), getanystr(itr2, "code2"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+          t.addcode_conversion(getint(itr2, "width_in"), getint(itr2, "width_out"), getanystr(itr2, "code1"), getanystr(itr2, "code2"),getanystr(itr2,"code_custom"),getanystr(itr2,"code_generic"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
       }
       for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
       {

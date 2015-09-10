@@ -151,7 +151,7 @@ namespace ctb
     }
     catch(...)
     {
-      error(str.append(" does not look like an integer"), false);
+      error(std::string("'").append(str).append("' does not look like an integer"), false);
     }
     return result;
   }

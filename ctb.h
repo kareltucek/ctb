@@ -284,6 +284,7 @@ namespace ctb
       std::cout << "  -r <comma separated tags>   require all of these tags" << std::endl;
       std::cout << "  -a <comma separated tags>   require one of these tags ('allow')" << std::endl;
       std::cout << "  -e <comma separated tags>   exclude code with any of these tags  " << std::endl;
+      std::cout << "  -c compile test - makes generator output only the first instruction of every vector  " << std::endl;
       std::cout << "  -h            show some help" << std::endl;
       std::cout << "" << std::endl;
       std::cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << std::endl;
@@ -416,6 +417,9 @@ namespace ctb
                   i+=1;
                   goto start;
                   break;
+                  case 'c':
+               mygenerator.set_compiletest(true);
+                break;
                 case 'h':
                   help_command_stream();
                   return 0;
@@ -464,9 +468,13 @@ start:;
         catch (error_struct& err)
         {
           r = 1;
-          std::cerr << "line " << i << ": " << line << "\n    " << err.first << std::endl;
+          std::stringstream s;
+          s << std::endl << "command line: " << line << " \n    " << err.first;
+
           if(err.second)
-            throw;
+            error(s.str(), err.second);
+          else
+            std::cerr << s.str();
         }
         ++i;
       }
@@ -488,7 +496,7 @@ start:;
       register_command("exportgraph",  std::bind(&ctb<T,IT>::command_io<fideg,std::ofstream,false>, this, std::placeholders::_1),  "exportgraph  <loader> <output file>");
       register_command("source",  std::bind(&ctb<T,IT>::command_source                       , this, std::placeholders::_1),  "source       <input file>");
       register_command("generate",  std::bind(&ctb<T,IT>::command_generate                     , this, std::placeholders::_1),  "generate <output aliasenv> <output file>");
-      register_command("testgraph",  std::bind(&ctb<T,IT>::command_generate                     , this, std::placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
+      register_command("testgraph",  std::bind(&ctb<T,IT>::command_testgraph                     , this, std::placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
       register_command("help",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
       register_command("?",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
     }

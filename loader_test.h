@@ -36,6 +36,8 @@ namespace ctb
         std::map<typename T::tid_t, std::vector<typename T::opid_t> > outs;
         static std::string get_op_name(typename T::opid_t, const std::string& base, int v = -1);
         void genvert(const std::string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<std::vector<typename T::opid_t> >& it, G& graph);
+        int oid;
+        int pid;
       public:
           void load_graph(G& graph, const IT&) ;
           void load_instab(IT& instab, std::istream&) ;
@@ -63,14 +65,13 @@ namespace ctb
   template <typename T, class G, class IT>
     void test_loader<T,G,IT>::genvert(const std::string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<std::vector<typename T::opid_t> >& it, G& graph)
     {
-      static int oid = 0;
       typename T::vid_t vid = get_op_name(op->opid, base, i);
 
       graph.addvert(vid, op->opid, 0);
       int j = 0;
       for( typename std::vector<typename std::vector<typename T::opid_t>::iterator>::const_iterator in = it->begin(); in != it->end(); ++in)
       {
-        graph.addedge(get_op_name(**in,"INPUT", j), vid, j+1);
+        graph.addedge(get_op_name(**in,"INPUT", j), vid, j);
         ++j;
       }
       auto itre = outs.find(op->out_type);
@@ -81,7 +82,7 @@ namespace ctb
         {
           std::string n = get_op_name(itro,"OUTPUT", 0).append(get_op_name(op->opid, "MIDDLE",j));
           graph.addvert(n,itro,++oid);
-          graph.addedge(vid, n, 1);
+          graph.addedge(vid, n, 0);
           ++j;
         }
       }
@@ -90,6 +91,8 @@ namespace ctb
   template <class T, class G, class IT>
     void test_loader<T,G,IT>::load_graph(G& graph, const IT& instab)
     {
+      oid = 0;
+      pid = 0;
 
       for(auto o : instab.instab.r())
       {
@@ -99,11 +102,9 @@ namespace ctb
           outs[o.second->out_type.r()].push_back(o.second->opid.r());
       }
 
-      static int pid = 0;
-
-      for ( auto type : outs)
-        for ( auto op : type.second)
-          graph.addvert(get_op_name(op, "OUTPUT", 0), op, pid++); 
+      //for ( auto type : outs)
+      //  for ( auto op : type.second)
+      //    graph.addvert(get_op_name(op, "OUTPUT", 0), op, ++oid);
 
       for(int i = 0; i < T::maxarity; ++i)
         for ( auto type : ins)
@@ -143,8 +144,8 @@ namespace ctb
             continue;
           if(ins.find(o->out_type.r()) == ins.end())
           {
-            for(int k = 0; k < T::maxarity; ++k)
-              genvert("INPUT", k, o, itr, graph);
+            //for(int k = 0; k < T::maxarity; ++k)
+            //  genvert("INPUT", k, o, itr, graph);
             ins[o->out_type.r()].push_back(o->opid.r());
           }
           int j = 0;

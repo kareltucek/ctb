@@ -30,6 +30,8 @@ namespace ctb
    *    - distance/path search
    *  node:
    *    - generic crawler, which starts at the node from which it was initiated. E.g. to apply function to all nodes, pick an arbitrary vertex from 'verts' or 'in' or 'out' and call crawl_topological...
+   *
+   *  Note that node::crawl<whichever> crawls only the reachable part of the graph while graph::crawl<whichever> guarantees entire graph to be crawled.
    * */
 
   //contained Type, Id type, Owner types
@@ -46,7 +48,7 @@ namespace ctb
             mutable std::vector<route> map;
             int index; /** I believe this is used as an identifier in maps*/
             int lastpass; /** is used mostly for keeping track of whether or not we've visited this node in current crawl*/
-            int newid();
+            static int newid();
             friend class graph_generic;
             template <typename... L> node(I vid, int index, L&&... p);
             bool update_distances();
@@ -80,6 +82,7 @@ namespace ctb
         int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
         void clear();
+        void crawl_topological(std::function<void(node*)> f); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
     };
 
 
@@ -163,8 +166,19 @@ namespace ctb
       if(verts->empty())
         return;
       int size = this->index;
-      verts->begin()->second->template crawl<true, true>([=](node* n)->bool{ n->init_map(size); return true;}, [=](node*n)->bool{return n->map.size() != size;} );
-      verts->begin()->second->template crawl<directed, true>([=](node* n)->bool{ return n->update_distances();}, [=](node*n)->bool{return true;} );
+
+      int passid = node::newid();
+
+      for(auto v : verts.r()) //this will ensure that all components will be crawled
+      {
+        node* n = v.second;
+        if(n->lastpass != passid)
+        {
+          //TODO: a more explicit explanation should probably come here...
+      n->template crawl<true, true>([=](node* n)->bool{ n->init_map(size); n->lastpass = passid; return true;}, [=](node*n)->bool{return n->map.size() != size;} );
+      n->template crawl<directed, true>([=](node* n)->bool{ return n->update_distances();}, [=](node*n)->bool{return true;} );
+    }
+    }
     }
 
 
@@ -204,6 +218,7 @@ namespace ctb
   template <class T, class I, bool directed, class ... O>
     void graph_generic<T,I,directed,O...>::addedge(I aid, I bid, int b_argpos)  
     {
+      /*is the +1 at argpos really correct? For now I suppose it is since unit tests do work as expected*/
       typename vertex_container_t::iterator a = verts.rw().find(aid);
       typename vertex_container_t::iterator b = verts.rw().find(bid);
       if(a == verts->end() || b == verts->end())
@@ -262,9 +277,22 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
+    void graph_generic<T,I,directed,O...>::crawl_topological(std::function<void(node*)> f)
+    {
+      int passid = node::newid();
+
+      for(auto v : verts.r()) //this will ensure that all components will be crawled
+      {
+        node* n = v.second;
+        if(n->lastpass != passid)
+          n->template crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;} );
+    }
+    }
+
+  template <class T, class I, bool directed, class ... O>
     void graph_generic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)
     {
-      int passid = newid();
+      int passid = node::newid();
 
       crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;} );
     }
@@ -284,7 +312,7 @@ namespace ctb
    *
    * e.g. (with proper f and g)
    * undirected crawl<false,false>(f{return updated || first pass},g{ return true }); performs belman ford algorithm
-   * directed   crawl<true, false>(f{return true}                 ,g{  true once  }); sorts a dag topologically (or respectively passes it topologically)
+   * directed   crawl<true, false>(f{return true}                 ,g{  true once  }); sorts a dag topologically (or respectively passes it in topological ordering)
    * */
   template <class T, class I, bool directed, class ... O>
     template <bool recurse, bool inverse>

@@ -5,6 +5,7 @@
 #include "datatypes.h"
 #include "aliasenv_maker.h"
 #include "parser.h"
+#include "errorhandling.h"
 
 #include <string>
 #include <vector>
@@ -125,17 +126,19 @@ namespace ctb
         template <dolar_mode dolars> void write_indent(std::ostream& ss, const std::string& str, int indent, int nobreak) const ;
         std::string get_name(const std::string& format, int& pos);
         template <class N, dolar_mode A, dolar_mode B, class Q> friend class writer;
-        template<dolar_mode dolars, bool preprocess, typename ... Types> writer& print_internal (const std::string& format, const Types&... params) ; 
-        template<dolar_mode dolars = I, bool preprocess, typename ... Types> writer& print_type (const std::string& format, const Types&... params) ; 
+        template<dolar_mode dolars, bool preprocess, typename ... Types> writer& print_internal (const std::string& format, const Types&... params) ;
+        template<dolar_mode dolars = I, bool preprocess, typename ... Types> writer& print_type (const std::string& format, const Types&... params) ;
         template<dolar_mode dolars = I, bool preprocess, typename ... Types> writer& print_type (const writer& format, const Types&... params) ;
         template<dolar_mode dolars = I, bool preprocess, typename ... Types> writer& print_type (int, const Types&... params) ;
-        template<dolar_mode dolars = I, typename ... Types> writer& print_branch (static_true s,  const Types&... params) ; 
-        template<dolar_mode dolars = I, typename ... Types> writer& print_branch (static_false s, const Types&... params) ; 
-        writer<M,I,O,P> getnth(int i);
-        template <typename ... Types> const writer<M,I,O,P>& getnth(int i, const writer<M,I,O,P>& a, const Types&... params);
+        template<dolar_mode dolars = I, typename ... Types> writer& print_branch (static_true s,  const Types&... params) ;
+        template<dolar_mode dolars = I, typename ... Types> writer& print_branch (static_false s, const Types&... params) ;
+        void getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw);
+        template <typename ... Types> void getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw, const writer<M,I,O,P>& a, const Types&... params);
+        template <typename ... Types> void getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw, const stringlist& a, const Types&... params);
         writer<M,I,O,P> to_writer(const int& r);
         writer<M,I,O,P> to_writer(const std::string& r);
         const writer<M,I,O,P>& to_writer(const writer<M,I,O,P>& r);
+        const stringlist& to_writer(const stringlist& r);
         std::string get_string() const; //does handle dolars internally!
         template <dolar_mode dolars> void commit();
       public:
@@ -154,6 +157,7 @@ namespace ctb
         /*operators*/bool operator!=(const writer& w) ;
         /*operators*/writer(const std::initializer_list<std::string>& init);/*this one is literal! no parsing here*/
 
+        ///*printing*/ template<dolar_mode dolars = I, typename S, typename ... Types> writer& printl (const Types&... params, const S& stringlist) ; /*print using a stringlist at the end of the parameter list - for dynamic numbr of arguments; the last argument has to be a stringlist, but deduction does not like knowing it*/
         /*printing*/ template<dolar_mode dolars = I, typename ... Types> writer& print (const Types&... params) ;
         /*printing*/ template<dolar_mode dolars = I, typename ... Types> writer& printf(const std::string& filename, const Types&... params) ; /** print, but the first argument is a filename of a file which is to be loaded instead of the format string */
         /*printing*/ template<dolar_mode dolars = I, typename ... Types, typename Type> writer& push  (const Type& format, const Types&... params) ; /** explicit push on a new line. To be used with list_concat for simple creation of delimited lists.*/
@@ -362,20 +366,39 @@ namespace ctb
     }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
-    writer<M,I,O,P> writer<M,I,O,P>::getnth(int i)
+    void writer<M,I,O,P>::getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw)
     {
       error( "out of range on printnth");
-      return writer();
+      rs = NULL;
+      rw = NULL;
     }
 
+  template <class M, dolar_mode I, dolar_mode O, class P>
+    template <typename ... Types> void writer<M,I,O,P>::getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw, const stringlist& a, const Types&... params)
+    {
+      if(i > a.size())
+      {
+        getnth(i-a.size(), rs, rw, params...);
+      }
+      else
+      {
+        rs = &a[i-1];
+        rw = NULL;
+      }
+    }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
-    template <typename ... Types> const writer<M,I,O,P>& writer<M,I,O,P>::getnth(int i, const writer<M,I,O,P>& a, const Types&... params)
+    template <typename ... Types> void writer<M,I,O,P>::getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw, const writer<M,I,O,P>& a, const Types&... params)
     {
       if(i==1)
-        return a;
+      {
+        rs = NULL;
+        rw = &a;
+      }
       else
-        return getnth(i-1, params...); //well if the reference arrived valid here, it will remain valid after return
+      {
+        getnth(i-1, rs, rw, params...);
+      }
     }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
@@ -502,6 +525,11 @@ namespace ctb
       return str;
     }
 
+  template <class M, dolar_mode I, dolar_mode O, class P>
+    const stringlist& writer<M,I,O,P>::to_writer(const stringlist& r)
+    {
+      return r;
+    }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
     writer<M,I,O,P> writer<M,I,O,P>::to_writer(const int& r)
@@ -630,15 +658,26 @@ namespace ctb
             case dEat:
             case dLet:
               if(a.empty())
+              {
                 error( std::string("bad '$' in: ").append(format));
+              }
               else if( -1 == a.find_first_not_of("0123456789"))
-                print_type<dolars,preprocess>(getnth(std::stoi(a), params...), params...);
+              {
+                int n = std::stoi(a);
+                const std::string* sptr;
+                const writer<M,I,O,P> * wptr;
+                getnth(n, sptr, wptr, params...);
+                if(sptr)
+                  print_type<dolars,preprocess>(*sptr, params...);
+                if(wptr)
+                  print_type<dolars,preprocess>(*wptr, params...);
+              }
               else
               {
                 bool s;
                 std::string e = M::alias(a,&s);
                 if(s)
-                  print_type<dolars,preprocess>(M::alias(a), params...);
+                  print_internal<dolars,preprocess>(e, params...);
                 else
                 {
                   add<preprocess>("$", false);
@@ -666,9 +705,9 @@ namespace ctb
 
 
   template <class M, dolar_mode I, dolar_mode O, class P>
-    template<dolar_mode dolars, bool preprocess, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print_type(int num, const Types&... params)  
+    template<dolar_mode dolars, bool preprocess, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print_type(int num, const Types&... params)
     {
-      print_type<dolars,preprocess>(std::to_string(num), params...); 
+      print_type<dolars,preprocess>(std::to_string(num), params...);
       return *this;
     }
 
@@ -676,17 +715,23 @@ namespace ctb
     template<dolar_mode dolars, bool preprocess, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print_type(const writer& format, const Types&... params)
     {
       if(&format != this)
+      {
         for(auto line : format.data)
-          print_type<dolars,preprocess>(line, params...);
+        {
+          print_type<dolars,preprocess>( line, params...);
+        }
+      }
       else
-        print_type<dolars,preprocess>(format.get_string(), params...);
+      {
+        print_type<dolars,preprocess>( format.get_string(), params...);
+      }
       return *this;
     }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
-    template<dolar_mode dolars, bool preprocess, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print_type(const std::string& format, const Types&... params)  
+    template<dolar_mode dolars, bool preprocess, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print_type( const std::string& format, const Types&... params)
     {
-      return print_internal<dolars,preprocess>(format, to_writer(params)...); //the purpose of this circus is not forcing (constant) writers to make several copies during a single call
+      return print_internal<dolars,preprocess>( format, to_writer(params)...); //the purpose of this circus is not forcing (constant) writers to make several copies during a single call
     }
 
   template <class M, dolar_mode I, dolar_mode O, class P>
@@ -705,8 +750,18 @@ namespace ctb
       return *this;
     }
 
+  //template <class M, dolar_mode I, dolar_mode O, class P>
+  //  template<dolar_mode dolars, typename S, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::printl(const Types&... params, const S& sl)
+  //  {
+  //  #ifdef TESTOVANI
+  //    std::tuple<const Types&...> t(params...);
+  //    std::string format = ctb::to_string(std::get<0>(t));
+  //  #endif
+  //    return print_branch<dolars>(P(), sl, params...); //here the P determines whether we want function with or without postprocessing (we need it to stop infinite recursion)
+  //  }
+
   template <class M, dolar_mode I, dolar_mode O, class P>
-    template<dolar_mode dolars, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print(const Types&... params)  
+    template<dolar_mode dolars, typename ... Types> writer<M,I,O,P>& writer<M,I,O,P>::print(const Types&... params)
     {
     #ifdef TESTOVANI
       std::tuple<const Types&...> t(params...);
@@ -913,6 +968,10 @@ namespace ctb
       writer k;
       k.print("$[${w->1}]");
       assert(k.data[0] == "1");
+      writer l;
+      stringlist s = {"b", "c"};
+      l.print("$1 $2 $3 $4 $5 $6", "a", s, "d", s);
+      assert(l.data[0] == "a b c d b c");
     }
 };
 

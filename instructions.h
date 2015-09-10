@@ -38,9 +38,13 @@ namespace ctb
    *     - type versions
    *       specifies data type of a particular width, such as 'int' or '__m128i'
    *     - type conversion
-   *       provides a means of splitting or gluing two registers together 
-   *       two code lines are provided for split of an instruction
-   *       e.g. _mm_unpacklo_epi32($arg1,$arg2)
+   *       provides a means of splitting or gluing two registers together
+   *       one of 3 code types may be specified:
+   *       - two code lines are provided for split of an instruction into two halves; semantics of this is {'$type $name = $code1;', '$type $name = $code2'}(names are different in each call) (generated ntimes (with different names and vindexes)
+   *         e.g. _mm_unpacklo_epi32($arg1,$arg2)
+   *       - code custom - here you get full list of names and it's your problem to cope with them; semantics is '$code_custom;' (-||-)
+   *       - code generic - this is called once for every instance of split or join with a vector index as a parameter; semantics is thus {'$code_custom'(with vvindex = 0*w), '$code_custom' (with vvindex = 1*w), '$code_custom'...} (-||-)
+   *
    * \endcode
    * 
    * All relevant structures have also a 'note', 'tags' and 'rating' fields. Tags serve for switching hardware-supported/unsupported sets of instructions on and off. Rating serves for choosing better variant when multiple are available (such as a new, mostly unsupported instruction versus an old slow workaround). Note is an arbitrary user note.
@@ -53,7 +57,10 @@ namespace ctb
    *  - $arg1      - access code obtained 'from the input edges'...
    *  - $arg2
    *  - $arg3
-   *  - $vindex    - index of the generated code. E.g. for instruction width = 4 and data granularity 16 the generator will be called in order with this set to 0, 4, 8 and 12
+   *  - $arg...
+   *  - $iindex    - input 'vector' index - index of the generated code. E.g. for standard instruction of width = 4 and data granularity 16 the generator will be called in order with this set to 0, 4, 8 and 12;
+   *  - $oindex    - output 'vector' index - differs for split and join operations
+   *  - $vindex    - 'vector vector' index - internal index for generic joins and splits. E.g. for split from width 8 to 4*2 at granularity 16 this will be called in two series with 0,2,4,8,0,2,4,8 (and iindexes 0,0,0,0,8,8,8,8). This should always be the difference of iindex and oindex
    *
    *  The input interface consists of the instruction_table::addtype and the instruction_table::add_operation create new operation/type with specified id and return a reference to it, which then can be used to fill in code snippets for realization of the code/snippets.
    *
@@ -83,11 +90,12 @@ namespace ctb
               const std::string code1;
               const std::string code2;
               const std::string code_custom;
+              const std::string code_generic;
               const std::string note;
               const std::string tags;
               const int rating;
               const bool satisfactory;
-              conversion(int in, int out, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&,int r, bool s);
+              conversion(int in, int out, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&, const std::string&, int r, bool s);
               conversion() = delete;
             } ;
             struct type_version
@@ -109,7 +117,7 @@ namespace ctb
             /*EAPI*/proxy<typename T::tid_t> tid;
             /*EAPI*/proxy<int> bitwidth;
             /*IAPI*/void addcode_type(int w, const std::string& c,const std::string&) ;
-            /*IAPI*/void addcode_conversion(int from, int to, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&,int r);
+            /*IAPI*/void addcode_conversion(int from, int to, const std::string& c1, const std::string& c2,const std::string& cc,const std::string& cg, const std::string& n, const std::string& t,int r);
             mutable graph_distance_t distances; //technically taken just a cache
         }
         ;
@@ -193,7 +201,7 @@ namespace ctb
   }
 
   template <class T>
-    instruction_table<T>::type::conversion::conversion(int i, int o, const std::string& c1, const std::string& c2,const std::string& cc,const std::string& n,const std::string& t,int r, bool s) : width_in(i), width_out(o), code1(c1), code2(c2), code_custom(cc), note(n), tags(t), rating(r), satisfactory(s)
+    instruction_table<T>::type::conversion::conversion(int i, int o, const std::string& c1, const std::string& c2,const std::string& cc, const std::string& cg, const std::string& n,const std::string& t,int r, bool s) : width_in(i), width_out(o), code1(c1), code2(c2), code_custom(cc), code_generic(cg), note(n), tags(t), rating(r), satisfactory(s)
   {
   }
 
@@ -205,10 +213,10 @@ namespace ctb
     }
 
   template <class T>
-    void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2,const std::string& cc,const std::string& n,const std::string& t,int r)
+    void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2,const std::string& cc,const std::string& cg, const std::string& n,const std::string& t,int r)
     {
       bool s = taghandler.is_satisfactory(t);
-      conversions.rw().push_back(conversion(in, out, c1, c2,cc,n,t,r, s));
+      conversions.rw().push_back(conversion(in, out, c1, c2,cc,cg,n,t,r, s));
       distances.addvert(in, false, false);
       distances.addvert(out, false, false);
       if(s)
@@ -324,8 +332,9 @@ namespace ctb
           s = true;
         }
       }
-      if(!s)
-        error( std::string("conversion from ").append(std::to_string(from)).append(" to ").append(std::to_string(to)).append(" at operation ").append(opid).append(" not found"));
+      //this error would prevent nontrivial path search from being used
+      //if(!s)
+      //  error( std::string("conversion from width ").append(std::to_string(from)).append(" to ").append(std::to_string(to)).append(" at operation ").append(opid).append(" not found"));
       return s;
     }
 

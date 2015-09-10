@@ -70,8 +70,9 @@ namespace ctb
    *            5 code 1
    *            6 code 2
    *            7 code custom
-   *            8 tags
-   *            9 rating
+   *            8 code generic
+   *            9 tags
+   *            10 rating
    * \endcode
    *
    * for more detailed description please see the xml loader documentation
@@ -91,13 +92,14 @@ namespace ctb
       private:
         enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
         enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode};
-        enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccTag,ccRating};
+        enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating};
 
         static writer_plain preprocessline(std::string line);
         static void process(IT& instab, std::istream& s);
         static void insert(IT& instab, std::string line);
 
         static std::map<std::string, int> flags;
+        static bool empty(const std::string& line);
       public:
         void load_graph(G& graph, std::istream&) ;
         void load_instab(IT& instab, std::istream&) ;
@@ -176,6 +178,7 @@ namespace ctb
           w.push(v.code1);
           w.push(v.code2);
           w.push(v.code_custom);
+          w.push(v.code_generic);
           w.push(v.tags);
           w.push(v.rating);
           s << w.list_concat("\t").write_str() << std::endl;
@@ -212,9 +215,20 @@ namespace ctb
     }
 
   template <class T, class G, class IT, class D>
+    bool csv_loader<T,G,IT,D>::empty(const std::string& line)
+    {
+      for(int i = 0; i < line.size(); ++i)
+      {
+        if(line[i] != '\t' && line[i] != '\n' && line[i] != '\r')
+          return false;
+      }
+      return true;
+    }
+
+  template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::insert(IT& instab, std::string line)
     {
-      if(line.size() == 0 || line[0] == '#')
+      if(line.size() == 0 || line[0] == '#' || empty(line))
         return;
 
       stringlist data = split(line, D::value);
@@ -233,7 +247,7 @@ namespace ctb
       else if(data[ccType] == "type_conversion")
       {
         typename IT::type_t& type = instab.addtype(data[ccTId],ctb::stoi(data[ccBW]));
-        type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
+        type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccCodeGeneric],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
       }
       else
       {
@@ -250,9 +264,9 @@ namespace ctb
       while(std::getline(s, line))
       {
         writer_plain lines = preprocessline(line);
-        for(int i = 0; i < lines.size(); i++)
+        for(int j = 0; j < lines.size(); j++)
         {
-          std::string l = lines.write_line(i);
+          std::string l = lines.write_line(j);
           try
           {
             insert(instab, l);
