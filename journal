@@ -158,6 +158,9 @@ bool <-> conversion instructions
 //solve template ingenerality of register methods - this conflict has never existed
 //switch to nonstatic loaders - done
 split commandline interface from programming interface (taskmaster conflicts at the moment)
+writer - callback driven parenthess expansion
+forward all agrument from print directly to aliasenv so that generation environment can do its (own) magic
+  +
 generic id type handling
 
 

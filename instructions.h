@@ -42,8 +42,8 @@ namespace ctb
    *       one of 3 code types may be specified:
    *       - two code lines are provided for split of an instruction into two halves; semantics of this is {'$type $name = $code1;', '$type $name = $code2'}(names are different in each call) (generated ntimes (with different names and vindexes)
    *         e.g. _mm_unpacklo_epi32($arg1,$arg2)
-   *       - code custom - here you get full list of names and it's your problem to cope with them; semantics is '$code_custom;' (-||-)
-   *       - code generic - this is called once for every instance of split or join with a vector index as a parameter; semantics is thus {'$code_custom'(with vvindex = 0*w), '$code_custom' (with vvindex = 1*w), '$code_custom'...} (-||-)
+   *       - code custom - here you get full list of names and it's your problem to cope with them; semantics is '$code_custom' (-||-)
+   *       - code generic - this is called once for every instance of split or join with a vector indices as a parameters; semantics is thus {'$code_generic'(with vvindex = 0*w), '$code_generic' (with vvindex = 1*w), '$code_generic'...} (-||-)
    *
    * \endcode
    * 

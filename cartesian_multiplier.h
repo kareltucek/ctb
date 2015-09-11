@@ -2,6 +2,7 @@
 #define CARTESIAN_GUARD
 
 #include <vector>
+#include <assert.h>
 
 namespace ctb
 {

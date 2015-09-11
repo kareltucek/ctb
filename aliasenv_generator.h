@@ -86,7 +86,9 @@ namespace ctb
       return;
 
     //these are the basic defines for internal code generation i.e. obligatory ones
+    //note that you may need to customize this first paragraph depending on the output language ==> you can override them from your own aliasenv easily
     ADD("innercode", "$type $name = $operation;");
+    ADD("declcode", "$type $name;");
     ADD("outputcode", "$operation;");
     ADD("inputcode", "$type $name = $operation;");
     ADD("conversioncode", "$type $name = $operation;");

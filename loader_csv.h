@@ -133,6 +133,7 @@ namespace ctb
   template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::export_instab(IT& instab, std::ostream& s)
     {
+      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\tcode custom\ttags\trating" << std::endl;
       for(auto o : instab.instab.r())
       {
         for(auto i : o.second->versions.r())
@@ -153,6 +154,7 @@ namespace ctb
           s << w.list_concat("\t").write_str() << std::endl;
         }
       }
+      s << "#note\ttype\ttype id\tbitwidth\twidth\tcode" << std::endl;
       for(auto t : instab.typetab.r())
       {
         for(auto v : t.second->versions.r())
@@ -166,6 +168,10 @@ namespace ctb
           w.push(v.code);
           s << w.list_concat("\t").write_str() << std::endl;
         }
+      }
+      s << "#note\ttype\ttype id\tbitwidth\twidth in\twidth out\tcode1\tcode2\tcode custom\tcode generic\ttags\trating" << std::endl;
+      for(auto t : instab.typetab.r())
+      {
         for(auto v : t.second->conversions.r())
         {
           writer_plain::basic_ignorant_exporter w;

@@ -161,7 +161,7 @@ namespace ctb
     }
 
   template <class T, class IT>
-    generator<T,IT>::generator(const IT & i) : instab(i), graph()
+    generator<T,IT>::generator(const IT & i) : instab(i), graph(), compiletest(false)
   {
   }
 
@@ -207,7 +207,11 @@ namespace ctb
         op->get_op_string(mygran, op_c, op_cc);
         if(op_c.empty() && op_cc.empty())
           warn(std::string("instruction code and custom code are both empty for ").append(opid));
-        if(op_c.empty())
+        if(i!=0 && c)
+        {
+          w.print("$declcode", type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+        }
+        else if(op_c.empty())
         {
           w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
         }
@@ -261,7 +265,12 @@ namespace ctb
               //SPLITS
               for(int i = 0; i < granularity/itr.first; i++)
               {
-                if(!c1.empty())
+                if(i!=0 && c)
+                {
+                  for(int j = 0; j < itr.first/width; ++j)
+                      w.print("$declcode", t, W().print(acces, i*itr.first+j*width),    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                }
+                else if(!c1.empty())
                 {
                   if(width != itr.first/2)
                     error("basic halving code used for split where width_in != 2*width_out");
@@ -282,16 +291,19 @@ namespace ctb
                 }
                 else
                   error("conversion with all codes empty encountered!", false);
-                if(c)
-                  break;
               }
               return acces;
             }
             else
             {
+              //JOINS
               for(int i = 0; i < granularity/width; i++)
               {
-                if(!c1.empty())
+                if(i!=0 && c)
+                {
+                  w.print("$declcode", t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), i*width, i*width, 0);
+                }
+                else if(!c1.empty())
                 {  
                   w.print("$conversioncode", t, W().print(acces, i*width         ), c1, get_inout_pos(), i*width, i*width, 0, W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
                 }
@@ -310,8 +322,6 @@ namespace ctb
                 }
                 else
                   error("conversion with all codes empty encountered!", false);
-                if(c)
-                  break;
               }
               return acces;
             }

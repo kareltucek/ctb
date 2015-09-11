@@ -1,3 +1,4 @@
+#note	type	output type	input types	op id	flags	width in	width out	code	code custom	tags	rating
 arithetic_std	instruction	double	double,double	ADD_double		1	1	$$arg1 + $$arg2		C	10
 sse_arithetic_std	instruction	double	double,double	ADD_double		2	2	_mm_add_pd($$arg1,$$arg2)		sse	10
 arithetic_std	instruction	float	float,float	ADD_float		1	1	$$arg1 + $$arg2		C	10
@@ -230,10 +231,10 @@ sse_logical	instruction	bool	bool,bool	EQ_bool		32	32	~($$arg1 ^ $$arg2)		C	5
 sse_logical	instruction	bool	bool,bool	EQ_bool		64	64	_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2))		sse	5
 sse_logical	instruction	bool	bool,bool	EQ_bool		128	128	_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2))		sse	5
 relational	instruction	ssebool	double,double	EQ_double		1	1	$$arg1 == $$arg2		C	10
-sse_relational	instruction	ssebool	double,double	EQ_double		2	2	_mm_cmpeq_pd($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	double,double	EQ_double		2	2	(__m128i)_mm_cmpeq_pd($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	float,float	EQ_float		1	1	$$arg1 == $$arg2		C	10
-sse_relational	instruction	ssebool	float,float	EQ_float		4	4	_mm_cmpeq_ps($$arg1,$$arg2)		sse	10
-sse_relational	instruction	ssebool	float,float	EQ_float		2	2	_mm_cmpeq_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	EQ_float		4	4	(__m128i)_mm_cmpeq_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	EQ_float		2	2	(__m128i)_mm_cmpeq_ps($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	int16_t,int16_t	EQ_int16_t		1	1	$$arg1 == $$arg2		C	10
 sse_relational	instruction	ssebool	int16_t,int16_t	EQ_int16_t		8	8	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
 sse_relational	instruction	ssebool	int16_t,int16_t	EQ_int16_t		4	4	_mm_cmpeq_epi16($$arg1,$$arg2)		sse	10
@@ -276,10 +277,10 @@ sse_logical	instruction	bool	bool,bool	GE_bool		32	32	$$arg1 | (~($$arg1 ^ $$arg
 sse_logical	instruction	bool	bool,bool	GE_bool		64	64	_mm_or_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
 sse_logical	instruction	bool	bool,bool	GE_bool		128	128	_mm_or_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
 relational	instruction	ssebool	double,double	GE_double		1	1	$$arg1 >= $$arg2		C	10
-sse_relational	instruction	ssebool	double,double	GE_double		2	2	_mm_cmpge_pd($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	double,double	GE_double		2	2	(__m128i)_mm_cmpge_pd($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	float,float	GE_float		1	1	$$arg1 >= $$arg2		C	10
-sse_relational	instruction	ssebool	float,float	GE_float		4	4	_mm_cmpge_ps($$arg1,$$arg2)		sse	10
-sse_relational	instruction	ssebool	float,float	GE_float		2	2	_mm_cmpge_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	GE_float		4	4	(__m128i)_mm_cmpge_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	GE_float		2	2	(__m128i)_mm_cmpge_ps($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	int16_t,int16_t	GE_int16_t		1	1	$$arg1 >= $$arg2		C	10
 sse_relational	instruction	ssebool	int16_t,int16_t	GE_int16_t		8	8	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
 sse_relational	instruction	ssebool	int16_t,int16_t	GE_int16_t		4	4	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmpgt_epi16($$arg1,$$arg2))		sse	10
@@ -322,10 +323,10 @@ sse_logical	instruction	bool	bool,bool	GT_bool		32	32	$$arg1 & (~$$arg2)		C	5
 sse_logical	instruction	bool	bool,bool	GT_bool		64	64	_mm_and_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),$$arg2))		sse	5
 sse_logical	instruction	bool	bool,bool	GT_bool		128	128	_mm_and_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),$$arg2))		sse	5
 relational	instruction	ssebool	double,double	GT_double		1	1	$$arg1 > $$arg2		C	10
-sse_relational	instruction	ssebool	double,double	GT_double		2	2	_mm_cmpgt_pd($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	double,double	GT_double		2	2	(__m128i)_mm_cmpgt_pd($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	float,float	GT_float		1	1	$$arg1 > $$arg2		C	10
-sse_relational	instruction	ssebool	float,float	GT_float		4	4	_mm_cmpgt_ps($$arg1,$$arg2)		sse	10
-sse_relational	instruction	ssebool	float,float	GT_float		2	2	_mm_cmpgt_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	GT_float		4	4	(__m128i)_mm_cmpgt_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	GT_float		2	2	(__m128i)_mm_cmpgt_ps($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	int16_t,int16_t	GT_int16_t		1	1	$$arg1 > $$arg2		C	10
 sse_relational	instruction	ssebool	int16_t,int16_t	GT_int16_t		8	8	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
 sse_relational	instruction	ssebool	int16_t,int16_t	GT_int16_t		4	4	_mm_cmpgt_epi16($$arg1,$$arg2)		sse	10
@@ -395,10 +396,10 @@ sse_logical	instruction	bool	bool,bool	LE_bool		32	32	$$arg2 | (~($$arg1 ^ $$arg
 sse_logical	instruction	bool	bool,bool	LE_bool		64	64	_mm_or_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
 sse_logical	instruction	bool	bool,bool	LE_bool		128	128	_mm_or_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
 relational	instruction	ssebool	double,double	LE_double		1	1	$$arg1 <= $$arg2		C	10
-sse_relational	instruction	ssebool	double,double	LE_double		2	2	_mm_cmple_pd($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	double,double	LE_double		2	2	(__m128i)_mm_cmple_pd($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	float,float	LE_float		1	1	$$arg1 <= $$arg2		C	10
-sse_relational	instruction	ssebool	float,float	LE_float		4	4	_mm_cmple_ps($$arg1,$$arg2)		sse	10
-sse_relational	instruction	ssebool	float,float	LE_float		2	2	_mm_cmple_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	LE_float		4	4	(__m128i)_mm_cmple_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	LE_float		2	2	(__m128i)_mm_cmple_ps($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	int16_t,int16_t	LE_int16_t		1	1	$$arg1 <= $$arg2		C	10
 sse_relational	instruction	ssebool	int16_t,int16_t	LE_int16_t		8	8	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
 sse_relational	instruction	ssebool	int16_t,int16_t	LE_int16_t		4	4	_mm_or_si128(_mm_cmpeq_epi16($$arg1,$$arg2),_mm_cmplt_epi16($$arg1,$$arg2))		sse	10
@@ -449,10 +450,10 @@ sse_logical	instruction	bool	bool,bool	LT_bool		32	32	(~$$arg1) & $$arg2		C	5
 sse_logical	instruction	bool	bool,bool	LT_bool		64	64	_mm_and_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),$$arg1))		sse	5
 sse_logical	instruction	bool	bool,bool	LT_bool		128	128	_mm_and_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),$$arg1))		sse	5
 relational	instruction	ssebool	double,double	LT_double		1	1	$$arg1 < $$arg2		C	10
-sse_relational	instruction	ssebool	double,double	LT_double		2	2	_mm_cmplt_pd($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	double,double	LT_double		2	2	(__m128i)_mm_cmplt_pd($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	float,float	LT_float		1	1	$$arg1 < $$arg2		C	10
-sse_relational	instruction	ssebool	float,float	LT_float		4	4	_mm_cmplt_ps($$arg1,$$arg2)		sse	10
-sse_relational	instruction	ssebool	float,float	LT_float		2	2	_mm_cmplt_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	LT_float		4	4	(__m128i)_mm_cmplt_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	LT_float		2	2	(__m128i)_mm_cmplt_ps($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	int16_t,int16_t	LT_int16_t		1	1	$$arg1 < $$arg2		C	10
 sse_relational	instruction	ssebool	int16_t,int16_t	LT_int16_t		8	8	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
 sse_relational	instruction	ssebool	int16_t,int16_t	LT_int16_t		4	4	_mm_cmplt_epi16($$arg1,$$arg2)		sse	10
@@ -527,10 +528,10 @@ sse_logical	instruction	bool	bool,bool	NE_bool		32	32	$$arg1 ^ $$arg2		C	5
 sse_logical	instruction	bool	bool,bool	NE_bool		64	64	_mm_xor_si128($$arg1,$$arg2)		sse	5
 sse_logical	instruction	bool	bool,bool	NE_bool		128	128	_mm_xor_si128($$arg1,$$arg2)		sse	5
 relational	instruction	ssebool	double,double	NE_double		1	1	$$arg1 != $$arg2		C	10
-sse_relational	instruction	ssebool	double,double	NE_double		2	2	_mm_cmpneq_pd($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	double,double	NE_double		2	2	(__m128i)_mm_cmpneq_pd($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	float,float	NE_float		1	1	$$arg1 != $$arg2		C	10
-sse_relational	instruction	ssebool	float,float	NE_float		4	4	_mm_cmpneq_ps($$arg1,$$arg2)		sse	10
-sse_relational	instruction	ssebool	float,float	NE_float		2	2	_mm_cmpneq_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	NE_float		4	4	(__m128i)_mm_cmpneq_ps($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	float,float	NE_float		2	2	(__m128i)_mm_cmpneq_ps($$arg1,$$arg2)		sse	10
 relational	instruction	ssebool	int16_t,int16_t	NE_int16_t		1	1	$$arg1 != $$arg2		C	10
 sse_relational	instruction	ssebool	int16_t,int16_t	NE_int16_t		8	8	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
 sse_relational	instruction	ssebool	int16_t,int16_t	NE_int16_t		4	4	_mm_sub_epi32(_mm_set1_epi32(0),_mm_cmpeq_epi16($$arg1,$$arg2))		sse	10
@@ -757,6 +758,7 @@ sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR_uint8_t		16	16	_mm_xo
 sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR_uint8_t		8	8	_mm_xor_si128($$arg1,$$arg2)		sse	5
 sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR_uint8_t		4	4	_mm_xor_si128($$arg1,$$arg2)		sse	5
 sse_arithmetic_bin	instruction	uint8_t	uint8_t,uint8_t	XOR_uint8_t		2	2	_mm_xor_si128($$arg1,$$arg2)		sse	5
+#note	type	type id	bitwidth	width	code
 types	type_version	bool	1	1	bool
 sse_types	type_version	bool	1	2	uint32_t
 sse_types	type_version	bool	1	4	uint32_t
@@ -765,6 +767,45 @@ sse_types	type_version	bool	1	16	uint32_t
 sse_types	type_version	bool	1	32	uint32_t
 sse_types	type_version	bool	1	64	__m128i
 sse_types	type_version	bool	1	128	__m128i
+types	type_version	double	64	1	double
+sse_types	type_version	double	64	2	__m128d
+types	type_version	float	32	1	float
+sse_types	type_version	float	32	2	__m128d
+sse_types	type_version	float	32	4	__m128d
+types	type_version	int16_t	16	1	int16_t
+sse_types	type_version	int16_t	16	8	__m128i
+sse_types	type_version	int16_t	16	4	__m128i
+sse_types	type_version	int16_t	16	2	__m128i
+types	type_version	int32_t	32	1	int32_t
+sse_types	type_version	int32_t	32	4	__m128i
+sse_types	type_version	int32_t	32	2	__m128i
+types	type_version	int64_t	64	1	int64_t
+sse_types	type_version	int64_t	64	2	__m128i
+types	type_version	int8_t	8	1	int8_t
+sse_types	type_version	int8_t	8	16	__m128i
+sse_types	type_version	int8_t	8	8	__m128i
+sse_types	type_version	int8_t	8	4	__m128i
+sse_types	type_version	int8_t	8	2	__m128i
+types	type_version	ssebool	8	1	uint8_t
+sse_types	type_version	ssebool	8	2	__m128i
+sse_types	type_version	ssebool	8	4	__m128i
+sse_types	type_version	ssebool	8	8	__m128i
+sse_types	type_version	ssebool	8	16	__m128i
+types	type_version	uint16_t	16	1	uint16_t
+sse_types	type_version	uint16_t	16	8	__m128i
+sse_types	type_version	uint16_t	16	4	__m128i
+sse_types	type_version	uint16_t	16	2	__m128i
+types	type_version	uint32_t	32	1	uint32_t
+sse_types	type_version	uint32_t	32	4	__m128i
+sse_types	type_version	uint32_t	32	2	__m128i
+types	type_version	uint64_t	64	1	uint64_t
+sse_types	type_version	uint64_t	64	2	__m128i
+types	type_version	uint8_t	8	1	uint8_t
+sse_types	type_version	uint8_t	8	16	__m128i
+sse_types	type_version	uint8_t	8	8	__m128i
+sse_types	type_version	uint8_t	8	4	__m128i
+sse_types	type_version	uint8_t	8	2	__m128i
+#note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
 sse_splits	type_conversion	bool	1	128	64	_mm_movelh_ps($$arg1,_mm_setzero_si128())	_mm_movehl_ps(_mm_setzero_si128(),$$arg1)			sse	10
 sse_glues	type_conversion	bool	1	64	128	_mm_movelh_ps($$arg1,$$arg2)				sse	10
 sse_splits	type_conversion	bool	1	32	16	$$arg1&31	16 >> $$arg1			C	10
@@ -779,21 +820,12 @@ sse_splits	type_conversion	bool	1	2	1	($$arg1&1)>0	($$arg1&2)>0			C	10
 sse_glues	type_conversion	bool	1	1	2	($$arg1*1)|($$arg2*2)				C	10
 sse_splits	type_conversion	bool	1	64	32	(uint32_t)_mm_extract_epi32((__m128)$$arg1,0)	(uint32_t)_mm_extract_epi32((__m128)$$arg1,1)			sse	10
 sse_glues	type_conversion	bool	1	32	64	_mm_set_epi32(0,0,$$arg2,$$arg1)				sse	10
-types	type_version	double	64	1	double
-sse_types	type_version	double	64	2	__m128d
 sse_splits	type_conversion	double	64	2	1	(double)_mm_extract_epi64((__m128)$$arg1,0)	(double)_mm_extract_epi64((__m128)$$arg1,1)			sse	10
 sse_glues	type_conversion	double	64	1	2	_mm_set_epi64($$arg2,$$arg1)				sse	10
-types	type_version	float	32	1	float
-sse_types	type_version	float	32	2	__m128d
-sse_types	type_version	float	32	4	__m128d
 sse_split32->64	type_conversion	float	32	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
 sse_merge64->32	type_conversion	float	32	2	4	_mm_movelh_ps( _mm_shuffle_epi32($$arg1,0x08), _mm_shuffle_epi32($$arg2,0x08))				sse	10
 sse_splits	type_conversion	float	32	2	1	(float)_mm_extract_epi32((__m128)$$arg1,0)	(float)_mm_extract_epi32((__m128)$$arg1,3)			sse	10
 sse_glues	type_conversion	float	32	1	2	_mm_set_epi32(0,$$arg2,0,$$arg1)				sse	10
-types	type_version	int16_t	16	1	int16_t
-sse_types	type_version	int16_t	16	8	__m128i
-sse_types	type_version	int16_t	16	4	__m128i
-sse_types	type_version	int16_t	16	2	__m128i
 sse_split16->32	type_conversion	int16_t	16	8	4	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,7,6,0,0,5,4,0,0,3,2,0,0,1,0))	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,15,14,0,0,13,12,0,0,11,10,0,0,9,8)))			sse	10
 sse_split32->64	type_conversion	int16_t	16	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
 sse_merge64->32	type_conversion	int16_t	16	2	4	_mm_movelh_ps( _mm_shuffle_epi32($$arg1,0x08), _mm_shuffle_epi32($$arg2,0x08))				sse	10
@@ -802,23 +834,13 @@ sse_splits	type_conversion	int16_t	16	2	1	(int16_t)_mm_extract_epi16((__m128)$$a
 sse_glues	type_conversion	int16_t	16	1	2	_mm_set_epi16(0,0,0,$$arg2,0,0,0,$$arg1)				sse	10
 sse_splits	type_conversion	int1_t	1	2	1	(int1_t)_mm_extract_epi1((__m128)$$arg1,0)	(int1_t)_mm_extract_epi1((__m128)$$arg1,$$p)			sse	10
 sse_splits	type_conversion	int2_t	2	2	1	(int2_t)_mm_extract_epi2((__m128)$$arg1,0)	(int2_t)_mm_extract_epi2((__m128)$$arg1,$$p)			sse	10
-types	type_version	int32_t	32	1	int32_t
-sse_types	type_version	int32_t	32	4	__m128i
-sse_types	type_version	int32_t	32	2	__m128i
 sse_split32->64	type_conversion	int32_t	32	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
 sse_merge64->32	type_conversion	int32_t	32	2	4	_mm_movelh_ps( _mm_shuffle_epi32($$arg1,0x08), _mm_shuffle_epi32($$arg2,0x08))				sse	10
 sse_splits	type_conversion	int32_t	32	2	1	(int32_t)_mm_extract_epi32((__m128)$$arg1,0)	(int32_t)_mm_extract_epi32((__m128)$$arg1,$$p)			sse	10
 sse_glues	type_conversion	int32_t	32	1	2	_mm_set_epi32(0,$$arg2,0,$$arg1)				sse	10
 sse_splits	type_conversion	int4_t	4	2	1	(int4_t)_mm_extract_epi4((__m128)$$arg1,0)	(int4_t)_mm_extract_epi4((__m128)$$arg1,$$p)			sse	10
-types	type_version	int64_t	64	1	int64_t
-sse_types	type_version	int64_t	64	2	__m128i
 sse_splits	type_conversion	int64_t	64	2	1	(int64_t)_mm_extract_epi64((__m128)$$arg1,0)	(int64_t)_mm_extract_epi64((__m128)$$arg1,$$p)			sse	10
 sse_glues	type_conversion	int64_t	64	1	2	_mm_set_epi64($$arg2,$$arg1)				sse	10
-types	type_version	int8_t	8	1	int8_t
-sse_types	type_version	int8_t	8	16	__m128i
-sse_types	type_version	int8_t	8	8	__m128i
-sse_types	type_version	int8_t	8	4	__m128i
-sse_types	type_version	int8_t	8	2	__m128i
 sse_split8->16	type_conversion	int8_t	8	16	8	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0)))	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8,)))			sse	10
 sse_split16->32	type_conversion	int8_t	8	8	4	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,7,6,0,0,5,4,0,0,3,2,0,0,1,0))	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,15,14,0,0,13,12,0,0,11,10,0,0,9,8)))			sse	10
 sse_split32->64	type_conversion	int8_t	8	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
@@ -836,11 +858,6 @@ sse_splits	type_conversion	p4_t	4	2	1	(p4_t)_mm_extract_epi4((__m128)$$arg1,0)	(
 sse_splits	type_conversion	p64_t	64	2	1	(p64_t)_mm_extract_epi64((__m128)$$arg1,0)	(p64_t)_mm_extract_epi64((__m128)$$arg1,$$p)			sse	10
 sse_splits	type_conversion	p8_t	8	2	1	(p8_t)_mm_extract_epi8((__m128)$$arg1,0)	(p8_t)_mm_extract_epi8((__m128)$$arg1,$$p)			sse	10
 sse_splits	type_conversion	p8_t	8	2	1	(p8_t)_mm_extract_epi8((__m128)$$arg1,0)	(p8_t)_mm_extract_epi8((__m128)$$arg1,$$p)			sse	10
-types	type_version	ssebool	8	1	uint8_t
-sse_types	type_version	ssebool	8	2	__m128i
-sse_types	type_version	ssebool	8	4	__m128i
-sse_types	type_version	ssebool	8	8	__m128i
-sse_types	type_version	ssebool	8	16	__m128i
 sse_split8->16	type_conversion	ssebool	8	16	8	_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0))	_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8,))			sse	10
 sse_split16->32	type_conversion	ssebool	8	8	4	_mm_shuffle_epi8($$arg1,_mm_set_epi8(6,6,6,6,4,4,4,4,2,2,2,2,0,0,0,0))	_mm_shuffle_epi8($$arg1,_mm_set_epi8(14,14,14,14,12,12,12,12,10,10,10,10,8,8,8,8))			sse	10
 sse_split32->64	type_conversion	ssebool	8	4	2	_mm_shuffle_epi32($$arg1,0x50)	_mm_shuffle_epi32($$arg1,0xFA)sse			sse	10
@@ -849,10 +866,6 @@ sse_merge32->16	type_conversion	ssebool	8	4	8	_mm_movelh_ps( _mm_shuffle_epi8($$
 sse_merge16->8	type_conversion	ssebool	8	8	16	_mm_movelh_ps( _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)), _mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)))				sse	10
 sse_splits	type_conversion	ssebool	8	2	1	($$t)_mm_extract_epi$$w((__m128)$$arg1,0)	($$t)_mm_extract_epi$$w((__m128)$$arg1,$$p)			sse	10
 sse_glues	type_conversion	ssebool	8	1	2	_mm_set_epi$$w($$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1)				sse	10
-types	type_version	uint16_t	16	1	uint16_t
-sse_types	type_version	uint16_t	16	8	__m128i
-sse_types	type_version	uint16_t	16	4	__m128i
-sse_types	type_version	uint16_t	16	2	__m128i
 sse_split16->32	type_conversion	uint16_t	16	8	4	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,7,6,0,0,5,4,0,0,3,2,0,0,1,0))	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,15,14,0,0,13,12,0,0,11,10,0,0,9,8)))			sse	10
 sse_split32->64	type_conversion	uint16_t	16	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
 sse_merge64->32	type_conversion	uint16_t	16	2	4	_mm_movelh_ps( _mm_shuffle_epi32($$arg1,0x08), _mm_shuffle_epi32($$arg2,0x08))				sse	10
@@ -861,23 +874,13 @@ sse_splits	type_conversion	uint16_t	16	2	1	(uint16_t)_mm_extract_epi16((__m128)$
 sse_glues	type_conversion	uint16_t	16	1	2	_mm_set_epi16(0,0,0,$$arg2,0,0,0,$$arg1)				sse	10
 sse_splits	type_conversion	uint1_t	1	2	1	(uint1_t)_mm_extract_epi1((__m128)$$arg1,0)	(uint1_t)_mm_extract_epi1((__m128)$$arg1,$$p)			sse	10
 sse_splits	type_conversion	uint2_t	2	2	1	(uint2_t)_mm_extract_epi2((__m128)$$arg1,0)	(uint2_t)_mm_extract_epi2((__m128)$$arg1,$$p)			sse	10
-types	type_version	uint32_t	32	1	uint32_t
-sse_types	type_version	uint32_t	32	4	__m128i
-sse_types	type_version	uint32_t	32	2	__m128i
 sse_split32->64	type_conversion	uint32_t	32	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
 sse_merge64->32	type_conversion	uint32_t	32	2	4	_mm_movelh_ps( _mm_shuffle_epi32($$arg1,0x08), _mm_shuffle_epi32($$arg2,0x08))				sse	10
 sse_splits	type_conversion	uint32_t	32	2	1	(uint32_t)_mm_extract_epi32((__m128)$$arg1,0)	(uint32_t)_mm_extract_epi32((__m128)$$arg1,$$p)			sse	10
 sse_glues	type_conversion	uint32_t	32	1	2	_mm_set_epi32(0,$$arg2,0,$$arg1)				sse	10
 sse_splits	type_conversion	uint4_t	4	2	1	(uint4_t)_mm_extract_epi4((__m128)$$arg1,0)	(uint4_t)_mm_extract_epi4((__m128)$$arg1,$$p)			sse	10
-types	type_version	uint64_t	64	1	uint64_t
-sse_types	type_version	uint64_t	64	2	__m128i
 sse_splits	type_conversion	uint64_t	64	2	1	(uint64_t)_mm_extract_epi64((__m128)$$arg1,0)	(uint64_t)_mm_extract_epi64((__m128)$$arg1,$$p)			sse	10
 sse_glues	type_conversion	uint64_t	64	1	2	_mm_set_epi64($$arg2,$$arg1)				sse	10
-types	type_version	uint8_t	8	1	uint8_t
-sse_types	type_version	uint8_t	8	16	__m128i
-sse_types	type_version	uint8_t	8	8	__m128i
-sse_types	type_version	uint8_t	8	4	__m128i
-sse_types	type_version	uint8_t	8	2	__m128i
 sse_split8->16	type_conversion	uint8_t	8	16	8	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0)))	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8,)))			sse	10
 sse_split16->32	type_conversion	uint8_t	8	8	4	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,7,6,0,0,5,4,0,0,3,2,0,0,1,0))	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,15,14,0,0,13,12,0,0,11,10,0,0,9,8)))			sse	10
 sse_split32->64	type_conversion	uint8_t	8	4	2	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10

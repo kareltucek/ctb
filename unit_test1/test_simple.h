@@ -82,6 +82,7 @@ void test_body()
         __m128i var_LDI_5_conv_w2_0 = var_LDI_1_w4_0;
         __m128i var_LDI_5_conv_w2_2 = _mm_srli_si128(var_LDI_1_w4_0,4);
         __m128i var_MULI_3_w2_0 = _mm_shuffle_epi32(_mm_mul_epu32(var_LDI_5_conv_w2_0, var_LDI_4_conv_w2_0), _MM_SHUFFLE (0,0,2,0));
+        __m128i var_MULI_3_w2_2 = _mm_shuffle_epi32(_mm_mul_epu32(var_LDI_5_conv_w2_2, var_LDI_4_conv_w2_2), _MM_SHUFFLE (0,0,2,0));
         __m128i var_MULI_7_conv_w4_0 = _mm_unpacklo_epi32(var_MULI_3_w2_0,var_MULI_3_w2_2);
         __m128i var_ADDI_6_w4_0 = _mm_add_epi32(var_MULI_7_conv_w4_0, var_ADDI_2_w4_0);
         _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_6_w4_0);
