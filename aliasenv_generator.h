@@ -87,11 +87,11 @@ namespace ctb
 
     //these are the basic defines for internal code generation i.e. obligatory ones
     //note that you may need to customize this first paragraph depending on the output language ==> you can override them from your own aliasenv easily
-    ADD("innercode", "$type $name = $operation;");
+    ADD("innercode", "$type $name = ($type)($operation);");
     ADD("declcode", "$type $name;");
-    ADD("outputcode", "$operation;");
-    ADD("inputcode", "$type $name = $operation;");
-    ADD("conversioncode", "$type $name = $operation;");
+    ADD("outputcode", "$operation /*$name*/;"); //commented name serves for determining opcode for debug
+    ADD("inputcode", "$type $name = ($type)($operation);");
+    ADD("conversioncode", "$type $name = ($type)($operation);");
 
     ADD("type", "$1");
     ADD("name", "$2");

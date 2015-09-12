@@ -42,7 +42,22 @@ HEADERS += \
     aliasenv_bobox.h \
     loader_test.h \
     errorhandling.h \
-    cartesian_multiplier.h
+    cartesian_multiplier.h \
+    unit_test4/output.h \
+    templates/simple_send.h \
+    templates/simple_env_out.h \
+    templates/simple_env_in.h \
+    templates/simple_decl_out.h \
+    templates/simple_decl_in.h \
+    templates/simple_box.h \
+    templates/bobox_send.h \
+    templates/bobox_env_out.h \
+    templates/bobox_env_in.h \
+    templates/bobox_decl_out.h \
+    templates/bobox_decl_in.h \
+    templates/bobox_box.h \
+    templates/simple_body.h \
+    aliasenv_simu.h
 
 OTHER_FILES += \
     test \

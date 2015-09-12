@@ -14,6 +14,8 @@ namespace ctb
    * This specific class relizes generation environment for a simple testing output. That is this class drives generation of a simple method test which somehow tests whether internal instruction generators work as expected without providing full input/output syntax of bobox. When writting this, bobox is still unavailable to the tester and thus it makes sense to have 'something' which can be compiled.
    *
    * Specifically we use internal aliases defined by aliasenv_generator and on top we define expansions for 'input' and 'output' aliases, which are output-environment dependent and thus are defined neither as part of instruction table nor part of the internal generator. Then we load into memory templates from file and direct their composition. During this process we use also an actual generator to generate actual 'isntruction code'.
+   *
+   * This aliasenv is a deprecated one serving just for the purpose of having old unit tests and a simple example
    * */
   class aliasenv_simple : public aliasenv_generator
   {

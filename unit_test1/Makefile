@@ -2,6 +2,7 @@ FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wn
 
 CXX=g++11
 
+
 all : test run
 
 test_simple.h : ../ctb ../test instab.xml graph.xml
@@ -13,6 +14,9 @@ test : test_simple.h
 run : 
 	diff test_simple.h test_simple.h.reference
 	./test
+
+rewrite :
+	cp test_simple.h test_simple.h.reference
 
 clean :
 	-rm test test_simple.h

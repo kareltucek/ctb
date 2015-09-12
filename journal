@@ -162,5 +162,7 @@ writer - callback driven parenthess expansion
 forward all agrument from print directly to aliasenv so that generation environment can do its (own) magic
   +
 generic id type handling
+solve output of two consecutive words elegantly
+test cmp on virtual
 
 

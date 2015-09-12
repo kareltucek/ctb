@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root Name="root">
+   <instruction_list Name="instruction_list">
+      <operation input="0" opid="ADDI" out_type="INT" in_types="INT,INT" output="0">
+         <instruction width_out="1" code="$arg1 + $arg2" width_in="1"></instruction>
+         <instruction width_out="4" code="_mm_add_epi32($arg1, $arg2)" width_in="4"></instruction>
+      </operation>
+      <operation input="0" opid="MULI" out_type="INT" in_types="INT,INT" output="0">
+         <instruction width_out="1" code="$arg1 * $arg2" width_in="1"></instruction>
+         <instruction width_out="2" code="_mm_shuffle_epi32(_mm_mul_epu32($arg1, $arg2), _MM_SHUFFLE (0,0,2,0))" width_in="2"></instruction>
+      </operation>
+      <operation input="0" opid="STI" out_type="INT" in_types="INT" output="1">
+         <instruction width_out="1" code="$output = $arg1" width_in="1"></instruction>
+         <instruction width_out="4" code="_mm_storeu_si128((__m128i*)&amp;$output, $arg1)" width_in="4"></instruction>
+      </operation>
+      <operation input="1" opid="LDI" out_type="INT" in_types="" output="0">
+         <instruction width_out="1" code="$input" width_in="1"></instruction>
+         <instruction width_out="4" code="_mm_loadu_si128((const __m128i*)&amp;$input)" width_in="4"></instruction>
+      </operation>
+   </instruction_list>
+   <type_list Name="type_list">
+      <type typeid="INT">
+         <type_version width="1" code="int"></type_version>
+         <type_version width="2" code="__m128i"></type_version>
+         <type_version width="4" code="__m128i"></type_version>
+         <type_conversion width_out="4" code1="_mm_unpacklo_epi32($arg1,$arg2)" width_in="2"></type_conversion>
+         <type_conversion width_out="2" code1="$arg1" width_in="4" code2="_mm_srli_si128($arg1,4)"></type_conversion>
+         <type_conversion width_out="1" code1="$arg1" width_in="2" code2="symbolic_split($arg1)"></type_conversion>
+         <type_conversion width_out="2" width_in="1" code1="symbolic_merge($arg1,$arg2)"></type_conversion>
+      </type>
+      <type typeid="FLOAT">
+         <type_version width="1" code="float"></type_version>
+         <type_version width="4" code="__m128"></type_version>
+         <type_conversion width_out="4" code1="_mm_movelh_ps($arg1, $arg2)" width_in="2"></type_conversion>
+         <type_version width="2" code="__m128"></type_version>
+      </type>
+      <type typeid="VOID"></type>
+   </type_list>
+   <disabled_list Name="type_list">
+      <type_conversion width_out="2" width_in="4" code_custom="$type $name1 = (__m128i)_mm_movelh_ps((__m128)$arg1, (__m128)$arg1); $type $name2 = $arg1;"></type_conversion>
+      <instruction width_out="1" width_in="1" code_custom="$type $name = $arg1 + $arg2;"></instruction>
+   </disabled_list>
+</root>

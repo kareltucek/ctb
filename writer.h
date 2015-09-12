@@ -155,6 +155,8 @@ namespace ctb
         /*operators*/template<typename N> writer& operator=( const writer<N>& w) ;
         /*operators*/bool operator==(const writer& w) ;
         /*operators*/bool operator!=(const writer& w) ;
+        /*operators*/writer& operator+=(const writer& w) ;
+        /*operators*/writer& operator+=(writer&& w) ;
         /*operators*/writer(const std::initializer_list<std::string>& init);/*this one is literal! no parsing here*/
 
         ///*printing*/ template<dolar_mode dolars = I, typename S, typename ... Types> writer& printl (const Types&... params, const S& stringlist) ; /*print using a stringlist at the end of the parameter list - for dynamic numbr of arguments; the last argument has to be a stringlist, but deduction does not like knowing it*/
@@ -186,6 +188,7 @@ namespace ctb
   typedef writer<aliasenv_empty_cpp> writer_default;
   typedef writer<aliasenv_empty> writer_plain;
 
+
     template <class M, dolar_mode I, dolar_mode O, class P>
     std::string to_string(const writer<M,I,O,P>& w)
     {
@@ -195,6 +198,48 @@ namespace ctb
   template<bool dolars = false, typename ... Types> std::string print (const Types&... params)
   {
     return writer<aliasenv_empty>().print(params...).write_str();
+  }
+
+      template <class M, dolar_mode I, dolar_mode O, class P>
+  writer<M,I,O,P>& writer<M,I,O,P>::operator+=(writer&& w)
+  {
+    if(&w == this)
+      error("writer does not support appending to itself");
+    for(auto itr = w.data.begin(); itr != w.data.end(); ++itr)
+    {
+      if(last_terminated)
+      {
+        data.push_back(std::move(*itr));
+      }
+      else
+      {
+        data.back().append(std::move(*itr));
+        last_terminated = true; 
+      }
+      last_terminated = w.last_terminated;
+    }
+    return *this;
+  }
+
+      template <class M, dolar_mode I, dolar_mode O, class P>
+  writer<M,I,O,P>& writer<M,I,O,P>::operator+=(const writer& w)
+  {
+    if(&w == this)
+      error("writer does not support appending to itself");
+    for(auto itr = w.data.begin(); itr != w.data.end(); ++itr)
+    {
+      if(last_terminated)
+      {
+        data.push_back(*itr);
+      }
+      else
+      {
+        data.back().append(*itr);
+        last_terminated = true; 
+      }
+      last_terminated = w.last_terminated;
+    }
+    return *this;
   }
 
     template <class M, dolar_mode I, dolar_mode O, class P>
@@ -368,7 +413,7 @@ namespace ctb
   template <class M, dolar_mode I, dolar_mode O, class P>
     void writer<M,I,O,P>::getnth(int i, const std::string*& rs, const writer<M,I,O,P>*& rw)
     {
-      error( "out of range on printnth");
+      warning( "out of range on printnth");
       rs = NULL;
       rw = NULL;
     }

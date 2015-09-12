@@ -4,13 +4,19 @@ FLAGS= -DTESTOVANI
 
 CXX=g++
 
-all : test
+all : ../ctb sse test run
 
-output.h : ../ctb ../sse_set/C_table.csv
-	../ctb -c -f ./program
 
-test : output.h
-	${CXX} ${FLAGS} main.cpp -o test -l tinyxml2 -msse4.1
+sse :
+	make -C ../sse_set
+
+output.h : ../ctb ../sse_set/C_table.csv Makefile
+	../ctb -f ./program
+
+test : output.h 
+	${CXX} ${FLAGS} main.cpp -ggdb -o test -l tinyxml2 -msse4.1
+
+run : test
 	./test
 
 

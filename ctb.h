@@ -10,6 +10,7 @@
 #include "aliasenv_maker.h"
 #include "aliasenv_bobox.h"
 #include "aliasenv_simple.h"
+#include "aliasenv_simu.h"
 
 namespace ctb
 {
@@ -153,6 +154,7 @@ namespace ctb
     void ctb<T,IT>::fill()
     {
       register_aliasenv<aliasenv_simple>();
+      register_aliasenv<aliasenv_simu>();
       register_aliasenv<aliasenv_bobox>();
       register_loader<csv_loader>();
       register_loader<xml_loader>();

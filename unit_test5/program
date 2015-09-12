@@ -1,0 +1,4 @@
+loadinstab csv ../sse_set/C_table.csv
+loadgraph xml graph.xml
+generate simu output.h
+
