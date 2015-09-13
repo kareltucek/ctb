@@ -13,6 +13,8 @@ namespace ctb
    *  -------------------
    *  Generator is an extension to the graph structure which serves for generating actual instruction code from a graph. Since the motivation of all the written functions is totaly clear to me, the question of 'what should be documented here' is quite unclear on the other hand. Please ask for comments at adress kareltucek centrum cz.
    *
+   *  flags are commented in instab documentation (instructions.h)
+   *
    *  Template arguments
    *  ------------------
    *  - T - traits
@@ -23,8 +25,10 @@ namespace ctb
     {
       private:
         class data_t;
+      public:
         typedef graph_generic<data_t, typename T::vid_t, true, generator> graph_t;
         typedef typename graph_t::node_t node_t;
+      private:
         typedef typename T::opid_t id_t;
         typedef typename T::vid_t vid_t;
         typedef typename T::param_t param_t;
@@ -43,7 +47,8 @@ namespace ctb
 
             template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
             void push_params();
-            std::string newname(std::string tag, bool reset = false) ;
+            static int newid(bool reset);
+            std::string newname(std::string tag) ;
             template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w, bool c);
           public:
             template <typename A> using proxy = proxy_<A,data_t,generator>;
@@ -57,6 +62,7 @@ namespace ctb
 
         bool compiletest; /*abbreviated as plain 'c'*/
       public:
+
         proxy<const IT&> instab;
         proxy<graph_t> graph;
 
@@ -111,7 +117,7 @@ namespace ctb
   template <class T, class IT>
     void generator<T,IT>::reset()
     {
-      data_t(NULL,NULL,id_t()).newname("", true); //resets id counter (want this for loader related testing)
+      data_t::newid(true);
     }
 
   template <class T, class IT>
@@ -169,6 +175,7 @@ namespace ctb
     template <class W>
     void generator<T,IT>::generate(int packsize, W& w)
     {
+      data_t::newid(true); //resets ids
       if(graph->out->empty())
         error( "graph is empty");
       else
@@ -183,7 +190,7 @@ namespace ctb
       {
       W empty;
       int myin, myout;
-      int mygran = op->get_max_width(granularity,&myin, &myout);
+      int mygran = op->is(fDEBUG) ? me->in[0]->data->op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
       if(mygran == 0)
         error( std::string("suitable width not found!"));
       if(granularity % mygran != 0)
@@ -219,7 +226,7 @@ namespace ctb
         {
           if(op->is(fINPUT))
             w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-          else if(op->is(fOUTPUT))
+          else if(op->is(fOUTPUT) || op->is(fDEBUG))
             w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
           else
             w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0             , myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
@@ -368,12 +375,18 @@ namespace ctb
     }
 
   template <class T, class IT>
-    std::string generator<T,IT>::data_t::newname(std::string tag, bool reset)
+    int generator<T,IT>::data_t::newid(bool reset)
     {
       static int id = 0;
       if(reset)
-        id = -1;
-      return print("var_$1_$2_$3_$$1", opid, id++, tag);
+        id = 0;
+      return ++id;
+    }
+
+  template <class T, class IT>
+    std::string generator<T,IT>::data_t::newname(std::string tag)
+    {
+      return print("var_$1_id$2_t$3_$$1_at$4", opid, newid(false), tag, me->id.r());
     }
 
   template <class T, class IT>

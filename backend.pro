@@ -57,7 +57,17 @@ HEADERS += \
     templates/bobox_decl_in.h \
     templates/bobox_box.h \
     templates/simple_body.h \
-    aliasenv_simu.h
+    aliasenv_simu.h \
+    templates/random_eng.h \
+    templates/macros.h \
+    templates/simu_send.h \
+    templates/simu_env_out.h \
+    templates/simu_env_in.h \
+    templates/simu_decl_out.h \
+    templates/simu_decl_in.h \
+    templates/simu_decl_cont.h \
+    templates/simu_box.h \
+    templates/simu_body.h
 
 OTHER_FILES += \
     test \

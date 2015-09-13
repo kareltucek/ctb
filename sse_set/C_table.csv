@@ -26,8 +26,13 @@ arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_
 conversions	instruction	${t->double,float,bool,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->double,float,bool,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	CVRT_$u_$t		1	1	($t)$$arg1		C	10
 IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}		LD_$t	input	1	1	$$input		C	10
 IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}	$t	ST_$t	output	1	1	$$output = $$arg1		C	10
+debug	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,bool,ssebool,float,double}	$t	DEBUG_$t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->2,4,8,16,32}	$w	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,ssebool,float,double}	$t	DEBUG_$t	debug	${w->2,4,8,16}	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->64,128}	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
 											
 #note	type	type id	bitwidth	width	code						
+types	type_version	void	32	32	void						
 types	type_version	bool	1	1	bool						
 types	type_version	ssebool	8	1	uint8_t						
 types	type_version	double	64	1	double						

@@ -102,6 +102,7 @@ namespace ctb
         void command_help(stringlist&& args);
         void command_source(stringlist&& args);
         void command_testgraph(stringlist&& args);
+        void command_adddebug(stringlist&& args);
         void command_generate(stringlist&& args);
         static std::string get_inner_name(std::string fname);
         static std::string get_prefix(std::string fname);
@@ -238,9 +239,13 @@ namespace ctb
     void ctb<T,IT>::self_test()
     {
       ctb b;
-      b.load_instab<xml_loader>(std::ifstream("unit_test1/instab.xml"));
-      writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple>( "test_simple", std::ifstream("unit_test1/graph.xml")) );
-      writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox>( "test_bobox", std::ifstream("unit_test1/graph.xml")) );
+      std::ifstream file, g1, g2;
+      openstream(file,"unit_test1/instab.xml");
+      openstream(g1,"unit_test1/graph.xml");
+      openstream(g2,"unit_test1/graph.xml");
+      b.load_instab<xml_loader,std::istream&>(file);
+      writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple,std::istream&>( "test_simple", g1) );
+      writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox,std::istream&>( "test_bobox", g2) );
       assert(b.get_prefix("/test/test/last") == "/test/test/");
     }
 
@@ -499,6 +504,7 @@ start:;
       register_command("source",  std::bind(&ctb<T,IT>::command_source                       , this, std::placeholders::_1),  "source       <input file>");
       register_command("generate",  std::bind(&ctb<T,IT>::command_generate                     , this, std::placeholders::_1),  "generate <output aliasenv> <output file>");
       register_command("testgraph",  std::bind(&ctb<T,IT>::command_testgraph                     , this, std::placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
+      register_command("adddebug",  std::bind(&ctb<T,IT>::command_adddebug                     , this, std::placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to it");
       register_command("help",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
       register_command("?",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
     }
@@ -520,6 +526,16 @@ start:;
       test_loader<T,generator_t,IT> l;
       l.load_graph(mygenerator,instab);
     }
+
+  template <class T, class IT>
+    void ctb<T,IT>::command_adddebug(stringlist&& args)
+  {
+      test_loader<T,generator_t,IT> l;
+      args.erase(args.begin());
+      int frame = args.empty() ? 1 : ::ctb::stoi(args[0]);
+      args.erase(args.begin());
+      l.adddebug(mygenerator,instab,frame,args);
+  }
 
   template <class T, class IT>
     void ctb<T,IT>::command_source(stringlist&& args)

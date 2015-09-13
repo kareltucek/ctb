@@ -9,19 +9,38 @@
 #include <emmintrin.h>
 #include <smmintrin.h>
 
+
+#include "macros.h"
+#include "random_eng.h"
+
+
 #define load_bool(a) true
 #define store_bool(a) true
 
 class tester
 {
   private:
+  int dbgframe;
+  random_engine data_source;
+
   $1
   $2
 
-  public:
-  void test()
+  uint32_t pull()
   {
-    srand(0); 
+    return data_source.get() % 100;
+  }
+
+  void reset()
+  {
+    data_source.reset();
+  }
+
+  public:
+  void test(int frame = -1)
+  {
+    dbgframe = frame;
+
     $3
   }
 };

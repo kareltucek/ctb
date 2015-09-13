@@ -31,8 +31,9 @@ namespace ctb
    *  root
    *    instruction_list
    *      operation
-   *        input (flag boolean)
-   *        output (flag boolean)
+   *        input (flag boolean) - serves for aliasenv (for generation of code with special semantics for IO ) and for generator, which has different semantics for managed code field.
+   *        output (flag boolean) - -||-
+   *        debug (flag boolean) - debug operations have special semantics, see instructions.h doc
    *        opid (identifier of logical operation (such as 'integer addition' - e.g. ADDI)
    *        out_type (typeid of returned type)
    *        in_types (list of parameter types; note that this serves mainly for generation of test cases - generation itself is weakly typed)
@@ -204,7 +205,7 @@ namespace ctb
       }
       for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
       {
-        typename T::flag_t f = ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
+        typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
         typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), split(getanystr(itr,"in_types"),','), f);
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
           t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));

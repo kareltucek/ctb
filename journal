@@ -136,6 +136,19 @@ Note that this change changes semantics of custom code for splits and joins. Sem
 
 Also I had to add a real 'dynamic' list support to the writer environment. Now writer accepts stringlists in its parameters. These are indexed in order as if these lists were flattened. This probably is not the best idea since it still prevents usage of multiple lists in a single call. This was needed for the custom join and split.
 
+
+Sun Sep 13 15:20:43 CEST 2015
+=============================
+Since Thursday I've been debugging instruction tables.
+
+I have written new alias environment, intended as an improved 'simple' which would allow consistent testing of behaviour of instruction tables. That means which would be able to produce multiple width algorithms (assuming that basic C is implemented correctly) and compare their results.
+
+Today I have written runtime debug support. That means:
+- Added flag 'debug' which identifies debug operations.
+- A debug operation is an operation which takes one input and behaves as an output, which is intended to be either written out to terminal or checked against static results. Debug operations are not subject to width conversions. 
+- Added new command 'adddebug' which creates and hooks debug nodes to either all vertices of a graph or to a set of nodes which are in a distance less than supplemented 'depth' parameter from vertices specified by argument list.
+
+
 TODO
 ====
 // TODO

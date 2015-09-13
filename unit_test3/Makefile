@@ -1,6 +1,6 @@
-FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O1
+FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O1 -msse4.1
 
-CXX=g++11
+CXX=g++
 
 all : test
 
@@ -10,7 +10,7 @@ output_csv.h : ../ctb instab.xml graph.xml
 
 
 test : output_csv.h
-	${CXX} ${FLAGS} main.cpp -DTEMPLATED -o test -l tinyxml2
+	${CXX} ${FLAGS} main.cpp -DTEMPLATED -o test -l tinyxml2 
 	./test
 
 

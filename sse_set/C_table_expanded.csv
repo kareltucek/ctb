@@ -209,6 +209,69 @@ conversions	instruction	uint16_t	uint8_t	CVRT_uint8_t_uint16_t		1	1	(uint16_t)$$
 conversions	instruction	uint32_t	uint8_t	CVRT_uint8_t_uint32_t		1	1	(uint32_t)$$arg1		C	10
 conversions	instruction	uint64_t	uint8_t	CVRT_uint8_t_uint64_t		1	1	(uint64_t)$$arg1		C	10
 conversions	instruction	uint8_t	uint8_t	CVRT_uint8_t_uint8_t		1	1	(uint8_t)$$arg1		C	10
+debug	instruction	bool	bool	DEBUG_bool	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	bool	bool	DEBUG_bool	debug	2	2	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	bool	bool	DEBUG_bool	debug	4	4	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	bool	bool	DEBUG_bool	debug	8	8	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	bool	bool	DEBUG_bool	debug	16	16	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	bool	bool	DEBUG_bool	debug	32	32	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	bool	bool	DEBUG_bool	debug	64	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	bool	bool	DEBUG_bool	debug	128	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	double	double	DEBUG_double	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	double	double	DEBUG_double	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	double	double	DEBUG_double	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	double	double	DEBUG_double	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	double	double	DEBUG_double	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	float	float	DEBUG_float	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	float	float	DEBUG_float	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	float	float	DEBUG_float	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	float	float	DEBUG_float	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	float	float	DEBUG_float	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	int16_t	int16_t	DEBUG_int16_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	int16_t	int16_t	DEBUG_int16_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int16_t	int16_t	DEBUG_int16_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int16_t	int16_t	DEBUG_int16_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int16_t	int16_t	DEBUG_int16_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	int32_t	int32_t	DEBUG_int32_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	int32_t	int32_t	DEBUG_int32_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int32_t	int32_t	DEBUG_int32_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int32_t	int32_t	DEBUG_int32_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int32_t	int32_t	DEBUG_int32_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	int64_t	int64_t	DEBUG_int64_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	int64_t	int64_t	DEBUG_int64_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int64_t	int64_t	DEBUG_int64_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int64_t	int64_t	DEBUG_int64_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int64_t	int64_t	DEBUG_int64_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	int8_t	int8_t	DEBUG_int8_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	int8_t	int8_t	DEBUG_int8_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int8_t	int8_t	DEBUG_int8_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int8_t	int8_t	DEBUG_int8_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	int8_t	int8_t	DEBUG_int8_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	ssebool	ssebool	DEBUG_ssebool	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	ssebool	ssebool	DEBUG_ssebool	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	ssebool	ssebool	DEBUG_ssebool	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	ssebool	ssebool	DEBUG_ssebool	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	ssebool	ssebool	DEBUG_ssebool	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	uint16_t	uint16_t	DEBUG_uint16_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	uint16_t	uint16_t	DEBUG_uint16_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint16_t	uint16_t	DEBUG_uint16_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint16_t	uint16_t	DEBUG_uint16_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint16_t	uint16_t	DEBUG_uint16_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	uint32_t	uint32_t	DEBUG_uint32_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	uint32_t	uint32_t	DEBUG_uint32_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint32_t	uint32_t	DEBUG_uint32_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint32_t	uint32_t	DEBUG_uint32_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint32_t	uint32_t	DEBUG_uint32_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	uint64_t	uint64_t	DEBUG_uint64_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	uint64_t	uint64_t	DEBUG_uint64_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint64_t	uint64_t	DEBUG_uint64_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint64_t	uint64_t	DEBUG_uint64_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint64_t	uint64_t	DEBUG_uint64_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug	instruction	uint8_t	uint8_t	DEBUG_uint8_t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug_sse	instruction	uint8_t	uint8_t	DEBUG_uint8_t	debug	2	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint8_t	uint8_t	DEBUG_uint8_t	debug	4	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint8_t	uint8_t	DEBUG_uint8_t	debug	8	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+debug_sse	instruction	uint8_t	uint8_t	DEBUG_uint8_t	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
 arithetic_std	instruction	double	double,double	DIV_double		1	1	$$arg1 / $$arg2		C	10
 sse_arithetic_std	instruction	double	double,double	DIV_double		2	2	_mm_div_pd($$arg1,$$arg2)		sse	10
 arithetic_std	instruction	float	float,float	DIV_float		1	1	$$arg1 / $$arg2		C	10
@@ -794,6 +857,7 @@ sse_types	type_version	uint8_t	8	16	__m128i
 sse_types	type_version	uint8_t	8	8	__m128i
 sse_types	type_version	uint8_t	8	4	__m128i
 sse_types	type_version	uint8_t	8	2	__m128i
+types	type_version	void	32	32	void
 #note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
 sse_splits	type_conversion	bool	1	128	64	(__m128i)_mm_movelh_ps((__m128)$$arg1,(__m128)_mm_setzero_si128())	(__m128i)_mm_movehl_ps((__m128)_mm_setzero_si128(),(__m128)$$arg1)			sse	10
 sse_glues	type_conversion	bool	1	64	128	(__m128i)_mm_movelh_ps((__m128)$$arg1,(__m128)$$arg2)				sse	10

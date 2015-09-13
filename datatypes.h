@@ -34,7 +34,7 @@ namespace ctb
 
   enum flags 
   {
-    fINPUT = 1, fOUTPUT = 2
+    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4
   } ;
 
   template <typename ... T> void pass(T...)
@@ -72,10 +72,20 @@ namespace ctb
     return l;
   }
 
+  std::string trim(const std::string& s)
+    {
+      int end = s.find_last_not_of(" \n\r");
+      int begin = s.find_first_not_of(" \n\r");
+      if(end == -1)
+        return s;
+      else
+        return s.substr(begin, end-begin+1);
+    }
+
   template<typename F>
     F string_to_flags(std::string str)
     {
-      static std::map<std::string, F> hash = {{"output",fOUTPUT},{"input",fINPUT}};
+      static std::map<std::string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
       F f = 0;
       stringlist words = split(str, ',');
       for(auto w : words)
@@ -114,7 +124,7 @@ namespace ctb
     std::string flags_to_string(F f)
     {
       std::string b;
-      static std::map<std::string, F> hash = {{"output",fOUTPUT},{"input",fINPUT}};
+      static std::map<std::string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
 
       for(auto rec : hash)
       {

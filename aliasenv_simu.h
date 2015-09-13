@@ -57,8 +57,8 @@ namespace ctb
 
     aliasenv_generator::init();
 
-    ADD("input", "data_in_$cindex[pos_in_$cindex+j]");
-    ADD("output", "data_out_$cindex[pos_out_$cindex+j]");
+    ADD("input", "data_in_$cindex[pos_in_$cindex+j+$iindex]");
+    ADD("output", "data_out_$cindex[pos_out_$cindex+j+$iindex]");
 
     ADD("fdeclin",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_in.h")));
     ADD("fdeclcont",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_cont.h")));

@@ -1,7 +1,7 @@
 #FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0 
 FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline
 
-CXX=g++11
+CXX=g++
 
 all : test ctb testdir1 testdir2 testdir3 ssedir testdir5 testdir4
 
@@ -36,6 +36,7 @@ clean :
 	-make -C unit_test1 clean
 	-make -C unit_test3 clean
 	-make -C unit_test4 clean
+	-make -C unit_test5 clean
 
 
 

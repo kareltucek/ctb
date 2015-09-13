@@ -3,6 +3,6 @@
 int main()
 {
   tester t;
-  t.test();
+  t.test(0);
   return 0;
 }
