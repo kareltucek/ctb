@@ -67,7 +67,8 @@ HEADERS += \
     templates/simu_decl_in.h \
     templates/simu_decl_cont.h \
     templates/simu_box.h \
-    templates/simu_body.h
+    templates/simu_body.h \
+    defines.h
 
 OTHER_FILES += \
     test \

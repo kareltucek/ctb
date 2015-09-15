@@ -160,6 +160,7 @@ TODO
 control flow support
 autoconversion for internal types (bool<->ssebool)
 bool <-> conversion instructions
+spillcode cost optimizations
 
 // TODO - minors
 //stream support - hopefully done
@@ -170,6 +171,7 @@ bool <-> conversion instructions
 //unit tests for export mechanics (and dependencies) - done
 //solve template ingenerality of register methods - this conflict has never existed
 //switch to nonstatic loaders - done
+//runtime debug support - done
 split commandline interface from programming interface (taskmaster conflicts at the moment)
 writer - callback driven parenthess expansion
 forward all agrument from print directly to aliasenv so that generation environment can do its (own) magic
@@ -177,5 +179,6 @@ forward all agrument from print directly to aliasenv so that generation environm
 generic id type handling
 solve output of two consecutive words elegantly
 test cmp on virtual
+pass arguments to loaders as a stringlist
 
 

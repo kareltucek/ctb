@@ -8,7 +8,7 @@ all : test ctb testdir1 testdir2 testdir3 ssedir testdir5 testdir4
 test : datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h
 	${CXX} ${FLAGS} test.cpp -DTEMPLATED -l tinyxml2 -o test
 
-ctb : main.cpp test
+ctb : main.cpp datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h
 	${CXX} ${FLAGS} main.cpp -DTEMPLATED  -l tinyxml2 -o ctb
 
 testdir1 : test

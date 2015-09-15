@@ -5,7 +5,7 @@ int main()
   try
   {
     tester t;
-    t.test(2000000);
+    t.test(2000000000);
   }
   catch(int& e)
   {
@@ -15,9 +15,15 @@ int main()
     tester t;
     t.test(e);
     }
-    catch(int& e)
+    catch(int& f)
     {
       return 1;
+      if(e != f)
+      {
+        std::cout << "failed at different line" << std::endl;
+        tester t;
+        t.test(f);
+      }
     }
     return 1;
   }

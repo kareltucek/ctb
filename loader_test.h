@@ -2,6 +2,7 @@
 #define TESTLOADER_GUARD
 
 
+#include "defines.h"
 #include <regex>
 #include <fstream>
 #include <string>
@@ -89,7 +90,7 @@ namespace ctb
       for(auto n : v)
       {
         auto itr = gen.graph->verts->find(n);
-        if(itr != gen.graph->verts->end())
+        if(itr != gen.graph->verts->end() && !itr->second->data->op->is(fOUTPUT))
           q->push(itr->second);
         else
           warning(std::string("vertex for debug not found" ).append(n));
@@ -140,7 +141,7 @@ namespace ctb
         int j = 0;
         for(auto itro : itre->second)
         {
-          std::string n = get_op_name(itro,"OUTPUT", 0).append(get_op_name(op->opid, "MIDDLE",j));
+          std::string n = get_op_name(itro,"OUTPUT", j).append(vid);
           graph.addvert(n,itro,++oid);
           graph.addedge(vid, n, 0);
           ++j;
@@ -151,6 +152,8 @@ namespace ctb
   template <class T, class G, class IT>
     void test_loader<T,G,IT>::load_graph(G& graph, const IT& instab)
     {
+      bool cartesian_expansion = false;
+
       oid = 0;
       pid = 0;
 
@@ -171,7 +174,7 @@ namespace ctb
           for ( auto op : type.second)
             graph.addvert(get_op_name(op, "INPUT", i), op, pid++); 
 
-      std::list<typename IT::operation_t*> q;
+      std::list<typename IT::operation_t*>* q = new std::list<typename IT::operation_t*>();
 
       for(auto o : instab.instab.r())
       {
@@ -181,14 +184,16 @@ namespace ctb
           continue;
         if(o.second->is(fOUTPUT))
           continue;
-        q.push_back(o.second);
+        q->push_back(o.second);
       }
 
       bool c = true;
+      int processed = 0;
       while( c )
       {
+        std::list<typename IT::operation_t*>* qn = new std::list<typename IT::operation_t*>();
         c = false;
-        for(auto o : q)
+        for(auto o : *q)
         {
           bool s = true;
           cartesian_multiplier<std::vector<typename T::opid_t> > itr;
@@ -203,12 +208,16 @@ namespace ctb
             itr.add(l->second);
           }
           if(!s)
+          {
             continue;
+            qn->push_back(o);
+          }
           if(ins.find(o->out_type.r()) == ins.end())
           {
             //for(int k = 0; k < T::maxarity; ++k)
             //  genvert("INPUT", k, o, itr, graph);
             ins[o->out_type.r()].push_back(o->opid.r());
+            c = true;
           }
           int j = 0;
           while(itr != itr.end())
@@ -216,9 +225,29 @@ namespace ctb
             genvert("BASE", j, o, itr, graph);
             ++j;
             ++itr;
+            ++processed;
+            if(!cartesian_expansion)
+              break;
+#ifdef TMPTEST
+#define PN 200
+            if(processed > PN)
+              break;
+#endif
           }
+#ifdef TMPTEST
+            if(processed > PN)
+              break;
+#endif
         }
+        delete q;
+        q = qn;
+#ifdef TMPTEST
+        if(processed > PN)
+          break;
+#endif
       }
+
+      delete q;
 
       /*
          for(auto o : instab.instab.r())

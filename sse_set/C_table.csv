@@ -6,12 +6,12 @@ logical	instruction	bool	bool	NOT_bool		1	1	! $$arg1        		C	10
 logical	instruction	bool	bool,bool	OR_bool		1	1	$$arg1 || $$arg2		C	10
 logical	instruction	bool	bool,bool	XOR_bool		1	1	$$arg1 ^ $$arg2 		C	10
 logical	instruction	bool	bool,bool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_bool		1	1	$$arg1 $c $$arg2 		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	EQ_$num		1	1	$$arg1 == $$arg2		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GE_$num		1	1	$$arg1 >= $$arg2		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GT_$num		1	1	$$arg1 > $$arg2		              C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LE_$num		1	1	$$arg1 <= $$arg2		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LT_$num		1	1	$$arg1 < $$arg2		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	NE_$num		1	1	$$arg1 != $$arg2		C	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	EQ_$num		1	1	0xFF*($$arg1 == $$arg2)		C	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GE_$num		1	1	0xFF*($$arg1 >= $$arg2)		C	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GT_$num		1	1	0xFF*($$arg1 > $$arg2)		              C	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LE_$num		1	1	0xFF*($$arg1 <= $$arg2)		C	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LT_$num		1	1	0xFF*($$arg1 < $$arg2)		C	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	NE_$num		1	1	0xFF*($$arg1 != $$arg2)		C	10
 arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	ADD_$num		1	1	$$arg1 + $$arg2		C	10
 arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	DIV_$num		1	1	$$arg1 / $$arg2		C	10
 arithetic_std	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	MOD_$num		1	1	$$arg1 % $$arg2		C	10
@@ -23,10 +23,13 @@ arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_
 arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	AND_$num		1	1	$$arg1 & $$arg2		C	10
 arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	OR_$num		1	1	$$arg1 | $$arg2		C	10
 arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	RSF_$num		1	1	$$arg1 >> $$arg2		C	10
-conversions	instruction	${t->double,float,bool,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->double,float,bool,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	CVRT_$u_$t		1	1	($t)$$arg1		C	10
+conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->bool}	CVRT_$t_$u		1	1	($t)($$arg1 > 0)		C	10
+conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->bool}	CVRT_$u_$t		1	1	($t)($$arg1 ? 1 : 0)		C	10
+conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	CVRT_$u_$t		1	1	($t)$$arg1		C	10
 IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}		LD_$t	input	1	1	$$input		C	10
 IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}	$t	ST_$t	output	1	1	$$output = $$arg1		C	10
-debug	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,bool,ssebool,float,double}	$t	DEBUG_$t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,float,double}	$t	DEBUG_$t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
+debug	instruction	${t->bool,ssebool}	$t	DEBUG_$t	debug	1	1	DEBUG_STD((int)$$arg1,"$$arg1")		C	10
 debug	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->2,4,8,16,32}	$w	DEBUG_STD($$arg1,"$$arg1")		C	10
 debug_sse	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,ssebool,float,double}	$t	DEBUG_$t	debug	${w->2,4,8,16}	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
 debug_sse	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->64,128}	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
@@ -84,20 +87,20 @@ sse_arithetic_std	instruction	${t,c,tag->int,epi,sse}${w,n->16,4}_t	$t$w_t,$t$w_
 sse_arithetic_std	instruction	${t,c,n->float,ps,4,float,ps,2,double,pd,2}	$t,$t	${name,op->ADD,add,SUB,sub,MUL,mul,DIV,div}_$t		$n	$n	_mm_$op_$c($$arg1,$$arg2)		sse	10
 sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	${name,op->AND,and,OR,or,XOR,xor}_$t$w_t		$n	$n	_mm_$op_si128($$arg1,$$arg2)		sse	5
 sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	NOT_$t$w_t		$n	$n	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
-sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->double,pd}	CVRT_$u_$t		2	2	_mm_cvt$d_$c($$arg1)		sse	10
 sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->float,ps}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse	10
 sse_conversions	instruction	${t,c->float,ps}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse	10
-sse_conversions	instruction	${t,c->double,pd}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		2	2	_mm_cvt$d_$c($$arg1)		sse	10
+sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->double,pd}	CVRT_$u_$t		2	2	_mm_shuffle_epi32(_mm_cvt$d_$c($$arg1),0x58)		sse	10
+sse_conversions	instruction	${t,c->double,pd}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		2	2	_mm_cvt$d_$c(_mm_shuffle_epi32($$arg1,0x58))		sse	10
 sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	_mm_loadu_si128((__m128i*)&$$input)		sse	10
 sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_loadu_$c(&$$input)		sse	10
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_storeu_$c(&$$output,(__m128$l)$$arg1)		sse	10
 sse_IO	instruction	bool		LD_bool_byte	input	1	1	$$input		C	10
-sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$input)/*do some magic here now*/		C	10
+sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$inputg)/*do some magic here now*/		C	10
 sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input		C	10
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		C,sse	10
 sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$output)		C	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)		C	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1		C	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		C,sse	10
 											
@@ -110,7 +113,7 @@ logical	instruction	ssebool	ssebool,ssebool	OR_ssebool		1	1	$$arg1 | $$arg1		C	1
 logical	instruction	ssebool	ssebool,ssebool	XOR_ssebool		1	1	$$arg1 ^ $$arg2 		C	10
 logical	instruction	ssebool	ssebool,ssebool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_ssebool		1	1	$$arg1 $c $$arg2 		C	10
 conversions	instruction	${t->bool}	${u->ssebool}	CVRT_$u_$t		1	1	$$arg1 ? 0xFF : 0		C	10
-conversions	instruction	${t->ssebool}	${u->bool}	CVRT_$u_$t		1	1	$$arg1 > 0		C	10
+conversions	instruction	${t->ssebool}	${u->bool}	CVRT_$u_$t		1	1	$$arg1 != 0		C	10
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	1	1	$$input		sse	10
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	1	1	$$output = $$arg1		C	10
@@ -118,10 +121,10 @@ sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128
 sse_logical	instruction	ssebool	ssebool	NOT_ssebool		${w->2,4,8,16}	$w	_mm_sub_epi32(_mm_set1_epi32(0),$$arg1)		sse	5
 sse_logical	instruction	ssebool	ssebool,ssebool	EQ_ssebool		${w->2,4,8,16}	$w	_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2))		sse	5
 sse_logical	instruction	ssebool	ssebool,ssebool	NE_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128($$arg1,$$arg2)		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	GT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),$$arg2))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	LT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),$$arg1))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	GE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg1,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	LE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg2,_mm_sub_epi32(_mm_set1_epi32(0),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+sse_logical	instruction	ssebool	ssebool,ssebool	GT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg2))		sse	5
+sse_logical	instruction	ssebool	ssebool,ssebool	LT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1))		sse	5
+sse_logical	instruction	ssebool	ssebool,ssebool	GE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+sse_logical	instruction	ssebool	ssebool,ssebool	LE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse	5
 sse_logical	instruction	ssebool	ssebool,ssebool	${name,op->AND,and,OR,or,XOR,xor}_ssebool		${w->2,4,8,16}	$w	_mm_$op_si128($$arg1,$$arg2)		sse	5
 											
 #note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
@@ -161,13 +164,13 @@ sse_glues	type_conversion	ssebool	8	1	2	_mm_set_epi8($$arg2,$$arg2,$$arg2,$$arg2
 											
 #c->sse, sse->c											
 sse_splits	type_conversion	${t->int,uint}${w,p->64,1,32,2,16,4,8,8}_t	$w	2	1	($t$w_t)_mm_extract_epi$w((__m128i)$$arg1,0)	($t$w_t)_mm_extract_epi$w((__m128i)$$arg1,$p)			sse	10
-sse_splits	type_conversion	${t,w,p->float,32,3,double,64,1}	$w	2	1	($t)_mm_extract_epi$w((__m128i)$$arg1,0)	($t)_mm_extract_epi$w((__m128i)$$arg1,$p)			sse	10
+sse_splits	type_conversion	${t,w,p->float,32,2,double,64,1}	$w	2	1	reinterpret_cast<const $t&>((const uint64_t&)_mm_extract_epi$w((__m128i)$$arg1,0))	reinterpret_cast<const $t&>((const uint64_t&)_mm_extract_epi$w((__m128i)$$arg1,$p))			sse	10
 sse_glues	type_conversion	${t->int,uint}${w->64}_t	$w	1	2	_mm_set_epi64x($$arg2,$$arg1)				sse	10
 sse_glues	type_conversion	${t->int,uint}${w->32}_t	$w	1	2	_mm_set_epi$w(0,$$arg2,0,$$arg1)				sse	10
 sse_glues	type_conversion	${t->int,uint}${w->16}_t	$w	1	2	_mm_set_epi$w(0,0,0,$arg2,0,0,0,$$arg1)				sse	10
 sse_glues	type_conversion	${t->int,uint}${w->8}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,0,$$arg2,0,0,0,0,0,0,0,$$arg1)				sse	10
-sse_glues	type_conversion	${t,w->float,32}	$w	1	2	_mm_set_epi$w(0,(uint32_t)$$arg2,0,(uint32_t)$$arg1)				sse	10
-sse_glues	type_conversion	${t,w->double,64}	$w	1	2	(__m128d)_mm_set_epi64x((uint64_t)$$arg2,(uint64_t)$$arg1)				sse	10
+sse_glues	type_conversion	${t,w->float,32}	$w	1	2	_mm_set_epi$w(0,*((uint32_t*)&$$arg2),0,*((uint32_t*)&$$arg1))				sse	10
+sse_glues	type_conversion	${t,w->double,64}	$w	1	2	(__m128d)_mm_set_epi64x(*((uint64_t*)&$$arg2),*((uint64_t*)&$$arg1))				sse	10
 											
 #canonic joins/splits - lets consider what happens if we compare canonic uint8 vector comparison result of width 2 with a result of a double comparison... ->this wont work											
 #sse_splits	type_conversion	${t->int,uint}${w,n,m->8,16,8,16,8,4,32,4,2}_t	$w	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse	10

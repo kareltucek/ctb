@@ -1,4 +1,5 @@
 loadinstab csv ../sse_set/C_table.csv
 testgraph
+adddebug 2 OUTPUT0_ST_ssebool_byteBASE0_GE_float
 generate simu output.h
 

@@ -2,6 +2,7 @@
 #define CSVLOADER_GUARD
 
 
+#include "defines.h"
 #include <regex>
 #include <fstream>
 #include <string>

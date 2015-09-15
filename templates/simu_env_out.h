@@ -1,22 +1,59 @@
 if ( pos_out_$1 == size_out_$1 )
 {
-  int mod = 1;
+  /*would be nices as a macro*/
+  cycles -= size_out_$1; 
   if(std::string("$3") == "bool")
   {
-    mod = 32;
-  }
-
-  for(int i = 0; i < size_out_$1/mod; ++i)
-  {
-    if($4 == 1)
+    for(int i = 0; i < size_out_$1; ++i)
     {
-      data_check_$1.push_back(data_out_$1[i]);
-      processed_out_$1++;
+      if($4 == 1)
+      {
+        data_check_$1.push_back(load_bool(data_out_$1,i));
+        processed_out_$1++;
+      }
+      else
+      {
+        if(load_bool(data_out_$1,i) != data_check_$1[processed_out_$1])
+        {
+          DEBUG_STD((int)load_bool(data_out_$1,i), "$5 OUTPUT_$1");
+          DEBUG_STD((int)data_check_$1[processed_out_$1], "$5 OUTPUT_CHECK_$1");
+          std::cout << "failed in cycle " << cycles << std::endl;
+          throw (int)cycles;
+        };
+        processed_out_$1++;
+      }
+      cycles++;
     }
-    else
+  }
+  else
+  {
+  for(int i = 0; i < size_out_$1; ++i)
     {
-      assert(data_out_$1[i] == data_check_$1[processed_out_$1]);
-      processed_out_$1++;
+      if($4 == 1)
+      {
+        data_check_$1.push_back(data_out_$1[i]);
+        processed_out_$1++;
+      }
+      else
+      {
+        if(data_out_$1[i] != data_check_$1[processed_out_$1])
+        {
+          if(std::string("$3") == "ssebool")
+          {
+            DEBUG_STD((int)data_out_$1[i], "$5 OUTPUT_$1");
+            DEBUG_STD((int)data_check_$1[processed_out_$1], "$5 OUTPUT_CHECK_$1");
+          }
+          else
+          {
+            DEBUG_STD(data_out_$1[i], "$5 OUTPUT_$1");
+            DEBUG_STD(data_check_$1[processed_out_$1], "$5 OUTPUT_CHECK_$1");
+          }
+          std::cout << "failed in cycle " << cycles << std::endl;
+          throw (int)cycles;
+        };
+        processed_out_$1++;
+      }
+      cycles++;
     }
   }
 

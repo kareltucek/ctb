@@ -5,12 +5,13 @@ void test_body$10()
   reset();
   int cycles = 0;
   const int packsize = $10;
-  for(int r = 0; r < 10; ++r)
+  for(int r = 0; r < 1; ++r)
   {
     $4
 
       for (int i = 0; i < 100 ;i++)
       {
+        /*std::cout << "at cycle " << cycles << std::endl*/;
         $5
 
           std::size_t batch_size;

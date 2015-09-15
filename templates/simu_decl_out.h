@@ -1,4 +1,4 @@
-/*decl for output $1*/;
+/*decl for output $1 with name $4*/;
 unsigned pos_out_$1 = 0;
 unsigned size_out_$1 = 0;
 unsigned processed_out_$1 = 0;

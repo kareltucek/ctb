@@ -2,6 +2,7 @@
 #ifndef aliasenv_SIMU_GUARD
 #define aliasenv_SIMU_GUARD
 
+#include "defines.h"
 #include "writer.h"
 #include "aliasenv_simu.h"
 #include <map>
@@ -58,7 +59,9 @@ namespace ctb
     aliasenv_generator::init();
 
     ADD("input", "data_in_$cindex[pos_in_$cindex+j+$iindex]");
+    ADD("inputg", "data_in_$cindex,pos_in_$cindex+j+$iindex");
     ADD("output", "data_out_$cindex[pos_out_$cindex+j+$iindex]");
+    ADD("outputg", "data_out_$cindex,pos_out_$cindex+j+$iindex");
 
     ADD("fdeclin",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_in.h")));
     ADD("fdeclcont",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_cont.h")));
@@ -74,6 +77,11 @@ namespace ctb
     template <class G>
       writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, std::string name)
   {
+#ifdef TMPTEST
+    if(granularity > 2) //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      granularity = 2;
+#endif
+
       init();
       typedef writer<aliasenv_simu> wrt;
 
@@ -111,12 +119,12 @@ namespace ctb
       for( auto n : generator.graph->in.r())
       {
         n->data->op->get_type_string(1, type_string);
-        decl.print("$fdeclin", n->data->get_inout_pos(), type_string, n->data->op->out_type.r());
+        decl.print("$fdeclin", n->data->get_inout_pos(), type_string, n->data->op->out_type.r(), n->id.r());
       }
       for(auto n : generator.graph->out.r())
       {
         n->data->op->get_type_string(1, type_string);
-        decl.print("$fdeclout", n->data->get_inout_pos(), type_string, n->data->op->out_type.r());
+        decl.print("$fdeclout", n->data->get_inout_pos(), type_string, n->data->op->out_type.r(), n->id.r());
       }
 
       wrt envelopes;
@@ -128,7 +136,7 @@ namespace ctb
       for(auto n : generator.graph->out.r())
       {
         n->data->op->get_type_string(1, type_string);
-        envelopes.print("$fenvout", n->data->get_inout_pos(),  type_string, n->data->op->out_type.r(), granularity);
+        envelopes.print("$fenvout", n->data->get_inout_pos(),  type_string, n->data->op->out_type.r(), granularity, n->id.r());
       }
 
       wrt minlist;

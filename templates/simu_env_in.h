@@ -2,7 +2,7 @@ if ( pos_in_$1 == size_in_$1 )
 {
   if(std::string("$3") == "bool")
   {
-    size_in_$1 = (pull()%16)*32; 
+    size_in_$1 = (pull()%20)*32; 
   }
   else
   {
@@ -22,7 +22,7 @@ if ( pos_in_$1 == size_in_$1 )
   }
   else if(std::string("$3") == "bool")
   {
-    for(int i = 0; i < size_in_$1/32; ++i)
+    for(int i = 0; i < size_in_$1; ++i) /*this will serve for both vector and bool*/
       data_in_$1[i] = pull();
   }
   else

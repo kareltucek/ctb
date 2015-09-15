@@ -7,7 +7,7 @@ class random_engine
   private:
     uint32_t seed;
   public:
-    void reset() {seed = 5323;};
+    void reset(int s = 0) {seed = 5323; for(int i = 0; i < s; i++) get();};
     uint32_t get()
     {
       //taken from http://stackoverflow.com/questions/15500621/c-c-algorithm-to-produce-same-pseudo-random-number-sequences-from-same-seed-on

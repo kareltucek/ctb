@@ -226,7 +226,9 @@ namespace ctb
         {
           if(op->is(fINPUT))
             w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-          else if(op->is(fOUTPUT) || op->is(fDEBUG))
+          else if(op->is(fOUTPUT))
+            w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+          else if(op->is(fDEBUG)) //same as output
             w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
           else
             w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0             , myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));

@@ -13,10 +13,6 @@
 #include "macros.h"
 #include "random_eng.h"
 
-
-#define load_bool(a) true
-#define store_bool(a) true
-
 class tester
 {
   private:
