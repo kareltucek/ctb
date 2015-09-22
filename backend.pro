@@ -14,7 +14,8 @@ SOURCES += \
     model_bobox.cpp \
     ctb.cpp \
     model_simple.cpp \
-    main.cpp
+    main.cpp \
+    unit_test5/simu.cpp
 
 HEADERS += \
     xmlloader.h \
@@ -68,7 +69,8 @@ HEADERS += \
     templates/simu_decl_cont.h \
     templates/simu_box.h \
     templates/simu_body.h \
-    defines.h
+    defines.h \
+    conversions.h
 
 OTHER_FILES += \
     test \

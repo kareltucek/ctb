@@ -9,7 +9,7 @@ void test_body$10()
   {
     $4
 
-      for (int i = 0; i < 100 ;i++)
+      for (int i = 0; i < 10 ;i++)
       {
         /*std::cout << "at cycle " << cycles << std::endl*/;
         $5

@@ -78,8 +78,8 @@ namespace ctb
       writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, std::string name)
   {
 #ifdef TMPTEST
-    if(granularity > 2) //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      granularity = 2;
+    if(granularity > 16)
+      granularity = 16;
 #endif
 
       init();

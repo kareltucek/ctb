@@ -9,6 +9,7 @@
 #include <iostream>
 #include "proxy.h"
 #include "errorhandling.h"
+#include "conversions.h"
 
 namespace ctb
 {
@@ -20,6 +21,17 @@ namespace ctb
 
   template<typename F>
     class tagmaster;
+
+  struct traits_conv_test
+  {
+    typedef int opid_t;
+    typedef int tid_t;
+    typedef int vid_t;
+    typedef uint32_t flag_t;
+    typedef std::string param_t;
+    typedef tagmaster<uint32_t> tag_handler_t;
+    static const int maxarity = 3;
+  } ;
 
   struct traits
   {

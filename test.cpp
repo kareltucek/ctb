@@ -4,7 +4,7 @@
 #include "parser.h"
 #include "ctb.h"
 
-int main()
+int main(int c, char** cc)
 {
   using namespace ctb;
 

@@ -37,7 +37,7 @@ namespace ctb
       private:
         std::map<typename T::tid_t, std::vector<typename T::opid_t> > ins;
         std::map<typename T::tid_t, std::vector<typename T::opid_t> > outs;
-        static std::string get_op_name(typename T::opid_t, const std::string& base, int v = -1);
+        static typename T::vid_t get_op_name(typename T::opid_t, const std::string& base, int v = -1);
         void genvert(const std::string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<std::vector<typename T::opid_t> >& it, G& graph);
         void gendbg(G& gen, const IT& it, typename T::vid_t v);
         int oid;
@@ -89,7 +89,7 @@ namespace ctb
     {
       for(auto n : v)
       {
-        auto itr = gen.graph->verts->find(n);
+        auto itr = gen.graph->verts->find(cvt<std::string, typename T::vid_t>::convert(n));
         if(itr != gen.graph->verts->end() && !itr->second->data->op->is(fOUTPUT))
           q->push(itr->second);
         else
@@ -118,9 +118,9 @@ namespace ctb
   }
 
   template <class T, class G, class IT>
-    std::string test_loader<T,G,IT>::get_op_name(typename T::opid_t t, const std::string& base, int v)
+    typename T::vid_t test_loader<T,G,IT>::get_op_name(typename T::opid_t t, const std::string& base, int v)
     {
-      return std::string(base).append(std::to_string(v)).append("_").append(t);
+      return cvt<std::string,typename T::vid_t>::convert(std::string(base).append(std::to_string(v)).append("_").append(cvt<typename T::opid_t, std::string>::convert(t)));
     }
 
   template <typename T, class G, class IT>
@@ -141,7 +141,7 @@ namespace ctb
         int j = 0;
         for(auto itro : itre->second)
         {
-          std::string n = get_op_name(itro,"OUTPUT", j).append(vid);
+          typename T::vid_t n = cvt<std::string,typename T::vid_t>::convert(cvt<typename T::vid_t, std::string>::convert(get_op_name(itro,"OUTPUT", j)).append(cvt<typename T::vid_t,std::string>::convert(vid)));
           graph.addvert(n,itro,++oid);
           graph.addedge(vid, n, 0);
           ++j;
@@ -228,23 +228,10 @@ namespace ctb
             ++processed;
             if(!cartesian_expansion)
               break;
-#ifdef TMPTEST
-#define PN 200
-            if(processed > PN)
-              break;
-#endif
           }
-#ifdef TMPTEST
-            if(processed > PN)
-              break;
-#endif
         }
         delete q;
         q = qn;
-#ifdef TMPTEST
-        if(processed > PN)
-          break;
-#endif
       }
 
       delete q;

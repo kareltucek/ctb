@@ -1,8 +1,8 @@
 #FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0  -fmax-errors=5
-FLAGS= -DTESTOVANI -O0
+FLAGS= -DTESTOVANI -O0 -fbracket-depth=10000
 
 
-CXX=g++
+CXX=clang++
 
 all : ../ctb sse test run
 

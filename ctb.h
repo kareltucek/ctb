@@ -143,6 +143,7 @@ namespace ctb
 
 
   typedef ctb<traits, instruction_table<traits> > ctb_default;
+  //typedef ctb<traits_conv_test, instruction_table<traits_conv_test> > ctb_conv_test;
 
   template <class T, class IT>
     ctb<T,IT>::ctb() : instab(), mygenerator(instab), hash_aliasenv(), hash_loader()
@@ -585,6 +586,7 @@ start:;
 
 
   template class ctb<traits, instruction_table<traits>> ;
+  //template class ctb<traits_conv_test, instruction_table<traits_conv_test>> ;
 };
 
 
