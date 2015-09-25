@@ -5,7 +5,7 @@ int main()
   try
   {
     tester t;
-    t.test(16);
+    t.test(160000);
   }
   catch(int& e)
   {

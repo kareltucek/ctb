@@ -29,7 +29,6 @@ namespace ctb
     typedef int vid_t;
     typedef uint32_t flag_t;
     typedef std::string param_t;
-    typedef tagmaster<uint32_t> tag_handler_t;
     static const int maxarity = 3;
   } ;
 
@@ -40,9 +39,13 @@ namespace ctb
     typedef std::string vid_t;
     typedef uint32_t flag_t;
     typedef int param_t;
-    typedef tagmaster<uint32_t> tag_handler_t;
+    //typedef tagmaster<uint32_t> tag_handler_t;
     static const int maxarity = 3;
   } ;
+
+  const int gmCOUNT = 3;
+  enum maskmodes { gSELECT = 1, gPRINT = 2, gONCE = 3};
+  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };
 
   enum flags 
   {
@@ -108,7 +111,7 @@ namespace ctb
         }
         else
         {
-          error( std::string("unknown flag found: ", false).append(w));
+          error( std::string("unknown flag found: ").append(w).append("\n"), false);
         }
       }
       return f;

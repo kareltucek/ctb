@@ -53,70 +53,134 @@ namespace ctb
     ADD("input", "data_in_$cindex[pos_in_$cindex+j]");
     ADD("output", "data_out_$cindex[pos_out_$cindex+j]");
 
-    ADD("fdeclin",  writer<aliasenv_generator>::from_file("templates/bobox_decl_in.h"));
-    ADD("fdeclout", writer<aliasenv_generator>::from_file("templates/bobox_decl_out.h"));
-    ADD("fenvin",   writer<aliasenv_generator>::from_file("templates/bobox_env_in.h"));
-    ADD("fenvout",  writer<aliasenv_generator>::from_file("templates/bobox_env_out.h"));
-    ADD("fbox",     writer<aliasenv_generator>::from_file("templates/bobox_box.h"));
-    ADD("fsend",    writer<aliasenv_generator>::from_file("templates/bobox_send.h"));
+    ADD("fdeclin",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_decl_in.h")));
+    ADD("fdeclout", writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_decl_out.h")));
+    ADD("fenvin",   writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_env_in.h")));
+    ADD("fenvout",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_env_out.h")));
+    ADD("fbox",     writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_box.h")));
+    ADD("fsend",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_send.h")));
+    ADD("fcode",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_code.h")));
+    ADD("falign",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_align.h")));
 
     initialized = true;
   }
 
 
   template <class G>
-    writer<aliasenv_bobox> aliasenv_bobox::generate(int max_granularity, G& generator, std::string name)
+    writer<aliasenv_bobox> aliasenv_bobox::generate(int granularity, G& generator, std::string name)
     {
       typedef writer<aliasenv_bobox> wrt;
-      /*
-         init();
-         wrt ilist;
-         for(auto n : generator.inlist())
-         ilist.push("input_list_$1, $1", n->get_inout_pos());
-         ilist.list_concat(",");
 
-         wrt olist;
-         for(auto n : generator.outlist())
-         olist.push("output_list_$1, $1", n->get_inout_pos());
-         olist.list_concat(",");
+      init();
+      wrt ilist;
+      wrt olist;
+      std::string type_string;
 
-         wrt decl;
-         for(auto n : generator.inlist())
-         decl.print("$fdeclin", n->get_inout_pos(), n->getop()->get_type_string());
-         for(auto n : generator.outlist())
-         decl.print("$fdeclout", n->get_inout_pos(), n->getop()->get_type_string());
+      //construct box list definitions
+      for(auto n : generator.graph->in.r())
+        ilist.push("input_list_$1, $1", n->data->get_inout_pos());
+      ilist.list_concat(",");
 
-         wrt envelopes;
-         for(auto n : generator.inlist())
-         envelopes.print("$fenvin", n->get_inout_pos(), n->getop()->get_type_string());
-         for(auto n : generator.outlist())
-         envelopes.print("$fenvout", n->get_inout_pos(),  n->getop()->get_type_string());
+      for(auto n : generator.graph->out.r())
+        olist.push("output_list_$1, $1", n->data->get_inout_pos());
+      olist.list_concat(",");
 
-         wrt minlist;
-         minlist.print("std::numeric_limits<unsigned>::max()");
-         for(auto n : generator.inlist())
-         minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->get_inout_pos(), minlist);
-         for(auto n : generator.outlist())
-         minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->get_inout_pos(), minlist);
+      //construct declarations
+      wrt decl;
+      for(auto n : generator.graph->in.r())
+      {
+        n->data->op->get_type_string(1, type_string);
+        decl.print("$fdeclin", n->data->get_inout_pos(), type_string);
+      }
+      for(auto n : generator.graph->out.r())
+      {
+        n->data->op->get_type_string(1, type_string);
+        decl.print("$fdeclout", n->data->get_inout_pos(), type_string);
+      }
 
-         wrt code;
-         generator.generate(max_granularity, code);
+      //accept envelopes
+      wrt envelopes;
+      for(auto n : generator.graph->in.r())
+      {
+        n->data->op->get_type_string(1, type_string);
+        envelopes.print("$fenvin", n->data->get_inout_pos(), type_string);
+      }
+      for(auto n : generator.graph->out.r())
+      {
+        n->data->op->get_type_string(1, type_string);
+        envelopes.print("$fenvout", n->data->get_inout_pos(),  type_string);
+      }
 
-         wrt inc;
-         for(auto n : generator.inlist())
-         inc.print("pos_in_$1 += batch_size;", n->get_inout_pos());
-         for(auto n : generator.outlist())
-         inc.print("pos_out_$1 += batch_size;", n->get_inout_pos());
+      //get batch size
+      wrt minlist;
+      minlist.print("std::numeric_limits<unsigned>::max()");
+      for(auto n : generator.graph->in.r())
+        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data->get_inout_pos(), minlist);
+      for(auto n : generator.graph->out.r())
+        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data->get_inout_pos(), minlist);
 
-         wrt send;
-         for(auto n : generator.outlist())
-         send.print("$fsend", n->get_inout_pos(), n->getop()->get_type_string());
+      //alignment code
+      wrt alignment;
+      if(generator.graph->in->empty() || generator.graph->out->empty())
+      {
+        error("Box without inputs or outputs passed. Cant handle alignment for such boxes. (There does not seem to be a reason to write nontrivial code for cases which should never happen)");
+      }
+      else
+      {
+        alignment.print("$falign", granularity, generator.graph->in->front()->data->get_inout_pos(), generator.graph->in->front()->data->get_inout_pos());
+        for(auto n : generator.graph->in.r())
+          alignment.print("aligned &= align_offset == pos_in_$2 % $1", granularity, n->data->get_inout_pos());
+        for(auto n : generator.graph->out.r())
+          alignment.print("aligned &= output_offset == pos_out_$2 % $1", granularity, n->data->get_inout_pos());
+      }
 
-         wrt box;
-         box.print("$fbox", name, ilist, olist,decl, envelopes, minlist, code, inc, send);
-         */
+      //generate actual code
+      wrt code_simple;
+      generator.generate(1, code_simple);
+      
+      wrt code_unaligned;
+      auto pcu = std::make_shared<tagmaster_default>("","","","unalignedio,C,sse");
+      generator.generate(granularity, code_unaligned, pcu);
+      wrt code_aligned;
+      generator.generate(granularity, code_aligned, std::make_shared<tagmaster_default>("","","","alignedio,C,sse"));
 
-      return wrt();
+      wrt code_shifted;
+      for(int i = 1; i < granularity; ++i)
+      {
+        ADD("alignoffset", wrt().print("$1", i).write_str());
+        wrt tmpcode;
+        generator.generate(granularity, tmpcode, std::make_shared<tagmaster_default>("","","","shiftedio,C,sse"));
+        code_shifted.print("case $alignoffset: {$1} break;)", tmpcode);
+      }
+
+      wrt code_preload;
+      /*TODO*/
+      std::shared_ptr<tagmaster_default> tp = std::make_shared<tagmaster_default>("preloadio","","","preloadio,C,sse");
+      generator.generate(granularity, code_preload, tp, tp, tp);
+
+      wrt code;
+      code.print("$fcode", code_aligned, code_shifted, code_unaligned, code_simple, code_preload);
+
+      //increment counters
+      wrt inc;
+      for(auto n : generator.graph->in.r())
+        inc.print("pos_in_$1 += batch_size;", n->data->get_inout_pos());
+      for(auto n : generator.graph->out.r())
+        inc.print("pos_out_$1 += batch_size;", n->data->get_inout_pos());
+
+      //send envelopes
+      wrt send;
+      for(auto n : generator.graph->out.r())
+      {
+        n->data->op->get_type_string(1, type_string);
+        send.print("$fsend", n->data->get_inout_pos(), type_string);
+      }
+
+      //put everything together
+      wrt box;
+      box.print("$fbox", name, ilist, olist,decl, envelopes, minlist, alignment, code, inc, send);
+
+      return box;
 
     }
 }

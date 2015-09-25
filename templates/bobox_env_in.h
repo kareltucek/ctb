@@ -1,3 +1,4 @@
+/*envelope in $1*/;
 if ( pos_in_$1 == size_in_$1 )
 {
   env_in_$1.reset();
@@ -6,7 +7,7 @@ if ( pos_in_$1 == size_in_$1 )
     break;
   size_in_$1 = env_in_$1->get_size();
   pos_in_$1 = 0;
-  data_out_$1 = env_in_$1->get_column( col_in_$1).get_data< int>();
+  data_in_$1 = env_in_$1->get_column( col_in_$1).get_data< int>();
   continue; /* to skip empty envelopes*/;
 }
 

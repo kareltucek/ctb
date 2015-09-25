@@ -1,5 +1,5 @@
-#FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0  -fmax-errors=5
-FLAGS= -DTESTOVANI -O0 -fbracket-depth=10000
+FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0  -fmax-errors=5 -Wno-deprecated-increment-bool -fbracket-depth=10000 
+#FLAGS= -DTESTOVANI -O0 
 
 
 CXX=clang++

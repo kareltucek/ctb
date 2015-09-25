@@ -95,6 +95,7 @@ namespace ctb
         typedef generator<T,IT> generator_t;
         IT instab;
         generator_t mygenerator;
+        std::shared_ptr<tagmaster<uint32_t>> mytags;
 
         void help_cmdline_old();
         void help_command_stream();
@@ -292,6 +293,7 @@ namespace ctb
       std::cout << "  -r <comma separated tags>   require all of these tags" << std::endl;
       std::cout << "  -a <comma separated tags>   require one of these tags ('allow')" << std::endl;
       std::cout << "  -e <comma separated tags>   exclude code with any of these tags  " << std::endl;
+      std::cout << "  -n <comma separated tags>   require all tags to be subset of this set of tags" << std::endl;
       std::cout << "  -c compile test - makes generator output only the first instruction of every vector  " << std::endl;
       std::cout << "  -h            show some help" << std::endl;
       std::cout << "" << std::endl;
@@ -382,7 +384,7 @@ namespace ctb
     int ctb<T,IT>::command_stream_cmdline(int count, char ** args)
     {
       exec_path = get_prefix(args[0]);
-      std::string allowed,excluded,required;
+      std::string allowed,excluded,required,nonexcluded;
       stringlist files;
       for(int i = 1; i < count; ++i)
       {
@@ -412,6 +414,11 @@ namespace ctb
                       if(!excluded.empty())
                         excluded.append(",");
                       excluded.append(args[i+1]);
+                      break;
+                    case 'n':
+                      if(!nonexcluded.empty())
+                        nonexcluded.append(",");
+                      nonexcluded.append(args[i+1]);
                       break;
                     case 'r':
                       if(!required.empty())
@@ -444,7 +451,8 @@ namespace ctb
         }
 start:;
       }
-      instab.set_tags(typename T::tag_handler_t(required,allowed,excluded));
+      mytags = std::make_shared<tagmaster<uint32_t>>(required,allowed,excluded,nonexcluded);
+      instab.add_tags(mytags);
       int r = 0;
       if(files.empty())
       {

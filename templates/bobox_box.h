@@ -25,14 +25,13 @@ private:
 
       auto batch_size = $6;
 
-      for ( std::size_t j = 0; j < batch_size; ++ j)
-      {
-        $7
-      }
+      $7
 
       $8
+
+      $9
     }
 
-    $9
+    $10
   }
 };

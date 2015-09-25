@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<graph_list Name="list">
+   <graph Name="graph1">
+      <vertex opid="LD_int32_t" param="0" vid="a_in"></vertex>
+      <vertex opid="LD_int32_t" param="1" vid="b_in"></vertex>
+      <vertex opid="ADD_int32_t" vid="c_add"></vertex>
+      <vertex opid="ST_int32_t" param="0" vid="d_out"></vertex>
+      <edge to="c_add" from="a_in" to_pos="0"></edge>
+      <edge to="c_add" from="b_in" to_pos="1"></edge>
+      <edge to="d_out" from="c_add" to_pos="0"></edge>
+   </graph>
+</graph_list>

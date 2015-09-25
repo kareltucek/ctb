@@ -63,16 +63,16 @@ namespace ctb
         bool compiletest; /*abbreviated as plain 'c'*/
       public:
 
-        proxy<const IT&> instab;
+        proxy< IT&> instab;
         proxy<graph_t> graph;
 
-        generator(const IT& i);
-        void set_instab(const IT& i);
+        generator( IT& i);
+        void set_instab( IT& i);
 
         template <typename...L> void addvert(vid_t v, id_t op, L... p) ;
         void addedge(vid_t aid, vid_t bid, int b_argpos) ;
 
-        template <class W> void generate(int granularity, W& w) ;
+        template <class W> void generate(int granularity, W& w, std::shared_ptr<taghandler_base> p = NULL, std::shared_ptr<taghandler_base> q = NULL, std::shared_ptr<taghandler_base> s = NULL) ;
         int get_broadest(int upperbound = 10000000) ;
 
         void set_compiletest(bool);
@@ -141,7 +141,7 @@ namespace ctb
     }
 
   template <class T, class IT>
-    void generator<T,IT>::set_instab(const IT& i)
+    void generator<T,IT>::set_instab( IT& i)
     {
       instab.rw() = i; 
     }
@@ -167,19 +167,31 @@ namespace ctb
     }
 
   template <class T, class IT>
-    generator<T,IT>::generator(const IT & i) : instab(i), graph(), compiletest(false)
+    generator<T,IT>::generator( IT & i) : instab(i), graph(), compiletest(false)
   {
   }
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate(int packsize, W& w)
+    void generator<T,IT>::generate(int packsize, W& w, std::shared_ptr<taghandler_base> ts, std::shared_ptr<taghandler_base> tp, std::shared_ptr<taghandler_base> to)
     {
-      data_t::newid(true); //resets ids
       if(graph->out->empty())
         error( "graph is empty");
-      else
-        graph.rw().crawl_topological([&](node_t* n) {n->data.rw().generate(packsize, w, compiletest); });
+      if(ts!=NULL)
+        instab.rw().add_tags(ts,gSELECT);
+      if(tp!=NULL)
+        instab.rw().add_tags(tp,gPRINT);
+      if(to!=NULL)
+        instab.rw().add_tags(to,gONCE);
+      instab->update_tags();
+      data_t::newid(true); //resets ids
+      graph.rw().crawl_topological([&](node_t* n) {n->data.rw().generate(packsize, w, compiletest); });
+      if(to!=NULL)
+        instab.rw().rm_tags(to,gONCE);
+      if(tp!=NULL)
+        instab.rw().rm_tags(tp,gPRINT);
+      if(ts!=NULL)
+        instab.rw().rm_tags(ts,gSELECT);
     }
 
   template <class T, class IT>
@@ -188,62 +200,64 @@ namespace ctb
     {
       try
       {
-      W empty;
-      int myin, myout;
-      int mygran = op->is(fDEBUG) ? me->in[0]->data->op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
-      if(mygran == 0)
-        error( std::string("suitable width not found!"));
-      if(granularity % mygran != 0)
-        error( std::string("granularities are relatively prime!"));
-      if(myin != myout)
-        error( std::string("asymetric instructions not supported"));
-      if(me->in->size() != op->in_types->size())
-        error( std::string("count of input nodes does not match operation specification"));
-      for(int i = 0; i < me->in->size(); ++i)
-        if(me->in[i]->data->op->out_type.r() != op->in_types[i])
-          error( std::string("argument ").append(std::to_string(i)).append(" does not match defined input type: got ").append(me->in[i]->data->op->out_type.r()).append(" wanted ").append(op->in_types[i]));
-      //op->imbue_width(mygran);
-      acces_map.clear();
+        W empty;
+        int myin, myout;
+        int mygran = op->is(fDEBUG) ? me->in[0]->data->op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
+        if(mygran == 0)
+          error( std::string("suitable width not found!"));
+        if(granularity % mygran != 0)
+          error( std::string("granularities are relatively prime!"));
+        if(myin != myout)
+          error( std::string("asymetric instructions not supported"));
+        if(me->in->size() != op->in_types->size())
+          error( std::string("count of input nodes does not match operation specification"));
+        for(int i = 0; i < me->in->size(); ++i)
+          if(me->in[i]->data->op->out_type.r() != op->in_types[i])
+            error( std::string("argument ").append(std::to_string(i)).append(" does not match defined input type: got ").append(me->in[i]->data->op->out_type.r()).append(" wanted ").append(op->in_types[i]));
+        //op->imbue_width(mygran);
+        acces_map.clear();
 #define ARG(a) (a-1 < me->in->size() ? W().print(me->in[a-1]->data.rw().get_acces(myin, granularity, w, c), i*myout) : empty)
-      W acces({newname(print("w$1",myout))});
-      acces_map.insert(acces_map_t::value_type(myout, acces));
-      for(int i = 0; i < granularity/myin; i++)
-      {
+        W acces({newname(print("w$1",myout))});
+        acces_map.insert(acces_map_t::value_type(myout, acces));
         std::string type_string, op_c, op_cc;
+        std::size_t printability; 
         op->get_type_string(mygran, type_string);
-        op->get_op_string(mygran, op_c, op_cc);
+        op->get_op_string(mygran, op_c, op_cc, printability);
         if(op_c.empty() && op_cc.empty())
           warn(std::string("instruction code and custom code are both empty for ").append(opid));
-        if(i!=0 && c)
+        /*even for unprintable code we want to consume ids -> cannot skip most of this function*/
+        for(int i = 0; i < granularity/myin && i < printability; i++) 
         {
-          w.print("$declcode", type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
-        }
-        else if(op_c.empty())
-        {
-          w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
-        }
-        else
-        {
-          if(op->is(fINPUT))
-            w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-          else if(op->is(fOUTPUT))
-            w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-          else if(op->is(fDEBUG)) //same as output
-            w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+          if(i!=0 && c)
+          {
+            w.print("$declcode", type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+          }
+          else if(op_c.empty())
+          {
+            w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+          }
           else
-            w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0             , myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+          {
+            if(op->is(fINPUT))
+              w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+            else if(op->is(fOUTPUT))
+              w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+            else if(op->is(fDEBUG)) //same as output
+              w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+            else
+              w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0             , myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+          }
         }
       }
-    }
-    catch (error_struct& err)
-    {
-      std::stringstream s;
-      s << "while processing node " << me->id.r() << " with opcode " << opid.r() << "\n    " << err.first;
-      if(err.second)
-        error(s.str(), true);
-      else
-        std::cerr << s.str() << std::endl;
-    }
+      catch (error_struct& err)
+      {
+        std::stringstream s;
+        s << "while processing node " << me->id.r() << " with opcode " << opid.r() << "\n    " << err.first;
+        if(err.second)
+          error(s.str(), true);
+        else
+          std::cerr << s.str() << std::endl;
+      }
     }
 
   template <class T, class IT>
@@ -261,7 +275,8 @@ namespace ctb
         for(auto itr : acces_map)
         {
           std::string c1, c2, cc, cg, t;
-          if(op->get_conv_string(itr.first, width, c1, c2, cc, t))
+          std::size_t printability;
+          if(op->get_conv_string(itr.first, width, c1, c2, cc, t, printability))
           {
             if(c2.empty() && c1.empty() && cc.empty())
               warn(std::string("all code strings are empty at ").append(opid));
@@ -270,7 +285,7 @@ namespace ctb
             if(itr.first > width)
             {
               //SPLITS
-              for(int i = 0; i < granularity/itr.first; i++)
+              for(int i = 0; i < granularity/itr.first && i < printability; i++)
               {
                 if(i!=0 && c)
                 {
@@ -304,7 +319,7 @@ namespace ctb
             else
             {
               //JOINS
-              for(int i = 0; i < granularity/width; i++)
+              for(int i = 0; i < granularity/width && i < printability; i++)
               {
                 if(i!=0 && c)
                 {

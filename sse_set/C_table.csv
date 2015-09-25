@@ -91,18 +91,33 @@ sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->float,ps
 sse_conversions	instruction	${t,c->float,ps}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse	10
 sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->double,pd}	CVRT_$u_$t		2	2	_mm_shuffle_epi32(_mm_cvt$d_$c($$arg1),0x58)		sse	10
 sse_conversions	instruction	${t,c->double,pd}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		2	2	_mm_cvt$d_$c(_mm_shuffle_epi32($$arg1,0x58))		sse	10
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	_mm_loadu_si128((__m128i*)&$$input)		sse	10
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_loadu_$c(&$$input)		sse	10
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_storeu_$c(&$$output,(__m128$l)$$arg1)		sse	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_loadu_$c(&$$input)		sse,unalignedio	11
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_storeu_$c(&$$output,(__m128$l)$$arg1)		sse,unalignedio	11
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_load_$c(&$$input)		sse,alignedio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_store_$c(&$$output,(__m128$l)$$arg1)		sse,alignedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	LDS(_mm_load_si128,(__m128i*)&$$input,$n)		sse,shiftedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,$n)		sse,shiftedio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	LDS(_mm_load_$c,&$$input,$n)		sse,shiftedio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	STS(_mm_store_$c,&$$output,(__m128$l)$$arg1,$n)		sse,shiftedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		$type preload_$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		$type preload_$basename = _mm_load_$c(&$$input);	sse,preloadio	10
 sse_IO	instruction	bool		LD_bool_byte	input	1	1	$$input		C	10
 sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$inputg)/*do some magic here now*/		C	10
 sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input		C	10
-sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		C,sse	10
+sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	bool		LD_bool_vector	input	128	128	LDS(_mm_load_si128,(const __m128i*)&$$input,128)		sse,shiftedio	10
+sse_IO	instruction	bool		LD_bool_vector	input	128	128		$type preload_$basename = _mm_load_si128,(const __m128i*)&$$input);	sse,preloadio	10
 sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1		C	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)		C	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1		C	10
-sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		C,sse	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	LDS(_mm_store_si128,(__m128i*)&$$output,$$arg1,128)		sse,shiftedio	10
 											
 #ssebool											
 logical	instruction	ssebool	ssebool,ssebool	AND_ssebool		1	1	$$arg1 & $$arg2		C	10
@@ -115,9 +130,13 @@ logical	instruction	ssebool	ssebool,ssebool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_ssebo
 conversions	instruction	${t->bool}	${u->ssebool}	CVRT_$u_$t		1	1	$$arg1 ? 0xFF : 0		C	10
 conversions	instruction	${t->ssebool}	${u->bool}	CVRT_$u_$t		1	1	$$arg1 != 0		C	10
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	1	1	$$input		sse	10
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	LDS(_mm_load_si128,(const __m128i*)&$$input,16)		sse,shiftedio	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16		$type preload_$basename = _mm_load_si128((const __m128i*)&$$input);	sse,preloadio	10
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		C	10
+sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
 sse_logical	instruction	ssebool	ssebool	NOT_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse	5
 sse_logical	instruction	ssebool	ssebool,ssebool	EQ_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2))		sse	5
 sse_logical	instruction	ssebool	ssebool,ssebool	NE_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128($$arg1,$$arg2)		sse	5

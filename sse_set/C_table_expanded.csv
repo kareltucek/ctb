@@ -420,29 +420,65 @@ IO	instruction	bool		LD_bool	input	1	1	$$input		C	10
 sse_IO	instruction	bool		LD_bool_byte	input	1	1	$$input		C	10
 sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$inputg)/*do some magic here now*/		C	10
 sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input		C	10
-sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		C,sse	10
+sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	bool		LD_bool_vector	input	128	128	LDS(_mm_load_si128,(const __m128i*)&$$input,128)		sse,shiftedio	10
+sse_IO	instruction	bool		LD_bool_vector	input	128	128		$$type preload_$$basename = _mm_load_si128,(const __m128i*)&$$input);	sse,preloadio	10
 IO	instruction	double		LD_double	input	1	1	$$input		C	10
-sse_IO	instruction	double		LD_double	input	2	2	_mm_loadu_pd(&$$input)		sse	10
+sse_IO	instruction	double		LD_double	input	2	2	_mm_loadu_pd(&$$input)		sse,unalignedio	11
+sse_IO	instruction	double		LD_double	input	2	2	_mm_load_pd(&$$input)		sse,alignedio	10
+sse_IO	instruction	double		LD_double	input	2	2	LDS(_mm_load_pd,&$$input,2)		sse,shiftedio	10
+sse_IO	instruction	double		LD_double	input	2	2		$$type preload_$$basename = _mm_load_pd(&$$input);	sse,preloadio	10
 IO	instruction	float		LD_float	input	1	1	$$input		C	10
-sse_IO	instruction	float		LD_float	input	4	4	_mm_loadu_ps(&$$input)		sse	10
+sse_IO	instruction	float		LD_float	input	4	4	_mm_loadu_ps(&$$input)		sse,unalignedio	11
+sse_IO	instruction	float		LD_float	input	4	4	_mm_load_ps(&$$input)		sse,alignedio	10
+sse_IO	instruction	float		LD_float	input	4	4	LDS(_mm_load_ps,&$$input,4)		sse,shiftedio	10
+sse_IO	instruction	float		LD_float	input	4	4		$$type preload_$$basename = _mm_load_ps(&$$input);	sse,preloadio	10
 IO	instruction	int16_t		LD_int16_t	input	1	1	$$input		C	10
-sse_IO	instruction	int16_t		LD_int16_t	input	8	8	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	int16_t		LD_int16_t	input	8	8	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	int16_t		LD_int16_t	input	8	8	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	int16_t		LD_int16_t	input	8	8	LDS(_mm_load_si128,(__m128i*)&$$input,8)		sse,shiftedio	10
+sse_IO	instruction	int16_t		LD_int16_t	input	8	8		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 IO	instruction	int32_t		LD_int32_t	input	1	1	$$input		C	10
-sse_IO	instruction	int32_t		LD_int32_t	input	4	4	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	int32_t		LD_int32_t	input	4	4	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	int32_t		LD_int32_t	input	4	4	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	int32_t		LD_int32_t	input	4	4	LDS(_mm_load_si128,(__m128i*)&$$input,4)		sse,shiftedio	10
+sse_IO	instruction	int32_t		LD_int32_t	input	4	4		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 IO	instruction	int64_t		LD_int64_t	input	1	1	$$input		C	10
-sse_IO	instruction	int64_t		LD_int64_t	input	2	2	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	int64_t		LD_int64_t	input	2	2	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	int64_t		LD_int64_t	input	2	2	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	int64_t		LD_int64_t	input	2	2	LDS(_mm_load_si128,(__m128i*)&$$input,2)		sse,shiftedio	10
+sse_IO	instruction	int64_t		LD_int64_t	input	2	2		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 IO	instruction	int8_t		LD_int8_t	input	1	1	$$input		C	10
-sse_IO	instruction	int8_t		LD_int8_t	input	16	16	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	int8_t		LD_int8_t	input	16	16	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	int8_t		LD_int8_t	input	16	16	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	int8_t		LD_int8_t	input	16	16	LDS(_mm_load_si128,(__m128i*)&$$input,16)		sse,shiftedio	10
+sse_IO	instruction	int8_t		LD_int8_t	input	16	16		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	1	1	$$input		sse	10
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	LDS(_mm_load_si128,(const __m128i*)&$$input,16)		sse,shiftedio	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16		$$type preload_$$basename = _mm_load_si128((const __m128i*)&$$input);	sse,preloadio	10
 IO	instruction	uint16_t		LD_uint16_t	input	1	1	$$input		C	10
-sse_IO	instruction	uint16_t		LD_uint16_t	input	8	8	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	uint16_t		LD_uint16_t	input	8	8	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	uint16_t		LD_uint16_t	input	8	8	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	uint16_t		LD_uint16_t	input	8	8	LDS(_mm_load_si128,(__m128i*)&$$input,8)		sse,shiftedio	10
+sse_IO	instruction	uint16_t		LD_uint16_t	input	8	8		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 IO	instruction	uint32_t		LD_uint32_t	input	1	1	$$input		C	10
-sse_IO	instruction	uint32_t		LD_uint32_t	input	4	4	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	uint32_t		LD_uint32_t	input	4	4	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	uint32_t		LD_uint32_t	input	4	4	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	uint32_t		LD_uint32_t	input	4	4	LDS(_mm_load_si128,(__m128i*)&$$input,4)		sse,shiftedio	10
+sse_IO	instruction	uint32_t		LD_uint32_t	input	4	4		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 IO	instruction	uint64_t		LD_uint64_t	input	1	1	$$input		C	10
-sse_IO	instruction	uint64_t		LD_uint64_t	input	2	2	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	uint64_t		LD_uint64_t	input	2	2	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	uint64_t		LD_uint64_t	input	2	2	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	uint64_t		LD_uint64_t	input	2	2	LDS(_mm_load_si128,(__m128i*)&$$input,2)		sse,shiftedio	10
+sse_IO	instruction	uint64_t		LD_uint64_t	input	2	2		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 IO	instruction	uint8_t		LD_uint8_t	input	1	1	$$input		C	10
-sse_IO	instruction	uint8_t		LD_uint8_t	input	16	16	_mm_loadu_si128((__m128i*)&$$input)		sse	10
+sse_IO	instruction	uint8_t		LD_uint8_t	input	16	16	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
+sse_IO	instruction	uint8_t		LD_uint8_t	input	16	16	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
+sse_IO	instruction	uint8_t		LD_uint8_t	input	16	16	LDS(_mm_load_si128,(__m128i*)&$$input,16)		sse,shiftedio	10
+sse_IO	instruction	uint8_t		LD_uint8_t	input	16	16		$$type preload_$$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
 logical	instruction	bool	bool,bool	LE_bool		1	1	$$arg1 <= $$arg2		C	10
 sse_logical	instruction	bool	bool,bool	LE_bool		2	2	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
 sse_logical	instruction	bool	bool,bool	LE_bool		4	4	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
@@ -711,29 +747,52 @@ IO	instruction	bool	bool	ST_bool	output	1	1	$$output = $$arg1		C	10
 sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1		C	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)		C	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1		C	10
-sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		C,sse	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	LDS(_mm_store_si128,(__m128i*)&$$output,$$arg1,128)		sse,shiftedio	10
 IO	instruction	double	double	ST_double	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	double	double	ST_double	output	2	2	_mm_storeu_pd(&$$output,(__m128d)$$arg1)		sse	10
+sse_IO	instruction	double	double	ST_double	output	2	2	_mm_storeu_pd(&$$output,(__m128d)$$arg1)		sse,unalignedio	11
+sse_IO	instruction	double	double	ST_double	output	2	2	_mm_store_pd(&$$output,(__m128d)$$arg1)		sse,alignedio	10
+sse_IO	instruction	double	double	ST_double	output	2	2	STS(_mm_store_pd,&$$output,(__m128d)$$arg1,2)		sse,shiftedio	10
 IO	instruction	float	float	ST_float	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	float	float	ST_float	output	4	4	_mm_storeu_ps(&$$output,(__m128)$$arg1)		sse	10
+sse_IO	instruction	float	float	ST_float	output	4	4	_mm_storeu_ps(&$$output,(__m128)$$arg1)		sse,unalignedio	11
+sse_IO	instruction	float	float	ST_float	output	4	4	_mm_store_ps(&$$output,(__m128)$$arg1)		sse,alignedio	10
+sse_IO	instruction	float	float	ST_float	output	4	4	STS(_mm_store_ps,&$$output,(__m128)$$arg1,4)		sse,shiftedio	10
 IO	instruction	int16_t	int16_t	ST_int16_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	int16_t	int16_t	ST_int16_t	output	8	8	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	int16_t	int16_t	ST_int16_t	output	8	8	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	int16_t	int16_t	ST_int16_t	output	8	8	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	int16_t	int16_t	ST_int16_t	output	8	8	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,8)		sse,shiftedio	10
 IO	instruction	int32_t	int32_t	ST_int32_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	int32_t	int32_t	ST_int32_t	output	4	4	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	int32_t	int32_t	ST_int32_t	output	4	4	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	int32_t	int32_t	ST_int32_t	output	4	4	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	int32_t	int32_t	ST_int32_t	output	4	4	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,4)		sse,shiftedio	10
 IO	instruction	int64_t	int64_t	ST_int64_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	int64_t	int64_t	ST_int64_t	output	2	2	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	int64_t	int64_t	ST_int64_t	output	2	2	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	int64_t	int64_t	ST_int64_t	output	2	2	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	int64_t	int64_t	ST_int64_t	output	2	2	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,2)		sse,shiftedio	10
 IO	instruction	int8_t	int8_t	ST_int8_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	int8_t	int8_t	ST_int8_t	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	int8_t	int8_t	ST_int8_t	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	int8_t	int8_t	ST_int8_t	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	int8_t	int8_t	ST_int8_t	output	16	16	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,16)		sse,shiftedio	10
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		C	10
+sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
 IO	instruction	uint16_t	uint16_t	ST_uint16_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	uint16_t	uint16_t	ST_uint16_t	output	8	8	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	uint16_t	uint16_t	ST_uint16_t	output	8	8	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	uint16_t	uint16_t	ST_uint16_t	output	8	8	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	uint16_t	uint16_t	ST_uint16_t	output	8	8	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,8)		sse,shiftedio	10
 IO	instruction	uint32_t	uint32_t	ST_uint32_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	uint32_t	uint32_t	ST_uint32_t	output	4	4	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	uint32_t	uint32_t	ST_uint32_t	output	4	4	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	uint32_t	uint32_t	ST_uint32_t	output	4	4	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	uint32_t	uint32_t	ST_uint32_t	output	4	4	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,4)		sse,shiftedio	10
 IO	instruction	uint64_t	uint64_t	ST_uint64_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	uint64_t	uint64_t	ST_uint64_t	output	2	2	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	uint64_t	uint64_t	ST_uint64_t	output	2	2	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	uint64_t	uint64_t	ST_uint64_t	output	2	2	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	uint64_t	uint64_t	ST_uint64_t	output	2	2	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,2)		sse,shiftedio	10
 IO	instruction	uint8_t	uint8_t	ST_uint8_t	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	uint8_t	uint8_t	ST_uint8_t	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse	10
+sse_IO	instruction	uint8_t	uint8_t	ST_uint8_t	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
+sse_IO	instruction	uint8_t	uint8_t	ST_uint8_t	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	uint8_t	uint8_t	ST_uint8_t	output	16	16	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,16)		sse,shiftedio	10
 arithetic_std	instruction	double	double,double	SUB_double		1	1	$$arg1 - $$arg2		C	10
 sse_arithetic_std	instruction	double	double,double	SUB_double		2	2	_mm_sub_pd($$arg1,$$arg2)		sse	10
 arithetic_std	instruction	float	float,float	SUB_float		1	1	$$arg1 - $$arg2		C	10

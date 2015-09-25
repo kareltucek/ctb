@@ -1,0 +1,11 @@
+model main()->() {
+
+	bobox::broadcast()->(),() cast;
+	hello::source_box()->(int) src_a;
+	hello::source_box()->(int) src_b;
+	hello::add_box(int),(int)->(int) add;
+	hello::sink_box(int)->() sink;
+
+	input -> cast[0] -> src_a -> [0]add -> sink -> output;
+	cast[1] -> src_b -> [1]add;
+}

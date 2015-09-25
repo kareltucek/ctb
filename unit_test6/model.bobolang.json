@@ -1,0 +1,110 @@
+{
+	"Vertices": [
+		{
+			"Type": "box",
+			"Label": "init_box",
+			"Id": "b1",
+			"Inputs": [
+				
+			],
+			"Outputs": [
+				"b1_o1"
+			]
+
+		},
+		{
+			"Type": "subgraph",
+			"Label": "main",
+			"Id": "b2",
+			"Inputs": [
+				"b2_i1"
+			],
+			"Outputs": [
+				"b2_o1"
+			],
+			"Vertices": [
+				{
+					"Type": "box",
+					"Label": "cast",
+					"Id": "b5",
+					"Inputs": [
+						"b5_i1"
+					],
+					"Outputs": [
+						"b5_o1", "b5_o2"
+					]
+
+				},
+				{
+					"Type": "box",
+					"Label": "src_a",
+					"Id": "b6",
+					"Inputs": [
+						"b6_i1"
+					],
+					"Outputs": [
+						"b6_o1"
+					]
+
+				},
+				{
+					"Type": "box",
+					"Label": "src_b",
+					"Id": "b7",
+					"Inputs": [
+						"b7_i1"
+					],
+					"Outputs": [
+						"b7_o1"
+					]
+
+				},
+				{
+					"Type": "box",
+					"Label": "add",
+					"Id": "b8",
+					"Inputs": [
+						"b8_i1", "b8_i2"
+					],
+					"Outputs": [
+						"b8_o1"
+					]
+
+				},
+				{
+					"Type": "box",
+					"Label": "sink",
+					"Id": "b9",
+					"Inputs": [
+						"b9_i1"
+					],
+					"Outputs": [
+						"b9_o1"
+					]
+
+				}
+			]
+		},
+		{
+			"Type": "box",
+			"Label": "term_box",
+			"Id": "b10",
+			"Inputs": [
+				"b10_i1"
+			],
+			"Outputs": [
+				
+			]
+
+		}
+	],
+	"Edges": [
+		 { "Id": "edge_from_b1_o1", "Path": [ "b1_o1", "b2_i1", "b5_i1" ] },
+		 { "Id": "edge_from_b5_o1", "Path": [ "b5_o1", "b6_i1" ] },
+		 { "Id": "edge_from_b5_o2", "Path": [ "b5_o2", "b7_i1" ] },
+		 { "Id": "edge_from_b6_o1", "Path": [ "b6_o1", "b8_i1" ] },
+		 { "Id": "edge_from_b7_o1", "Path": [ "b7_o1", "b8_i2" ] },
+		 { "Id": "edge_from_b8_o1", "Path": [ "b8_o1", "b9_i1" ] },
+		 { "Id": "edge_from_b9_o1", "Path": [ "b9_o1", "b2_o1", "b10_i1" ] }
+	]
+}

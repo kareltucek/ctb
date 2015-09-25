@@ -59,11 +59,11 @@ if ( pos_out_$1 == size_out_$1 )
 
   if(std::string("$3") == "bool")
   {
-    size_out_$1 = (pull()%16)*32; 
+    size_out_$1 = (10+pull()%16)*32; 
   }
   else
   {
-    size_out_$1 = pull()%100; 
+    size_out_$1 = 50+pull()%100; 
   }
 
   if(data_out_$1 != NULL)

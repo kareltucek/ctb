@@ -13,6 +13,12 @@ struct cvt
   static B convert(const B&);
 };
 
+template <typename A>
+struct cvt<A,A>
+{
+  static A convert(const A& a){return a;};
+};
+
 template <> struct cvt<int,std::string> { static std::string convert(const int& a){return std::to_string(a);}; };
 
 template <> struct cvt<std::string,int>

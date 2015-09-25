@@ -2,11 +2,11 @@ if ( pos_in_$1 == size_in_$1 )
 {
   if(std::string("$3") == "bool")
   {
-    size_in_$1 = (pull()%20)*32; 
+    size_in_$1 = (pull()%20+10)*32; 
   }
   else
   {
-    size_in_$1 = pull()%100; 
+    size_in_$1 = 50+pull()%50; 
   }
 
   if(data_in_$1 != NULL)

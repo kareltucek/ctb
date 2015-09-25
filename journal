@@ -149,6 +149,21 @@ Today I have written runtime debug support. That means:
 - Added new command 'adddebug' which creates and hooks debug nodes to either all vertices of a graph or to a set of nodes which are in a distance less than supplemented 'depth' parameter from vertices specified by argument list.
 
 
+Tue Sep 22 20:29:55 CEST 2015
+=============================
+Since the previous entry I have debugged the rest of the C/sse instruction table. 
+
+Today I arrived at a problem while modyfying the bobox model. Specifically I need to define different LD versions for aligned and unaligned swiches. The problem is with generality of such swich since the table should remain as model-independent as possible. At last I arrived at a conclusion that correct approach will be not to mess with internal generation of instructions by model. Instead there will be multiple versions of the instruction in the table marked by different tags and models will define their own required tag sets. There comes a problem, because the tag handler was originally intended to exist only in one instance and be constant. Finally I have rewrittent it into runtime polymorphic class and modified instruction table so that it can hold an arbitrary number of tag handlers. Before every generation the instruction table's instruction's state is updated.
+
+
+Fri Sep 25 12:52:10 CEST 2015
+=============================
+Yesterday I noticed another problem. I need to generate preload instructions with width dependent on a curent graph and only for the lowest vector variable. For that I need two modifications:
+- Selective generation. Passing a 'bool callback(vertex)' callback to the generator seems to be a good solution.
+- Still I need to generate this only for the first variable of the load methods -> I need a custom mode on the generate method. Generalization of generator and instruction table for functional handling seems to be a good method of dealing with the problem. For now I will most likely add just a conditional switch on a new 'flag' 
+
+Flags field seems to be becoming a bit redundant. The only difference to the tags fields is that flags are currently used for more internal stuff.
+
 TODO
 ====
 // TODO
@@ -158,6 +173,12 @@ TODO
 //export mechanics - hopefully done
 //general conversion interface - hopefully done (not yet tested)
 control flow support
+-> graph partitioning -> how? Most likely on the 'generator' level. The generator will get support for creating directly code of the partitions.
+-> general composite instruction support in instruction tables
+-> preprocessors - standalone graph preprocessors
+-> generator
+-> create cf generators -> what should these do? These should most likely be alias-env specific template compositors ('inserted between current generator and aliasenvs'); possibly 
+-> maybe cf-generators should be insertable as the original generators?
 autoconversion for internal types (bool<->ssebool)
 bool <-> conversion instructions
 spillcode cost optimizations
@@ -180,5 +201,7 @@ generic id type handling
 solve output of two consecutive words elegantly
 test cmp on virtual
 pass arguments to loaders as a stringlist
-
+organize macro files
+generalize generator and instruction table in order to be able to use general instruction classes (into functional hash table)
+optimize tag handling; decoding of tags should be unified and moved a few call-layers higher
 

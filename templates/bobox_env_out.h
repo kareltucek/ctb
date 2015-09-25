@@ -1,3 +1,4 @@
+/*envelope out $1*/;
 if ( pos_out_$1 == size_out_$1 )
 {
   if ( pos_out_$1 )

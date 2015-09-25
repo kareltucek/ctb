@@ -6,6 +6,7 @@
 #include "graph.h"
 #include "datatypes.h"
 #include "tagmaster.h"
+#include "taghandler.h"
 
 #include <map>
 #include <vector>
@@ -71,6 +72,17 @@ namespace ctb
    *
    *  The output interface consists of two 'decode' methods, which return either type of operation. The data retrieval interface is the interface of the operation class, which provides retrieval of all codes, including the type-related stuff.
    *
+   *  Instruction selection
+   *  ---------------------
+   *  Selection of instructions is driven by a serie of tag handlers* organized into layers. Curently there are two layers:
+   *  - 'select' layer - defines whether an instruction version can be selected in the run
+   *  - 'print' layer - defines whether code for an instruction should be printed or not
+   *  These allow higher level layer of a program to generate only a part of a graph depending on tags of instructions. 
+   *
+   *  Every layer can contain an arbitrary tag handlers. These are intersected separately for each layer and the result is cached into the instruction version data structure. (this happens in the update_tags() call). 
+   *
+   *  *(Tag handler is basically a functor which receives a stringlist of masks and decides whether those masks satisfy some (user-defined) conditions)
+   *
    *  template arguments
    *  ------------------
    *  T - traits
@@ -88,6 +100,7 @@ namespace ctb
         class type
         {
           private:
+            friend instruction_table;
             struct conversion
             {
               const int width_in;
@@ -99,7 +112,7 @@ namespace ctb
               const std::string note;
               const std::string tags;
               const int rating;
-              const bool satisfactory;
+              mutable typename T::flag_t satisfactory;
               conversion(int in, int out, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&, const std::string&, int r, bool s);
               conversion() = delete;
             } ;
@@ -111,10 +124,11 @@ namespace ctb
               type_version(int w, const std::string& c,const std::string&);
               type_version() = delete;
             } ;
-            typename T::tag_handler_t& taghandler;
+            instruction_table* parent;
+            void update_tags() const;
           public:
             type() = delete;
-            type(typename T::tag_handler_t& taghandler, int bitwidth);
+            type(instruction_table*, int bitwidth);
             typedef graph_generic<dummy, int, false, type> graph_distance_t;
             proxy<typename T::opid_t> debug_op;
             //TODO index this a bit intelligently...
@@ -131,6 +145,7 @@ namespace ctb
         {
           private:
             mutable int imbued_width;
+            friend instruction_table;
             struct instruction //holds information for generation
             {
               int width;
@@ -141,43 +156,48 @@ namespace ctb
               const std::string note;
               const std::string tags;
               const int rating;
-              const bool satisfactory;
+              mutable typename T::flag_t satisfactory;
               instruction(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r, bool satisfactory);
               instruction() = delete;
             }
             ;//std::vector<typename T::tid_t> in_types
-            typename T::tag_handler_t& taghandler;
+            instruction_table* parent;
+            void update_tags() const;
           public:
             /*EAPI*/proxy<std::vector<instruction>> versions;
             /*EAPI*/proxy<type*> mytype;
             /*EAPI*/proxy<typename T::tid_t> out_type;
             /*EAPI*/proxy<typename std::vector<typename T::tid_t>> in_types;
-            /*EAPI*/proxy<typename T::flag_t> flags;
-            /*EAPI*/proxy<typename T::opid_t> opid;
+            /*EAPI*/proxy<typename T::flag_t> flags; /*EAPI*/proxy<typename T::opid_t> opid;
             /*IAPI*/void addcode(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r);
             /*API*/bool is(typename T::flag_t f) const ;
             /*API*/int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;
             /*API*//*DEPRECATED*///void imbue_width(int w)const;
             /*API*/typename T::opid_t get_debug_opid() const;
             /*API*/bool get_type_string(int w, std::string&)const;
-            /*API*/bool get_op_string(int w, std::string& c, std::string& cc )const;
-            /*API*/bool get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string&cc, std::string& type)const;
+            /*API*/bool get_op_string(int w, std::string& c, std::string& cc, std::size_t&)const;
+            /*API*/bool get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string&cc, std::string& type, std::size_t&)const;
             /*API*/const typename type::graph_distance_t& get_conversion_graph() const;
-            operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, typename T::tag_handler_t& th);
+            operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table* parent);
             operation() = delete;
         }
         ;
-        typedef std::map<typename T::tid_t, type*> typetable_t;
+        typedef std::map<typename T::tid_t, type*> typetab_t;
         typedef std::map<typename T::opid_t, operation*> instab_t;
-
-        typename T::tag_handler_t taghandler;
+        typedef std::set<std::shared_ptr<taghandler_base>> taghandlerrec_t;
+        typedef std::vector<taghandlerrec_t> taghandlertab_t;
+        taghandlertab_t taglists;
+        typename T::flag_t get_tag_mask(const std::string& tags);
       public:
         /*EAPI*/proxy<instab_t> instab;
-        /*EAPI*/proxy<typetable_t> typetab;
+        /*EAPI*/proxy<typetab_t> typetab;
 
         typedef operation operation_t; 
         typedef type type_t;
-        /*API*/ template <typename U> void set_tags(U&& tag_container);
+        /*API*/ void add_tags(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT); 
+        /*API*/ void rm_tags(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT);
+        /*API*/ bool is_tag_satisfactory(const std::string&) const;
+        /*API*/ void update_tags() const;
         /*API*/ const operation_t& dec(typename T::opid_t type) const ;
         /*API*/ const type_t& dectype(typename T::tid_t type) const ;
         /*IAPI*/ operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, const std::vector<typename T::tid_t>&it, typename T::flag_t f) ;
@@ -192,8 +212,23 @@ namespace ctb
   typedef instruction_table<traits> instruction_table_default;
 
   template <class T>
-    instruction_table<T>::type::type(typename T::tag_handler_t& th, int bw) : taghandler(th), bitwidth(bw)
+    instruction_table<T>::type::type(instruction_table<T>* p, int bw) : parent(p), bitwidth(bw)
   {
+  }
+
+      template <class T>
+  void instruction_table<T>::type::update_tags() const
+  {
+    for(const auto& i : conversions.r())
+      i.satisfactory = parent->get_tag_mask(i.tags);
+  }
+      template <class T>
+  void instruction_table<T>::operation::update_tags() const
+  {
+    for(const auto& i : versions.r())
+    {
+      i.satisfactory = parent->get_tag_mask(i.tags);
+    }
   }
 
     template <class T>
@@ -228,7 +263,7 @@ namespace ctb
   template <class T>
     void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2,const std::string& cc,const std::string& cg, const std::string& n,const std::string& t,int r)
     {
-      bool s = taghandler.is_satisfactory(t);
+      bool s = parent->is_tag_satisfactory(t);
       conversions.rw().push_back(conversion(in, out, c1, c2,cc,cg,n,t,r, s));
       distances.addvert(in, false, false);
       distances.addvert(out, false, false);
@@ -242,7 +277,7 @@ namespace ctb
   }
 
   template <class T>
-    instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, typename T::tag_handler_t& th) : opid(i), mytype(t), out_type(ot), flags(f), taghandler(th), in_types(it)
+    instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table<T>* p) : opid(i), mytype(t), out_type(ot), flags(f), parent(p), in_types(it)
   {
   }
 
@@ -256,7 +291,7 @@ namespace ctb
   template <class T>
     void instruction_table<T>::operation::addcode(int wi, int wo, const std::string& c,const std::string& cc,const std::string& n,const std::string& t,int r)
     {
-      versions.rw().push_back(instruction(wi, wo, c,cc,n,t,r,taghandler.is_satisfactory(t)));
+      versions.rw().push_back(instruction(wi, wo, c,cc,n,t,r,parent->is_tag_satisfactory(t)));
     }
 
   template <class T>
@@ -307,7 +342,7 @@ namespace ctb
     }
 
   template <class T>
-    bool instruction_table<T>::operation::get_op_string(int w, std::string& c, std::string& cc)const
+    bool instruction_table<T>::operation::get_op_string(int w, std::string& c, std::string& cc, std::size_t& printability)const
     {
       if(w == -1)
         w = imbued_width;
@@ -315,12 +350,13 @@ namespace ctb
       int r = 0;
       for( auto ins : versions.r())
       {
-        if ( ins.satisfactory && ins.width_in == w && ins.rating >= r)
+        if ( (ins.satisfactory & mSELECT) && ins.width_in == w && ins.rating >= r)
         {
           c = ins.code;
           cc = ins.code_custom;
           r = ins.rating;
           s = true;
+          printability = (ins.satisfactory & mPRINT) ? (ins.satisfactory & mONCE) ? 1 : 100000 : 0;
         }
       }
       if(!s)
@@ -329,13 +365,13 @@ namespace ctb
     }
 
   template <class T>
-    bool instruction_table<T>::operation::get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& cc, std::string& t) const
+    bool instruction_table<T>::operation::get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& cc, std::string& t, std::size_t& printability) const
     {
       bool s = false;
       int r = 0;
       for( auto con : mytype->conversions.r())
       {
-        if (con.satisfactory && con.width_in == from && con.width_out == to && con.rating >= r)
+        if ((con.satisfactory & mPRINT) && con.width_in == from && con.width_out == to && con.rating >= r)
         {
           c1 = con.code1;
           c2 = con.code2;
@@ -343,6 +379,7 @@ namespace ctb
           get_type_string(to, t);
           r = con.rating;
           s = true;
+          printability = (con.satisfactory & mPRINT) ? (con.satisfactory & mONCE) ? 1 : 100000 : 0;
         }
       }
       //this error would prevent nontrivial path search from being used
@@ -371,7 +408,7 @@ namespace ctb
       auto itr = typetab->find(t);
       if(itr == typetab->end())
         error(std::string("type '").append(t).append("' not found; at: '").append(op).append("' while constructing graph"));
-      operation* ptr = new operation(op, t, it, f, itr->second, taghandler);
+      operation* ptr = new operation(op, t, it, f, itr->second, this);
       instab.rw()[op] = ptr;
       if((f & fDEBUG) > 0)
       {
@@ -392,7 +429,7 @@ namespace ctb
           ret.bitwidth.rw() = bitwidth;
         return ret;
       }
-      type* ptr = new type(taghandler, bitwidth);
+      type* ptr = new type(this, bitwidth);
       ptr->tid = t;
       typetab.rw()[t] = ptr;
       return *ptr;
@@ -405,10 +442,54 @@ namespace ctb
     }
 
   template <class T>
-    template <class U>
-    void instruction_table<T>::set_tags(U&& t)
+    void instruction_table<T>::rm_tags(std::shared_ptr<taghandler_base> ptr, std::size_t l)
     {
-      taghandler = std::forward<U>(t);
+      taglists[l].erase(ptr);
+    }
+
+  template <class T>
+    void instruction_table<T>::add_tags(std::shared_ptr<taghandler_base> ptr, std::size_t l)
+    {
+      while(taglists.size() < l + 1)
+        taglists.push_back(taghandlerrec_t());
+      taglists[l].insert(ptr);
+    }
+
+      template <class T>
+  typename T::flag_t instruction_table<T>::get_tag_mask(const std::string& tags)
+  {
+    typename T::flag_t mask = 0; 
+    typename T::flag_t def = mSELECT | mPRINT; 
+    for(int i = 0; i < gmCOUNT; ++i)
+    {
+      bool sat = def & (1<<i);
+      if(taglists.size() > i)
+        for(auto th : taglists[i])
+          sat &= th->is_satisfactory(tags);
+      if(sat)
+        mask |= 1 << i;
+    }
+    return mask;
+  }
+
+    template <class T>
+  bool instruction_table<T>::is_tag_satisfactory(const std::string& tags) const
+  {
+    if(taglists.empty())
+      return true;
+    bool sat = true;
+    for(auto th : taglists[gSELECT])
+      sat &= th->is_satisfactory(tags);
+    return sat;
+  }
+
+  template <class T>
+    void instruction_table<T>::update_tags() const
+    {
+      for(auto i : instab.r())
+        i.second->update_tags();
+      for(auto d : typetab.r())
+        d.second->update_tags();
     }
 
   template <class T>
@@ -425,7 +506,7 @@ namespace ctb
       instab.rw().clear();
       typetab.rw().clear();
       if(tags)
-        taghandler.clear();
+        taglists.clear();
     }
 
   template class instruction_table<traits> ;

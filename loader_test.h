@@ -12,6 +12,7 @@
 #include "datatypes.h"
 #include "generator.h"
 #include "aliasenv_maker.h"
+#include "conversions.h"
 #include "cartesian_multiplier.h"
 
 
