@@ -1,38 +1,38 @@
 #note	type	output type	input types	op id	flags	width in	width out	code	code custom	tags	rating
-logical	instruction	bool	bool,bool	AND_bool		1	1	$$arg1 && $$arg2		C	10
-logical	instruction	bool	bool,bool	EQ_bool		1	1	$$arg1 == $$arg2		C	10
-logical	instruction	bool	bool,bool	NE_bool		1	1	$$arg1 != $$arg2		C	10
-logical	instruction	bool	bool	NOT_bool		1	1	! $$arg1        		C	10
-logical	instruction	bool	bool,bool	OR_bool		1	1	$$arg1 || $$arg2		C	10
-logical	instruction	bool	bool,bool	XOR_bool		1	1	$$arg1 ^ $$arg2 		C	10
-logical	instruction	bool	bool,bool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_bool		1	1	$$arg1 $c $$arg2 		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	EQ_$num		1	1	0xFF*($$arg1 == $$arg2)		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GE_$num		1	1	0xFF*($$arg1 >= $$arg2)		C	10
+logical	instruction	bool	bool,bool	AND_bool		1	1	$$arg1 && $$arg2		C,universal	10
+logical	instruction	bool	bool,bool	EQ_bool		1	1	$$arg1 == $$arg2		C,universal	10
+logical	instruction	bool	bool,bool	NE_bool		1	1	$$arg1 != $$arg2		C,universal	10
+logical	instruction	bool	bool	NOT_bool		1	1	! $$arg1        		C,universal	10
+logical	instruction	bool	bool,bool	OR_bool		1	1	$$arg1 || $$arg2		C,universal	10
+logical	instruction	bool	bool,bool	XOR_bool		1	1	$$arg1 ^ $$arg2 		C,universal	10
+logical	instruction	bool	bool,bool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_bool		1	1	$$arg1 $c $$arg2 		C,universal	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	EQ_$num		1	1	0xFF*($$arg1 == $$arg2)		C,universal	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GE_$num		1	1	0xFF*($$arg1 >= $$arg2)		C,universal	10
 relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	GT_$num		1	1	0xFF*($$arg1 > $$arg2)		              C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LE_$num		1	1	0xFF*($$arg1 <= $$arg2)		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LT_$num		1	1	0xFF*($$arg1 < $$arg2)		C	10
-relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	NE_$num		1	1	0xFF*($$arg1 != $$arg2)		C	10
-arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	ADD_$num		1	1	$$arg1 + $$arg2		C	10
-arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	DIV_$num		1	1	$$arg1 / $$arg2		C	10
-arithetic_std	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	MOD_$num		1	1	$$arg1 % $$arg2		C	10
-arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	MUL_$num		1	1	$$arg1 * $$arg2		C	10
-arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	SUB_$num		1	1	$$arg1 - $$arg2		C	10
-arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	XOR_$num		1	1	$$arg1 ^ $$arg2		C	10
-arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num	NOT_$num		1	1	~ $$arg1       		C	10
-arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	LSF_$num		1	1	$$arg1 << $$arg2		C	10
-arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	AND_$num		1	1	$$arg1 & $$arg2		C	10
-arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	OR_$num		1	1	$$arg1 | $$arg2		C	10
-arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	RSF_$num		1	1	$$arg1 >> $$arg2		C	10
-conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->bool}	CVRT_$t_$u		1	1	($t)($$arg1 > 0)		C	10
-conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->bool}	CVRT_$u_$t		1	1	($t)($$arg1 ? 1 : 0)		C	10
-conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	CVRT_$u_$t		1	1	($t)$$arg1		C	10
-IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}		LD_$t	input	1	1	$$input		C	10
-IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}	$t	ST_$t	output	1	1	$$output = $$arg1		C	10
-debug	instruction	${t->int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,float,double}	$t	DEBUG_$t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C	10
-debug	instruction	${t->int8_t,uint8_t,bool,ssebool}	$t	DEBUG_$t	debug	1	1	DEBUG_STD((int)$$arg1,"$$arg1")		C	10
-debug	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->2,4,8,16,32}	$w	DEBUG_STD($$arg1,"$$arg1")		C	10
-debug_sse	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,ssebool,float,double}	$t	DEBUG_$t	debug	${w->2,4,8,16}	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
-debug_sse	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->64,128}	1	DEBUG_SSE($$arg1,"$$arg1")		sse	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LE_$num		1	1	0xFF*($$arg1 <= $$arg2)		C,universal	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	LT_$num		1	1	0xFF*($$arg1 < $$arg2)		C,universal	10
+relational	instruction	ssebool	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t},$num	NE_$num		1	1	0xFF*($$arg1 != $$arg2)		C,universal	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	ADD_$num		1	1	$$arg1 + $$arg2		C,universal	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	DIV_$num		1	1	$$arg1 / $$arg2		C,universal	10
+arithetic_std	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	MOD_$num		1	1	$$arg1 % $$arg2		C,universal	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	MUL_$num		1	1	$$arg1 * $$arg2		C,universal	10
+arithetic_std	instruction	${num->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	SUB_$num		1	1	$$arg1 - $$arg2		C,universal	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	XOR_$num		1	1	$$arg1 ^ $$arg2		C,universal	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num	NOT_$num		1	1	~ $$arg1       		C,universal	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	LSF_$num		1	1	$$arg1 << $$arg2		C,universal	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	AND_$num		1	1	$$arg1 & $$arg2		C,universal	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	OR_$num		1	1	$$arg1 | $$arg2		C,universal	10
+arithmetic_bin	instruction	${num->int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	$num,$num	RSF_$num		1	1	$$arg1 >> $$arg2		C,universal	10
+conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->bool}	CVRT_$t_$u		1	1	($t)($$arg1 > 0)		C,universal	10
+conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->bool}	CVRT_$u_$t		1	1	($t)($$arg1 ? 1 : 0)		C,universal	10
+conversions	instruction	${t->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	${u->double,float,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t}	CVRT_$u_$t		1	1	($t)$$arg1		C,universal	10
+IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}		LD_$t	input	1	1	$$input		C,universal	10
+IO	instruction	${t->float,double,int8_t,int16_t,int32_t,int64_t,uint8_t,uint16_t,uint32_t,uint64_t,bool}	$t	ST_$t	output	1	1	$$output = $$arg1		C,universal	10
+debug	instruction	${t->int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,float,double}	$t	DEBUG_$t	debug	1	1	DEBUG_STD($$arg1,"$$arg1")		C,universal	10
+debug	instruction	${t->int8_t,uint8_t,bool,ssebool}	$t	DEBUG_$t	debug	1	1	DEBUG_STD((int)$$arg1,"$$arg1")		C,universal	10
+debug	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->2,4,8,16,32}	$w	DEBUG_STD($$arg1,"$$arg1")		C,universal	10
+debug_sse,universal	instruction	${t->int8_t,uint8_t,int16_t,uint16_t,int32_t,uint32_t,int64_t,uint64_t,ssebool,float,double}	$t	DEBUG_$t	debug	${w->2,4,8,16}	1	DEBUG_SSE($$arg1,"$$arg1")		sse,universal	10
+debug_sse,universal	instruction	${t->bool}	$t	DEBUG_$t	debug	${w->64,128}	1	DEBUG_SSE($$arg1,"$$arg1")		sse,universal	10
 											
 #note	type	type id	bitwidth	width	code						
 types	type_version	void	32	32	void						
@@ -56,22 +56,22 @@ sse_types	type_version	bool	1	${ w->64,128}	__m128i
 sse_types	type_version	ssebool	8	${w->2,4,8,16}	__m128i						
 											
 #note	type	output type	input types	op id	flags	width in	width out	code	code custom	tags	rating
-sse_logical	instruction	bool	bool,bool	${name,op->AND,&,OR,|,XOR,^}_bool		${w->1,2,4,8,16,32}	$w	$$arg1 $op $$arg2		C	5
-sse_logical	instruction	bool	bool	NOT_bool		${w->2,4,8,16,32}	$w	~$$arg1 		C	5
-sse_logical	instruction	bool	bool,bool	EQ_bool		${w->2,4,8,16,32}	$w	~($$arg1 ^ $$arg2)		C	5
-sse_logical	instruction	bool	bool,bool	NE_bool		${w->2,4,8,16,32}	$w	$$arg1 ^ $$arg2		C	5
-sse_logical	instruction	bool	bool,bool	GT_bool		${w->2,4,8,16,32}	$w	$$arg1 & (~$$arg2)		C	5
-sse_logical	instruction	bool	bool,bool	LT_bool		${w->2,4,8,16,32}	$w	(~$$arg1) & $$arg2		C	5
-sse_logical	instruction	bool	bool,bool	GE_bool		${w->2,4,8,16,32}	$w	$$arg1 | (~($$arg1 ^ $$arg2))		C	5
-sse_logical	instruction	bool	bool,bool	LE_bool		${w->2,4,8,16,32}	$w	$$arg2 | (~($$arg1 ^ $$arg2))		C	5
-sse_logical	instruction	bool	bool,bool	${name,op->AND,and,OR,or,XOR,xor}_bool		${w->64,128}	$w	_mm_$op_si128($$arg1,$$arg2)		sse	5
-sse_logical	instruction	bool	bool	NOT_bool		${w->64,128}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse	5
-sse_logical	instruction	bool	bool,bool	EQ_bool		${w->64,128}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2))		sse	5
-sse_logical	instruction	bool	bool,bool	NE_bool		${w->64,128}	$w	_mm_xor_si128($$arg1,$$arg2)		sse	5
-sse_logical	instruction	bool	bool,bool	GT_bool		${w->64,128}	$w	_mm_and_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg2))		sse	5
-sse_logical	instruction	bool	bool,bool	LT_bool		${w->64,128}	$w	_mm_and_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1))		sse	5
-sse_logical	instruction	bool	bool,bool	GE_bool		${w->64,128}	$w	_mm_or_si128($$arg1, _mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse	5
-sse_logical	instruction	bool	bool,bool	LE_bool		${w->64,128}	$w	_mm_or_si128($$arg2, _mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse	5
+sse_logical	instruction	bool	bool,bool	${name,op->AND,&,OR,|,XOR,^}_bool		${w->1,2,4,8,16,32}	$w	$$arg1 $op $$arg2		C,universal	5
+sse_logical	instruction	bool	bool	NOT_bool		${w->2,4,8,16,32}	$w	~$$arg1 		C,universal	5
+sse_logical	instruction	bool	bool,bool	EQ_bool		${w->2,4,8,16,32}	$w	~($$arg1 ^ $$arg2)		C,universal	5
+sse_logical	instruction	bool	bool,bool	NE_bool		${w->2,4,8,16,32}	$w	$$arg1 ^ $$arg2		C,universal	5
+sse_logical	instruction	bool	bool,bool	GT_bool		${w->2,4,8,16,32}	$w	$$arg1 & (~$$arg2)		C,universal	5
+sse_logical	instruction	bool	bool,bool	LT_bool		${w->2,4,8,16,32}	$w	(~$$arg1) & $$arg2		C,universal	5
+sse_logical	instruction	bool	bool,bool	GE_bool		${w->2,4,8,16,32}	$w	$$arg1 | (~($$arg1 ^ $$arg2))		C,universal	5
+sse_logical	instruction	bool	bool,bool	LE_bool		${w->2,4,8,16,32}	$w	$$arg2 | (~($$arg1 ^ $$arg2))		C,universal	5
+sse_logical	instruction	bool	bool,bool	${name,op->AND,and,OR,or,XOR,xor}_bool		${w->64,128}	$w	_mm_$op_si128($$arg1,$$arg2)		sse,universal	5
+sse_logical	instruction	bool	bool	NOT_bool		${w->64,128}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse,universal	5
+sse_logical	instruction	bool	bool,bool	EQ_bool		${w->64,128}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2))		sse,universal	5
+sse_logical	instruction	bool	bool,bool	NE_bool		${w->64,128}	$w	_mm_xor_si128($$arg1,$$arg2)		sse,universal	5
+sse_logical	instruction	bool	bool,bool	GT_bool		${w->64,128}	$w	_mm_and_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg2))		sse,universal	5
+sse_logical	instruction	bool	bool,bool	LT_bool		${w->64,128}	$w	_mm_and_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1))		sse,universal	5
+sse_logical	instruction	bool	bool,bool	GE_bool		${w->64,128}	$w	_mm_or_si128($$arg1, _mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse,universal	5
+sse_logical	instruction	bool	bool,bool	LE_bool		${w->64,128}	$w	_mm_or_si128($$arg2, _mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse,universal	5
 											
 											
 # /*bugged in gcc*/sse_relational	instruction	ssebool	${t,c->int,epi,uint,epi}${w,n,tag->64,2,sse}_t,$t$w_t	${name,op->EQ,eq,GT,gt,LT,lt}_$t$w_t		$n	$n	_mm_cmp$op_$c$w($$arg1,$$arg2)		$tag	10
@@ -79,143 +79,140 @@ sse_relational	instruction	ssebool	${t,c->int,epi,uint,epi}${w,n,tag->32,4,sse,3
 sse_relational	instruction	ssebool	${t,c->int,epi,uint,epi}${w,n,tag->64,2,sse,32,4,sse,32,2,sse,16,8,sse,16,4,sse,16,2,sse,8,16,sse,8,8,sse,8,4,sse,8,2,sse}_t,$t$w_t	NE_$t$w_t		$n	$n	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_cmpeq_$c$w($$arg1,$$arg2))		$tag	10
 # /*bugged in gcc*/sse_relational	instruction	ssebool	${t,c->int,epi,uint,epi}${w,n,tag->64,2,sse}_t,$t$w_t	${name,op->GE,gt,LE,lt}_$t$w_t		$n	$n	_mm_or_si128(_mm_cmpeq_$c$w($$arg1,$$arg2),_mm_cmp$op_$c$w($$arg1,$$arg2))		$tag	10
 sse_relational	instruction	ssebool	${t,c->int,epi,uint,epi}${w,n,tag->32,4,sse,32,2,sse,16,8,sse,16,4,sse,16,2,sse,8,16,sse,8,8,sse,8,4,sse,8,2,sse}_t,$t$w_t	${name,op->GE,gt,LE,lt}_$t$w_t		$n	$n	_mm_or_si128(_mm_cmpeq_$c$w($$arg1,$$arg2),_mm_cmp$op_$c$w($$arg1,$$arg2))		$tag	10
-sse_relational	instruction	ssebool	${t,c,n->double,pd,2,float,ps,4,float,ps,2},$t	${name,op->EQ,eq,GT,gt,LT,lt,LE,le,GE,ge,NE,neq}_$t		$n	$n	(__m128i)_mm_cmp$op_$c($$arg1,$$arg2)		sse	10
-sse_arithetic_std	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	${name,op->ADD,add,SUB,sub}_$t$w_t		$n	$n	_mm_$op_$c$w($$arg1,$$arg2)		sse	10
+sse_relational	instruction	ssebool	${t,c,n->double,pd,2,float,ps,4,float,ps,2},$t	${name,op->EQ,eq,GT,gt,LT,lt,LE,le,GE,ge,NE,neq}_$t		$n	$n	(__m128i)_mm_cmp$op_$c($$arg1,$$arg2)		sse,universal	10
+sse_arithetic_std	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	${name,op->ADD,add,SUB,sub}_$t$w_t		$n	$n	_mm_$op_$c$w($$arg1,$$arg2)		sse,universal	10
 sse_arithetic_std	instruction	${t,c,tag->uint,epu,sse,int,epi,sse}${w,n->32,2,16,2,8,2}_t	$t$w_t,$t$w_t	${name,op->MUL,mul}_$t$w_t		$n	$n	_mm_$op_$c${ww->32}($$arg1,$$arg2)		$tag	10
 sse_arithetic_std	instruction	${t,c,tag->int,epi,sse}${w,n->32,2,16,2,8,2}_t	$t$w_t,$t$w_t	${name,op->MUL,mul}_$t$w_t		$n	$n	_mm_shuffle_epi32(_mm_$op_$c$w($$arg1, $$arg2), _MM_SHUFFLE (0,0,2,0))		$tag	5
 sse_arithetic_std	instruction	${t,c,tag->int,epi,sse}${w,n->16,4}_t	$t$w_t,$t$w_t	${name,op->MUL,mullo}_$t$w_t		$n	$n	_mm_$op_$c$w($$arg1,$$arg2)		$tag	5
-sse_arithetic_std	instruction	${t,c,n->float,ps,4,float,ps,2,double,pd,2}	$t,$t	${name,op->ADD,add,SUB,sub,MUL,mul,DIV,div}_$t		$n	$n	_mm_$op_$c($$arg1,$$arg2)		sse	10
-sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	${name,op->AND,and,OR,or,XOR,xor}_$t$w_t		$n	$n	_mm_$op_si128($$arg1,$$arg2)		sse	5
-sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	NOT_$t$w_t		$n	$n	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse	5
-sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->float,ps}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse	10
-sse_conversions	instruction	${t,c->float,ps}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse	10
-sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->double,pd}	CVRT_$u_$t		2	2	_mm_shuffle_epi32(_mm_cvt$d_$c($$arg1),0x58)		sse	10
-sse_conversions	instruction	${t,c->double,pd}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		2	2	_mm_cvt$d_$c(_mm_shuffle_epi32($$arg1,0x58))		sse	10
+sse_arithetic_std	instruction	${t,c,n->float,ps,4,float,ps,2,double,pd,2}	$t,$t	${name,op->ADD,add,SUB,sub,MUL,mul,DIV,div}_$t		$n	$n	_mm_$op_$c($$arg1,$$arg2)		sse,universal	10
+sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	${name,op->AND,and,OR,or,XOR,xor}_$t$w_t		$n	$n	_mm_$op_si128($$arg1,$$arg2)		sse,universal	5
+sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	NOT_$t$w_t		$n	$n	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse,universal	5
+sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->float,ps}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse,universal	10
+sse_conversions	instruction	${t,c->float,ps}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)		sse,universal	10
+sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->double,pd}	CVRT_$u_$t		2	2	_mm_shuffle_epi32(_mm_cvt$d_$c($$arg1),0x58)		sse,universal	10
+sse_conversions	instruction	${t,c->double,pd}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		2	2	_mm_cvt$d_$c(_mm_shuffle_epi32($$arg1,0x58))		sse,universal	10
 sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	_mm_loadu_si128((__m128i*)&$$input)		sse,unalignedio	11
 sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_loadu_$c(&$$input)		sse,unalignedio	11
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_storeu_$c(&$$output,(__m128$l)$$arg1)		sse,unalignedio	11
 sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	_mm_load_si128((__m128i*)&$$input)		sse,alignedio	10
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio,shiftedio	10
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_load_$c(&$$input)		sse,alignedio	10
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_store_$c(&$$output,(__m128$l)$$arg1)		sse,alignedio	10
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n	LDS(_mm_load_si128,(__m128i*)&$$input,$n)		sse,shiftedio	10
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	STS(_mm_store_si128,(__m128i*)&$$output,$$arg1,$n)		sse,shiftedio	10
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	LDS(_mm_load_$c,&$$input,$n)		sse,shiftedio	10
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	STS(_mm_store_$c,&$$output,(__m128$l)$$arg1,$n)		sse,shiftedio	10
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		$type preload_$basename = _mm_load_si128((__m128i*)&$$input);	sse,preloadio	10
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		$type preload_$basename = _mm_load_$c(&$$input);	sse,preloadio	10
-sse_IO	instruction	bool		LD_bool_byte	input	1	1	$$input		C	10
-sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$inputg)/*do some magic here now*/		C	10
-sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input		C	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_store_$c(&$$output,(__m128$l)$$arg1)		sse,alignedio,shiftedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		$type $name = preload_$basename;preload_$basename = ($type)_mm_load_si128((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8($name, preload_$basename, $alignoffset % $n);	sse,shiftedio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		$type $name = preload_$basename;preload_$basename = ($type)_mm_load_$c((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8((__m128i)$name, (__m128i)preload_$basename, $alignoffset % $n);	sse,shiftedio	10
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		$type preload_$basename = _mm_load_si128((__m128i*)(&$$input - $alignoffset % $n));	sse,preloadio	10
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		$type preload_$basename = _mm_load_$c(&$$input - $alignoffset % $n);	sse,preloadio	10
+sse_IO	instruction	bool		LD_bool_byte	input	1	1	$$input		C,universal	10
+sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$inputg)/*do some magic here now*/		C,universal	10
+sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input		C,universal	10
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
-sse_IO	instruction	bool		LD_bool_vector	input	128	128	LDS(_mm_load_si128,(const __m128i*)&$$input,128)		sse,shiftedio	10
+#sse_IO	instruction	bool		LD_bool_vector	input	128	128	/*cant generate shift for 128 bool*/		sse,shiftedio	10
 sse_IO	instruction	bool		LD_bool_vector	input	128	128		$type preload_$basename = _mm_load_si128,(const __m128i*)&$$input);	sse,preloadio	10
-sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1		C	10
-sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)		C	10
-sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1		C	10
+sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1		C,universal	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)		C,universal	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1		C,universal	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
-sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
-sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	LDS(_mm_store_si128,(__m128i*)&$$output,$$arg1,128)		sse,shiftedio	10
+sse_IO	instruction	bool	bool	ST_bool_vector	output	128	128	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio,shiftedio	10
 											
 #ssebool											
-logical	instruction	ssebool	ssebool,ssebool	AND_ssebool		1	1	$$arg1 & $$arg2		C	10
-logical	instruction	ssebool	ssebool,ssebool	EQ_ssebool		1	1	0xFF*($$arg1 == $$arg2)		C	10
-logical	instruction	ssebool	ssebool,ssebool	NE_ssebool		1	1	0xFF*($$arg1 != $$arg2)		C	10
-logical	instruction	ssebool	ssebool	NOT_ssebool		1	1	~ $$arg1        		C	10
-logical	instruction	ssebool	ssebool,ssebool	OR_ssebool		1	1	$$arg1 | $$arg1		C	10
-logical	instruction	ssebool	ssebool,ssebool	XOR_ssebool		1	1	$$arg1 ^ $$arg2 		C	10
-logical	instruction	ssebool	ssebool,ssebool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_ssebool		1	1	0xFF*($$arg1 $c $$arg2) 		C	10
-conversions	instruction	${t->bool}	${u->ssebool}	CVRT_$u_$t		1	1	$$arg1 ? 0xFF : 0		C	10
-conversions	instruction	${t->ssebool}	${u->bool}	CVRT_$u_$t		1	1	$$arg1 != 0		C	10
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	1	1	$$input		sse	10
+logical	instruction	ssebool	ssebool,ssebool	AND_ssebool		1	1	$$arg1 & $$arg2		C,universal	10
+logical	instruction	ssebool	ssebool,ssebool	EQ_ssebool		1	1	0xFF*($$arg1 == $$arg2)		C,universal	10
+logical	instruction	ssebool	ssebool,ssebool	NE_ssebool		1	1	0xFF*($$arg1 != $$arg2)		C,universal	10
+logical	instruction	ssebool	ssebool	NOT_ssebool		1	1	~ $$arg1        		C,universal	10
+logical	instruction	ssebool	ssebool,ssebool	OR_ssebool		1	1	$$arg1 | $$arg1		C,universal	10
+logical	instruction	ssebool	ssebool,ssebool	XOR_ssebool		1	1	$$arg1 ^ $$arg2 		C,universal	10
+logical	instruction	ssebool	ssebool,ssebool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_ssebool		1	1	0xFF*($$arg1 $c $$arg2) 		C,universal	10
+conversions	instruction	${t->bool}	${u->ssebool}	CVRT_$u_$t		1	1	$$arg1 ? 0xFF : 0		C,universal	10
+conversions	instruction	${t->ssebool}	${u->bool}	CVRT_$u_$t		1	1	$$arg1 != 0		C,universal	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	1	1	$$input		sse,universal	10
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	LDS(_mm_load_si128,(const __m128i*)&$$input,16)		sse,shiftedio	10
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16		$type preload_$basename = _mm_load_si128((const __m128i*)&$$input);	sse,preloadio	10
-sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	1	1	$$output = $$arg1		C	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	${n->16}	$n		$type $name = preload_$basename;preload_$basename = ($type)_mm_load_si128((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8($name,preload_$basename,$alignoffset % $n);	sse,shiftedio	10
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16		$type preload_$basename = _mm_load_si128((const __m128i*)(((uint8_t*)&$$input) - $alignoffset % $n));	sse,preloadio	10
+sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	1	1	$$output = $$arg1		C,universal	10
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)		sse,unalignedio	11
-sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio	10
-sse_logical	instruction	ssebool	ssebool	NOT_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	EQ_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	NE_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128($$arg1,$$arg2)		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	GT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg2))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	LT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	GE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	LE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse	5
-sse_logical	instruction	ssebool	ssebool,ssebool	${name,op->AND,and,OR,or,XOR,xor}_ssebool		${w->2,4,8,16}	$w	_mm_$op_si128($$arg1,$$arg2)		sse	5
+sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)		sse,alignedio,shiftedio	10
+sse_logical	instruction	ssebool	ssebool	NOT_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	EQ_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2))		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	NE_ssebool		${w->2,4,8,16}	$w	_mm_xor_si128($$arg1,$$arg2)		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	GT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg2))		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	LT_ssebool		${w->2,4,8,16}	$w	_mm_and_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1))		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	GE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg1,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	LE_ssebool		${w->2,4,8,16}	$w	_mm_or_si128($$arg2,_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),_mm_xor_si128($$arg1,$$arg2)))		sse,universal	5
+sse_logical	instruction	ssebool	ssebool,ssebool	${name,op->AND,and,OR,or,XOR,xor}_ssebool		${w->2,4,8,16}	$w	_mm_$op_si128($$arg1,$$arg2)		sse,universal	5
 											
 #note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
 #alternating joins/splits for ssebool											
-sse_split8->16	type_conversion	${type,w,f,t->ssebool,8,16,8}	$w	$f	$t	_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0))	_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8))			sse	10
-sse_split16->32	type_conversion	${type,w,f,t->ssebool,8,8,4}	$w	$f	$t	_mm_shuffle_epi8($$arg1,_mm_set_epi8(6,6,6,6,4,4,4,4,2,2,2,2,0,0,0,0))	_mm_shuffle_epi8($$arg1,_mm_set_epi8(14,14,14,14,12,12,12,12,10,10,10,10,8,8,8,8))			sse	10
-sse_split32->64	type_conversion	${type,w,f,t->ssebool,8,4,2}	$w	$f	$t	_mm_shuffle_epi32($$arg1,0x50)	_mm_shuffle_epi32($$arg1,0xFA)			sse	10
-#does not make sense sse_split64->128	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,_mm_setzero_si128())	_mm_movehl_ps(_mm_setzero_si128(),$$arg1)			sse	10
-#does not make sense sse_merge128->64	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,$$arg2)				sse	10
-sse_merge64->32	type_conversion	${type,w,f,t->ssebool,8,4,2}	$w	$t	$f	_mm_movelh_ps((__m128)_mm_shuffle_epi32($$arg1,0x08),(__m128)_mm_shuffle_epi32($$arg2,0x08))				sse	10
-sse_merge32->16	type_conversion	${type,w,f,t->ssebool,8,8,4}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,12,12,8,8,4,4,0,0)),(__m128)_mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,12,12,8,8,4,4,0,0)))				sse	10
-sse_merge16->8	type_conversion	${type,w,f,t->ssebool,8,16,8}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)),(__m128)_mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)))				sse	10
+sse_split8->16	type_conversion	${type,w,f,t->ssebool,8,16,8}	$w	$f	$t	_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0))	_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8))			sse,universal	10
+sse_split16->32	type_conversion	${type,w,f,t->ssebool,8,8,4}	$w	$f	$t	_mm_shuffle_epi8($$arg1,_mm_set_epi8(6,6,6,6,4,4,4,4,2,2,2,2,0,0,0,0))	_mm_shuffle_epi8($$arg1,_mm_set_epi8(14,14,14,14,12,12,12,12,10,10,10,10,8,8,8,8))			sse,universal	10
+sse_split32->64	type_conversion	${type,w,f,t->ssebool,8,4,2}	$w	$f	$t	_mm_shuffle_epi32($$arg1,0x50)	_mm_shuffle_epi32($$arg1,0xFA)			sse,universal	10
+#does not make sense sse_split64->128	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,_mm_setzero_si128())	_mm_movehl_ps(_mm_setzero_si128(),$$arg1)			sse,universal	10
+#does not make sense sse_merge128->64	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,$$arg2)				sse,universal	10
+sse_merge64->32	type_conversion	${type,w,f,t->ssebool,8,4,2}	$w	$t	$f	_mm_movelh_ps((__m128)_mm_shuffle_epi32($$arg1,0x08),(__m128)_mm_shuffle_epi32($$arg2,0x08))				sse,universal	10
+sse_merge32->16	type_conversion	${type,w,f,t->ssebool,8,8,4}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,12,12,8,8,4,4,0,0)),(__m128)_mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,12,12,8,8,4,4,0,0)))				sse,universal	10
+sse_merge16->8	type_conversion	${type,w,f,t->ssebool,8,16,8}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)),(__m128)_mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)))				sse,universal	10
 											
 #alternating joins/splits for numbers											
-sse_split8->16	type_conversion	${type,w,f,t->int8_t,8,16,8,uint8_t,8,16,8}	$w	$f	$t	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0)))	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8)))			sse	10
-sse_split16->32	type_conversion	${type,w,f,t->int8_t,8,8,4,uint8_t,8,8,4,uint16_t,16,8,4,int16_t,16,8,4}	$w	$f	$t	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,7,6,0,0,5,4,0,0,3,2,0,0,1,0)))	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,15,14,0,0,13,12,0,0,11,10,0,0,9,8)))			sse	10
-sse_split32->64	type_conversion	${type,w,f,t->int8_t,8,4,2,uint8_t,8,4,2,uint16_t,16,4,2,int16_t,16,4,2,float,32,4,2,int32_t,32,4,2,uint32_t,32,4,2}	$w	$f	$t	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse	10
-#does not make sense sse_split64->128	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,_mm_setzero_si128())	_mm_movehl_ps(_mm_setzero_si128(),$$arg1)			sse	10
-#does not make sense sse_merge128->64	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,$$arg2)				sse	10
-sse_merge64->32	type_conversion	${type,w,f,t->int8_t,8,4,2,uint8_t,8,4,2,uint16_t,16,4,2,int16_t,16,4,2,float,32,4,2,int32_t,32,4,2,uint32_t,32,4,2}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi32($$arg1,0x08),(__m128) _mm_shuffle_epi32($$arg2,0x08))				sse	10
-sse_merge32->16	type_conversion	${type,w,f,t->int8_t,8,8,4,uint8_t,8,8,4,uint16_t,16,8,4,int16_t,16,8,4}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,13,12,9,8,5,4,1,0)),(__m128) _mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,13,12,9,8,5,4,1,0)))				sse	10
-sse_merge16->8	type_conversion	${type,w,f,t->int8_t,8,16,8,uint8_t,8,16,8}	$w	$t	$f	_mm_movelh_ps( (__m128)_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)),(__m128) _mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)))				sse	10
+sse_split8->16	type_conversion	${type,w,f,t->int8_t,8,16,8,uint8_t,8,16,8}	$w	$f	$t	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(7,7,6,6,5,5,4,4,3,3,2,2,1,1,0,0)))	_mm_and_si128(_mm_set_epi8(0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF,0,0xFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(15,15,14,14,13,13,12,12,11,11,10,10,9,9,8,8)))			sse,universal	10
+sse_split16->32	type_conversion	${type,w,f,t->int8_t,8,8,4,uint8_t,8,8,4,uint16_t,16,8,4,int16_t,16,8,4}	$w	$f	$t	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,7,6,0,0,5,4,0,0,3,2,0,0,1,0)))	_mm_and_si128(_mm_set_epi16(0,0xFFFF,0,0xFFFF,0,0xFFFF,0,0xFFFF),_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,15,14,0,0,13,12,0,0,11,10,0,0,9,8)))			sse,universal	10
+sse_split32->64	type_conversion	${type,w,f,t->int8_t,8,4,2,uint8_t,8,4,2,uint16_t,16,4,2,int16_t,16,4,2,float,32,4,2,int32_t,32,4,2,uint32_t,32,4,2}	$w	$f	$t	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0x50))	_mm_and_si128(_mm_set_epi32(0,0xFFFFFFFF,0,0xFFFFFFFF),_mm_shuffle_epi32($$arg1,0xFA))			sse,universal	10
+#does not make sense sse_split64->128	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,_mm_setzero_si128())	_mm_movehl_ps(_mm_setzero_si128(),$$arg1)			sse,universal	10
+#does not make sense sse_merge128->64	type_conversion	${type,w,f,t->}	$w	$f	$t	_mm_movelh_ps($$arg1,$$arg2)				sse,universal	10
+sse_merge64->32	type_conversion	${type,w,f,t->int8_t,8,4,2,uint8_t,8,4,2,uint16_t,16,4,2,int16_t,16,4,2,float,32,4,2,int32_t,32,4,2,uint32_t,32,4,2}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi32($$arg1,0x08),(__m128) _mm_shuffle_epi32($$arg2,0x08))				sse,universal	10
+sse_merge32->16	type_conversion	${type,w,f,t->int8_t,8,8,4,uint8_t,8,8,4,uint16_t,16,8,4,int16_t,16,8,4}	$w	$t	$f	_mm_movelh_ps((__m128) _mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,13,12,9,8,5,4,1,0)),(__m128) _mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,13,12,9,8,5,4,1,0)))				sse,universal	10
+sse_merge16->8	type_conversion	${type,w,f,t->int8_t,8,16,8,uint8_t,8,16,8}	$w	$t	$f	_mm_movelh_ps( (__m128)_mm_shuffle_epi8($$arg1,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)),(__m128) _mm_shuffle_epi8($$arg2,_mm_set_epi8(0,0,0,0,0,0,0,0,14,12,10,8,6,4,2,0)))				sse,universal	10
 											
 #standard bool											
-sse_splits	type_conversion	bool	${w,n,m->1,128,64}	$n	$m	(__m128i)_mm_movelh_ps((__m128)$$arg1,(__m128)_mm_setzero_si128())	(__m128i)_mm_movehl_ps((__m128)_mm_setzero_si128(),(__m128)$$arg1)			sse	10
-sse_glues	type_conversion	bool	${w,n,m->1,128,64}	$m	$n	(__m128i)_mm_movelh_ps((__m128)$$arg1,(__m128)$$arg2)				sse	10
-sse_splits	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$n	$m	$$arg1&$[$n-1]	$m >> $$arg1			C	10
-sse_glues	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$m	$n	$$arg1|($$arg2<<$m)				C	10
-sse_splits	type_conversion	bool	${w,n,m->1,2,1}	$n	$m	($$arg1&1)>0	($$arg1&2)>0			C	10
-sse_glues	type_conversion	bool	${w,n,m->1,2,1}	$m	$n	($$arg1*1)|($$arg2*2) 				C	10
-sse_splits	type_conversion	bool	1	64	32	(uint32_t)_mm_extract_epi32((__m128i)$$arg1,0)	(uint32_t)_mm_extract_epi32((__m128i)$$arg1,1)			sse	10
-sse_glues	type_conversion	bool	1	32	64	_mm_set_epi32(0,0,$$arg2,$$arg1)				sse	10
+sse_splits	type_conversion	bool	${w,n,m->1,128,64}	$n	$m	(__m128i)_mm_movelh_ps((__m128)$$arg1,(__m128)_mm_setzero_si128())	(__m128i)_mm_movehl_ps((__m128)_mm_setzero_si128(),(__m128)$$arg1)			sse,universal	10
+sse_glues	type_conversion	bool	${w,n,m->1,128,64}	$m	$n	(__m128i)_mm_movelh_ps((__m128)$$arg1,(__m128)$$arg2)				sse,universal	10
+sse_splits	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$n	$m	$$arg1&$[$n-1]	$m >> $$arg1			C,universal	10
+sse_glues	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$m	$n	$$arg1|($$arg2<<$m)				C,universal	10
+sse_splits	type_conversion	bool	${w,n,m->1,2,1}	$n	$m	($$arg1&1)>0	($$arg1&2)>0			C,universal	10
+sse_glues	type_conversion	bool	${w,n,m->1,2,1}	$m	$n	($$arg1*1)|($$arg2*2) 				C,universal	10
+sse_splits	type_conversion	bool	1	64	32	(uint32_t)_mm_extract_epi32((__m128i)$$arg1,0)	(uint32_t)_mm_extract_epi32((__m128i)$$arg1,1)			sse,universal	10
+sse_glues	type_conversion	bool	1	32	64	_mm_set_epi32(0,0,$$arg2,$$arg1)				sse,universal	10
 											
 #ssebool											
-sse_splits	type_conversion	ssebool	8	2	1	_mm_extract_epi8((__m128)$$arg1,0)	_mm_extract_epi8((__m128)$$arg1,8)			sse	10
-sse_glues	type_conversion	ssebool	8	1	2	_mm_set_epi8($$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1)				sse	10
+sse_splits	type_conversion	ssebool	8	2	1	_mm_extract_epi8((__m128)$$arg1,0)	_mm_extract_epi8((__m128)$$arg1,8)			sse,universal	10
+sse_glues	type_conversion	ssebool	8	1	2	_mm_set_epi8($$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg2,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1,$$arg1)				sse,universal	10
 											
 #c->sse, sse->c											
-sse_splits	type_conversion	${t->int,uint}${w,p->64,1,32,2,16,4,8,8}_t	$w	2	1	($t$w_t)_mm_extract_epi$w((__m128i)$$arg1,0)	($t$w_t)_mm_extract_epi$w((__m128i)$$arg1,$p)			sse	10
-sse_splits	type_conversion	${t,w,p->float,32,2,double,64,1}	$w	2	1	reinterpret_cast<const $t&>((const uint64_t&)_mm_extract_epi$w((__m128i)$$arg1,0))	reinterpret_cast<const $t&>((const uint64_t&)_mm_extract_epi$w((__m128i)$$arg1,$p))			sse	10
-sse_glues	type_conversion	${t->int,uint}${w->64}_t	$w	1	2	_mm_set_epi64x($$arg2,$$arg1)				sse	10
-sse_glues	type_conversion	${t->int,uint}${w->32}_t	$w	1	2	_mm_set_epi$w(0,$$arg2,0,$$arg1)				sse	10
-sse_glues	type_conversion	${t->int,uint}${w->16}_t	$w	1	2	_mm_set_epi$w(0,0,0,$arg2,0,0,0,$$arg1)				sse	10
-sse_glues	type_conversion	${t->int,uint}${w->8}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,0,$$arg2,0,0,0,0,0,0,0,$$arg1)				sse	10
-sse_glues	type_conversion	${t,w->float,32}	$w	1	2	_mm_set_epi$w(0,*((uint32_t*)&$$arg2),0,*((uint32_t*)&$$arg1))				sse	10
-sse_glues	type_conversion	${t,w->double,64}	$w	1	2	(__m128d)_mm_set_epi64x(*((uint64_t*)&$$arg2),*((uint64_t*)&$$arg1))				sse	10
+sse_splits	type_conversion	${t->int,uint}${w,p->64,1,32,2,16,4,8,8}_t	$w	2	1	($t$w_t)_mm_extract_epi$w((__m128i)$$arg1,0)	($t$w_t)_mm_extract_epi$w((__m128i)$$arg1,$p)			sse,universal	10
+sse_splits	type_conversion	${t,w,p->float,32,2,double,64,1}	$w	2	1	reinterpret_cast<const $t&>((const uint64_t&)_mm_extract_epi$w((__m128i)$$arg1,0))	reinterpret_cast<const $t&>((const uint64_t&)_mm_extract_epi$w((__m128i)$$arg1,$p))			sse,universal	10
+sse_glues	type_conversion	${t->int,uint}${w->64}_t	$w	1	2	_mm_set_epi64x($$arg2,$$arg1)				sse,universal	10
+sse_glues	type_conversion	${t->int,uint}${w->32}_t	$w	1	2	_mm_set_epi$w(0,$$arg2,0,$$arg1)				sse,universal	10
+sse_glues	type_conversion	${t->int,uint}${w->16}_t	$w	1	2	_mm_set_epi$w(0,0,0,$arg2,0,0,0,$$arg1)				sse,universal	10
+sse_glues	type_conversion	${t->int,uint}${w->8}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,0,$$arg2,0,0,0,0,0,0,0,$$arg1)				sse,universal	10
+sse_glues	type_conversion	${t,w->float,32}	$w	1	2	_mm_set_epi$w(0,*((uint32_t*)&$$arg2),0,*((uint32_t*)&$$arg1))				sse,universal	10
+sse_glues	type_conversion	${t,w->double,64}	$w	1	2	(__m128d)_mm_set_epi64x(*((uint64_t*)&$$arg2),*((uint64_t*)&$$arg1))				sse,universal	10
 											
 #canonic joins/splits - lets consider what happens if we compare canonic uint8 vector comparison result of width 2 with a result of a double comparison... ->this wont work											
-#sse_splits	type_conversion	${t->int,uint}${w,n,m->8,16,8,16,8,4,32,4,2}_t	$w	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse	10
-#sse_glues	type_conversion	${t->int,uint}${w,n,m->8,16,8,16,8,4,32,4,2}_t	$w	$m	$n	_mm_movelh_ps($$arg1,$$arg2)				sse	10
-#sse_splits	type_conversion	${t->int,uint}${w,n,m->8,8,4,16,4,2}_t	$w	$n	$m	_mm_and_si128($$arg1,_mm_set_epi32(0,0,0,0xFFFFFFFF))	_mm_srli_si128($$arg1,4)			sse	10
-#sse_glues	type_conversion	${t->int,uint}${w,n,m->8,8,4,16,4,2}_t	$w	$m	$n	_mm_or_si128($$arg1,_mm_slli_si128($$arg2,4))				sse	10
-#sse_splits	type_conversion	${t->int,uint}${w,n,m->8,4,2}_t	$w	$n	$m	_mm_and_si128($$arg1,_mm_set_epi32(0,0,0,0x0000FFFF))	_mm_srli_si128($$arg1,2)			sse	10
-#sse_glues	type_conversion	${t->int,uint}${w,n,m->8,4,2}_t	$w	$m	$n	_mm_or_si128($$arg1,_mm_slli_si128($$arg2,2))				sse	10
-#sse_splits	type_conversion	${t->int,uint}${w->64,32,16,8}_t	$w	2	1	($t$w_t)_mm_extract_epi$w((__m128)$$arg1,0)	($t$w_t)_mm_extract_epi$w((__m128)$$arg1,1)			sse	10
-#sse_glues	type_conversion	${t->int,uint}${w->64}_t	$w	1	2	_mm_set_epi$w($$arg2,$$arg1)				sse	10
-#sse_glues	type_conversion	${t->int,uint}${w->32}_t	$w	1	2	_mm_set_epi$w(0,0,$$arg2,$$arg1)				sse	10
-#sse_glues	type_conversion	${t->int,uint}${w->16}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,$$arg2,$$arg1)				sse	10
-#sse_glues	type_conversion	${t->int,uint}${w->8}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$$arg2,$$arg1)				sse	10
-#sse_splits	type_conversion	${t,w->float,32,double,64}	$w	2	1	($t)_mm_extract_epi$w((__m128)$$arg1,0)	($t)_mm_extract_epi$w((__m128)$$arg1,1)			sse	10
-#sse_glues	type_conversion	${t,w->float,32}	$w	1	2	_mm_set_epi$w(0,0,$$arg2,$$arg1)				sse	10
-#sse_glues	type_conversion	${t,w->double,64}	$w	1	2	_mm_set_epi$w($$arg2,$$arg1)				sse	10
-#sse_splits	type_conversion	${t->float}	${w,n,m->32,4,2}	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse	10
-#sse_glues	type_conversion	${t->float}	${w,n,m->32,4,2 }	$m	$n	_mm_movelh_ps($$arg1,$$arg2)				sse	10
-#sse_splits	type_conversion	bool	${w,n,m->1,128,64}	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse	10
-#sse_glues	type_conversion	bool	${w,n,m->1,128,64}	$m	$n	_mm_movelh_ps($$arg1,$$arg2)				sse	10
-#sse_splits	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$n	$m	$$arg1&$[$n-1]	$m >> $$arg1			C	10
-#sse_glues	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$m	$n	$$arg1|($$arg2<<$m)				C	10
-#sse_splits	type_conversion	bool	${w,n,m->1,2,1}	$n	$m	($$arg1&1)>0	($$arg1&2)>0			C	10
-#sse_glues	type_conversion	bool	${w,n,m->1,2,1}	$m	$n	($$arg1*1)|($$arg2*2) 				C	10
-#sse_splits	type_conversion	bool	1	64	32	(uint32_t)_mm_extract_epi32((__m128)$$arg1,0)	(uint32_t)_mm_extract_epi32((__m128)$$arg1,1)			sse	10
-#sse_glues	type_conversion	bool	1	32	64	_mm_set_epi32(0,0,$$arg2,$$arg1)				sse	10
+#sse_splits	type_conversion	${t->int,uint}${w,n,m->8,16,8,16,8,4,32,4,2}_t	$w	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w,n,m->8,16,8,16,8,4,32,4,2}_t	$w	$m	$n	_mm_movelh_ps($$arg1,$$arg2)				sse,universal	10
+#sse_splits	type_conversion	${t->int,uint}${w,n,m->8,8,4,16,4,2}_t	$w	$n	$m	_mm_and_si128($$arg1,_mm_set_epi32(0,0,0,0xFFFFFFFF))	_mm_srli_si128($$arg1,4)			sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w,n,m->8,8,4,16,4,2}_t	$w	$m	$n	_mm_or_si128($$arg1,_mm_slli_si128($$arg2,4))				sse,universal	10
+#sse_splits	type_conversion	${t->int,uint}${w,n,m->8,4,2}_t	$w	$n	$m	_mm_and_si128($$arg1,_mm_set_epi32(0,0,0,0x0000FFFF))	_mm_srli_si128($$arg1,2)			sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w,n,m->8,4,2}_t	$w	$m	$n	_mm_or_si128($$arg1,_mm_slli_si128($$arg2,2))				sse,universal	10
+#sse_splits	type_conversion	${t->int,uint}${w->64,32,16,8}_t	$w	2	1	($t$w_t)_mm_extract_epi$w((__m128)$$arg1,0)	($t$w_t)_mm_extract_epi$w((__m128)$$arg1,1)			sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w->64}_t	$w	1	2	_mm_set_epi$w($$arg2,$$arg1)				sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w->32}_t	$w	1	2	_mm_set_epi$w(0,0,$$arg2,$$arg1)				sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w->16}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,$$arg2,$$arg1)				sse,universal	10
+#sse_glues	type_conversion	${t->int,uint}${w->8}_t	$w	1	2	_mm_set_epi$w(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$$arg2,$$arg1)				sse,universal	10
+#sse_splits	type_conversion	${t,w->float,32,double,64}	$w	2	1	($t)_mm_extract_epi$w((__m128)$$arg1,0)	($t)_mm_extract_epi$w((__m128)$$arg1,1)			sse,universal	10
+#sse_glues	type_conversion	${t,w->float,32}	$w	1	2	_mm_set_epi$w(0,0,$$arg2,$$arg1)				sse,universal	10
+#sse_glues	type_conversion	${t,w->double,64}	$w	1	2	_mm_set_epi$w($$arg2,$$arg1)				sse,universal	10
+#sse_splits	type_conversion	${t->float}	${w,n,m->32,4,2}	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse,universal	10
+#sse_glues	type_conversion	${t->float}	${w,n,m->32,4,2 }	$m	$n	_mm_movelh_ps($$arg1,$$arg2)				sse,universal	10
+#sse_splits	type_conversion	bool	${w,n,m->1,128,64}	$n	$m	_mm_movelh_ps($$arg1,(__m128)_mm_setzero_si128())	_mm_movehl_ps($$arg1,$$arg1)			sse,universal	10
+#sse_glues	type_conversion	bool	${w,n,m->1,128,64}	$m	$n	_mm_movelh_ps($$arg1,$$arg2)				sse,universal	10
+#sse_splits	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$n	$m	$$arg1&$[$n-1]	$m >> $$arg1			C,universal	10
+#sse_glues	type_conversion	bool	${w,n,m->1,32,16,1,16,8,1,8,4,1,4,2}	$m	$n	$$arg1|($$arg2<<$m)				C,universal	10
+#sse_splits	type_conversion	bool	${w,n,m->1,2,1}	$n	$m	($$arg1&1)>0	($$arg1&2)>0			C,universal	10
+#sse_glues	type_conversion	bool	${w,n,m->1,2,1}	$m	$n	($$arg1*1)|($$arg2*2) 				C,universal	10
+#sse_splits	type_conversion	bool	1	64	32	(uint32_t)_mm_extract_epi32((__m128)$$arg1,0)	(uint32_t)_mm_extract_epi32((__m128)$$arg1,1)			sse,universal	10
+#sse_glues	type_conversion	bool	1	32	64	_mm_set_epi32(0,0,$$arg2,$$arg1)				sse,universal	10
 											
 											
 #generic extract											

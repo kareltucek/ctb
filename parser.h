@@ -12,8 +12,8 @@ namespace ctb
   {
     public:
       enum ttype{tNum,tMul,tDiv,tAdd,tSub,tPB,tPE,tEof};
-      typedef std::pair<ttype, int> token;
     private:
+      typedef std::pair<ttype, int> token;
       std::vector<token> stack;
       ttype type(const token&);
       int val(const token&);

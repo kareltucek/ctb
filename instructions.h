@@ -53,6 +53,7 @@ namespace ctb
    * All 'code' fields are supposed to be in form of rhs expressions, which are later substitued into abbreviations specified by the aliasenv_generator class (or its descendants). For special purposes there may later be a 'code_custom' field introduced, which will allow specification of the full code on user side. All code fields have a shell like expansion format defined by the writer class with abbreviations provided by the aliasenv_maker.hierarchy. At the time of writting this, the following abbreviations are available in code generation:
    *  - $type      - e.g. 'int'
    *  - $name      - name generated for the variable
+   *  - $basename  - name of the first variable in vector - e.g. for the purpose of generating one unique variable for every pipe (e.g. for preloads)
    *  - $operation - operation::instruction::code
    *  - $cindex    - for input or output node this is the serial number of this node (e.g. id of the input list which is associated with the instruction in question)
    *  - $arg1      - access code obtained 'from the input edges'...
@@ -360,7 +361,10 @@ namespace ctb
         }
       }
       if(!s)
-        error( std::string("instruction of width_in = ").append(std::to_string(w)).append(" at operation ").append(opid).append(" not found"));
+      {
+        warn( std::string("instruction of width_in = ").append(std::to_string(w)).append(" at operation ").append(opid).append(" satisfying current tags not found"));
+        printability = 0;
+      }
       return s;
     }
 
@@ -464,8 +468,11 @@ namespace ctb
     {
       bool sat = def & (1<<i);
       if(taglists.size() > i)
+      {
+        sat = true;
         for(auto th : taglists[i])
           sat &= th->is_satisfactory(tags);
+      }
       if(sat)
         mask |= 1 << i;
     }

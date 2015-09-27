@@ -329,7 +329,7 @@ namespace ctb
       if(recurse && directed)
         for(auto inptr  : (!inverse ? in:out).r())
           if(inptr != NULL)
-            inptr->crawl<recurse,inverse>(f, g, q);
+            inptr->template crawl<recurse,inverse>(f, g, q);
       if(f(this))
         for(auto outptr : (!inverse ? out:in).r())
           q->push(outptr);

@@ -77,11 +77,16 @@ private:
         data_out_0 = env_out_0->get_column( col_out_0).get_data< int>();
       }
       auto batch_size = std::min(std::min(std::min(std::numeric_limits<unsigned>::max(), size_in_2 - pos_in_2), size_in_1 - pos_in_1), size_out_0 - pos_out_0);
+      /*declare align*/;
       std::size_t align_offset = pos_in_2 % 4;
       std::size_t output_offset = pos_out_2 % 4;
       bool aligned = true;
       ;
-      aligned &= align_offset == pos_in_2 % 4aligned &= align_offset == pos_in_1 % 4aligned &= output_offset == pos_out_0 % 4
+      /*check alignment*/;
+      aligned &= align_offset == pos_in_2 % 4;
+      aligned &= align_offset == pos_in_1 % 4;
+      aligned &= output_offset == pos_out_0 % 4;
+      /*actual code*/;
       if(aligned)
       {
         for ( std::size_t j = 0;j < output_offset && j < batch_size;++ j)
@@ -128,7 +133,7 @@ private:
             _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
           }
           break;
-        )case 1:
+        )case 2:
           {
             __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
             __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
@@ -144,7 +149,7 @@ private:
             _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
           }
           break;
-        )case 1:
+        )case 3:
           {
             __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
             __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
@@ -191,6 +196,7 @@ private:
       pos_in_1 += batch_size;
       pos_out_0 += batch_size;
     }
+    /*send envelope*/;
     if ( pos_out_0 )
     {
       env_out_0->set_size( pos_out_0);

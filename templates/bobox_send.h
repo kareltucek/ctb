@@ -1,3 +1,4 @@
+/*send envelope*/;
 if ( pos_out_$1 )
 {
   env_out_$1->set_size( pos_out_$1);

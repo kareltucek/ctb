@@ -44,7 +44,7 @@ namespace ctb
   } ;
 
   const int gmCOUNT = 3;
-  enum maskmodes { gSELECT = 1, gPRINT = 2, gONCE = 3};
+  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};
   enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };
 
   enum flags 

@@ -95,15 +95,16 @@ namespace ctb
 
     ADD("type", "$1");
     ADD("name", "$2");
-    ADD("operation", "$3");
+    ADD("basename", "$3");
+    ADD("operation", "$4");
 
-    ADD("cindex", "$4");
-    ADD("iindex", "$5");
-    ADD("oindex", "$6");
-    ADD("vindex", "$7");
-    ADD("arg1", "$8");
-    ADD("arg2", "$9");
-    ADD("arg3", "$10");
+    ADD("cindex", "$5");
+    ADD("iindex", "$6");
+    ADD("oindex", "$7");
+    ADD("vindex", "$8");
+    ADD("arg1", "$9");
+    ADD("arg2", "$10");
+    ADD("arg3", "$11");
 
 
     initialized = true;

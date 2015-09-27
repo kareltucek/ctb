@@ -25,6 +25,7 @@ namespace ctb
   std::map<std::string, std::string> aliasenv_bobox::aliases;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
+#define SET(a,b) aliases[a]=b
 
   std::string aliasenv_bobox::get_name()
   {
@@ -60,7 +61,8 @@ namespace ctb
     ADD("fbox",     writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_box.h")));
     ADD("fsend",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_send.h")));
     ADD("fcode",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_code.h")));
-    ADD("falign",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_align.h")));
+    ADD("falign",   writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_align.h")));
+    ADD("fcase",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/bobox_case.h")));
 
     initialized = true;
   }
@@ -128,10 +130,11 @@ namespace ctb
       else
       {
         alignment.print("$falign", granularity, generator.graph->in->front()->data->get_inout_pos(), generator.graph->in->front()->data->get_inout_pos());
+        alignment.print("/*check alignment*/;");
         for(auto n : generator.graph->in.r())
-          alignment.print("aligned &= align_offset == pos_in_$2 % $1", granularity, n->data->get_inout_pos());
+          alignment.print("aligned &= align_offset == pos_in_$2 % $1;", granularity, n->data->get_inout_pos());
         for(auto n : generator.graph->out.r())
-          alignment.print("aligned &= output_offset == pos_out_$2 % $1", granularity, n->data->get_inout_pos());
+          alignment.print("aligned &= output_offset == pos_out_$2 % $1;", granularity, n->data->get_inout_pos());
       }
 
       //generate actual code
@@ -139,27 +142,28 @@ namespace ctb
       generator.generate(1, code_simple);
       
       wrt code_unaligned;
-      auto pcu = std::make_shared<tagmaster_default>("","","","unalignedio,C,sse");
+      auto pcu = std::make_shared<tagmaster_default>("","unalignedio,universal","","");
       generator.generate(granularity, code_unaligned, pcu);
       wrt code_aligned;
-      generator.generate(granularity, code_aligned, std::make_shared<tagmaster_default>("","","","alignedio,C,sse"));
+      generator.generate(granularity, code_aligned, std::make_shared<tagmaster_default>("","alignedio,universal","",""));
 
       wrt code_shifted;
       for(int i = 1; i < granularity; ++i)
       {
-        ADD("alignoffset", wrt().print("$1", i).write_str());
+        SET("alignoffset", wrt().print("$1", i).write_str());
         wrt tmpcode;
-        generator.generate(granularity, tmpcode, std::make_shared<tagmaster_default>("","","","shiftedio,C,sse"));
-        code_shifted.print("case $alignoffset: {$1} break;)", tmpcode);
+        generator.generate(granularity, tmpcode, std::make_shared<tagmaster_default>("","shiftedio,universal","",""));
+        code_shifted.print("$fcase", tmpcode, granularity);
       }
 
       wrt code_preload;
       /*TODO*/
-      std::shared_ptr<tagmaster_default> tp = std::make_shared<tagmaster_default>("preloadio","","","preloadio,C,sse");
-      generator.generate(granularity, code_preload, tp, tp, tp);
+      std::shared_ptr<tagmaster_default> tq = std::make_shared<tagmaster_default>("","preloadio,universal","","");
+      std::shared_ptr<tagmaster_default> tp = std::make_shared<tagmaster_default>("preloadio","","","");
+      generator.generate(granularity, code_preload, tq, tp, tp);
 
       wrt code;
-      code.print("$fcode", code_aligned, code_shifted, code_unaligned, code_simple, code_preload);
+      code.print("$fcode", code_aligned, code_shifted, code_unaligned, code_simple, code_preload, granularity);
 
       //increment counters
       wrt inc;

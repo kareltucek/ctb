@@ -222,30 +222,32 @@ namespace ctb
         std::string type_string, op_c, op_cc;
         std::size_t printability; 
         op->get_type_string(mygran, type_string);
-        op->get_op_string(mygran, op_c, op_cc, printability);
-        if(op_c.empty() && op_cc.empty())
+        bool found = op->get_op_string(mygran, op_c, op_cc, printability);
+        if(found && op_c.empty() && op_cc.empty())
           warn(std::string("instruction code and custom code are both empty for ").append(opid));
         /*even for unprintable code we want to consume ids -> cannot skip most of this function*/
+	W basename = W().print(acces,0);
         for(int i = 0; i < granularity/myin && i < printability; i++) 
         {
+	  W name = W().print(acces,i*myout);
           if(i!=0 && c)
           {
-            w.print("$declcode", type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+            w.print("$declcode",     type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
           }
           else if(op_c.empty())
           {
-            w.print(op_cc, type_string, W().print(acces, i*myout), "recursive argument here", get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+            w.print(op_cc,           type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
           }
           else
           {
             if(op->is(fINPUT))
-              w.print("$inputcode" , type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+              w.print("$inputcode" , type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
             else if(op->is(fOUTPUT))
-              w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+              w.print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
             else if(op->is(fDEBUG)) //same as output
-              w.print("$outputcode", type_string, W().print(acces, i*myout), op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+              w.print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
             else
-              w.print("$innercode"  , type_string, W().print(acces, i*myout), op_c, 0             , myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+              w.print("$innercode" , type_string, name, basename, op_c, 0              , myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
           }
         }
       }

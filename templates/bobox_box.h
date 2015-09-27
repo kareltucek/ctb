@@ -5,6 +5,8 @@
 #include "bobox_results.hpp"
 #include "bobox_bobolang.hpp"
 #include "bobox_basic_object_factory.hpp"
+#include <emmintrin.h>
+#include <smmintrin.h>
 
 class $1_box : public bobox::basic_box {
 public:

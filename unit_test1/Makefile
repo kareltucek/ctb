@@ -12,7 +12,7 @@ test : test_simple.h
 	${CXX} ${FLAGS} test_simple.cpp -DTEMPLATED -o test -l tinyxml2 -msse4.1
 
 run : 
-	diff test_simple.h test_simple.h.reference
+	-diff test_simple.h test_simple.h.reference
 	./test
 
 rewrite :
