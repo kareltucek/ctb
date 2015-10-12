@@ -613,30 +613,29 @@ namespace ctb
       }
 #else
       {
-        //yeah I know this is ugly... but consider the mess created by all the temporary variables needed for rewriting thiscode widthout gotos
         int offset = 0;
         int s,a,e;
         std::string g1,g2,pre,pos;
-start:
-         s = line.find("${", offset);
-        if(s == std::string::npos) goto end;
-         a = line.find("->", s);
-        if(a == std::string::npos) goto end;
-         e = line.find("}", s);
-        if(e == std::string::npos) goto end;
-         g1 = ctb::trim(line.substr(s+2, a-s-2));
-         g2 = ctb::trim(line.substr(a+2, e-a-2));
-        if(g1.empty() || a > e)
+        while(true)
         {
-          offset = s+1;
-          goto start;
+          s = line.find("${", offset);
+          if(s == std::string::npos) break;
+          a = line.find("->", s);
+          if(a == std::string::npos) break;
+          e = line.find("}", s);
+          if(e == std::string::npos) break;
+          g1 = ::ctb::trim(line.substr(s+2, a-s-2));
+          g2 = ::ctb::trim(line.substr(a+2, e-a-2));
+          if(g1.empty() || a > e)
+          {
+            offset = s+1;
+            continue;
+          }
+          pre = line.substr(0,s);
+          pos = line.substr(e+1,line.length()-e-1);
+          subtab.push_back(sub_t(split(g1,','), split(g2, ',')));
+          line = pre + "$" + split(g1,',')[0] + pos;
         }
-         pre = line.substr(0,s);
-         pos = line.substr(e+1,line.length()-e-1);
-        subtab.push_back(sub_t(split(g1,','), split(g2, ',')));
-        line = pre + "$" + split(g1,',')[0] + pos;
-        goto start;
-end:  ;
       }
 #endif
       std::vector<std::string> results;

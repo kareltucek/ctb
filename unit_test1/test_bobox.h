@@ -4,6 +4,8 @@
 #include "bobox_results.hpp"
 #include "bobox_bobolang.hpp"
 #include "bobox_basic_object_factory.hpp"
+#include <emmintrin.h>
+#include <smmintrin.h>
 class test_bobox_box :
 public bobox::basic_box
 {
@@ -87,9 +89,10 @@ private:
       aligned &= align_offset == pos_in_1 % 4;
       aligned &= output_offset == pos_out_0 % 4;
       /*actual code*/;
+      std::size_t j = 0;
       if(aligned)
       {
-        for ( std::size_t j = 0;j < output_offset && j < batch_size;++ j)
+        for (;j < output_offset && j < batch_size;++ j)
         {
           int var_LDI_id2_tw1_0_ata_in = (int)(data_in_2[pos_in_2+j]);
           int var_LDI_id3_tw1_0_atd_in = (int)(data_in_1[pos_in_1+j]);
@@ -98,92 +101,46 @@ private:
           int var_ADDI_id6_tw1_0_ate_pl = (int)(var_MULI_id5_tw1_0_atb_ml + var_ADDI_id4_tw1_0_atb_pl);
           data_out_0[pos_out_0+j] = var_ADDI_id6_tw1_0_ate_pl /*var_STI_id7_tw1_0_atc_out*/;
         }
-        switch(align_offset + output_offset)
+        switch((align_offset + output_offset) % 4)
         {
         case 0:
           {
-            __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
-            __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
-            __m128i var_ADDI_id4_tw4_0_atb_pl = (__m128i)(_mm_add_epi32(var_LDI_id2_tw4_0_ata_in, var_LDI_id3_tw4_0_atd_in));
-            __m128i var_LDI_id6_tconv_w2_0_ata_in = (__m128i)(var_LDI_id2_tw4_0_ata_in);
-            __m128i var_LDI_id6_tconv_w2_2_ata_in = (__m128i)(_mm_srli_si128(var_LDI_id2_tw4_0_ata_in,4));
-            __m128i var_LDI_id7_tconv_w2_0_atd_in = (__m128i)(var_LDI_id3_tw4_0_atd_in);
-            __m128i var_LDI_id7_tconv_w2_2_atd_in = (__m128i)(_mm_srli_si128(var_LDI_id3_tw4_0_atd_in,4));
-            __m128i var_MULI_id5_tw2_0_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_0_atd_in, var_LDI_id6_tconv_w2_0_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id5_tw2_2_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_2_atd_in, var_LDI_id6_tconv_w2_2_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id9_tconv_w4_0_atb_ml = (__m128i)(_mm_unpacklo_epi32(var_MULI_id5_tw2_0_atb_ml,var_MULI_id5_tw2_2_atb_ml));
-            __m128i var_ADDI_id8_tw4_0_ate_pl = (__m128i)(_mm_add_epi32(var_MULI_id9_tconv_w4_0_atb_ml, var_ADDI_id4_tw4_0_atb_pl));
-            _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
+            for ( ;j + 4 <= batch_size;j += 4)
+            {
+              ;
+            }
           }
-          ;
           break;
         case 1:
           {
-            __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
-            __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
-            __m128i var_ADDI_id4_tw4_0_atb_pl = (__m128i)(_mm_add_epi32(var_LDI_id2_tw4_0_ata_in, var_LDI_id3_tw4_0_atd_in));
-            __m128i var_LDI_id6_tconv_w2_0_ata_in = (__m128i)(var_LDI_id2_tw4_0_ata_in);
-            __m128i var_LDI_id6_tconv_w2_2_ata_in = (__m128i)(_mm_srli_si128(var_LDI_id2_tw4_0_ata_in,4));
-            __m128i var_LDI_id7_tconv_w2_0_atd_in = (__m128i)(var_LDI_id3_tw4_0_atd_in);
-            __m128i var_LDI_id7_tconv_w2_2_atd_in = (__m128i)(_mm_srli_si128(var_LDI_id3_tw4_0_atd_in,4));
-            __m128i var_MULI_id5_tw2_0_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_0_atd_in, var_LDI_id6_tconv_w2_0_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id5_tw2_2_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_2_atd_in, var_LDI_id6_tconv_w2_2_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id9_tconv_w4_0_atb_ml = (__m128i)(_mm_unpacklo_epi32(var_MULI_id5_tw2_0_atb_ml,var_MULI_id5_tw2_2_atb_ml));
-            __m128i var_ADDI_id8_tw4_0_ate_pl = (__m128i)(_mm_add_epi32(var_MULI_id9_tconv_w4_0_atb_ml, var_ADDI_id4_tw4_0_atb_pl));
-            _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
+            for ( ;j + 4 <= batch_size;j += 4)
+            {
+            }
           }
           break;
-        )case 2:
+        case 2:
           {
-            __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
-            __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
-            __m128i var_ADDI_id4_tw4_0_atb_pl = (__m128i)(_mm_add_epi32(var_LDI_id2_tw4_0_ata_in, var_LDI_id3_tw4_0_atd_in));
-            __m128i var_LDI_id6_tconv_w2_0_ata_in = (__m128i)(var_LDI_id2_tw4_0_ata_in);
-            __m128i var_LDI_id6_tconv_w2_2_ata_in = (__m128i)(_mm_srli_si128(var_LDI_id2_tw4_0_ata_in,4));
-            __m128i var_LDI_id7_tconv_w2_0_atd_in = (__m128i)(var_LDI_id3_tw4_0_atd_in);
-            __m128i var_LDI_id7_tconv_w2_2_atd_in = (__m128i)(_mm_srli_si128(var_LDI_id3_tw4_0_atd_in,4));
-            __m128i var_MULI_id5_tw2_0_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_0_atd_in, var_LDI_id6_tconv_w2_0_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id5_tw2_2_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_2_atd_in, var_LDI_id6_tconv_w2_2_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id9_tconv_w4_0_atb_ml = (__m128i)(_mm_unpacklo_epi32(var_MULI_id5_tw2_0_atb_ml,var_MULI_id5_tw2_2_atb_ml));
-            __m128i var_ADDI_id8_tw4_0_ate_pl = (__m128i)(_mm_add_epi32(var_MULI_id9_tconv_w4_0_atb_ml, var_ADDI_id4_tw4_0_atb_pl));
-            _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
+            for ( ;j + 4 <= batch_size;j += 4)
+            {
+            }
           }
           break;
-        )case 3:
+        case 3:
           {
-            __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
-            __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
-            __m128i var_ADDI_id4_tw4_0_atb_pl = (__m128i)(_mm_add_epi32(var_LDI_id2_tw4_0_ata_in, var_LDI_id3_tw4_0_atd_in));
-            __m128i var_LDI_id6_tconv_w2_0_ata_in = (__m128i)(var_LDI_id2_tw4_0_ata_in);
-            __m128i var_LDI_id6_tconv_w2_2_ata_in = (__m128i)(_mm_srli_si128(var_LDI_id2_tw4_0_ata_in,4));
-            __m128i var_LDI_id7_tconv_w2_0_atd_in = (__m128i)(var_LDI_id3_tw4_0_atd_in);
-            __m128i var_LDI_id7_tconv_w2_2_atd_in = (__m128i)(_mm_srli_si128(var_LDI_id3_tw4_0_atd_in,4));
-            __m128i var_MULI_id5_tw2_0_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_0_atd_in, var_LDI_id6_tconv_w2_0_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id5_tw2_2_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_2_atd_in, var_LDI_id6_tconv_w2_2_ata_in), _MM_SHUFFLE (0,0,2,0)));
-            __m128i var_MULI_id9_tconv_w4_0_atb_ml = (__m128i)(_mm_unpacklo_epi32(var_MULI_id5_tw2_0_atb_ml,var_MULI_id5_tw2_2_atb_ml));
-            __m128i var_ADDI_id8_tw4_0_ate_pl = (__m128i)(_mm_add_epi32(var_MULI_id9_tconv_w4_0_atb_ml, var_ADDI_id4_tw4_0_atb_pl));
-            _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
+            for ( ;j + 4 <= batch_size;j += 4)
+            {
+            }
           }
           break;
-          )
         }
       }
       else
       {
-        __m128i var_LDI_id2_tw4_0_ata_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_2[pos_in_2+j]));
-        __m128i var_LDI_id3_tw4_0_atd_in = (__m128i)(_mm_loadu_si128((const __m128i*)&data_in_1[pos_in_1+j]));
-        __m128i var_ADDI_id4_tw4_0_atb_pl = (__m128i)(_mm_add_epi32(var_LDI_id2_tw4_0_ata_in, var_LDI_id3_tw4_0_atd_in));
-        __m128i var_LDI_id6_tconv_w2_0_ata_in = (__m128i)(var_LDI_id2_tw4_0_ata_in);
-        __m128i var_LDI_id6_tconv_w2_2_ata_in = (__m128i)(_mm_srli_si128(var_LDI_id2_tw4_0_ata_in,4));
-        __m128i var_LDI_id7_tconv_w2_0_atd_in = (__m128i)(var_LDI_id3_tw4_0_atd_in);
-        __m128i var_LDI_id7_tconv_w2_2_atd_in = (__m128i)(_mm_srli_si128(var_LDI_id3_tw4_0_atd_in,4));
-        __m128i var_MULI_id5_tw2_0_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_0_atd_in, var_LDI_id6_tconv_w2_0_ata_in), _MM_SHUFFLE (0,0,2,0)));
-        __m128i var_MULI_id5_tw2_2_atb_ml = (__m128i)(_mm_shuffle_epi32(_mm_mul_epu32(var_LDI_id7_tconv_w2_2_atd_in, var_LDI_id6_tconv_w2_2_ata_in), _MM_SHUFFLE (0,0,2,0)));
-        __m128i var_MULI_id9_tconv_w4_0_atb_ml = (__m128i)(_mm_unpacklo_epi32(var_MULI_id5_tw2_0_atb_ml,var_MULI_id5_tw2_2_atb_ml));
-        __m128i var_ADDI_id8_tw4_0_ate_pl = (__m128i)(_mm_add_epi32(var_MULI_id9_tconv_w4_0_atb_ml, var_ADDI_id4_tw4_0_atb_pl));
-        _mm_storeu_si128((__m128i*)&data_out_0[pos_out_0+j], var_ADDI_id8_tw4_0_ate_pl) /*var_STI_id10_tw4_0_atc_out*/;
+        for ( ;j + 4 <= batch_size;j += 4)
+        {
+        }
       }
-      for ( std::size_t j = 0;j < batch_size;++ j)
+      for ( ;j < batch_size;++ j)
       {
         int var_LDI_id2_tw1_0_ata_in = (int)(data_in_2[pos_in_2+j]);
         int var_LDI_id3_tw1_0_atd_in = (int)(data_in_1[pos_in_1+j]);

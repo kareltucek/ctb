@@ -7,7 +7,7 @@ all : output.h test run
 output.h : ../ctb ../sse_set/C_table.csv graph.xml
 	../ctb -f program
 
-test :
+test : output.h
 	${CXX} ${FLAGS} -DNDEBUG main.cpp -I../../bobox/boback/h -I../../ulibpp/h   ../../bobox/boback/lib/release/boback.a  ../../ulibpp/lib/release/ulibpp.a -lstdc++ -lrt -lnuma -pthread  -o test -msse4.1
 
 run :

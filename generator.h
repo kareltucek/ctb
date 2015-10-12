@@ -20,13 +20,14 @@ namespace ctb
    *  - T - traits
    *  - IT - instruction table type
    *  */
+
   template <class T, class IT>
-    class generator
+    class generator 
     {
       private:
         class data_t;
       public:
-        typedef graph_generic<data_t, typename T::vid_t, true, generator> graph_t;
+        typedef graph_general<data_t, typename T::vid_t, true, generator> graph_t;
         typedef typename graph_t::node_t node_t;
       private:
         typedef typename T::opid_t id_t;
@@ -77,12 +78,22 @@ namespace ctb
 
         void set_compiletest(bool);
 
+        template<template <typename ...> class L, typename...P> void transform(P...params) ;
+
         void clear();
         void reset();
         void update(); /** In case instruction table is reloaded the operation pointers are no longer valid. This function updates them.*/
     };
 
   typedef generator<traits, instruction_table_default> generator_default;
+
+    template <class T, class IT>
+        template<template <typename ...> class L, typename...P> 
+  void generator<T,IT>::transform(P...params)
+  {
+    L<graph_t> l;
+    l.transform(graph.rw(),params...);
+  }
 
   template <class T, class IT>
     void generator<T,IT>::update()
@@ -284,6 +295,7 @@ namespace ctb
               warn(std::string("all code strings are empty at ").append(opid));
             W acces({newname(print("conv_w$1",width))});
             acces_map.insert(acces_map_t::value_type(width, acces));
+            W basename = W().print(acces, 0);
             if(itr.first > width)
             {
               //SPLITS
@@ -292,26 +304,26 @@ namespace ctb
                 if(i!=0 && c)
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                      w.print("$declcode", t, W().print(acces, i*itr.first+j*width),    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                      w.print("$declcode", t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
                 }
                 else if(!c1.empty())
                 {
                   if(width != itr.first/2)
                     error("basic halving code used for split where width_in != 2*width_out");
-                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ),    c1, get_inout_pos(), i*itr.first, i*itr.first      , 0    , W().print(itr.second, i*itr.first), "", "");
-                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width),    c2, get_inout_pos(), i*itr.first, i*itr.first+width, width, W().print(itr.second, i*itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ), basename,    c1, get_inout_pos(), i*itr.first, i*itr.first      , 0    , W().print(itr.second, i*itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width), basename,    c2, get_inout_pos(), i*itr.first, i*itr.first+width, width, W().print(itr.second, i*itr.first), "", "");
                 }
                 else if(!cc.empty())
                 {
                   stringlist sl;
                   for(int j = 0; j < itr.first/width; ++j)
                     sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
-                  w.print(cc, t, W().print(acces, i*itr.first ), "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first, 0, W().print(itr.second, i*itr.first), sl);
+                  w.print(cc, t, W().print(acces, i*itr.first ), basename, "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first, 0, W().print(itr.second, i*itr.first), sl);
                 }
                 else if(!cg.empty())
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                      w.print(cg, t, W().print(acces, i*itr.first+j*width),    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                      w.print(cg, t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
                 }
                 else
                   error("conversion with all codes empty encountered!", false);
@@ -325,24 +337,24 @@ namespace ctb
               {
                 if(i!=0 && c)
                 {
-                  w.print("$declcode", t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), i*width, i*width, 0);
+                  w.print("$declcode", t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width, 0);
                 }
                 else if(!c1.empty())
                 {  
-                  w.print("$conversioncode", t, W().print(acces, i*width         ), c1, get_inout_pos(), i*width, i*width, 0, W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*width         ), basename, c1, get_inout_pos(), i*width, i*width, 0, W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
                 }
                 else if(!cc.empty())
                 {
                   stringlist sl;
                   for(int j = 0; j < itr.first/width; ++j)
                     sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
-                  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), i*width, i*width, 0, sl);
+                  w.print(cc, t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width, 0, sl);
                 //  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
                 }
                 else if(!cg.empty())
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                    w.print(cg, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), i*width, i*width+j*itr.first, j*itr.first, W().print(itr.second, i*width+j*itr.first), "", "");
+                    w.print(cg, t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width+j*itr.first, j*itr.first, W().print(itr.second, i*width+j*itr.first), "", "");
                 }
                 else
                   error("conversion with all codes empty encountered!", false);

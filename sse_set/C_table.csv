@@ -109,7 +109,7 @@ sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input		C,universal	10
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)		sse,unalignedio	11
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_load_si128((const __m128i*)&$$input)		sse,alignedio	10
 #sse_IO	instruction	bool		LD_bool_vector	input	128	128	/*cant generate shift for 128 bool*/		sse,shiftedio	10
-sse_IO	instruction	bool		LD_bool_vector	input	128	128		$type preload_$basename = _mm_load_si128,(const __m128i*)&$$input);	sse,preloadio	10
+#sse_IO	instruction	bool		LD_bool_vector	input	128	128		$type preload_$basename = _mm_load_si128,(const __m128i*)&$$input);	sse,preloadio	10
 sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1		C,universal	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)		C,universal	10
 sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1		C,universal	10

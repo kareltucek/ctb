@@ -3,7 +3,7 @@
 #define INSTRUCTION_GUARD
 
 #include "writer.h"
-#include "graph.h"
+#include "graph_factor.h"
 #include "datatypes.h"
 #include "tagmaster.h"
 #include "taghandler.h"
@@ -130,7 +130,7 @@ namespace ctb
           public:
             type() = delete;
             type(instruction_table*, int bitwidth);
-            typedef graph_generic<dummy, int, false, type> graph_distance_t;
+            typedef graph_general<dummy, int, false, type> graph_distance_t;
             proxy<typename T::opid_t> debug_op;
             //TODO index this a bit intelligently...
             /*EAPI*/proxy<std::vector<type_version>> versions;
@@ -149,9 +149,9 @@ namespace ctb
             friend instruction_table;
             struct instruction //holds information for generation
             {
-              int width;
-              int width_in;
-              int width_out;
+              const int width;
+              const int width_in;
+              const int width_out;
               const std::string code;
               const std::string code_custom;
               const std::string note;
@@ -162,15 +162,26 @@ namespace ctb
               instruction() = delete;
             }
             ;//std::vector<typename T::tid_t> in_types
+            struct expansion
+            {
+              const std::string name;
+              const std::string transformer_name;
+              const std::vector<typename T::opid_t> arguments;
+              const std::string note;
+              expansion(const std::string&,const std::string&,const std::vector<typename T::opid_t>&, const std::string&);
+              expansion() = delete;
+            };
             instruction_table* parent;
             void update_tags() const;
           public:
+            /*TAPI*/proxy<std::vector<expansion>> expansions;
             /*EAPI*/proxy<std::vector<instruction>> versions;
             /*EAPI*/proxy<type*> mytype;
             /*EAPI*/proxy<typename T::tid_t> out_type;
             /*EAPI*/proxy<typename std::vector<typename T::tid_t>> in_types;
             /*EAPI*/proxy<typename T::flag_t> flags; /*EAPI*/proxy<typename T::opid_t> opid;
             /*IAPI*/void addcode(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r);
+            /*IAPI*/void addexpansion(const std::string&, const std::string&, const std::vector<typename T::opid_t>& args, const std::string&);
             /*API*/bool is(typename T::flag_t f) const ;
             /*API*/int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;
             /*API*//*DEPRECATED*///void imbue_width(int w)const;
@@ -273,6 +284,11 @@ namespace ctb
     }
 
   template <class T>
+    instruction_table<T>::operation::expansion::expansion(const std::string& n, const std::string& t, const std::vector<typename T::opid_t>& a, const std::string& m) : name(n), transformer_name(t), arguments(a), note(m)
+  {
+  }
+
+  template <class T>
     instruction_table<T>::operation::instruction::instruction(int wi, int wo, const std::string& c,const std::string& cc,const std::string& n,const std::string& t,int r, bool s) : code(c), width_in(wi), width_out(wo), width(std::max(wi, wo)), code_custom(cc), note(n), tags(t), rating(r), satisfactory(s)
   {
   }
@@ -287,6 +303,12 @@ namespace ctb
     {
       (mytype.r())->distances.calculate_distances();
       return mytype.r()->distances;
+    }
+
+  template <class T>
+    void instruction_table<T>::operation::addexpansion(const std::string& n, const std::string& t, const std::vector<typename T::opid_t>& a, const std::string& m)
+    {
+      expansions.rw().push_back(expansion(n,t,a,m));
     }
 
   template <class T>

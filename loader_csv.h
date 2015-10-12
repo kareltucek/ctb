@@ -55,6 +55,16 @@ namespace ctb
    *            9 code custom
    *            10 tags
    *            11 rating
+   * for expansion:
+   *          (operation definition)
+   *            2 output type
+   *            3 input types (in-order comma separated list)
+   *            4 opid
+   *            5 flags = comma separated list of {input,output}
+   *          (expansion definition)
+   *            6 expansion name
+   *            7 transformer's name
+   *            8 args = comma separated list for the transformer
    * for the type version:
    *          (logical type definition)
    *            2 type id
@@ -92,6 +102,7 @@ namespace ctb
     {
       private:
         enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
+        enum cols_expansion   {ceNote,ceType,ceOutType,ceInTypes,ceOpId,ceFlags,ceName,ceTransformer,ceArgs};
         enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode};
         enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating};
 
@@ -152,6 +163,24 @@ namespace ctb
           w.push(i.code_custom);
           w.push(i.tags);
           w.push(i.rating);
+          s << w.list_concat("\t").write_str() << std::endl;
+        }
+      }
+      s << "#note\ttype\toutput type\tinput types\top id\tflags\tname\ttransformer\targs" << std::endl;
+      for(auto o : instab.instab.r())
+      {
+        for(auto i : o.second->expansions.r())
+        {
+          writer_plain::basic_ignorant_exporter w;
+          w.push(i.note);
+          w.push("expansion");
+          w.push(o.second->out_type);
+          w.push(writer_plain(o.second->in_types.r()).list_concat(",").write_str());
+          w.push(o.second->opid);
+          w.push(flags_to_string(o.second->flags));
+          w.push(i.name);
+          w.push(i.transformer_name);
+          w.push(writer_plain(i.arguments).list_concat(",").write_str());
           s << w.list_concat("\t").write_str() << std::endl;
         }
       }
@@ -244,17 +273,24 @@ namespace ctb
         int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
         instab.addtype(data[ciOutType]);
         typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],split(data[ciInTypes],','),f);
-        operation.addcode(ctb::stoi(data[ciWIn]),ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],ctb::stoi(data[ciRating]));
+        operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
+      }
+      else if(data[ciType] == "expansion")
+      {
+        int f = string_to_flags<typename T::flag_t>(data[ceFlags]);
+        instab.addtype(data[ceOutType]);
+        typename IT::operation_t& operation = instab.addoperation(data[ceOpId],data[ceOutType],split(data[ceInTypes],','),f);
+        operation.addexpansion(data[ceName],data[ceTransformer],split(data[ceArgs],','),data[ceNote]);
       }
       else if (data[cvType] == "type_version")
       {
-        typename IT::type_t& type = instab.addtype(data[cvTId],ctb::stoi(data[cvBW]));
-        type.addcode_type(ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
+        typename IT::type_t& type = instab.addtype(data[cvTId],::ctb::stoi(data[cvBW]));
+        type.addcode_type(::ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
       }
       else if(data[ccType] == "type_conversion")
       {
-        typename IT::type_t& type = instab.addtype(data[ccTId],ctb::stoi(data[ccBW]));
-        type.addcode_conversion(ctb::stoi(data[ccWIn]), ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccCodeGeneric],data[ccNote],data[ccTag],ctb::stoi(data[ccRating]));
+        typename IT::type_t& type = instab.addtype(data[ccTId],::ctb::stoi(data[ccBW]));
+        type.addcode_conversion(::ctb::stoi(data[ccWIn]), ::ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccCodeGeneric],data[ccNote],data[ccTag],::ctb::stoi(data[ccRating]));
       }
       else
       {

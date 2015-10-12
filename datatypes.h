@@ -59,6 +59,7 @@ namespace ctb
   typedef std::vector<std::string> stringlist;
 
 
+
   bool fileexists(const char *name)
   {
     struct stat   buffer;
@@ -182,6 +183,11 @@ namespace ctb
   }
 
 
+  template <typename T, T V>
+    struct value_container
+  {
+    static const T value = V;
+  };
 
 
 };

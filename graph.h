@@ -8,6 +8,8 @@
 #include <string>
 #include <limits>
 #include <assert.h>
+#include "multicont.h"
+#include <set>
 
 namespace ctb
 {
@@ -36,30 +38,32 @@ namespace ctb
 
   //contained Type, Id type, Owner types
   template <class T, class I, bool directed, class ... O>
-    class graph_generic
+    class graph_basic
     {
-      private:
+      protected:
 
         class node
         {
           private:
-            graph_generic* parent;
+            graph_basic* parent;
             typedef std::pair<node*, int> route;
             mutable std::vector<route> map;
             int index; /** I believe this is used as an identifier in maps*/
             int lastpass; /** is used mostly for keeping track of whether or not we've visited this node in current crawl*/
-            static int newid();
-            friend class graph_generic;
+            friend class graph_basic;
             template <typename... L> node(I vid, int index, L&&... p);
             bool update_distances();
             bool init_map(int size);
             node * get_path(node * n);
+          protected:
+            static int newid();
           public:
-            template <class A, class...B> using proxy = proxy_<A,node,graph_generic,B...>;
+            template <class A, class...B> using proxy = proxy_<A,node,graph_basic,B...>;
             proxy<T, O...> data; /**vertex user data*/
             proxy<I> id;
-            proxy<std::vector<node*> > out;
-            proxy<std::vector<node*> > in;
+            proxy<int> classid;
+            proxy<multicont<std::vector<node*>> > out;
+            proxy<multicont<std::vector<node*>> > in;
             proxy<T,O...>& operator->(); /**provides diect access to the data member*/
             template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
             void crawl_topological(std::function<void(node*)> f); /** this is an overload of crawl for topological search*/
@@ -70,12 +74,13 @@ namespace ctb
         int index;
       public:
         typedef node node_t;
-        template <class A> using proxy = proxy_<A,graph_generic>;
+        template <class A> using proxy = proxy_<A,graph_basic>;
+        proxy<int> classcount;
         proxy<vertex_list_t> in;
         proxy<vertex_list_t> out;
         proxy<vertex_container_t> verts;
-        graph_generic();
-        ~graph_generic();
+        graph_basic();
+        ~graph_basic();
         template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
         void addedge(I aid, I bid, int b_argpos = -1) ; /** self describing I believe*/
         void calculate_distances(); /**performs bellman-ford algorithm */
@@ -83,19 +88,38 @@ namespace ctb
         static void self_test();
         void clear();
         void crawl_topological(std::function<void(node*)> f); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
+        void factorize();
     };
 
+  typedef graph_basic<dummy,int,true> graph_default;
+  typedef graph_basic<dummy,int,true> graph_basic_default;
 
-  typedef graph_generic<dummy,int,true> graph_default;
+
+    template <class T, class I, bool directed, class ... O>
+  void graph_basic<T,I,directed,O...>::factorize()
+  {
+    int classid = 0;
+    int passid = node::newid();
+    for(auto v : this->verts.r()) //this will ensure that all components will be crawled
+    {
+      node* n = v.second;
+      if(n->lastpass != passid)
+      {
+        n->template crawl<true, false>( [=](node* n)-> bool { n->classid.rw() = classid; n->lastpass = passid; return true; }, [=](node* n)->bool { return n->lastpass != passid; } );
+        ++classid;
+      }
+    }
+    classcount.rw() = classid;
+  }
 
   template <class T, class I, bool directed, class ... O>
-    graph_generic<T,I,directed,O...>::~graph_generic()
+    graph_basic<T,I,directed,O...>::~graph_basic()
     {
       clear();
     }
 
   template <class T, class I, bool directed, class ... O>
-    void graph_generic<T,I,directed,O...>::clear()
+    void graph_basic<T,I,directed,O...>::clear()
     {
       in.rw().clear();
       out.rw().clear();
@@ -105,9 +129,9 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
-    void graph_generic<T,I,directed,O...>::self_test()
+    void graph_basic<T,I,directed,O...>::self_test()
     {
-      graph_generic<dummy, int, true> g;
+      graph_basic<dummy, int, true> g;
       g.addvert(1, true, false);
       g.addvert(2, false, false);
       g.addvert(3, false, true);
@@ -121,7 +145,7 @@ namespace ctb
       g.calculate_distances();
       assert(g.get_dist(1,4) == 2);
       //  
-      graph_generic<dummy, int, false> h;
+      graph_basic<dummy, int, false> h;
       h.addvert(1, false, false);
       h.addvert(2, false, false);
       h.addvert(3, false, false);
@@ -136,13 +160,13 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
-    graph_generic<T,I,directed,O...>::node::proxy<T,O...>& graph_generic<T,I,directed,O...>::node::operator->()  
+    graph_basic<T,I,directed,O...>::node::proxy<T,O...>& graph_basic<T,I,directed,O...>::node::operator->()  
     {
       return data;
     }
 
   template <class T, class I, bool directed, class ... O>
-    int graph_generic<T,I,directed,O...>::get_dist(I a, I b, I* c) const
+    int graph_basic<T,I,directed,O...>::get_dist(I a, I b, I* c) const
     {
       auto va = verts->find(a);
       auto vb = verts->find(b);
@@ -155,13 +179,13 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
-    typename graph_generic<T,I,directed,O...>::node* graph_generic<T,I,directed,O...>::node::get_path(node * n)
+    typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::node::get_path(node * n)
     {
       return map[n->index].first;
     }
 
   template <class T, class I, bool directed, class ... O>
-    void graph_generic<T,I,directed,O...>::calculate_distances()  
+    void graph_basic<T,I,directed,O...>::calculate_distances()  
     {
       if(verts->empty())
         return;
@@ -183,7 +207,7 @@ namespace ctb
 
 
   template <class T, class I, bool directed, class ... O>
-    bool graph_generic<T,I,directed,O...>::node::update_distances()
+    bool graph_basic<T,I,directed,O...>::node::update_distances()
     {
       bool updated = false;
       for( auto n : out.rw())
@@ -203,7 +227,7 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
-    bool graph_generic<T,I,directed,O...>::node::init_map(int size)
+    bool graph_basic<T,I,directed,O...>::node::init_map(int size)
     {
       map.clear();
       for(int i = 0; i < size; i++)
@@ -216,7 +240,7 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
-    void graph_generic<T,I,directed,O...>::addedge(I aid, I bid, int b_argpos)  
+    void graph_basic<T,I,directed,O...>::addedge(I aid, I bid, int b_argpos)  
     {
       /*is the +1 at argpos really correct? For now I suppose it is since unit tests do work as expected*/
       typename vertex_container_t::iterator a = verts.rw().find(aid);
@@ -246,7 +270,7 @@ namespace ctb
 
   template <class T, class I, bool directed, class ... O>
     template <typename...L> 
-    void graph_generic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  
+    void graph_basic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  
     {
       node* ptr = new node(v, index++, (std::forward<L>(p))...);
       verts.rw().insert(typename vertex_container_t::value_type(v, ptr));
@@ -259,25 +283,25 @@ namespace ctb
 
   template <class T, class I, bool directed, class ... O>
     template <typename... L> 
-    graph_generic<T,I,directed,O...>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)
+    graph_basic<T,I,directed,O...>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)
     {
     }
 
 
   template <class T, class I, bool directed, class ... O>
-    graph_generic<T,I,directed,O...>::graph_generic() : in(), out(), verts(), index(0)
+    graph_basic<T,I,directed,O...>::graph_basic() : in(), out(), verts(), index(0)
   {
   }
 
   template <class T, class I, bool directed, class ... O>
-    int graph_generic<T,I,directed,O...>::node::newid()
+    int graph_basic<T,I,directed,O...>::node::newid()
     {
       static int id = 0;
       return ++id;
     }
 
   template <class T, class I, bool directed, class ... O>
-    void graph_generic<T,I,directed,O...>::crawl_topological(std::function<void(node*)> f)
+    void graph_basic<T,I,directed,O...>::crawl_topological(std::function<void(node*)> f)
     {
       int passid = node::newid();
 
@@ -290,7 +314,7 @@ namespace ctb
     }
 
   template <class T, class I, bool directed, class ... O>
-    void graph_generic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)
+    void graph_basic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)
     {
       int passid = node::newid();
 
@@ -316,7 +340,7 @@ namespace ctb
    * */
   template <class T, class I, bool directed, class ... O>
     template <bool recurse, bool inverse>
-    void graph_generic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
+    void graph_basic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
     {
       bool root = false;
       if(q == NULL)

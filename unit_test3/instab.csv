@@ -7,6 +7,7 @@
 	instruction	INT	INT,INT	MULI		2	2	_mm_shuffle_epi32(_mm_mul_epu32($$arg1, $$arg2), _MM_SHUFFLE (0,0,2,0))			0
 	instruction	INT	INT	STI	output	1	1	$$output = $$arg1			0
 	instruction	INT	INT	STI	output	4	4	_mm_storeu_si128((__m128i*)&$$output, $$arg1)			0
+#note	type	output type	input types	op id	flags	name	transformer	args
 #note	type	type id	bitwidth	width	code
 	type_version	FLOAT	32	1	float
 	type_version	FLOAT	32	4	__m128

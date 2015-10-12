@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <root Name="root">
    <instruction_list Name="instruction_list">
+      <operation input="0" opid="SPLIT" out_type="INT" output="0">
+         <expansion name="split" transformer_name="cf" arguments="ADDI,MULI"></expansion>
+      </operation>
       <operation input="0" opid="ADDI" out_type="INT" output="0">
          <instruction width_out="1" code="$arg1 + $arg2" width_in="1"></instruction>
          <instruction width_out="4" code="_mm_add_epi32($arg1, $arg2)" width_in="4"></instruction>

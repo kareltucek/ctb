@@ -11,6 +11,7 @@
 #include "aliasenv_bobox.h"
 #include "aliasenv_simple.h"
 #include "aliasenv_simu.h"
+#include "cf_transform.h"
 
 namespace ctb
 {
@@ -105,6 +106,7 @@ namespace ctb
         void command_testgraph(stringlist&& args);
         void command_adddebug(stringlist&& args);
         void command_generate(stringlist&& args);
+        void command_transform(stringlist&& args);
         static std::string get_inner_name(std::string fname);
         static std::string get_prefix(std::string fname);
 
@@ -114,9 +116,11 @@ namespace ctb
         typedef std::tuple< std::function<void(std::istream&)>, std::function<void(std::istream&)>, std::function<void(std::ostream&)>, std::function<void(std::ostream&)>> loader_record;
         typedef std::function<std::string(std::string)> aliasenv_record;
         typedef std::pair<std::function<void(stringlist&&)>,std::string> command_record;
+        typedef std::function<void()> transform_record;
         std::map<std::string, loader_record> hash_loader;
         std::map<std::string, aliasenv_record> hash_aliasenv;
         std::map<std::string, command_record> hash_command;
+        std::map<std::string, transform_record> hash_transforms;
       public:
         ctb();
         ctb(const ctb&) = delete;
@@ -125,11 +129,12 @@ namespace ctb
         template<template <typename ...> class L, typename...P> void        load_graph(P...params) ;
         template<template <typename ...> class L, typename...P> void        export_instab(P...params) ;
         template<template <typename ...> class L, typename...P> void        export_graph(P...params) ;
-        template<typename M>                             std::string generate(std::string name) ;
-
+        template<template <typename ...> class L, typename...P> void        transform_graph(P...params) ;
         template<template <typename ...> class L, typename M, typename...P> std::string process(std::string name, P...params) ;
+        template<typename M>                                                std::string generate(std::string name) ;
 
         template<template <typename ... > class L> void register_loader() ;
+        template<template <typename ... > class L> void register_transform() ;
         template<class M> void register_aliasenv() ;
         void register_command(const std::string& cmd, std::function<void(stringlist&&)> f, const std::string& description);
 
@@ -161,8 +166,16 @@ namespace ctb
       register_aliasenv<aliasenv_bobox>();
       register_loader<csv_loader>();
       register_loader<xml_loader>();
+      register_transform<cf_transform>();
     }
 
+  template <class T, class IT>
+    template<template <typename...> class L> void ctb<T,IT>::register_transform()
+    {
+      if(L<generator_t>::get_name() == "")
+        error( "unnamed transformation passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
+      hash_transforms[L<generator_t>::get_name()] = transform_record(std::bind(&ctb<T,IT>::transform_graph<L>  , this));
+    }
 
   template <class T, class IT>
     template<template <typename...> class L> void ctb<T,IT>::register_loader()
@@ -196,6 +209,12 @@ namespace ctb
     {
       L<T, generator_t, IT> loader;
       loader.export_graph(mygenerator, params...);
+    }
+
+  template <class T, class IT>
+    template<template <typename ...> class L, typename...P> void ctb<T,IT>::transform_graph(P...params)
+    {
+      mygenerator.template transform<L,P...>(params...);
     }
 
   template <class T, class IT>
@@ -247,7 +266,7 @@ namespace ctb
       openstream(g2,"unit_test1/graph.xml");
       b.load_instab<xml_loader,std::istream&>(file);
       writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple,std::istream&>( "test_simple", g1) );
-      writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox,std::istream&>( "test_bobox", g2) );
+      //writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox,std::istream&>( "test_bobox", g2) );
       assert(b.get_prefix("/test/test/last") == "/test/test/");
     }
 
@@ -310,6 +329,11 @@ namespace ctb
       }
       std::cout << "Aliasenvs:" << std::endl;
       for(auto l : hash_aliasenv)
+      {
+        std::cout << "  " << l.first << std::endl;
+      }
+      std::cout << "Transformers:" << std::endl;
+      for(auto l : hash_transforms)
       {
         std::cout << "  " << l.first << std::endl;
       }
@@ -490,7 +514,7 @@ start:;
           if(err.second)
             error(s.str(), err.second);
           else
-            std::cerr << s.str();
+            std::cerr << s.str() << std::endl;
         }
         ++i;
       }
@@ -513,7 +537,8 @@ start:;
       register_command("source",  std::bind(&ctb<T,IT>::command_source                       , this, std::placeholders::_1),  "source       <input file>");
       register_command("generate",  std::bind(&ctb<T,IT>::command_generate                     , this, std::placeholders::_1),  "generate <output aliasenv> <output file>");
       register_command("testgraph",  std::bind(&ctb<T,IT>::command_testgraph                     , this, std::placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
-      register_command("adddebug",  std::bind(&ctb<T,IT>::command_adddebug                     , this, std::placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to it");
+      register_command("adddebug",  std::bind(&ctb<T,IT>::command_adddebug                     , this, std::placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to its vertices");
+      register_command("transform",  std::bind(&ctb<T,IT>::command_transform                     , this, std::placeholders::_1),  "transform  <transformer> - transforms the loaded graph somehow");
       register_command("help",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
       register_command("?",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
     }
@@ -541,9 +566,17 @@ start:;
   {
       test_loader<T,generator_t,IT> l;
       args.erase(args.begin());
-      int frame = args.empty() ? 1 : ::ctb::stoi(args[0]);
+      int depth = args.empty() ? 1 : ::ctb::stoi(args[0]);
       args.erase(args.begin());
-      l.adddebug(mygenerator,instab,frame,args);
+      l.adddebug(mygenerator,instab,depth,args);
+  }
+
+  template <class T, class IT>
+    void ctb<T,IT>::command_transform(stringlist&& args)
+  {
+    if(args.size() != 2)
+      error( std::string("invalid number of arguments "), false);
+    hash_transforms[args[1]]();
   }
 
   template <class T, class IT>

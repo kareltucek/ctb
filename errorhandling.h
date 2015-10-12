@@ -15,12 +15,12 @@ namespace ctb
 
   void warning(std::string e)
   {
-    std::cerr << e << std::endl;
+    std::cerr << std::endl << "warning: " << e << std::endl;
   }
 
   void warn(std::string e)
   {
-    std::cerr << e << std::endl;
+    std::cerr << std::endl << "warning: " << e << std::endl;
   }
 };
 

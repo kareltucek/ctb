@@ -173,15 +173,18 @@ TODO
 //export mechanics - hopefully done
 //general conversion interface - hopefully done (not yet tested)
 control flow support
+-> //graph factorization - done
+-> //general composite instruction support in instruction tables - done
+-> //preprocessors - standalone graph preprocessors - done
 -> graph partitioning -> how? Most likely on the 'generator' level. The generator will get support for creating directly code of the partitions.
--> general composite instruction support in instruction tables
--> preprocessors - standalone graph preprocessors
+-> extend graph api by reference driven edits and by removes
+-> write preprocessor for a control flow set
 -> generator
 -> create cf generators -> what should these do? These should most likely be alias-env specific template compositors ('inserted between current generator and aliasenvs'); possibly 
 -> maybe cf-generators should be insertable as the original generators?
 autoconversion for internal types (bool<->ssebool)
 bool <-> conversion instructions
-spillcode cost optimizations
+"spillcode" like cost optimizations
 
 // TODO - minors
 //stream support - hopefully done

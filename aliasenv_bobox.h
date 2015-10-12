@@ -158,6 +158,7 @@ namespace ctb
 
       wrt code_preload;
       /*TODO*/
+      SET("alignoffset", "(align_offset + output_offset)");
       std::shared_ptr<tagmaster_default> tq = std::make_shared<tagmaster_default>("","preloadio,universal","","");
       std::shared_ptr<tagmaster_default> tp = std::make_shared<tagmaster_default>("preloadio","","","");
       generator.generate(granularity, code_preload, tq, tp, tp);
