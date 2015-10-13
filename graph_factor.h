@@ -6,7 +6,7 @@ namespace ctb
   /**
    * General description
    * -------------------
-   *  This is an extension to the basic graph, which maintains structure of a factor graph.
+   *  This is an extension to the basic graph, which can generate structure of a factor graph. Note that the factor structure is not kept up-to-date through edits of the original graph.
    * */
 
   template <class T, class I, bool directed, class ... O>

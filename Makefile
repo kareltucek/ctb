@@ -32,7 +32,6 @@ testdir6 : ctb
 ssedir : ctb
 	make -C sse_set
 
-
 clean :
 	-rm test ctb
 	-make -C unit_test2 clean

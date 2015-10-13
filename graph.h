@@ -72,6 +72,11 @@ namespace ctb
         typedef std::map<I, node*> vertex_container_t;
         typedef std::vector<node*> vertex_list_t;
         int index;
+        node* tovert(I);
+        node* tovert(node*);
+        node* tovert(node&);
+        void rmat(std::vector<node*>& list, node* to);
+        void rmatv(node* a,node* to);
       public:
         typedef node node_t;
         template <class A> using proxy = proxy_<A,graph_basic>;
@@ -81,8 +86,10 @@ namespace ctb
         proxy<vertex_container_t> verts;
         graph_basic();
         ~graph_basic();
-        template <typename...L> void addvert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
-        void addedge(I aid, I bid, int b_argpos = -1) ; /** self describing I believe*/
+        template <typename...L> node* addvert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
+        template <typename J> void addedge(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0) ; /** self describing I believe*/
+        template <typename J> void rmedge(J aid, J bid, int level = 0);
+        template <typename J> void rmvert(J v);
         void calculate_distances(); /**performs bellman-ford algorithm */
         int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
@@ -94,6 +101,26 @@ namespace ctb
   typedef graph_basic<dummy,int,true> graph_default;
   typedef graph_basic<dummy,int,true> graph_basic_default;
 
+      template <class T, class I, bool directed, class ... O>
+  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(node& v)
+  {
+    return &v;
+  }
+  
+      template <class T, class I, bool directed, class ... O>
+  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(node* v)
+  {
+    return v;
+  }
+
+      template <class T, class I, bool directed, class ... O>
+  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(I v)
+  {
+    typename vertex_container_t::iterator a = verts.rw().find(v);
+    if(a == verts.rw().end())
+      return NULL;
+    return a->second;
+  }
 
     template <class T, class I, bool directed, class ... O>
   void graph_basic<T,I,directed,O...>::factorize()
@@ -239,38 +266,113 @@ namespace ctb
       return true;
     }
 
-  template <class T, class I, bool directed, class ... O>
-    void graph_basic<T,I,directed,O...>::addedge(I aid, I bid, int b_argpos)  
+      template <class T, class I, bool directed, class ... O>
+  void graph_basic<T,I,directed,O...>::rmatv(node* a,node* to)
+  {
+    for( int i = 0; i < 2; i++)
     {
-      /*is the +1 at argpos really correct? For now I suppose it is since unit tests do work as expected*/
-      typename vertex_container_t::iterator a = verts.rw().find(aid);
-      typename vertex_container_t::iterator b = verts.rw().find(bid);
-      if(a == verts->end() || b == verts->end())
+      auto& l = i == 0 ? a->in.rw() : a->out.rw();
+      for(int j = 0; j < l.getlevelcount(); ++j)
+      {
+        rmat(l.getlevel(j), to);
+      }
+    }
+  }
+
+      template <class T, class I, bool directed, class ... O>
+  void graph_basic<T,I,directed,O...>::rmat(std::vector<node*>& list, node* to)
+  {
+    for (auto itr = list.begin(); itr != list.end(); ++itr) 
+      if(*itr == to) //(we want to preserve argument indices)
+        *itr = NULL;
+  }
+
+      template <class T, class I, bool directed, class ... O>
+    template <typename J>
+  void graph_basic<T,I,directed,O...>::rmvert(J v)
+  {
+    auto a = tovert(v);
+    if(a == NULL)
+      error( "unknown vertex id in rmvert");
+    for( int i = 0; i < 2; i++)
+    {
+      auto& l = i == 0 ? a->in.rw() : a->out.rw();
+      for(int j = 0; j < l.getlevelcount(); ++j)
+      {
+        for(auto b : l.getlevel(j))
+        {
+          rmatv(b, a);
+        }
+      }
+    }
+    rmat(in.rw(), a); 
+    rmat(out.rw(), a); 
+    verts.rw().erase(a);
+    delete a; //not the safest thing to do. Now I admit that smart pointers should be used probably always.
+  }
+
+      template <class T, class I, bool directed, class ... O>
+    template <typename J>
+  void graph_basic<T,I,directed,O...>::rmedge(J aid, J bid, int l)
+  {
+    auto a = tovert(aid);
+    auto b = tovert(bid);
+    if(a == NULL || b == NULL)
+      error( "unknown vertex id in rmedge");
+    if(directed)
+    {
+      rmat(a->out.rw().getlevel(l), b);
+      rmat(b->in.rw().getlevel(l), a);
+    }
+    else
+    {
+      rmat(a->out.rw().getlevel(l), b);
+      rmat(a->in.rw().getlevel(l), b);
+      rmat(b->in.rw().getlevel(l), a);
+      rmat(b->out.rw().getlevel(l), a);
+    }
+  }
+
+  template <class T, class I, bool directed, class ... O>
+    template <typename J>
+    void graph_basic<T,I,directed,O...>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l)
+    {
+      auto a = tovert(aid);
+      auto b = tovert(bid);
+      if(a == NULL || b == NULL)
         error( "unknown vertex id");
       if(directed)
       {
-        a->second->out.rw().push_back(b->second);
-        if(b_argpos != -1)
+        if(a_argpos != -1)
         {
-          while(b->second->in.rw().size() < b_argpos+1)
-            b->second->in.rw().push_back(NULL);
-          b->second->in.rw()[b_argpos] = a->second;
+          while(a->out.rw().getlevel(l).size() < a_argpos+1)
+            a->out.rw().getlevel(l).push_back(NULL);
+          a->out.rw().getlevel(l)[a_argpos] = b;
         }
         else
-          b->second->in.rw().push_back(a->second);
+          a->out.rw().push_back(b);
+
+        if(b_argpos != -1)
+        {
+          while(b->in.rw().getlevel(l).size() < b_argpos+1)
+            b->in.rw().getlevel(l).push_back(NULL);
+          b->in.rw().getlevel(l)[b_argpos] = a;
+        }
+        else
+          b->in.rw().push_back(a);
       }
       else
       {
-        a->second->out.rw().push_back(b->second);
-        a->second->in.rw().push_back(b->second);
-        b->second->in.rw().push_back(a->second);
-        b->second->out.rw().push_back(a->second);
+        a->out.rw().getlevel(l).push_back(b);
+        a->in.rw().getlevel(l).push_back(b);
+        b->in.rw().getlevel(l).push_back(a);
+        b->out.rw().getlevel(l).push_back(a);
       }
     }
 
   template <class T, class I, bool directed, class ... O>
     template <typename...L> 
-    void graph_basic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  
+    typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  
     {
       node* ptr = new node(v, index++, (std::forward<L>(p))...);
       verts.rw().insert(typename vertex_container_t::value_type(v, ptr));
@@ -278,6 +380,7 @@ namespace ctb
         in.rw().push_back(ptr);
       if(bout)
         out.rw().push_back(ptr);
+      return ptr;
     }
 
 

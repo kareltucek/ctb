@@ -32,6 +32,11 @@ class multicont : public T
       return ((i == 0) ? (*((T*)this)) : (vec[i-1]));
     };
 
+    int getlevelcount()
+    {
+      return vec.size();
+    };
+
     static void self_test()
     {
       multicont<std::vector<int>> a;

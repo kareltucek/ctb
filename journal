@@ -177,7 +177,7 @@ control flow support
 -> //general composite instruction support in instruction tables - done
 -> //preprocessors - standalone graph preprocessors - done
 -> graph partitioning -> how? Most likely on the 'generator' level. The generator will get support for creating directly code of the partitions.
--> extend graph api by reference driven edits and by removes
+-> //extend graph api by reference driven edits and by removes - done
 -> write preprocessor for a control flow set
 -> generator
 -> create cf generators -> what should these do? These should most likely be alias-env specific template compositors ('inserted between current generator and aliasenvs'); possibly 
