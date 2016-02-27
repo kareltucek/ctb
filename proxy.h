@@ -1,6 +1,7 @@
 #ifndef PROXY_GUARD
 #define PROXY_GUARD
 
+#include "defines.h"
 #include "datatypes.h"
 
 namespace ctb
@@ -59,10 +60,10 @@ namespace ctb
       private:
       //T operator=(const T& arg) { data = arg; return data; }
       T data;
-      typedef typename std::remove_reference<typename std::remove_pointer<T>::type>::type result_dereferenced_t;
-      typedef typename std::remove_reference<T>::type result_t;
-      template <typename U> struct br_ct  { typedef decltype(std::declval<T const>()[std::declval<U>()]) type; };
-      template <typename U> struct br_t { typedef decltype(std::declval<T      >()[std::declval<U>()]) type; };
+      typedef typename remove_reference<typename remove_pointer<T>::type>::type result_dereferenced_t;
+      typedef typename remove_reference<T>::type result_t;
+      template <typename U> struct br_ct  { typedef decltype(declval<T const>()[declval<U>()]) type; };
+      template <typename U> struct br_t { typedef decltype(declval<T      >()[declval<U>()]) type; };
       template <typename U> U& dereference( U* t) const {return *t;};
       template <typename U> const U& dereference(const U& t) const {return t;};
       result_t& rw() { return data; }
@@ -76,20 +77,23 @@ namespace ctb
       const T& operator*() const { return data; }
       const result_dereferenced_t* operator->() const { return &dereference(data); }
       template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }
-      template <typename...L> proxy_(L&&... args) : data((std::forward<L>(args))...){}
+      template <typename...L> proxy_(L&&... args) : data((forward<L>(args))...){}
     };
 
-  /*rw proxy is now neccessary for keeping interfaces consistent*/
+  /* Rw proxy is now neccessary for keeping interfaces consistent.
+   *
+   * It seems like this program architecture has been a huge mistake.
+   * */
 
-  template <class T>
+  template <class T, class A = dummy_friend, class B = dummy_friend, class C = dummy_friend,  class D = dummy_friend, class E = dummy_friend>
     class proxy_rw {
       private:
       //T operator=(const T& arg) { data = arg; return data; }
       T data;
-      typedef typename std::remove_reference<typename std::remove_pointer<T>::type>::type result_dereferenced_t;
-      typedef typename std::remove_reference<T>::type result_t;
-      template <typename U> struct br_ct  { typedef decltype(std::declval<T const>()[std::declval<U>()]) type; };
-      template <typename U> struct br_t { typedef decltype(std::declval<T      >()[std::declval<U>()]) type; };
+      typedef typename remove_reference<typename remove_pointer<T>::type>::type result_dereferenced_t;
+      typedef typename remove_reference<T>::type result_t;
+      template <typename U> struct br_ct  { typedef decltype(declval<T const>()[declval<U>()]) type; };
+      template <typename U> struct br_t { typedef decltype(declval<T      >()[declval<U>()]) type; };
       template <typename U> U& dereference( U* t) const {return *t;};
       template <typename U> const U& dereference(const U& t) const {return t;};
       public:
@@ -104,7 +108,7 @@ namespace ctb
       //const T& operator*() const { return data; }
       //const result_dereferenced_t* operator->() const { return &dereference(data); }
       //template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }
-      template <typename...L> proxy_rw(L&&... args) : data((std::forward<L>(args))...){}
+      template <typename...L> proxy_rw(L&&... args) : data((forward<L>(args))...){}
     };
 };
 #endif 

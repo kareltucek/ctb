@@ -36,20 +36,20 @@ namespace ctb
     class test_loader
     {
       private:
-        std::map<typename T::tid_t, std::vector<typename T::opid_t> > ins;
-        std::map<typename T::tid_t, std::vector<typename T::opid_t> > outs;
-        static typename T::vid_t get_op_name(typename T::opid_t, const std::string& base, int v = -1);
-        void genvert(const std::string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<std::vector<typename T::opid_t> >& it, G& graph);
+        map<typename T::tid_t, vector<typename T::opid_t> > ins;
+        map<typename T::tid_t, vector<typename T::opid_t> > outs;
+        static typename T::vid_t get_op_name(typename T::opid_t, const string& base, int v = -1);
+        void genvert(const string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<vector<typename T::opid_t> >& it, G& graph);
         void gendbg(G& gen, const IT& it, typename T::vid_t v);
         int oid;
         int pid;
       public:
           void adddebug(G& graph, const IT&, int frame, const stringlist&) ;
           void load_graph(G& graph, const IT&) ;
-          void load_instab(IT& instab, std::istream&) ;
-          void export_graph(G& instab, std::ostream&) ;
-          void export_instab(IT& instab, std::ostream&) ;
-          static std::string get_name();
+          void load_instab(IT& instab, istream&) ;
+          void export_graph(G& instab, ostream&) ;
+          void export_instab(IT& instab, ostream&) ;
+          static string get_name();
           static void self_test() ;
     } ;
 
@@ -57,7 +57,7 @@ namespace ctb
 
 
   template <class T, class G, class IT>
-    std::string test_loader<T,G,IT>::get_name()
+    string test_loader<T,G,IT>::get_name()
     {
       return "test";
     }
@@ -66,7 +66,7 @@ namespace ctb
   void test_loader<T,G,IT>::gendbg(G& gen, const IT& it, typename T::vid_t v)
   {
     static int id = 1;
-    typename T::opid_t v_opid = gen.graph->verts.r().find(v)->second->data->opid.r();
+    typename T::opid_t v_opid = gen.graph.verts.find(v)->second->data.opid;
     typename T::opid_t debug_id = it.dec(v_opid).get_debug_opid();
     typename T::vid_t name = get_op_name(debug_id,"DEBUG", id++);
     gen.addvert(name, debug_id, 0);
@@ -78,32 +78,32 @@ namespace ctb
     template <class T, class G, class IT>
   void test_loader<T,G,IT>::adddebug(G& gen, const IT& it, int depth, const stringlist& v)
   {
-    std::set<typename T::vid_t> l;
-    std::queue<const typename G::node_t*>* q = new std::queue<const typename G::node_t*>();
+    set<typename T::vid_t> l;
+    queue<const typename G::node_t*>* q = new queue<const typename G::node_t*>();
     if(v.empty())
     {
-      for(auto n : gen.graph->verts.r())
-        if(!n.second->data->op->is(fDEBUG) && !n.second->data->op->is(fOUTPUT))
+      for(auto n : gen.graph.verts)
+        if(!n.second->data.op->is(fDEBUG) && !n.second->data.op->is(fOUTPUT))
           q->push(n.second);
     }
     else
     {
       for(auto n : v)
       {
-        auto itr = gen.graph->verts->find(cvt<std::string, typename T::vid_t>::convert(n));
-        if(itr != gen.graph->verts->end() && !itr->second->data->op->is(fOUTPUT))
+        auto itr = gen.graph.verts.find(cvt<string, typename T::vid_t>::convert(n));
+        if(itr != gen.graph.verts.end() && !itr->second->data.op->is(fOUTPUT))
           q->push(itr->second);
         else
-          warning(std::string("vertex for debug not found" ).append(n));
+          warning(string("vertex for debug not found" ).append(n));
       }
     }
     for(int i = depth; i > 0; i--)
     {
-      std::queue<const typename G::node_t*>* qn = new std::queue<const typename G::node_t*>();
+      queue<const typename G::node_t*>* qn = new queue<const typename G::node_t*>();
       while(!q->empty())
       {
-        l.insert(q->front()->id.r());
-        for(auto m : q->front()->in.r())
+        l.insert(q->front()->id);
+        for(auto m : q->front()->in)
         {
           qn->push(m);
         }
@@ -115,23 +115,23 @@ namespace ctb
     delete q;
     for(auto n : l)
       gendbg(gen, it, n);
-    //      l.insert(n.second->id.r());
+    //      l.insert(n.second->id);
   }
 
   template <class T, class G, class IT>
-    typename T::vid_t test_loader<T,G,IT>::get_op_name(typename T::opid_t t, const std::string& base, int v)
+    typename T::vid_t test_loader<T,G,IT>::get_op_name(typename T::opid_t t, const string& base, int v)
     {
-      return cvt<std::string,typename T::vid_t>::convert(std::string(base).append(std::to_string(v)).append("_").append(cvt<typename T::opid_t, std::string>::convert(t)));
+      return cvt<string,typename T::vid_t>::convert(string(base).append(to_string(v)).append("_").append(cvt<typename T::opid_t, string>::convert(t)));
     }
 
   template <typename T, class G, class IT>
-    void test_loader<T,G,IT>::genvert(const std::string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<std::vector<typename T::opid_t> >& it, G& graph)
+    void test_loader<T,G,IT>::genvert(const string& base, int i, typename IT::operation_t* op, const cartesian_multiplier<vector<typename T::opid_t> >& it, G& graph)
     {
       typename T::vid_t vid = get_op_name(op->opid, base, i);
 
       graph.addvert(vid, op->opid, 0);
       int j = 0;
-      for( typename std::vector<typename std::vector<typename T::opid_t>::iterator>::const_iterator in = it->begin(); in != it->end(); ++in)
+      for( typename vector<typename vector<typename T::opid_t>::iterator>::const_iterator in = it->begin(); in != it->end(); ++in)
       {
         graph.addedge(get_op_name(**in,"INPUT", j), vid, j);
         ++j;
@@ -142,7 +142,7 @@ namespace ctb
         int j = 0;
         for(auto itro : itre->second)
         {
-          typename T::vid_t n = cvt<std::string,typename T::vid_t>::convert(cvt<typename T::vid_t, std::string>::convert(get_op_name(itro,"OUTPUT", j)).append(cvt<typename T::vid_t,std::string>::convert(vid)));
+          typename T::vid_t n = cvt<string,typename T::vid_t>::convert(cvt<typename T::vid_t, string>::convert(get_op_name(itro,"OUTPUT", j)).append(cvt<typename T::vid_t,string>::convert(vid)));
           graph.addvert(n,itro,++oid);
           graph.addedge(vid, n, 0);
           ++j;
@@ -158,12 +158,12 @@ namespace ctb
       oid = 0;
       pid = 0;
 
-      for(auto o : instab.instab.r())
+      for(auto o : instab.instab)
       {
         if(o.second->is(fINPUT))
-          ins[o.second->out_type.r()].push_back(o.second->opid.r());
+          ins[o.second->out_type].push_back(o.second->opid);
         if(o.second->is(fOUTPUT))
-          outs[o.second->out_type.r()].push_back(o.second->opid.r());
+          outs[o.second->out_type].push_back(o.second->opid);
       }
 
       //for ( auto type : outs)
@@ -175,9 +175,9 @@ namespace ctb
           for ( auto op : type.second)
             graph.addvert(get_op_name(op, "INPUT", i), op, pid++); 
 
-      std::list<typename IT::operation_t*>* q = new std::list<typename IT::operation_t*>();
+      list<typename IT::operation_t*>* q = new list<typename IT::operation_t*>();
 
-      for(auto o : instab.instab.r())
+      for(auto o : instab.instab)
       {
         if(o.second->is(fDEBUG))
           continue;
@@ -192,13 +192,13 @@ namespace ctb
       int processed = 0;
       while( c )
       {
-        std::list<typename IT::operation_t*>* qn = new std::list<typename IT::operation_t*>();
+        list<typename IT::operation_t*>* qn = new list<typename IT::operation_t*>();
         c = false;
         for(auto o : *q)
         {
           bool s = true;
-          cartesian_multiplier<std::vector<typename T::opid_t> > itr;
-          for( auto it : o->in_types.r())
+          cartesian_multiplier<vector<typename T::opid_t> > itr;
+          for( auto it : o->in_types)
           {
             auto l = ins.find(it);
             if(l == ins.end())
@@ -213,11 +213,11 @@ namespace ctb
             continue;
             qn->push_back(o);
           }
-          if(ins.find(o->out_type.r()) == ins.end())
+          if(ins.find(o->out_type) == ins.end())
           {
             //for(int k = 0; k < T::maxarity; ++k)
             //  genvert("INPUT", k, o, itr, graph);
-            ins[o->out_type.r()].push_back(o->opid.r());
+            ins[o->out_type].push_back(o->opid);
             c = true;
           }
           int j = 0;
@@ -238,43 +238,43 @@ namespace ctb
       delete q;
 
       /*
-         for(auto o : instab.instab.r())
+         for(auto o : instab.instab)
          {
-         for(auto i : o.second->versions.r())
+         for(auto i : o.second->versions)
          {
          writer_plain::basic_ignorant_exporter w;
          w.push(i.note);
          w.push("instruction");
          w.push(o.second->out_type);
-         w.push(writer_plain(o.second->in_types.r()).list_concat(",").write_str());
+         w.push(writer_plain(o.second->in_types).list_concat(",").write_str());
          w.push(o.second->opid);
          w.push(flags_to_string(o.second->flags));
-         w.push(std::to_string(i.width_in));
-         w.push(std::to_string(i.width_out));
+         w.push(to_string(i.width_in));
+         w.push(to_string(i.width_out));
          w.push(i.code);
          w.push(i.code_custom);
          w.push(i.tags);
          w.push(i.rating);
-         s << w.list_concat("\t").write_str() << std::endl;
+         s << w.list_concat("\t").write_str() << endl;
          }
          }
          */
     }
 
   template <class T, class G, class IT>
-    void test_loader<T,G,IT>::export_graph(G& graph, std::ostream&)
+    void test_loader<T,G,IT>::export_graph(G& graph, ostream&)
     {
       error( "test loader does not support graph export");
     }
 
   template <class T, class G, class IT>
-    void test_loader<T,G,IT>::export_instab(IT& instab, std::ostream& s)
+    void test_loader<T,G,IT>::export_instab(IT& instab, ostream& s)
     {
       error( "test loader does not support instruction table export");
     }
 
   template <class T, class G, class IT>
-    void test_loader<T,G,IT>::load_instab(IT& instab, std::istream& s)
+    void test_loader<T,G,IT>::load_instab(IT& instab, istream& s)
     {
       error( "test loader does not support instruction table load");
     }
@@ -282,6 +282,7 @@ namespace ctb
   template <class T, class G, class IT>
     void test_loader<T,G,IT>::self_test()
     {
+      cout << "testing test loader" << endl;
     }
 
   template class test_loader<traits, generator_default, instruction_table_default> ;

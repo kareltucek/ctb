@@ -1,6 +1,8 @@
 #ifndef LANGUAGEEMPTY_GUARD
 #define LANGUAGEEMPTY_GUARD
 
+#include "defines.h"
+
 namespace ctb
 {
   /** 
@@ -27,7 +29,7 @@ namespace ctb
   class language_empty
   {
     public:
-      static void shouldbreak(const int& pos, const std::string& format, bool& brbf, bool& braf)
+      static void shouldbreak(const int& pos, const string& format, bool& brbf, bool& braf)
       { 
         brbf=false;
         braf=false;
@@ -39,7 +41,7 @@ namespace ctb
             break;
         }
       };
-      static void shouldindent( const std::string&, int& outindent, int& indent, int& nobreak)
+      static void shouldindent( const string&, int& outindent, int& indent, int& nobreak)
       {  
         outindent=0; 
         nobreak=0;
@@ -49,7 +51,7 @@ namespace ctb
   class language_cpp
   {
     public:
-      static void shouldbreak(const int& pos, const std::string& format, bool& brbf, bool& braf)
+      static void shouldbreak(const int& pos, const string& format, bool& brbf, bool& braf)
       { 
         brbf = false;
         braf = false;
@@ -72,7 +74,7 @@ namespace ctb
         }
       };
 
-      static void shouldindent( const std::string& line, int& outindent, int& indent, int& nobreak)
+      static void shouldindent( const string& line, int& outindent, int& indent, int& nobreak)
       {  
         outindent = indent;
         nobreak = 0;

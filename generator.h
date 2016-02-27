@@ -2,6 +2,7 @@
 #ifndef GENERATOR_GUARD
 #define GENERATOR_GUARD
 
+#include "defines.h"
 #include "graph.h"
 #include "instructions.h"
 #include "aliasenv_maker.h"
@@ -27,34 +28,32 @@ namespace ctb
       private:
         class data_t;
       public:
-        typedef graph_general<data_t, typename T::vid_t, true, generator> graph_t;
+        typedef graph_general<data_t, typename T::vid_t, true> graph_t;
         typedef typename graph_t::node_t node_t;
       private:
         typedef typename T::opid_t id_t;
         typedef typename T::vid_t vid_t;
         typedef typename T::param_t param_t;
         typedef typename IT::operation_t op_t;
-        template <typename A> using proxy = proxy_<A,generator>;
 
         class data_t
         {
           private:
-            typedef std::map<int, writer<aliasenv_generator> > acces_map_t;
+            typedef map<int, writer<aliasenv_generator> > acces_map_t;
             friend class generator;
 
             node_t* me;
             acces_map_t acces_map;
-            std::vector<param_t> parameters;
+            vector<param_t> parameters;
 
             template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
             void push_params();
             static int newid(bool reset);
-            std::string newname(std::string tag) ;
+            string newname(string tag) ;
             template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w, bool c);
           public:
-            template <typename A> using proxy = proxy_<A,data_t,generator>;
-            proxy<const op_t*> op;
-            proxy<id_t> opid;
+            const op_t* op;
+            id_t opid;
 
             template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
             template <class W> void generate(int granularity, W& w, bool c);
@@ -64,8 +63,8 @@ namespace ctb
         bool compiletest; /*abbreviated as plain 'c'*/
       public:
 
-        proxy< IT&> instab;
-        proxy<graph_t> graph;
+         IT& instab;
+        graph_t graph;
 
         generator( IT& i);
         void set_instab( IT& i);
@@ -73,7 +72,7 @@ namespace ctb
         template <typename...L> void addvert(vid_t v, id_t op, L... p) ;
         void addedge(vid_t aid, vid_t bid, int b_argpos) ;
 
-        template <class W> void generate(int granularity, W& w, std::shared_ptr<taghandler_base> p = NULL, std::shared_ptr<taghandler_base> q = NULL, std::shared_ptr<taghandler_base> s = NULL) ;
+        template <class W> void generate(int granularity, W& w, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ;
         int get_broadest(int upperbound = 10000000) ;
 
         void set_compiletest(bool);
@@ -92,28 +91,28 @@ namespace ctb
   void generator<T,IT>::transform(P...params)
   {
     L<graph_t> l;
-    l.transform(graph.rw(),params...);
+    l.transform(graph,params...);
   }
 
   template <class T, class IT>
     void generator<T,IT>::update()
     {
-      for(auto itr = graph->verts->cbegin(); itr != graph->verts->cend(); ++itr)
+      for(auto itr = graph.verts.cbegin(); itr != graph.verts.cend(); ++itr)
       {
-        data_t& n = itr->second->data.rw();
-        n.op.rw() = &instab->dec(n.opid.r());
+        data_t& n = itr->second->data;
+        n.op = &instab.dec(n.opid);
         /*
-           std::string a = n.opid.r();
+           string a = n.opid;
            instab->dec(a);
-           instab->dec(n.opid.r());
+           instab->dec(n.opid);
            */
       }
-      //graph.rw().crawl_topological([&](typename graph_t::node_t* n){n->data.op.rw() = instab->dec(n->data->opid.r());});
+      //graph.crawl_topological([&](typename graph_t::node_t* n){n->data.op = instab->dec(n->data->opid);});
       /*
-         for( auto op : graph->verts.r() )
+         for( auto op : graph->verts )
          {
-         std::string id = op.second->data->opid.r();
-         op.second->data.rw().op.rw() =
+         string id = op.second->data->opid;
+         op.second->data.op =
          instab->dec(id);
          }
          */
@@ -134,41 +133,41 @@ namespace ctb
   template <class T, class IT>
     void generator<T,IT>::clear()  
     {
-      graph.rw().clear();
+      graph.clear();
     }
 
   template <class T, class IT>
     template <typename...L> void generator<T,IT>::addvert(vid_t v, id_t op, L... p)  
     {
-      auto ptr = &instab->dec(op);
-      graph.rw().addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
+      auto ptr = &instab.dec(op);
+      graph.addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
     }
 
   template <class T, class IT>
     template <typename... L>
     generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(o)
     {
-      push_params((std::forward<L>(p))...);
+      push_params((forward<L>(p))...);
     }
 
   template <class T, class IT>
     void generator<T,IT>::set_instab( IT& i)
     {
-      instab.rw() = i; 
+      instab = i; 
     }
 
   template <class T, class IT>
     template <typename P, typename...Ps>
     void generator<T,IT>::data_t::push_params(P&& p, Ps&&...params)
     {
-      parameters.push_back(std::forward<P>(p));
-      push_params((std::forward<Ps>(params))...);
+      parameters.push_back(forward<P>(p));
+      push_params((forward<Ps>(params))...);
     }
 
   template <class T, class IT>
     void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos)  
     {
-      graph.rw().addedge(aid, bid, b_argpos);
+      graph.addedge(aid, bid, b_argpos);
     }
 
 
@@ -184,25 +183,25 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate(int packsize, W& w, std::shared_ptr<taghandler_base> ts, std::shared_ptr<taghandler_base> tp, std::shared_ptr<taghandler_base> to)
+    void generator<T,IT>::generate(int packsize, W& w, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
     {
-      if(graph->out->empty())
+      if(graph.out.empty())
         error( "graph is empty");
       if(ts!=NULL)
-        instab.rw().add_tags(ts,gSELECT);
+        instab.add_tags(ts,gSELECT);
       if(tp!=NULL)
-        instab.rw().add_tags(tp,gPRINT);
+        instab.add_tags(tp,gPRINT);
       if(to!=NULL)
-        instab.rw().add_tags(to,gONCE);
-      instab->update_tags();
+        instab.add_tags(to,gONCE);
+      instab.update_tags();
       data_t::newid(true); //resets ids
-      graph.rw().crawl_topological([&](node_t* n) {n->data.rw().generate(packsize, w, compiletest); });
+      graph.crawl_topological([&](node_t* n) {n->data.generate(packsize, w, compiletest); });
       if(to!=NULL)
-        instab.rw().rm_tags(to,gONCE);
+        instab.rm_tags(to,gONCE);
       if(tp!=NULL)
-        instab.rw().rm_tags(tp,gPRINT);
+        instab.rm_tags(tp,gPRINT);
       if(ts!=NULL)
-        instab.rw().rm_tags(ts,gSELECT);
+        instab.rm_tags(ts,gSELECT);
     }
 
   template <class T, class IT>
@@ -213,29 +212,29 @@ namespace ctb
       {
         W empty;
         int myin, myout;
-        int mygran = op->is(fDEBUG) ? me->in[0]->data->op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
+        int mygran = op->is(fDEBUG) ? me->in[0]->data.op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
         if(mygran == 0)
-          error( std::string("suitable width not found!"));
+          error( string("suitable width not found!"));
         if(granularity % mygran != 0)
-          error( std::string("granularities are relatively prime!"));
+          error( string("granularities are relatively prime!"));
         if(myin != myout)
-          error( std::string("asymetric instructions not supported"));
-        if(me->in->size() != op->in_types->size())
-          error( std::string("count of input nodes does not match operation specification"));
-        for(int i = 0; i < me->in->size(); ++i)
-          if(me->in[i]->data->op->out_type.r() != op->in_types[i])
-            error( std::string("argument ").append(std::to_string(i)).append(" does not match defined input type: got ").append(me->in[i]->data->op->out_type.r()).append(" wanted ").append(op->in_types[i]));
+          error( string("asymetric instructions not supported"));
+        if(me->in.size() != op->in_types.size())
+          error( string("count of input nodes does not match operation specification"));
+        for(int i = 0; i < me->in.size(); ++i)
+          if(me->in[i]->data.op->out_type != op->in_types[i])
+            error( string("argument ").append(to_string(i)).append(" does not match defined input type: got ").append(me->in[i]->data.op->out_type).append(" wanted ").append(op->in_types[i]));
         //op->imbue_width(mygran);
         acces_map.clear();
-#define ARG(a) (a-1 < me->in->size() ? W().print(me->in[a-1]->data.rw().get_acces(myin, granularity, w, c), i*myout) : empty)
+#define ARG(a) (a-1 < me->in.size() ? W().print(me->in[a-1]->data.get_acces(myin, granularity, w, c), i*myout) : empty)
         W acces({newname(print("w$1",myout))});
         acces_map.insert(acces_map_t::value_type(myout, acces));
-        std::string type_string, op_c, op_cc;
-        std::size_t printability; 
+        string type_string, op_c, op_cc;
+        size_t printability; 
         op->get_type_string(mygran, type_string);
         bool found = op->get_op_string(mygran, op_c, op_cc, printability);
         if(found && op_c.empty() && op_cc.empty())
-          warn(std::string("instruction code and custom code are both empty for ").append(opid));
+          warn(string("instruction code and custom code are both empty for ").append(opid));
         /*even for unprintable code we want to consume ids -> cannot skip most of this function*/
 	W basename = W().print(acces,0);
         for(int i = 0; i < granularity/myin && i < printability; i++) 
@@ -264,12 +263,12 @@ namespace ctb
       }
       catch (error_struct& err)
       {
-        std::stringstream s;
-        s << "while processing node " << me->id.r() << " with opcode " << opid.r() << "\n    " << err.first;
+        stringstream s;
+        s << "while processing node " << me->id << " with opcode " << opid << "\n    " << err.first;
         if(err.second)
           error(s.str(), true);
         else
-          std::cerr << s.str() << std::endl;
+          cerr << s.str() << endl;
       }
     }
 
@@ -287,12 +286,12 @@ namespace ctb
         //if a trivial path exists
         for(auto itr : acces_map)
         {
-          std::string c1, c2, cc, cg, t;
-          std::size_t printability;
+          string c1, c2, cc, cg, t;
+          size_t printability;
           if(op->get_conv_string(itr.first, width, c1, c2, cc, t, printability))
           {
             if(c2.empty() && c1.empty() && cc.empty())
-              warn(std::string("all code strings are empty at ").append(opid));
+              warn(string("all code strings are empty at ").append(opid));
             W acces({newname(print("conv_w$1",width))});
             acces_map.insert(acces_map_t::value_type(width, acces));
             W basename = W().print(acces, 0);
@@ -364,7 +363,7 @@ namespace ctb
           }
         }
       }
-      //throw std::string("acces code of width ") + std::to_string(width) + " not found.";
+      //throw string("acces code of width ") + to_string(width) + " not found.";
       //try to find a nontrivial path
       int mindist = 100;
       int minsrc = -1;
@@ -380,7 +379,7 @@ namespace ctb
 
       if(minsrc == -1)
       {
-        error( std::string("conversion path to ") + std::to_string(width) + " at " + (me->id.r()) +  " not found.");
+        error( string("conversion path to ") + to_string(width) + " at " + (me->id) +  " not found.");
         return writer<aliasenv_generator>();
       }
       else
@@ -401,7 +400,7 @@ namespace ctb
     {
       if(parameters.empty())
         return 0;
-      //throw std::string("envelope id not defined for vertex: ").append(id);
+      //throw string("envelope id not defined for vertex: ").append(id);
       return (int)parameters[0];
     }
 
@@ -415,19 +414,19 @@ namespace ctb
     }
 
   template <class T, class IT>
-    std::string generator<T,IT>::data_t::newname(std::string tag)
+    string generator<T,IT>::data_t::newname(string tag)
     {
-      return print("var_$1_id$2_t$3_$$1_at$4", opid, newid(false), tag, me->id.r());
+      return print("var_$1_id$2_t$3_$$1_at$4", opid, newid(false), tag, me->id);
     }
 
   template <class T, class IT>
     int generator<T,IT>::get_broadest(int upperbound)
     {
       int w = 0;
-      if(graph->out->empty())
+      if(graph.out.empty())
         error( "graph is empty");
       else
-        graph.rw().crawl_topological([&](node_t* n) { w = std::max(n->data->op->get_max_width(upperbound),w);  });
+        graph.crawl_topological([&](node_t* n) { w = max(n->data.op->get_max_width(upperbound),w);  });
       return w;
     }
 };

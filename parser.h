@@ -2,6 +2,7 @@
 #ifndef PARSER_GUARD
 #define PARSER_GUARD
 
+#include "defines.h"
 #include <string>
 #include <map>
 #include "errorhandling.h"
@@ -13,8 +14,8 @@ namespace ctb
     public:
       enum ttype{tNum,tMul,tDiv,tAdd,tSub,tPB,tPE,tEof};
     private:
-      typedef std::pair<ttype, int> token;
-      std::vector<token> stack;
+      typedef pair<ttype, int> token;
+      vector<token> stack;
       ttype type(const token&);
       int val(const token&);
       token tokenize(const char *&);
@@ -22,14 +23,15 @@ namespace ctb
       int process(const char*&);
       void squash_mul_div();
       void squash_add_sub();
-      static void diagnosis(const std::string& s, const std::string& e, int pos);
+      static void diagnosis(const string& s, const string& e, int pos);
     public:
       static void self_test();
-      static int calculate(const std::string&);
+      static int calculate(const string&);
   };
 
   void parser::self_test()
   {
+    cout << "testing math parser" << endl;
     assert(parser::calculate("1+1") == 2);
     assert(parser::calculate("2+3*4+2") == 16);
     assert(parser::calculate("(2+3)*(4-2)") == 10);
@@ -88,12 +90,12 @@ namespace ctb
     }
   }
 
-  void parser::diagnosis(const std::string& s, const std::string& e, int pos)
+  void parser::diagnosis(const string& s, const string& e, int pos)
   {
-    error(std::string("at position ").append(std::to_string(pos)).append(" in expression ").append(s).append("\n    ").append(e), false);
+    error(string("at position ").append(to_string(pos)).append(" in expression ").append(s).append("\n    ").append(e), false);
   }
 
-  int parser::calculate(const std::string& s)
+  int parser::calculate(const string& s)
   {
     parser p;
     const char* exp = s.c_str();
@@ -107,7 +109,7 @@ namespace ctb
     {
       diagnosis(s, err.first, exp-start);
     }
-    catch(std::exception& err)
+    catch(exception& err)
     {
       diagnosis(s, err.what(), exp-start);
     }
@@ -131,7 +133,7 @@ namespace ctb
 
   parser::token parser::tokenize(const char *& ptr)
   {
-    static std::map<char, ttype> hash = {
+    static map<char, ttype> hash = {
       {'(',tPB},
       {')',tPE},
       {'*',tMul},
@@ -208,9 +210,9 @@ namespace ctb
           squash_mul_div();
           squash_add_sub();
           if(stack.size() != 1)
-            error(std::string(std::to_string(stack.size())).append(" tokens remained on stack"));
+            error(string(to_string(stack.size())).append(" tokens remained on stack"));
           if(type(get(0)) != tNum)
-            error(std::string("wrong token type remained on stack "));
+            error(string("wrong token type remained on stack "));
           return val(get(0));
       }
     }

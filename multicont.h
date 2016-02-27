@@ -1,17 +1,20 @@
 #ifndef MULTICONT_GUARD
 #define MULTICONT_GUARD
 
+#include "defines.h"
 #include <vector>
 #include <assert.h>
 
-/* Multicont is a class which mimics its template parameter, but provides an additional method which allows access to a vector of 'nondefault' instances of the template parameter
+/* Multicont is a class which mimics its template parameter, but provides an additional method which allows access to a vector of 'nondefault' instances of the template parameter. 
+ *
+ * E.g. this allows as to add multiple classes of edges between graph vertices without having to change anything except one container type.
  * */
 
 template <class T>
 class multicont : public T
 {
   private:
-    mutable std::vector<T> vec;
+    mutable vector<T> vec;
     void fillin(int i) const
     {
       while(vec.size() < i)
@@ -39,7 +42,8 @@ class multicont : public T
 
     static void self_test()
     {
-      multicont<std::vector<int>> a;
+      cout << "testing multi container" << endl;
+      multicont<vector<int>> a;
       a.push_back(0);
       a.push_back(1);
       a.getlevel(1).push_back(2);
@@ -49,6 +53,6 @@ class multicont : public T
     }
 };
 
-typedef multicont<std::vector<int>> multicont_default;
+typedef multicont<vector<int>> multicont_default;
 
 #endif

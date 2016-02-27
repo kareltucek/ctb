@@ -106,18 +106,18 @@ namespace ctb
         enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode};
         enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating};
 
-        static writer_plain preprocessline(std::string line);
-        static void process(IT& instab, std::istream& s);
-        static void insert(IT& instab, std::string line);
+        static writer_plain preprocessline(string line);
+        static void process(IT& instab, istream& s);
+        static void insert(IT& instab, string line);
 
-        static std::map<std::string, int> flags;
-        static bool empty(const std::string& line);
+        static map<string, int> flags;
+        static bool empty(const string& line);
       public:
-        void load_graph(G& graph, std::istream&) ;
-        void load_instab(IT& instab, std::istream&) ;
-        void export_graph(G& instab, std::ostream&) ;
-        void export_instab(IT& instab, std::ostream&) ;
-        static std::string get_name();
+        void load_graph(G& graph, istream&) ;
+        void load_instab(IT& instab, istream&) ;
+        void export_graph(G& instab, ostream&) ;
+        void export_instab(IT& instab, ostream&) ;
+        static string get_name();
         static void self_test() ;
     } ;
 
@@ -125,105 +125,105 @@ namespace ctb
 
 
   template <class T, class G, class IT, class D>
-    std::string csv_loader<T,G,IT,D>::get_name()
+    string csv_loader<T,G,IT,D>::get_name()
     {
       return "csv";
     }
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::export_graph(G& graph, std::ostream&)
+    void csv_loader<T,G,IT,D>::export_graph(G& graph, ostream&)
     {
       error( "csv loader does not support graph export");
     }
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::load_graph(G& graph, std::istream&)
+    void csv_loader<T,G,IT,D>::load_graph(G& graph, istream&)
     {
       error( "csv loader does not support graph load"); 
     }
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::export_instab(IT& instab, std::ostream& s)
+    void csv_loader<T,G,IT,D>::export_instab(IT& instab, ostream& s)
     {
-      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\tcode custom\ttags\trating" << std::endl;
-      for(auto o : instab.instab.r())
+      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\tcode custom\ttags\trating" << endl;
+      for(auto o : instab.instab)
       {
-        for(auto i : o.second->versions.r())
+        for(auto i : o.second->versions)
         {
           writer_plain::basic_ignorant_exporter w;
           w.push(i.note);
           w.push("instruction");
           w.push(o.second->out_type);
-          w.push(writer_plain(o.second->in_types.r()).list_concat(",").write_str());
+          w.push(writer_plain(o.second->in_types).list_concat(",").write_str());
           w.push(o.second->opid);
           w.push(flags_to_string(o.second->flags));
-          w.push(std::to_string(i.width_in));
-          w.push(std::to_string(i.width_out));
+          w.push(to_string(i.width_in));
+          w.push(to_string(i.width_out));
           w.push(i.code);
           w.push(i.code_custom);
           w.push(i.tags);
           w.push(i.rating);
-          s << w.list_concat("\t").write_str() << std::endl;
+          s << w.list_concat("\t").write_str() << endl;
         }
       }
-      s << "#note\ttype\toutput type\tinput types\top id\tflags\tname\ttransformer\targs" << std::endl;
-      for(auto o : instab.instab.r())
+      s << "#note\ttype\toutput type\tinput types\top id\tflags\tname\ttransformer\targs" << endl;
+      for(auto o : instab.instab)
       {
-        for(auto i : o.second->expansions.r())
+        for(auto i : o.second->expansions)
         {
           writer_plain::basic_ignorant_exporter w;
           w.push(i.note);
           w.push("expansion");
           w.push(o.second->out_type);
-          w.push(writer_plain(o.second->in_types.r()).list_concat(",").write_str());
+          w.push(writer_plain(o.second->in_types).list_concat(",").write_str());
           w.push(o.second->opid);
           w.push(flags_to_string(o.second->flags));
           w.push(i.name);
           w.push(i.transformer_name);
           w.push(writer_plain(i.arguments).list_concat(",").write_str());
-          s << w.list_concat("\t").write_str() << std::endl;
+          s << w.list_concat("\t").write_str() << endl;
         }
       }
-      s << "#note\ttype\ttype id\tbitwidth\twidth\tcode" << std::endl;
-      for(auto t : instab.typetab.r())
+      s << "#note\ttype\ttype id\tbitwidth\twidth\tcode" << endl;
+      for(auto t : instab.typetab)
       {
-        for(auto v : t.second->versions.r())
+        for(auto v : t.second->versions)
         {
           writer_plain::basic_ignorant_exporter w;
           w.push(v.note);
           w.push("type_version");
           w.push(t.second->tid);
           w.push(t.second->bitwidth);
-          w.push(std::to_string(v.width));
+          w.push(to_string(v.width));
           w.push(v.code);
-          s << w.list_concat("\t").write_str() << std::endl;
+          s << w.list_concat("\t").write_str() << endl;
         }
       }
-      s << "#note\ttype\ttype id\tbitwidth\twidth in\twidth out\tcode1\tcode2\tcode custom\tcode generic\ttags\trating" << std::endl;
-      for(auto t : instab.typetab.r())
+      s << "#note\ttype\ttype id\tbitwidth\twidth in\twidth out\tcode1\tcode2\tcode custom\tcode generic\ttags\trating" << endl;
+      for(auto t : instab.typetab)
       {
-        for(auto v : t.second->conversions.r())
+        for(auto v : t.second->conversions)
         {
           writer_plain::basic_ignorant_exporter w;
           w.push(v.note);
           w.push("type_conversion");
           w.push(t.second->tid);
           w.push(t.second->bitwidth);
-          w.push(std::to_string(v.width_in));
-          w.push(std::to_string(v.width_out));
+          w.push(to_string(v.width_in));
+          w.push(to_string(v.width_out));
           w.push(v.code1);
           w.push(v.code2);
           w.push(v.code_custom);
           w.push(v.code_generic);
           w.push(v.tags);
           w.push(v.rating);
-          s << w.list_concat("\t").write_str() << std::endl;
+          s << w.list_concat("\t").write_str() << endl;
         }
       }
     }
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::load_instab(IT& instab, std::istream& s)
+    void csv_loader<T,G,IT,D>::load_instab(IT& instab, istream& s)
     {
       process(instab, s);
     }
@@ -231,6 +231,8 @@ namespace ctb
   template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::self_test()
     {
+      cout << "testing csv loader" << endl;
+
       stringlist a = split("a;b;;c",';'); 
       int i = 0;
       assert(a[i++]=="a");
@@ -246,12 +248,12 @@ namespace ctb
 
       instruction_table_default tab;
       csvloader_default l;
-      std::ifstream s("unit_test1/instab.csv");
+      ifstream s("unit_test1/instab.csv");
       l.load_instab(tab, s);
     }
 
   template <class T, class G, class IT, class D>
-    bool csv_loader<T,G,IT,D>::empty(const std::string& line)
+    bool csv_loader<T,G,IT,D>::empty(const string& line)
     {
       for(int i = 0; i < line.size(); ++i)
       {
@@ -262,7 +264,7 @@ namespace ctb
     }
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::insert(IT& instab, std::string line)
+    void csv_loader<T,G,IT,D>::insert(IT& instab, string line)
     {
       if(line.size() == 0 || line[0] == '#' || empty(line))
         return;
@@ -294,33 +296,33 @@ namespace ctb
       }
       else
       {
-        error( std::string("unknown line type "), false);
+        error( string("unknown line type "), false);
       }
     }
 
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::process(IT& instab, std::istream& s)
+    void csv_loader<T,G,IT,D>::process(IT& instab, istream& s)
     {
-      std::string line;
+      string line;
       int i = 1;
-      while(std::getline(s, line))
+      while(getline(s, line))
       {
         writer_plain lines = preprocessline(line);
         for(int j = 0; j < lines.size(); j++)
         {
-          std::string l = lines.write_line(j);
+          string l = lines.write_line(j);
           try
           {
             insert(instab, l);
           }
           catch(const error_struct& e)
           {
-            error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.first ), false);
+            error(string("at line ").append(to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.first ), false);
           }
-          catch(std::exception& e)
+          catch(exception& e)
           {
-            error(std::string("at line ").append(std::to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.what() ), false);
+            error(string("at line ").append(to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.what() ), false);
           }
         }
         ++i;
@@ -328,7 +330,7 @@ namespace ctb
     }
 
   template <class T, class G, class IT, class D>
-    writer_plain csv_loader<T,G,IT,D>::preprocessline(std::string line)
+    writer_plain csv_loader<T,G,IT,D>::preprocessline(string line)
     {
       return writer_plain().print(line.append("\n"));
     }

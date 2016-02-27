@@ -1,6 +1,7 @@
 #ifndef DATATYPES_GUARD
 #define DATATYPES_GUARD
 
+#include "defines.h"
 #include <string>
 #include <sys/stat.h>
 #include <vector>
@@ -17,7 +18,7 @@ namespace ctb
   {
   }
 
-  typedef std::vector<std::string> stringlist;
+  typedef vector<string> stringlist;
 
 
   bool fileexists(const char *name)
@@ -26,12 +27,12 @@ namespace ctb
     return (stat (name, &buffer) == 0);
   }
 
-  std::vector<std::string> split(std::string str, char d, bool squash = false)
+  vector<string> split(string str, char d, bool squash = false)
   {
-    std::string item;
-    std::vector<std::string> l;
-    std::istringstream ss(str);
-    while(std::getline(ss, item, d))
+    string item;
+    vector<string> l;
+    istringstream ss(str);
+    while(getline(ss, item, d))
     {
       int end = item.find_last_not_of(" \n\r");
       int begin = item.find_first_not_of(" \n\r");
@@ -50,18 +51,18 @@ namespace ctb
 
 
   template <typename S>
-    void openstream(S& stream, const std::string& name, bool check_existence = true)
+    void openstream(S& stream, const string& name, bool check_existence = true)
     {
       stream.open(name);
       if(!stream.is_open())
       {
         if(!fileexists(name.c_str()) && check_existence)
         {
-            error(std::string("file does not exist: ").append(name));
+            error(string("file does not exist: ").append(name));
         }
         else
         {
-          error(std::string("file could not be opened: ").append(name));
+          error(string("file could not be opened: ").append(name));
         }
       }
     }

@@ -1,10 +1,11 @@
 #ifndef XMLLOADER_GUARD
 #define XMLLOADER_GUARD
 
+#include "defines.h"
 #include "tinyxml2.h"
 
 #ifndef XMLCheckResult
-#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { error(std::string("XML loader error: ").append(std::to_string(a_eResult))); }
+#define XMLCheckResult(a_eResult) if (a_eResult != XML_SUCCESS) { error(string("XML loader error: ").append(to_string(a_eResult))); }
 #endif
 
 namespace ctb
@@ -81,42 +82,42 @@ namespace ctb
     class xml_loader
     {
       private:
-        static std::string getstr(tinyxml2::XMLNode * node, std::string name);
-        static std::string getanystr(tinyxml2::XMLNode * node, std::string name);
-        static int getint(tinyxml2::XMLNode * node, std::string name);
-        static int getanyint(tinyxml2::XMLNode * node, std::string name, int def = 0);
-        static bool hasval(tinyxml2::XMLNode* node, std::string name);
+        static string getstr(tinyxml2::XMLNode * node, string name);
+        static string getanystr(tinyxml2::XMLNode * node, string name);
+        static int getint(tinyxml2::XMLNode * node, string name);
+        static int getanyint(tinyxml2::XMLNode * node, string name, int def = 0);
+        static bool hasval(tinyxml2::XMLNode* node, string name);
       public:
-        void load_graph(G& graph, std::istream& stream) ;
-        void load_instab(IT& instab, std::istream& stream) ;
-        void export_graph(G& graph, std::ostream& stream) ;
-        void export_instab(IT& instab, std::ostream& stream) ;
-        static std::string get_name();
+        void load_graph(G& graph, istream& stream) ;
+        void load_instab(IT& instab, istream& stream) ;
+        void export_graph(G& graph, ostream& stream) ;
+        void export_instab(IT& instab, ostream& stream) ;
+        static string get_name();
         static void self_test() ;
     } ;
 
   typedef xml_loader<traits, generator_default, instruction_table_default> loader_default;
 
   template <class T, class G, class IT>
-    std::string xml_loader<T,G,IT>::get_name()
+    string xml_loader<T,G,IT>::get_name()
     {
       return "xml";
     }
 
   template <class T, class G, class IT>
-    void xml_loader<T,G,IT>::export_instab(IT& instab, std::ostream& stream)
+    void xml_loader<T,G,IT>::export_instab(IT& instab, ostream& stream)
     {
       error( "xml export not (yet) supported");
     }
 
   template <class T, class G, class IT>
-    void xml_loader<T,G,IT>::export_graph(G& graph, std::ostream& stream)
+    void xml_loader<T,G,IT>::export_graph(G& graph, ostream& stream)
     {
       error( "xml export not (yet) supported");
     }
 
   template <class T, class G, class IT>
-    int xml_loader<T,G,IT>::getanyint(tinyxml2::XMLNode * node, std::string name, int def)
+    int xml_loader<T,G,IT>::getanyint(tinyxml2::XMLNode * node, string name, int def)
     {
       if(hasval(node, name))
         return getint(node, name);
@@ -125,7 +126,7 @@ namespace ctb
     }
 
   template <class T, class G, class IT>
-    std::string xml_loader<T,G,IT>::getanystr(tinyxml2::XMLNode * node, std::string name)
+    string xml_loader<T,G,IT>::getanystr(tinyxml2::XMLNode * node, string name)
     {
       if(hasval(node, name))
         return getstr(node, name);
@@ -134,10 +135,10 @@ namespace ctb
     }
 
   template <class T, class G, class IT>
-    std::string xml_loader<T,G,IT>::getstr(tinyxml2::XMLNode * node, std::string name)
+    string xml_loader<T,G,IT>::getstr(tinyxml2::XMLNode * node, string name)
     {
       if(node->FirstChildElement(name.c_str()) != NULL)
-        return node->FirstChildElement(name.c_str())->GetText() == NULL ? "" :  std::string(node->FirstChildElement(name.c_str())->GetText());
+        return node->FirstChildElement(name.c_str())->GetText() == NULL ? "" :  string(node->FirstChildElement(name.c_str())->GetText());
       else
       {
         tinyxml2::XMLElement * ptr = node->ToElement();
@@ -146,16 +147,16 @@ namespace ctb
     }
 
   template <class T, class G, class IT>
-    int xml_loader<T,G,IT>::getint(tinyxml2::XMLNode * node, std::string name)
+    int xml_loader<T,G,IT>::getint(tinyxml2::XMLNode * node, string name)
     {
-      std::string str = getstr(node, name.c_str());
+      string str = getstr(node, name.c_str());
       if(str.empty())
         return 0;
-      return std::stoi(str);
+      return ctb::stoi(str);
     }
 
   template <class T, class G, class IT>
-    bool xml_loader<T,G,IT>::hasval(tinyxml2::XMLNode * node, std::string name)
+    bool xml_loader<T,G,IT>::hasval(tinyxml2::XMLNode * node, string name)
     {
       if(node->FirstChildElement(name.c_str()) != NULL)
         return true;
@@ -164,9 +165,9 @@ namespace ctb
     }
 
   template <class T, class G, class IT>
-    void xml_loader<T,G,IT>::load_graph(G& graph, std::istream& stream)
+    void xml_loader<T,G,IT>::load_graph(G& graph, istream& stream)
     {
-      std::string xml{ std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() };
+      string xml{ istreambuf_iterator<char>(stream), istreambuf_iterator<char>() };
       using namespace tinyxml2;
       XMLDocument xmlDoc;
       XMLCheckResult(xmlDoc.Parse(xml.c_str()));
@@ -185,9 +186,9 @@ namespace ctb
     }
 
   template <class T, class G, class IT>
-    void xml_loader<T,G,IT>::load_instab(IT& instab, std::istream& stream)
+    void xml_loader<T,G,IT>::load_instab(IT& instab, istream& stream)
     {
-      std::string xml{ std::istreambuf_iterator<char>(stream), std::istreambuf_iterator<char>() };
+      string xml{ istreambuf_iterator<char>(stream), istreambuf_iterator<char>() };
       using namespace tinyxml2;
       XMLDocument xmlDoc;
       //XMLCheckResult(xmlDoc.LoadFile(filename.c_str()));
@@ -217,12 +218,13 @@ namespace ctb
   template <class T, class G, class IT>
     void xml_loader<T,G,IT>::self_test()
     {
+      cout << "testing xml loader" << endl;
       instruction_table_default tab;
       generator_default g(tab);
       xml_loader l;
-      std::ifstream i_xml("unit_test1/instab.xml");
+      ifstream i_xml("unit_test1/instab.xml");
       l.load_instab(tab, i_xml);
-      std::ifstream g_xml("unit_test1/graph.xml");
+      ifstream g_xml("unit_test1/graph.xml");
       l.load_graph(g, g_xml);
     }
 }

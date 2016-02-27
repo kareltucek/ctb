@@ -19,27 +19,27 @@ namespace ctb
   class aliasenv_simu : public aliasenv_generator
   {
     protected:
-      typedef std::map<std::string, std::string> aliastab_t;
+      typedef map<string, string> aliastab_t;
       static aliastab_t aliases;
       static void init();
-      template <class G> static writer<aliasenv_simu> generate_body(int m,  G& generator, std::string name);
+      template <class G> static writer<aliasenv_simu> generate_body(int m,  G& generator, string name);
     public:
       typedef language_cpp language;
-      static std::string get_name();
-      static std::string alias(const std::string& a, bool* s = NULL);
-      template <class G> static writer<aliasenv_simu> generate(int m,  G& generator, std::string name);
+      static string get_name();
+      static string alias(const string& a, bool* s = NULL);
+      template <class G> static writer<aliasenv_simu> generate(int m,  G& generator, string name);
   } ;
 
-  std::map<std::string, std::string> aliasenv_simu::aliases;
+  map<string, string> aliasenv_simu::aliases;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
 
-  std::string aliasenv_simu::get_name()
+  string aliasenv_simu::get_name()
   {
     return "simu";
   }
 
-  std::string aliasenv_simu::alias(const std::string& a, bool* s)
+  string aliasenv_simu::alias(const string& a, bool* s)
   {
     auto itr = aliases.find(a);
     if(itr == aliases.end())
@@ -63,19 +63,19 @@ namespace ctb
     ADD("output", "data_out_$cindex[pos_out_$cindex+j+$iindex]");
     ADD("outputg", "data_out_$cindex,pos_out_$cindex+j+$iindex");
 
-    ADD("fdeclin",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_in.h")));
-    ADD("fdeclcont",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_cont.h")));
-    ADD("fdeclout", writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_decl_out.h")));
-    ADD("fenvin",   writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_env_in.h")));
-    ADD("fenvout",  writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_env_out.h")));
-    ADD("fbox",     writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_box.h")));
-    ADD("fbody",    writer<aliasenv_generator>::from_file(std::string().append(exec_path).append("templates/simu_body.h")));
+    ADD("fdeclin",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_decl_in.h")));
+    ADD("fdeclcont",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_decl_cont.h")));
+    ADD("fdeclout", writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_decl_out.h")));
+    ADD("fenvin",   writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_env_in.h")));
+    ADD("fenvout",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_env_out.h")));
+    ADD("fbox",     writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_box.h")));
+    ADD("fbody",    writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_body.h")));
 
     initialized = true;
   }
 
     template <class G>
-      writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, std::string name)
+      writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, string name)
   {
 #ifdef TMPTEST
     if(granularity > 16)
@@ -86,11 +86,11 @@ namespace ctb
       typedef writer<aliasenv_simu> wrt;
 
       wrt decl;
-      std::string type_string;
-      for( auto n : generator.graph->out.r())
+      string type_string;
+      for( auto n : generator.graph.out)
       {
-        n->data->op->get_type_string(1, type_string);
-        decl.print("$fdeclcont", n->data->get_inout_pos(), type_string);
+        n->data.op->get_type_string(1, type_string);
+        decl.print("$fdeclcont", n->data.get_inout_pos(), type_string);
       }
 
     writer<aliasenv_simu> bodies;
@@ -107,7 +107,7 @@ namespace ctb
   }
 
   template <class G>
-    writer<aliasenv_simu> aliasenv_simu::generate_body(int granularity, G& generator, std::string name)
+    writer<aliasenv_simu> aliasenv_simu::generate_body(int granularity, G& generator, string name)
     {
       typedef writer<aliasenv_simu> wrt;
 
@@ -115,36 +115,36 @@ namespace ctb
       wrt olist;
 
       wrt decl;
-      std::string type_string;
-      for( auto n : generator.graph->in.r())
+      string type_string;
+      for( auto n : generator.graph.in)
       {
-        n->data->op->get_type_string(1, type_string);
-        decl.print("$fdeclin", n->data->get_inout_pos(), type_string, n->data->op->out_type.r(), n->id.r());
+        n->data.op->get_type_string(1, type_string);
+        decl.print("$fdeclin", n->data.get_inout_pos(), type_string, n->data.op->out_type, n->id);
       }
-      for(auto n : generator.graph->out.r())
+      for(auto n : generator.graph.out)
       {
-        n->data->op->get_type_string(1, type_string);
-        decl.print("$fdeclout", n->data->get_inout_pos(), type_string, n->data->op->out_type.r(), n->id.r());
+        n->data.op->get_type_string(1, type_string);
+        decl.print("$fdeclout", n->data.get_inout_pos(), type_string, n->data.op->out_type, n->id);
       }
 
       wrt envelopes;
-      for(auto n : generator.graph->in.r())
+      for(auto n : generator.graph.in)
       {
-        n->data->op->get_type_string(1, type_string);
-        envelopes.print("$fenvin", n->data->get_inout_pos(), type_string, n->data->op->out_type.r());
+        n->data.op->get_type_string(1, type_string);
+        envelopes.print("$fenvin", n->data.get_inout_pos(), type_string, n->data.op->out_type);
       }
-      for(auto n : generator.graph->out.r())
+      for(auto n : generator.graph.out)
       {
-        n->data->op->get_type_string(1, type_string);
-        envelopes.print("$fenvout", n->data->get_inout_pos(),  type_string, n->data->op->out_type.r(), granularity, n->id.r());
+        n->data.op->get_type_string(1, type_string);
+        envelopes.print("$fenvout", n->data.get_inout_pos(),  type_string, n->data.op->out_type, granularity, n->id);
       }
 
       wrt minlist;
       minlist.print("std::numeric_limits<unsigned>::max()");
-      for(auto n : generator.graph->in.r())
-        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data->get_inout_pos(), minlist);
-      for(auto n : generator.graph->out.r())
-        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data->get_inout_pos(), minlist);
+      for(auto n : generator.graph.in)
+        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_inout_pos(), minlist);
+      for(auto n : generator.graph.out)
+        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
 
       wrt code;
       generator.generate(granularity, code);
@@ -154,10 +154,10 @@ namespace ctb
         generator.generate(1, code2);
 
       wrt inc;
-      for(auto n : generator.graph->in.r())
-        inc.print("pos_in_$1 += batch_size;", n->data->get_inout_pos());
-      for(auto n : generator.graph->out.r())
-        inc.print("pos_out_$1 += batch_size;", n->data->get_inout_pos());
+      for(auto n : generator.graph.in)
+        inc.print("pos_in_$1 += batch_size;", n->data.get_inout_pos());
+      for(auto n : generator.graph.out)
+        inc.print("pos_out_$1 += batch_size;", n->data.get_inout_pos());
 
       wrt box;
       box.print("$fbody", name, ilist, olist,decl, envelopes, minlist, code, code2, inc, granularity);

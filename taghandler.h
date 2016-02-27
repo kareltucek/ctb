@@ -1,6 +1,7 @@
 #ifndef TAGHANDLER_GUARD
 #define TAGHANDLER_GUARD
 
+#include "defines.h"
 #include <map>
 #include "datatypes.h"
 
@@ -13,7 +14,7 @@ namespace ctb
   class taghandler_base
   {
     public:
-      virtual bool is_satisfactory(const std::string&) = 0;
+      virtual bool is_satisfactory(const string&) = 0;
   };
 
 }

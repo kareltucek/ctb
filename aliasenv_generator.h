@@ -2,6 +2,7 @@
 #ifndef aliasenv_GENERATOR_GUARD
 #define aliasenv_GENERATOR_GUARD
 
+#include "defines.h"
 #include "writer.h"
 #include <map>
 
@@ -29,35 +30,35 @@ namespace ctb
   class aliasenv_generator 
   {
     protected:
-      typedef std::map<std::string, std::string> aliastab_t;
+      typedef map<string, string> aliastab_t;
       static aliastab_t aliases;
       static void init();
-      static bool check_pos_alias(const std::string& name, const std::string& a, int offset);
+      static bool check_pos_alias(const string& name, const string& a, int offset);
     public:
       typedef language_empty language;
-      static std::string alias(const std::string& a, bool* s = NULL, int n = -1);
-      template <class G> static writer<aliasenv_generator> generate(int m,  G& graph, std::string name) ;
+      static string alias(const string& a, bool* s = NULL, int n = -1);
+      template <class G> static writer<aliasenv_generator> generate(int m,  G& graph, string name) ;
   };
 
-  std::map<std::string, std::string> aliasenv_generator::aliases;
+  map<string, string> aliasenv_generator::aliases;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
 
-  bool aliasenv_generator::check_pos_alias(const std::string& name, const std::string& a, int offset)
+  bool aliasenv_generator::check_pos_alias(const string& name, const string& a, int offset)
   {
     bool aredigits = true;
     for(int i = name.length(); i < a.length(); ++i)
       aredigits &= isdigit(a[i]);
     if(aredigits && a.length() > name.length() && a.substr(0,name.length()) == name) // >3 ensures at least one digit to exist
     {
-      ADD(a, std::string("$").append(std::to_string(offset+std::stoi(a.substr(name.length(),a.length()-name.length())))));
+      ADD(a, string("$").append(ctb::to_string(offset+ctb::stoi(a.substr(name.length(),a.length()-name.length())))));
       return true;
     }
     return false;
   }
 
 
-  std::string aliasenv_generator::alias(const std::string& a, bool* s, int n)
+  string aliasenv_generator::alias(const string& a, bool* s, int n)
   {
     auto itr = aliases.find(a);
     if(itr == aliases.end())
@@ -70,7 +71,7 @@ namespace ctb
       if(s != NULL)
         *s = false;
       else
-        warn(std::string("warning: alias not found: ").append(a));
+        warn(string("warning: alias not found: ").append(a));
       return "";
     }
     if(s != NULL)
@@ -111,7 +112,7 @@ namespace ctb
   }
 
   template <class G>
-    writer<aliasenv_generator> aliasenv_generator::generate(int max_granularity, G& graph, std::string name)
+    writer<aliasenv_generator> aliasenv_generator::generate(int max_granularity, G& graph, string name)
     {
       error( "empty aliasenv generator used");
       return writer<aliasenv_generator>();

@@ -1,6 +1,8 @@
 #ifndef GRAPH_FACTOR_GUARD
 #define GRAPH_FACTOR_GUARD
 
+#include "defines.h"
+
 namespace ctb
 {
   /**
@@ -9,23 +11,22 @@ namespace ctb
    *  This is an extension to the basic graph, which can generate structure of a factor graph. Note that the factor structure is not kept up-to-date through edits of the original graph.
    * */
 
-  template <class T, class I, bool directed, class ... O>
-    class graph_factor : public graph_basic<T,I,directed,O...>
+  template <class T, class I, bool directed>
+    class graph_factor : public graph_basic<T,I,directed>
   {
     protected:
       class factor_class;
-      typedef graph_basic<T,I,directed,O...> ancestor_t;
-      typedef graph_basic<factor_class,int,true,graph_factor> factorgraph_myt;
+      typedef graph_basic<T,I,directed> ancestor_t;
+      typedef graph_basic<factor_class,int,true> factorgraph_myt;
 
         class factor_class 
         {
           protected:
             typename factorgraph_myt::node_t* me;
           public:
-            template <class A, class...B> using proxy = proxy_<A,factorgraph_myt,ancestor_t,graph_factor,factor_class,B...>;
-            proxy<std::set<typename ancestor_t::node*>> vertices;
-            proxy<std::set<typename ancestor_t::node*>> in;
-            proxy<std::set<typename ancestor_t::node*>> out;
+            set<typename ancestor_t::node*> vertices;
+            set<typename ancestor_t::node*> in;
+            set<typename ancestor_t::node*> out;
             factor_class(typename factorgraph_myt::node_t* m) : me(m){};
         };
         void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);
@@ -33,29 +34,29 @@ namespace ctb
       typedef factorgraph_myt factorgraph_t;
       typedef typename ancestor_t::node node_t;
       typedef typename ancestor_t::id_t id_t;
-      using graph_basic<T,I,directed,O...>::graph_basic;
-      template <class A> using proxy = proxy_<A,graph_factor>;
+      using graph_basic<T,I,directed>::graph_basic;
 
-      proxy<factorgraph_t> factor;
+      factorgraph_t factor;
       void factorize();
       static void self_test();
 
   };
   typedef graph_factor<dummy,int,true> graph_factor_default;
-  template <class T, class I, bool directed, class ... O> using graph_general = graph_factor<T,I,directed,O...>;
+  template <class T, class I, bool directed> using graph_general = graph_factor<T,I,directed>;
 
-  template <class T, class I, bool directed, class ... O>
-  void graph_factor<T,I,directed,O...>::add_factor_edge(node_t* from, node_t* to)
+  template <class T, class I, bool directed>
+  void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)
   {
-    factor.rw().addedge(from->classid, to->classid); 
-    factor.r().verts.r().find(from->classid.r())->second->data.rw().out.rw().insert(from);
-    factor.r().verts.r().find(to->classid.r())->second->data.rw().in.rw().insert(to);
+    factor.addedge(from->classid, to->classid); 
+    factor.verts.find(from->classid)->second->data.out.insert(from);
+    factor.verts.find(to->classid)->second->data.in.insert(to);
   }
 
   
-  template <class T, class I, bool directed, class ... O>
-  void graph_factor<T,I,directed,O...>::self_test()
+  template <class T, class I, bool directed>
+  void graph_factor<T,I,directed>::self_test()
   {
+    cout << "testing factor graph" << endl;
       typedef graph_factor_default g_t;
       g_t g;
       g.addvert(1, true, false);
@@ -65,31 +66,31 @@ namespace ctb
       g.addedge(1,2);
       g.addedge(3,4);
       g.factorize();
-      assert(g.verts->find(1)->second->classid.r() == g.verts->find(2)->second->classid.r());
-      assert(g.verts->find(3)->second->classid == g.verts->find(4)->second->classid);
-      assert(g.verts->find(1)->second->classid != g.verts->find(4)->second->classid);
+      assert(g.verts.find(1)->second->classid == g.verts.find(2)->second->classid);
+      assert(g.verts.find(3)->second->classid == g.verts.find(4)->second->classid);
+      assert(g.verts.find(1)->second->classid != g.verts.find(4)->second->classid);
   } 
 
-    template <class T, class I, bool directed, class ... O>
-  void graph_factor<T,I,directed,O...>::factorize()
+    template <class T, class I, bool directed>
+  void graph_factor<T,I,directed>::factorize()
   {
-    factor.rw().clear();
-    graph_basic<T,I,directed,O...>::factorize(); //will assign class ids in the simple graph
-    for(int i = 0; i < this->classcount.r(); ++i)
-      factor.rw().addvert(i, false, false);
-    this->crawl_topological([=](node_t* n){ this->factor->verts.r().find(n->classid.r())->second->data.rw().vertices.rw().insert(n);  });
-    this->crawl_topological([=](node_t* n){ for(auto i : n->out.r().getlevel(1)) { this->add_factor_edge(n,i); } });
-    std::set<int> ins;
-    std::set<int> outs;
+    factor.clear();
+    graph_basic<T,I,directed>::factorize(); //will assign class ids in the simple graph
+    for(int i = 0; i < this->classcount; ++i)
+      factor.addvert(i, false, false);
+    this->crawl_topological([=](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
+    this->crawl_topological([=](node_t* n){ for(auto i : n->out.getlevel(1)) { this->add_factor_edge(n,i); } });
+    set<int> ins;
+    set<int> outs;
 
-    for(auto n : this->in.r())
-      ins.insert(n->classid.r());
-    for(auto n : this->out.r())
-      outs.insert(n->classid.r());
+    for(auto n : this->in)
+      ins.insert(n->classid);
+    for(auto n : this->out)
+      outs.insert(n->classid);
     for(auto n : ins)
-      factor.rw().in.rw().push_back(n);
+      factor.in.push_back(factor.verts.find(n)->second);
     for(auto n : outs)
-      factor.rw().outs.rw().push_back(n);
+      factor.out.push_back(factor.verts.find(n)->second);
   }
 };
 

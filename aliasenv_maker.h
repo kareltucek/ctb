@@ -2,6 +2,7 @@
 #ifndef aliasenv_GUARD
 #define aliasenv_GUARD
 
+#include "defines.h"
 #include "languages.h"
 #include "writer.h"
 #include <map>
@@ -24,25 +25,25 @@ namespace ctb
     class aliasenv_maker
     {
       protected:
-        typedef std::map<std::string, std::string> aliastab_t;
+        typedef map<string, string> aliastab_t;
         static aliastab_t aliases;
         static void init();
       public:
         typedef aliasenv_maker<T,L,false> noreport;
         typedef L language;
-        static std::string alias(const std::string& a, bool* success = NULL);
+        static string alias(const string& a, bool* success = NULL);
         static void clear();
-        static std::string& access(const std::string&);
+        static string& access(const string&);
     };
 
   struct empty_tag{};
 
-  template <typename T, typename L, bool R> std::map<std::string, std::string> aliasenv_maker<T,L,R>::aliases;
+  template <typename T, typename L, bool R> map<string, string> aliasenv_maker<T,L,R>::aliases;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
 
   template <typename T, typename L, bool R>
-    std::string aliasenv_maker<T,L,R>::alias(const std::string& a, bool* s)
+    string aliasenv_maker<T,L,R>::alias(const string& a, bool* s)
     {
       auto itr = aliases.find(a);
       if(itr == aliases.end())
@@ -50,7 +51,7 @@ namespace ctb
         if(s != NULL)
           *s = false;
         else if(R)
-          warn( std::string("warning: alias not found: ").append(a));
+          warn( string("warning: alias not found: ").append(a));
         return "";
       }
       if(s != NULL)
@@ -71,7 +72,7 @@ namespace ctb
     }
 
   template <typename T, typename L, bool R>
-    std::string& aliasenv_maker<T,L,R>::access(const std::string& str)
+    string& aliasenv_maker<T,L,R>::access(const string& str)
     {
       return aliases[str];
     }

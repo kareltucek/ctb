@@ -1,6 +1,7 @@
 #ifndef DATATYPES_GUARD
 #define DATATYPES_GUARD
 
+#include "defines.h"
 #include <string>
 #include <sys/stat.h>
 #include <vector>
@@ -9,7 +10,6 @@
 #include <iostream>
 #include "proxy.h"
 #include "errorhandling.h"
-#include "conversions.h"
 
 namespace ctb
 {
@@ -28,15 +28,15 @@ namespace ctb
     typedef int tid_t;
     typedef int vid_t;
     typedef uint32_t flag_t;
-    typedef std::string param_t;
+    typedef string param_t;
     static const int maxarity = 3;
   } ;
 
   struct traits
   {
-    typedef std::string opid_t;
-    typedef std::string tid_t;
-    typedef std::string vid_t;
+    typedef string opid_t;
+    typedef string tid_t;
+    typedef string vid_t;
     typedef uint32_t flag_t;
     typedef int param_t;
     //typedef tagmaster<uint32_t> tag_handler_t;
@@ -56,7 +56,7 @@ namespace ctb
   {
   }
 
-  typedef std::vector<std::string> stringlist;
+  typedef vector<string> stringlist;
 
 
 
@@ -66,12 +66,12 @@ namespace ctb
     return (stat (name, &buffer) == 0);
   }
 
-  std::vector<std::string> split(std::string str, char d, bool squash = false)
+  vector<string> split(string str, char d, bool squash = false)
   {
-    std::string item;
-    std::vector<std::string> l;
-    std::istringstream ss(str);
-    while(std::getline(ss, item, d))
+    string item;
+    vector<string> l;
+    istringstream ss(str);
+    while(getline(ss, item, d))
     {
       int end = item.find_last_not_of(" \n\r");
       int begin = item.find_first_not_of(" \n\r");
@@ -88,7 +88,7 @@ namespace ctb
     return l;
   }
 
-  std::string trim(const std::string& s)
+  string trim(const string& s)
     {
       int end = s.find_last_not_of(" \n\r");
       int begin = s.find_first_not_of(" \n\r");
@@ -99,9 +99,9 @@ namespace ctb
     }
 
   template<typename F>
-    F string_to_flags(std::string str)
+    F string_to_flags(string str)
     {
-      static std::map<std::string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
+      static map<string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
       F f = 0;
       stringlist words = split(str, ',');
       for(auto w : words)
@@ -112,35 +112,35 @@ namespace ctb
         }
         else
         {
-          error( std::string("unknown flag found: ").append(w).append("\n"), false);
+          error( string("unknown flag found: ").append(w).append("\n"), false);
         }
       }
       return f;
     }
 
   template <typename S>
-    void openstream(S& stream, const std::string& name, bool check_existence = true)
+    void openstream(S& stream, const string& name, bool check_existence = true)
     {
       stream.open(name);
       if(!stream.is_open())
       {
         if(!fileexists(name.c_str()) && check_existence)
         {
-            error(std::string("file does not exist: ").append(name));
+            error(string("file does not exist: ").append(name));
         }
         else
         {
-          error(std::string("file could not be opened: ").append(name));
+          error(string("file could not be opened: ").append(name));
         }
       }
     }
 
 
   template<typename F>
-    std::string flags_to_string(F f)
+    string flags_to_string(F f)
     {
-      std::string b;
-      static std::map<std::string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
+      string b;
+      static map<string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
 
       for(auto rec : hash)
       {
@@ -154,22 +154,22 @@ namespace ctb
       return b;
     }
 
-  std::string exec_path;
+  string exec_path;
 
 
-  std::string to_string(std::string str)
+  string to_string(string str)
   {
     return str;
   }
 
-  std::string to_string(int i)
+  string to_string(int i)
   {
     return std::to_string(i);
   }
 
-  int stoi(std::string str)
+  int stoi(string str)
   {
-    //will want some evaluation here later...
+    //may want some evaluation here later...
     int result = 0;
     try
     {
@@ -177,7 +177,7 @@ namespace ctb
     }
     catch(...)
     {
-      error(std::string("'").append(str).append("' does not look like an integer"), false);
+      error(string("'").append(str).append("' does not look like an integer"), false);
     }
     return result;
   }

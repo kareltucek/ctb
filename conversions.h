@@ -1,6 +1,7 @@
 #ifndef CONVERT_GUARD
 #define CONVERT_GUARD
 
+#include "defines.h"
 #include <string>
 #include <functional>
 
@@ -19,11 +20,11 @@ struct cvt<A,A>
   static A convert(const A& a){return a;};
 };
 
-template <> struct cvt<int,std::string> { static std::string convert(const int& a){return std::to_string(a);}; };
+template <> struct cvt<int,string> { static string convert(const int& a){return to_string(a);}; };
 
-template <> struct cvt<std::string,int>
+template <> struct cvt<string,int>
 {
-  static int convert(const std::string& a)
+  static int convert(const string& a)
   {
     try
     {
@@ -31,7 +32,7 @@ template <> struct cvt<std::string,int>
     }
     catch(...)
     {
-      return std::hash<std::string>()(a);
+      return hash<string>()(a);
     }
   };
 };

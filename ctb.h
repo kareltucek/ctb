@@ -1,6 +1,7 @@
 #ifndef ctb_GUARD
 #define ctb_GUARD
 
+#include "defines.h"
 #include "graph.h"
 #include "datatypes.h"
 #include "generator.h"
@@ -96,7 +97,7 @@ namespace ctb
         typedef generator<T,IT> generator_t;
         IT instab;
         generator_t mygenerator;
-        std::shared_ptr<tagmaster<uint32_t>> mytags;
+        shared_ptr<tagmaster<uint32_t>> mytags;
 
         void help_cmdline_old();
         void help_command_stream();
@@ -107,20 +108,20 @@ namespace ctb
         void command_adddebug(stringlist&& args);
         void command_generate(stringlist&& args);
         void command_transform(stringlist&& args);
-        static std::string get_inner_name(std::string fname);
-        static std::string get_prefix(std::string fname);
+        static string get_inner_name(string fname);
+        static string get_prefix(string fname);
 
         void fill();
         void fill_commands();
 
-        typedef std::tuple< std::function<void(std::istream&)>, std::function<void(std::istream&)>, std::function<void(std::ostream&)>, std::function<void(std::ostream&)>> loader_record;
-        typedef std::function<std::string(std::string)> aliasenv_record;
-        typedef std::pair<std::function<void(stringlist&&)>,std::string> command_record;
-        typedef std::function<void()> transform_record;
-        std::map<std::string, loader_record> hash_loader;
-        std::map<std::string, aliasenv_record> hash_aliasenv;
-        std::map<std::string, command_record> hash_command;
-        std::map<std::string, transform_record> hash_transforms;
+        typedef tuple< function<void(istream&)>, function<void(istream&)>, function<void(ostream&)>, function<void(ostream&)>> loader_record;
+        typedef function<string(string)> aliasenv_record;
+        typedef pair<function<void(stringlist&&)>,string> command_record;
+        typedef function<void()> transform_record;
+        map<string, loader_record> hash_loader;
+        map<string, aliasenv_record> hash_aliasenv;
+        map<string, command_record> hash_command;
+        map<string, transform_record> hash_transforms;
       public:
         ctb();
         ctb(const ctb&) = delete;
@@ -130,16 +131,16 @@ namespace ctb
         template<template <typename ...> class L, typename...P> void        export_instab(P...params) ;
         template<template <typename ...> class L, typename...P> void        export_graph(P...params) ;
         template<template <typename ...> class L, typename...P> void        transform_graph(P...params) ;
-        template<template <typename ...> class L, typename M, typename...P> std::string process(std::string name, P...params) ;
-        template<typename M>                                                std::string generate(std::string name) ;
+        template<template <typename ...> class L, typename M, typename...P> string process(string name, P...params) ;
+        template<typename M>                                                string generate(string name) ;
 
         template<template <typename ... > class L> void register_loader() ;
         template<template <typename ... > class L> void register_transform() ;
         template<class M> void register_aliasenv() ;
-        void register_command(const std::string& cmd, std::function<void(stringlist&&)> f, const std::string& description);
+        void register_command(const string& cmd, function<void(stringlist&&)> f, const string& description);
 
-        int parse_command_stream(std::istream& );
-        int parse_command(std::string);
+        int parse_command_stream(istream& );
+        int parse_command(string);
         int command_stream_cmdline(int count, char ** args);
         int cmdline_old(int count, char ** args);
 
@@ -173,28 +174,28 @@ namespace ctb
     template<template <typename ...> class L> void ctb<T,IT>::register_transform()
     {
       if(L<typename generator_t::graph_t>::get_name() == "")
-        error( "unnamed transformation passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
-      hash_transforms[L<typename generator_t::graph_t>::get_name()] = transform_record(std::bind(&ctb<T,IT>::transform_graph<L>  , this));
+        error( "unnamed transformation passed - (have you defined a 'string get_name(){return \"whatever nonempty\";}' method?");
+      hash_transforms[L<typename generator_t::graph_t>::get_name()] = transform_record(bind(&ctb<T,IT>::transform_graph<L>  , this));
     }
 
   template <class T, class IT>
     template<template <typename...> class L> void ctb<T,IT>::register_loader()
     {
       if(L<T,generator_t,IT>::get_name() == "")
-        error( "unnamed loader passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
+        error( "unnamed loader passed - (have you defined a 'string get_name(){return \"whatever nonempty\";}' method?");
       hash_loader[L<T,generator_t,IT>::get_name()] = loader_record(
-          std::bind(&ctb<T,IT>::load_instab<L,std::istream&>  , this, std::placeholders::_1),
-          std::bind(&ctb<T,IT>::load_graph<L,std::istream&>   , this, std::placeholders::_1),
-          std::bind(&ctb<T,IT>::export_instab<L,std::ostream&>, this, std::placeholders::_1),
-          std::bind(&ctb<T,IT>::export_graph<L,std::ostream&> , this, std::placeholders::_1));
+          bind(&ctb<T,IT>::load_instab<L,istream&>  , this, placeholders::_1),
+          bind(&ctb<T,IT>::load_graph<L,istream&>   , this, placeholders::_1),
+          bind(&ctb<T,IT>::export_instab<L,ostream&>, this, placeholders::_1),
+          bind(&ctb<T,IT>::export_graph<L,ostream&> , this, placeholders::_1));
     }
 
   template <class T, class IT>
     template<class M> void ctb<T,IT>::register_aliasenv()
     {
       if(M::get_name() == "")
-        error( "unnamed aliasenv passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
-      hash_aliasenv[M::get_name()] = aliasenv_record(std::bind(&ctb::generate<M>, this, std::placeholders::_1));
+        error( "unnamed aliasenv passed - (have you defined a 'string get_name(){return \"whatever nonempty\";}' method?");
+      hash_aliasenv[M::get_name()] = aliasenv_record(bind(&ctb::generate<M>, this, placeholders::_1));
     }
 
   template <class T, class IT>
@@ -238,7 +239,7 @@ namespace ctb
 
   template <class T, class IT>
     template <typename M>
-    std::string ctb<T,IT>::generate(std::string name)
+    string ctb<T,IT>::generate(string name)
     {
       mygenerator.reset();
       auto m = M::generate(mygenerator.get_broadest(), mygenerator, name);
@@ -247,7 +248,7 @@ namespace ctb
 
   template <class T, class IT>
     template <template <typename ...> class L, typename M, typename...P>
-    std::string ctb<T,IT>::process(std::string name, P...params)
+    string ctb<T,IT>::process(string name, P...params)
     {
       generator_t g(instab);
       L<T, generator_t, IT> l;
@@ -259,19 +260,20 @@ namespace ctb
   template <class T, class IT>
     void ctb<T,IT>::self_test()
     {
+      cout << "testing ctb" << endl;
       ctb b;
-      std::ifstream file, g1, g2;
+      ifstream file, g1, g2;
       openstream(file,"unit_test1/instab.xml");
       openstream(g1,"unit_test1/graph.xml");
       openstream(g2,"unit_test1/graph.xml");
-      b.load_instab<xml_loader,std::istream&>(file);
-      writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple,std::istream&>( "test_simple", g1) );
-      //writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox,std::istream&>( "test_bobox", g2) );
+      b.load_instab<xml_loader,istream&>(file);
+      writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple,istream&>( "test_simple", g1) );
+      //writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox,istream&>( "test_bobox", g2) );
       assert(b.get_prefix("/test/test/last") == "/test/test/");
     }
 
   template <class T, class IT>
-    std::string ctb<T,IT>::get_prefix(std::string f)
+    string ctb<T,IT>::get_prefix(string f)
     {
       int p = f.find_last_of("\\/");
       if(p > -1)
@@ -282,7 +284,7 @@ namespace ctb
     }
 
   template <class T, class IT>
-    std::string ctb<T,IT>::get_inner_name(std::string f)
+    string ctb<T,IT>::get_inner_name(string f)
     {
       int p = f.find_last_of("\\/");
       if(p > -1)
@@ -297,45 +299,45 @@ namespace ctb
   template <class T, class IT>
     void ctb<T,IT>::help_cmdline_old()
     {
-      std::cout << "syntax: ctb [options] <instr table> <input file 1> <input file 2> ... " << std::endl;
-      std::cout << "options:" << std::endl;
-      std::cout << "    -m  {simple|bobox}    output aliasenv specification" << std::endl;
-      std::cout << "    -o  <directory>       output directory" << std::endl;
+      cout << "syntax: ctb [options] <instr table> <input file 1> <input file 2> ... " << endl;
+      cout << "options:" << endl;
+      cout << "    -m  {simple|bobox}    output aliasenv specification" << endl;
+      cout << "    -o  <directory>       output directory" << endl;
     }
 
   template <class T, class IT>
     void ctb<T,IT>::help_command_stream()
     {
-      std::cout << "syntax: ctb [options]" << std::endl;
-      std::cout << "options:" << std::endl;
-      std::cout << "  -f <file>                   read input from file instead from cin" << std::endl;
-      std::cout << "  -r <comma separated tags>   require all of these tags" << std::endl;
-      std::cout << "  -a <comma separated tags>   require one of these tags ('allow')" << std::endl;
-      std::cout << "  -e <comma separated tags>   exclude code with any of these tags  " << std::endl;
-      std::cout << "  -n <comma separated tags>   require all tags to be subset of this set of tags" << std::endl;
-      std::cout << "  -c compile test - makes generator output only the first instruction of every vector  " << std::endl;
-      std::cout << "  -h            show some help" << std::endl;
-      std::cout << "" << std::endl;
-      std::cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << std::endl;
-      std::cout << "Actions:" << std::endl;
+      cout << "syntax: ctb [options]" << endl;
+      cout << "options:" << endl;
+      cout << "  -f <file>                   read input from file instead from cin" << endl;
+      cout << "  -r <comma separated tags>   require all of these tags" << endl;
+      cout << "  -a <comma separated tags>   require one of these tags ('allow')" << endl;
+      cout << "  -e <comma separated tags>   exclude code with any of these tags  " << endl;
+      cout << "  -n <comma separated tags>   require all tags to be subset of this set of tags" << endl;
+      cout << "  -c compile test - makes generator output only the first instruction of every vector  " << endl;
+      cout << "  -h            show some help" << endl;
+      cout << "" << endl;
+      cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << endl;
+      cout << "Actions:" << endl;
       for(auto l : hash_command)
       {
-        std::cout << "  " << l.second.second << std::endl;
+        cout << "  " << l.second.second << endl;
       }
-      std::cout << "Loaders:" << std::endl;
+      cout << "Loaders:" << endl;
       for(auto l : hash_loader)
       {
-        std::cout << "  " << l.first << std::endl;
+        cout << "  " << l.first << endl;
       }
-      std::cout << "Aliasenvs:" << std::endl;
+      cout << "Aliasenvs:" << endl;
       for(auto l : hash_aliasenv)
       {
-        std::cout << "  " << l.first << std::endl;
+        cout << "  " << l.first << endl;
       }
-      std::cout << "Transformers:" << std::endl;
+      cout << "Transformers:" << endl;
       for(auto l : hash_transforms)
       {
-        std::cout << "  " << l.first << std::endl;
+        cout << "  " << l.first << endl;
       }
     }
 
@@ -344,9 +346,9 @@ namespace ctb
     {
       int file = 0;
       char aliasenv = 's';
-      std::vector<char*> files;
+      vector<char*> files;
       char* instab_file = NULL;
-      std::string opath = "output/";
+      string opath = "output/";
       for(int i = 1; i < count; i++)
       {
         switch(args[i][0])
@@ -383,20 +385,20 @@ namespace ctb
             file++;
         }
       }
-      std::ifstream stream(instab_file);
-      load_instab<xml_loader, std::istream&>(stream);
+      ifstream stream(instab_file);
+      load_instab<xml_loader, istream&>(stream);
       for(auto f : files)
       {
-        std::string cont;
-        std::ifstream streamf(f);
-        std::istream& stream = streamf;
+        string cont;
+        ifstream streamf(f);
+        istream& stream = streamf;
         switch(aliasenv)
         {
           case 's':
-            cont = process<xml_loader,aliasenv_simple,std::istream&>(get_inner_name(f), stream);
+            cont = process<xml_loader,aliasenv_simple,istream&>(get_inner_name(f), stream);
             break;
           case 'b':
-            cont = process<xml_loader,aliasenv_bobox,std::istream&>(get_inner_name(f), stream);
+            cont = process<xml_loader,aliasenv_bobox,istream&>(get_inner_name(f), stream);
             break;
         }
         writer_default::to_file(opath + "/" + get_inner_name(f) + ".h", cont);
@@ -408,7 +410,7 @@ namespace ctb
     int ctb<T,IT>::command_stream_cmdline(int count, char ** args)
     {
       exec_path = get_prefix(args[0]);
-      std::string allowed,excluded,required,nonexcluded;
+      string allowed,excluded,required,nonexcluded;
       stringlist files;
       for(int i = 1; i < count; ++i)
       {
@@ -424,9 +426,9 @@ namespace ctb
                 case 'e':
                 case 'r':
                   if(i+1 >= count)
-                    error( std::string("argument expected after -").append(std::string(1,args[i][j])).append(" switch"));
+                    error( string("argument expected after -").append(string(1,args[i][j])).append(" switch"));
                   if(args[i][j+1] != '\0')
-                    warn( std::string("skipping some (misplaced) switches due to argument at: ").append(std::string(1,args[i][j])));
+                    warn( string("skipping some (misplaced) switches due to argument at: ").append(string(1,args[i][j])));
                   switch(args[i][j])
                   {
                     case 'a':
@@ -464,7 +466,7 @@ namespace ctb
                   return 0;
                 default:
                   help_command_stream();
-                  error( std::string("unknown switch: ").append(std::string(1,args[i][j])));
+                  error( string("unknown switch: ").append(string(1,args[i][j])));
                   return 1;
               }
             }
@@ -475,18 +477,18 @@ namespace ctb
         }
 start:;
       }
-      mytags = std::make_shared<tagmaster<uint32_t>>(required,allowed,excluded,nonexcluded);
+      mytags = make_shared<tagmaster<uint32_t>>(required,allowed,excluded,nonexcluded);
       instab.add_tags(mytags);
       int r = 0;
       if(files.empty())
       {
-        r |= parse_command_stream(std::cin);
+        r |= parse_command_stream(cin);
       }
       else
       {
         for( auto f : files)
         {
-          std::ifstream s(f);
+          ifstream s(f);
           r |= parse_command_stream(s);
         }
       }
@@ -494,12 +496,12 @@ start:;
     }
 
   template <class T, class IT>
-    int ctb<T,IT>::parse_command_stream(std::istream& stream)
+    int ctb<T,IT>::parse_command_stream(istream& stream)
     {
-      std::string line;
+      string line;
       int i = 1;
       int r = 0;
-      while(std::getline(stream, line))
+      while(getline(stream, line))
       {
         try
         {
@@ -508,13 +510,13 @@ start:;
         catch (error_struct& err)
         {
           r = 1;
-          std::stringstream s;
-          s << std::endl << "command line: " << line << " \n    " << err.first;
+          stringstream s;
+          s << endl << "command line: " << line << " \n    " << err.first;
 
           if(err.second)
             error(s.str(), err.second);
           else
-            std::cerr << s.str() << std::endl;
+            cerr << s.str() << endl;
         }
         ++i;
       }
@@ -522,7 +524,7 @@ start:;
     }
 
     template <class T, class IT>
-  void ctb<T,IT>::register_command(const std::string& cmd, std::function<void(stringlist&&)> f, const std::string& description)
+  void ctb<T,IT>::register_command(const string& cmd, function<void(stringlist&&)> f, const string& description)
   {
     hash_command[cmd] = command_record(f, description); 
   }
@@ -530,25 +532,25 @@ start:;
   template <class T, class IT>
     void ctb<T,IT>::fill_commands()
     {
-      register_command("loadinstab",  std::bind(&ctb<T,IT>::command_io<fidli,std::ifstream,true>,  this, std::placeholders::_1),  "loadinstab   <loader> <input file>");
-      register_command("loadgraph",  std::bind(&ctb<T,IT>::command_io<fidlg,std::ifstream,true>,  this, std::placeholders::_1),  "loadgraph    <loader> <input file>");
-      register_command("exportinstab",  std::bind(&ctb<T,IT>::command_io<fidei,std::ofstream,false>, this, std::placeholders::_1),  "exportinstab <loader> <output file>");
-      register_command("exportgraph",  std::bind(&ctb<T,IT>::command_io<fideg,std::ofstream,false>, this, std::placeholders::_1),  "exportgraph  <loader> <output file>");
-      register_command("source",  std::bind(&ctb<T,IT>::command_source                       , this, std::placeholders::_1),  "source       <input file>");
-      register_command("generate",  std::bind(&ctb<T,IT>::command_generate                     , this, std::placeholders::_1),  "generate <output aliasenv> <output file>");
-      register_command("testgraph",  std::bind(&ctb<T,IT>::command_testgraph                     , this, std::placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
-      register_command("adddebug",  std::bind(&ctb<T,IT>::command_adddebug                     , this, std::placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to its vertices");
-      register_command("transform",  std::bind(&ctb<T,IT>::command_transform                     , this, std::placeholders::_1),  "transform  <transformer> - transforms the loaded graph somehow");
-      register_command("help",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
-      register_command("?",  std::bind(&ctb<T,IT>::command_help                  , this, std::placeholders::_1),  "help");
+      register_command("loadinstab",  bind(&ctb<T,IT>::command_io<fidli,ifstream,true>,  this, placeholders::_1),  "loadinstab   <loader> <input file>");
+      register_command("loadgraph",  bind(&ctb<T,IT>::command_io<fidlg,ifstream,true>,  this, placeholders::_1),  "loadgraph    <loader> <input file>");
+      register_command("exportinstab",  bind(&ctb<T,IT>::command_io<fidei,ofstream,false>, this, placeholders::_1),  "exportinstab <loader> <output file>");
+      register_command("exportgraph",  bind(&ctb<T,IT>::command_io<fideg,ofstream,false>, this, placeholders::_1),  "exportgraph  <loader> <output file>");
+      register_command("source",  bind(&ctb<T,IT>::command_source                       , this, placeholders::_1),  "source       <input file>");
+      register_command("generate",  bind(&ctb<T,IT>::command_generate                     , this, placeholders::_1),  "generate <output aliasenv> <output file>");
+      register_command("testgraph",  bind(&ctb<T,IT>::command_testgraph                     , this, placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
+      register_command("adddebug",  bind(&ctb<T,IT>::command_adddebug                     , this, placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to its vertices");
+      register_command("transform",  bind(&ctb<T,IT>::command_transform                     , this, placeholders::_1),  "transform  <transformer> - transforms the loaded graph somehow");
+      register_command("help",  bind(&ctb<T,IT>::command_help                  , this, placeholders::_1),  "help");
+      register_command("?",  bind(&ctb<T,IT>::command_help                  , this, placeholders::_1),  "help");
     }
   template <class T, class IT>
     void ctb<T,IT>::command_generate(stringlist&& args)
     {
       if(args.size() != 3)
-        error( std::string("invalid number of arguments "), false);
+        error( string("invalid number of arguments "), false);
       if(hash_aliasenv.find(args[1]) == hash_aliasenv.end())
-        error( std::string("aliasenv not found (did you register it in ctb.h?): ", false).append(args[1]));
+        error( string("aliasenv not found (did you register it in ctb.h?): ", false).append(args[1]));
       writer_plain::to_file(args[2], hash_aliasenv[args[1]](get_inner_name(args[2])));
     }
 
@@ -556,7 +558,7 @@ start:;
     void ctb<T,IT>::command_testgraph(stringlist&& args)
     {
       if(args.size() != 1)
-        error( std::string("invalid number of arguments "), false);
+        error( string("invalid number of arguments "), false);
       test_loader<T,generator_t,IT> l;
       l.load_graph(mygenerator,instab);
     }
@@ -575,7 +577,7 @@ start:;
     void ctb<T,IT>::command_transform(stringlist&& args)
   {
     if(args.size() != 2)
-      error( std::string("invalid number of arguments "), false);
+      error( string("invalid number of arguments "), false);
     hash_transforms[args[1]]();
   }
 
@@ -583,8 +585,8 @@ start:;
     void ctb<T,IT>::command_source(stringlist&& args)
     {
       if(args.size() != 2)
-        error( std::string("invalid number of arguments "), false);
-      std::ifstream filei;
+        error( string("invalid number of arguments "), false);
+      ifstream filei;
       openstream(filei,args[1]);
       parse_command_stream(filei);
     }
@@ -600,16 +602,16 @@ start:;
     template<functor_id I, typename F, bool input> void ctb<T,IT>::command_io(stringlist&& args)
     {
       if(args.size() != 3)
-        error( std::string("invalid number of arguments "), false);
+        error( string("invalid number of arguments "), false);
       if(hash_loader.find(args[1]) == hash_loader.end())
-        error( std::string("loader not found (did you register it in ctb.h?): ", false).append(args[1]));
+        error( string("loader not found (did you register it in ctb.h?): ", false).append(args[1]));
       F file;
       openstream(file, args[2], input);
-      std::get<I>(hash_loader[args[1]])(file);
+      get<I>(hash_loader[args[1]])(file);
     }
 
   template <class T, class IT>
-    int ctb<T,IT>::parse_command(std::string line)
+    int ctb<T,IT>::parse_command(string line)
     {
       stringlist words = split(line, ' ',true);
       if(words.empty())
@@ -617,10 +619,10 @@ start:;
       if(!words[0].empty() && words[0][0] == '#')
         return 0;
       if(hash_command.find(words[0]) == hash_command.end())
-        error( std::string("invalid command: ").append(line), false);
-      std::cout << "processing command " << words[0] << "...";
-      (hash_command[words[0]].first)(std::move(words));
-      std::cout << "... done!" << std::endl;
+        error( string("invalid command: ").append(line), false);
+      cout << "processing command " << words[0] << "...";
+      (hash_command[words[0]].first)(move(words));
+      cout << "... done!" << endl;
       return 0;
     }
 

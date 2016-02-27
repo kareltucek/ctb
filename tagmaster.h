@@ -1,6 +1,7 @@
 #ifndef TAGMASTER_GUARD
 #define TAGMASTER_GUARD
 
+#include "defines.h"
 #include <map>
 #include "datatypes.h"
 #include "taghandler.h"
@@ -33,11 +34,11 @@ namespace ctb
         F excluded;
         F at;
         F full;
-        std::map<std::string,F> tags_used;
+        map<string,F> tags_used;
       public:
-        tagmaster(const std::string& r = "",const std::string& a = "",const std::string& e = "", const std::string& ne = "");
-        bool is_satisfactory(const std::string&);
-        F to_mask(const std::string&);
+        tagmaster(const string& r = "",const string& a = "",const string& e = "", const string& ne = "");
+        bool is_satisfactory(const string&);
+        F to_mask(const string&);
         void clear();
 
         static void self_test();
@@ -58,7 +59,7 @@ namespace ctb
   }
 
   template<typename F>
-    tagmaster<F>::tagmaster(const std::string& r,const std::string& a,const std::string& e,const std::string& ne) : at(1), full(0), tags_used()
+    tagmaster<F>::tagmaster(const string& r,const string& a,const string& e,const string& ne) : at(1), full(0), tags_used()
   {
       required=to_mask(r);
       allowed=to_mask(a);
@@ -67,11 +68,11 @@ namespace ctb
   }
 
   template<typename F>
-    F tagmaster<F>::to_mask(const std::string& str)
+    F tagmaster<F>::to_mask(const string& str)
     {
       F mask = F(0); 
       stringlist tags = split(str,',');
-      for(const std::string& t : tags) 
+      for(const string& t : tags) 
       {
         if(t == "")
           continue;
@@ -94,7 +95,7 @@ namespace ctb
     }
 
   template<typename F>
-    bool tagmaster<F>::is_satisfactory(const std::string& str)
+    bool tagmaster<F>::is_satisfactory(const string& str)
     {
       F mask = to_mask(str);
       return ((mask & required) == required) && ((mask & excluded) == 0 ) && ((mask & allowed) != 0 || allowed == 0) && (nonexcluded == 0 || (mask & nonexcluded) == mask);
@@ -103,6 +104,7 @@ namespace ctb
     template<typename F>
   void tagmaster<F>::self_test()
   {
+    cout << "testing tag master" << endl;
     tagmaster_default t;
     auto l =t.to_mask("a,b,c");
     auto k = t.to_mask("b,c,a");

@@ -4,29 +4,6 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
-$	tags	/^ctb::exec_path	datatypes.h	\/^  std::string exec_path;$\/;"	m	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-$	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-$	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-$	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-$	tags	/^ctb::fileexists	datatypes.h	\/^  bool fileexists(const char *name)$\/;"	f	namespace:ctb	signature:(const char *name)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::flags_to_string	datatypes.h	\/^    std::string flags_to_string(F f)$\/;"	f	namespace:ctb	signature:(F f)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
-$	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::pass	datatypes.h	\/^  template <typename ... T> void pass(T...)$\/;"	f	namespace:ctb	signature:(T....)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::stoi	datatypes.h	\/^  int stoi(std::string str)$\/;"	f	namespace:ctb	signature:(std::string str)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::string_to_flags	datatypes.h	\/^    F string_to_flags(std::string str)$\/;"	f	namespace:ctb	signature:(std::string str)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::stringlist	datatypes.h	\/^  typedef std::vector<std::string> stringlist;$\/;"	t	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::to_string	datatypes.h	\/^  std::string to_string(int i)$\/;"	f	namespace:ctb	signature:(int i)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::to_string	datatypes.h	\/^  std::string to_string(std::string str)$\/;"	f	namespace:ctb	signature:(std::string str)$/;"	m	class:__anon2::__anon3	file:	access:private
-$	tags	/^ctb::trim	datatypes.h	\/^  std::string trim(const std::string& s)$\/;"	f	namespace:ctb	signature:(const std::string& s)$/;"	m	class:__anon2::__anon3	file:	access:private
 $$arg1	sse_set/C_table_expanded.csv	/^logical	instruction	bool	bool,bool	LE_bool		1	1	$$arg1 <= $$arg2		C,universal	10$/;"	v
 $$name	sse_set/C_table_expanded.csv	/^sse_IO	instruction	double		LD_double	input	2	2		$$type $$name = preload_$$basename;preload_$$basename = ($$type)_mm_load_pd((__m128i*)(&$$input + 2 - $$alignoffset % 2));$$name = _mm_alignr_epi8((__m128i)$$name, (__m128i)preload_$$basename, $$alignoffset % 2);	sse,shiftedio	10$/;"	v
 $$name	sse_set/C_table_expanded.csv	/^sse_IO	instruction	float		LD_float	input	4	4		$$type $$name = preload_$$basename;preload_$$basename = ($$type)_mm_load_ps((__m128i*)(&$$input + 4 - $$alignoffset % 4));$$name = _mm_alignr_epi8((__m128i)$$name, (__m128i)preload_$$basename, $$alignoffset % 4);	sse,shiftedio	10$/;"	v
@@ -64,7 +41,7 @@ ADD	aliasenv_generator.h	44;"	d
 ADD	aliasenv_maker.h	42;"	d
 ADD	aliasenv_simple.h	36;"	d
 ADD	aliasenv_simu.h	35;"	d
-ARG	generator.h	230;"	d
+ARG	generator.h	228;"	d
 BOBOX_BOX_INPUTS_LIST	templates/bobox_box.h	/^  BOBOX_BOX_INPUTS_LIST($2);$/;"	p	class:$1_box	access:public	signature:($2)
 BOBOX_BOX_INPUTS_LIST	unit_test1/test_bobox.h	/^  BOBOX_BOX_INPUTS_LIST(input_list_2, 2,input_list_1, 1);$/;"	p	class:test_bobox_box	access:public	signature:(input_list_2, 2,input_list_1, 1)
 BOBOX_BOX_INPUTS_LIST	unit_test6/main.cpp	/^	BOBOX_BOX_INPUTS_LIST(data_in, 0);$/;"	p	class:sink_box	file:	access:public	signature:(data_in, 0)
@@ -390,97 +367,6 @@ _SIDD_UWORD_OPS	sse_set/intrin_ref.h	4654;"	d
 _SMMINTRIN_H_INCLUDED	sse_set/intrin_ref.h	4093;"	d
 _TMMINTRIN_H_INCLUDED	sse_set/intrin_ref.h	3849;"	d
 _XMMINTRIN_H_INCLUDED	sse_set/intrin_ref.h	950;"	d
-__anon2::$	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-__anon2::$	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-__anon2::$	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-__anon2::$	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	m	class:__anon2	file:	access:private
-__anon2::$	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::exec_path	datatypes.h	\/^  std::string exec_path;$\/;"	m	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::fileexists	datatypes.h	\/^  bool fileexists(const char *name)$\/;"	f	namespace:ctb	signature:(const char *name)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::flags_to_string	datatypes.h	\/^    std::string flags_to_string(F f)$\/;"	f	namespace:ctb	signature:(F f)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::pass	datatypes.h	\/^  template <typename ... T> void pass(T...)$\/;"	f	namespace:ctb	signature:(T....)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::stoi	datatypes.h	\/^  int stoi(std::string str)$\/;"	f	namespace:ctb	signature:(std::string str)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::string_to_flags	datatypes.h	\/^    F string_to_flags(std::string str)$\/;"	f	namespace:ctb	signature:(std::string str)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::stringlist	datatypes.h	\/^  typedef std::vector<std::string> stringlist;$\/;"	t	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::to_string	datatypes.h	\/^  std::string to_string(int i)$\/;"	f	namespace:ctb	signature:(int i)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::to_string	datatypes.h	\/^  std::string to_string(std::string str)$\/;"	f	namespace:ctb	signature:(std::string str)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::$	tags	/^ctb::trim	datatypes.h	\/^  std::string trim(const std::string& s)$\/;"	f	namespace:ctb	signature:(const std::string& s)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::check_existence	tags	/^openstream	datatypes.h	\/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$\/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::d	tags	/^split	datatypes.h	\/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$\/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::fDEBUG	tags	/^ctb::fDEBUG	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::fDEBUG	tags	/^ctb::fINPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::fDEBUG	tags	/^ctb::fOUTPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::fOUTPUT	tags	/^ctb::fDEBUG	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::fOUTPUT	tags	/^ctb::fINPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::fOUTPUT	tags	/^ctb::fOUTPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::gONCE	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gONCE	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gONCE	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gONCE	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::gPRINT	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gPRINT	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gPRINT	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gPRINT	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::gSELECT	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gSELECT	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gSELECT	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-__anon2::__anon3::gSELECT	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::mONCE	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mONCE	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mONCE	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mONCE	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mPRINT	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mPRINT	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mPRINT	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mPRINT	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mSELECT	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mSELECT	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mSELECT	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::mSELECT	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-__anon2::__anon3::maskmodes	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::maskmodes	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::maskmodes	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::maskmodes_masks	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::maskmodes_masks	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::maskmodes_masks	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::maskmodes_masks	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	g	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::name	tags	/^openstream	datatypes.h	\/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$\/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::squash	tags	/^split	datatypes.h	\/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$\/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::str	tags	/^split	datatypes.h	\/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$\/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::stream	tags	/^openstream	datatypes.h	\/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$\/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)$/;"	m	class:__anon2::__anon3	file:	access:private
-__anon2::__anon3::stringlist	tags	/^ctb::stringlist	datatypes.h	\/^  typedef std::vector<std::string> stringlist;$\/;"	t	namespace:ctb$/;"	t	class:__anon2::__anon3	file:	access:private
-__anon2::fideg	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fideg	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fideg	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fideg	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fideg	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
-__anon2::fidei	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidei	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidei	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidei	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidei	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
-__anon2::fidlg	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidlg	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidlg	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidlg	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidlg	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
-__anon2::fidli	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidli	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidli	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidli	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-__anon2::fidli	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
-__anon2::functor_id	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
-__anon2::functor_id	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
-__anon2::functor_id	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
-__anon2::functor_id	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
 __m128	sse_set/intrin_ref.h	/^typedef float __m128 __attribute__ ((__vector_size__ (16), __may_alias__));$/;"	t
 __m128d	sse_set/intrin_ref.h	/^typedef double __m128d __attribute__ ((__vector_size__ (16), __may_alias__));$/;"	t
 __m128i	sse_set/intrin_ref.h	/^typedef long long __m128i __attribute__ ((__vector_size__ (16), __may_alias__));$/;"	t
@@ -1221,7 +1107,7 @@ add	writer.h	/^        template <bool preprocess> void add(std::string&& str, bo
 add	writer.h	/^    void writer<M,I,O,P>::add(std::string&& str, bool terminal)$/;"	f	class:ctb::writer	signature:(std::string&& str, bool terminal)
 add_box	unit_test6/main.cpp	/^typedef output_box add_box;$/;"	t	file:
 add_factor_edge	graph_factor.h	/^        void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);$/;"	p	class:ctb::graph_factor	access:protected	signature:(typename ancestor_t::node*, typename ancestor_t::node*)
-add_factor_edge	graph_factor.h	/^  void graph_factor<T,I,directed,O...>::add_factor_edge(node_t* from, node_t* to)$/;"	f	class:ctb::graph_factor	signature:(node_t* from, node_t* to)
+add_factor_edge	graph_factor.h	/^  void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)$/;"	f	class:ctb::graph_factor	signature:(node_t* from, node_t* to)
 add_tags	instructions.h	/^        \/*API*\/ void add_tags(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT); $/;"	p	class:ctb::instruction_table	access:public	signature:(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT)
 add_tags	instructions.h	/^    void instruction_table<T>::add_tags(std::shared_ptr<taghandler_base> ptr, std::size_t l)$/;"	f	class:ctb::instruction_table	signature:(std::shared_ptr<taghandler_base> ptr, std::size_t l)
 addcode	instructions.h	/^            \/*IAPI*\/void addcode(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r);$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r)
@@ -1235,7 +1121,7 @@ adddebug	loader_test.h	/^  void test_loader<T,G,IT>::adddebug(G& gen, const IT& 
 addedge	generator.h	/^        void addedge(vid_t aid, vid_t bid, int b_argpos) ;$/;"	p	class:ctb::generator	access:public	signature:(vid_t aid, vid_t bid, int b_argpos)
 addedge	generator.h	/^    void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos)  $/;"	f	class:ctb::generator	signature:(vid_t aid, vid_t bid, int b_argpos)
 addedge	graph.h	/^        template <typename J> void addedge(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0) ; \/** self describing I believe*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0)
-addedge	graph.h	/^    void graph_basic<T,I,directed,O...>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int b_argpos, int a_argpos, int l)
+addedge	graph.h	/^    void graph_basic<T,I,directed>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int b_argpos, int a_argpos, int l)
 addexpansion	instructions.h	/^            \/*IAPI*\/void addexpansion(const std::string&, const std::string&, const std::vector<typename T::opid_t>& args, const std::string&);$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(const std::string&, const std::string&, const std::vector<typename T::opid_t>& args, const std::string&)
 addexpansion	instructions.h	/^    void instruction_table<T>::operation::addexpansion(const std::string& n, const std::string& t, const std::vector<typename T::opid_t>& a, const std::string& m)$/;"	f	class:ctb::instruction_table::operation	signature:(const std::string& n, const std::string& t, const std::vector<typename T::opid_t>& a, const std::string& m)
 addons	.exrc	/^set runtimepath=~\/.vim,\/var\/lib\/vim\/addons,\/usr\/share\/vim\/vimfiles,\/usr\/share\/vim\/vim73,\/usr\/share\/vim\/vimfiles\/after,\/var\/lib\/vim\/addons\/after,~\/.vim\/after$/;"	v
@@ -1249,7 +1135,7 @@ addtype	instructions.h	/^    typename instruction_table<T>::type_t& instruction_
 addvert	generator.h	/^        template <typename...L> void addvert(vid_t v, id_t op, L... p) ;$/;"	p	class:ctb::generator	access:public	signature:(vid_t v, id_t op, L... p)
 addvert	generator.h	/^    template <typename...L> void generator<T,IT>::addvert(vid_t v, id_t op, L... p)  $/;"	f	class:ctb::generator	signature:(vid_t v, id_t op, L... p)
 addvert	graph.h	/^        template <typename...L> node* addvert(I v, bool in , bool out , L&&... p) ; \/** v is identifier of a vetes, in and out specify whether vertex should be registered as output\/input, p... are parameters to be passed to the 'data' member upon construction*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(I v, bool in , bool out , L&&... p)
-addvert	graph.h	/^    typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  $/;"	f	class:ctb::graph_basic	signature:(I v, bool bin, bool bout, L&&... p)
+addvert	graph.h	/^    typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::addvert(I v, bool bin, bool bout, L&&... p)  $/;"	f	class:ctb::graph_basic	signature:(I v, bool bin, bool bout, L&&... p)
 after	.exrc	/^set runtimepath=~\/.vim,\/var\/lib\/vim\/addons,\/usr\/share\/vim\/vimfiles,\/usr\/share\/vim\/vim73,\/usr\/share\/vim\/vimfiles\/after,\/var\/lib\/vim\/addons\/after,~\/.vim\/after$/;"	v
 after	tags	/^addons	.exrc	\/^set runtimepath=~\\\/.vim,\\\/var\\\/lib\\\/vim\\\/addons,\\\/usr\\\/share\\\/vim\\\/vimfiles,\\\/usr\\\/share\\\/vim\\\/vim73,\\\/usr\\\/share\\\/vim\\\/vimfiles\\\/after,\\\/var\\\/lib\\\/vim\\\/addons\\\/after,~\\\/.vim\\\/after$\/;"	v$/;"	v
 after	tags	/^after	.exrc	\/^set runtimepath=~\\\/.vim,\\\/var\\\/lib\\\/vim\\\/addons,\\\/usr\\\/share\\\/vim\\\/vimfiles,\\\/usr\\\/share\\\/vim\\\/vim73,\\\/usr\\\/share\\\/vim\\\/vimfiles\\\/after,\\\/var\\\/lib\\\/vim\\\/addons\\\/after,~\\\/.vim\\\/after$\/;"	v$/;"	v
@@ -1270,7 +1156,6 @@ aliasenv_GUARD	aliasenv_maker.h	3;"	d
 aliasenv_SIMPLE_GUARD	aliasenv_simple.h	3;"	d
 aliasenv_SIMU_GUARD	aliasenv_simu.h	3;"	d
 aliasenv_bobox	aliasenv_bobox.h	/^  class aliasenv_bobox : public aliasenv_generator$/;"	c	namespace:ctb	inherits:aliasenv_generator
-aliasenv_bobox	tags	/^ctb::aliasenv_bobox	aliasenv_bobox.h	\/^  class aliasenv_bobox : public aliasenv_generator$\/;"	c	namespace:ctb	inherits:aliasenv_generator$/;"	c	file:	inherits:aliasenv_generator$,t,:ctb::aliasenv_boboxaccess:,ctb::aliasenv_bobox::aliastab_taliasenv_bobox,h,std::mapaliastab_t,$,m,:ctb::aliasenv_boboxaccess:,ctb::aliasenv_bobox::aliasesaliasenv_bobox,h,aliastab_taliases,$,p,:ctb::aliasenv_boboxaccess:,signature:,ctb::aliasenv_bobox::initaliasenv_bobox,h,init,$,t,:ctb::aliasenv_boboxaccess:,ctb::aliasenv_bobox::languagealiasenv_bobox,h,language_cpplanguage,$,p,:ctb::aliasenv_boboxaccess:,signature:,std::string,a,bool,s,NULL,ctb::aliasenv_bobox::aliasaliasenv_bobox,h,std::stringalias,std::string,a,bool,s,NULL,$,p,:ctb::aliasenv_boboxaccess:,signature:,ctb::aliasenv_bobox::get_namealiasenv_bobox,h,std::stringget_name,$,p,:ctb::aliasenv_boboxaccess:,signature:,m,G,generator,std::stringname,ctb::aliasenv_bobox::generatealiasenv_bobox,h,writergenerate,m,G,generator,std::stringname,$,m,:ctb::aliasenv_boboxctb::aliasenv_bobox::aliasesaliasenv_bobox,h,std::mapaliasenv_bobox::aliases,$,dSETaliasenv_bobox,h,f,:ctb::aliasenv_boboxsignature:,ctb::aliasenv_bobox::get_namealiasenv_bobox,h,std::stringaliasenv_bobox::get_name,$,f,:ctb::aliasenv_boboxsignature:,std::string,a,bool,s,ctb::aliasenv_bobox::aliasaliasenv_bobox,h,std::stringaliasenv_bobox::alias,std::string,a,bool,s,$,f,:ctb::aliasenv_boboxsignature:,ctb::aliasenv_bobox::initaliasenv_bobox,h,aliasenv_bobox::init,$,f,:ctb::aliasenv_boboxsignature:,granularity,G,generator,std::stringname,ctb::aliasenv_bobox::generatealiasenv_bobox,h,writeraliasenv_bobox::generate,granularity,G,generator,std::stringname,$,dctbaliasenv_generator,h,ctb$,c,:ctbctb::aliasenv_generatoraliasenv_generator,h,aliasenv_generator$,t,:ctb::aliasenv_generatoraccess:,ctb::aliasenv_generator::aliastab_taliasenv_generator,h,std::mapaliastab_t,$,m,:ctb::aliasenv_generatoraccess:,ctb::aliasenv_generator::aliasesaliasenv_generator,h,aliastab_taliases,$,p,:ctb::aliasenv_generatoraccess:,signature:,ctb::aliasenv_generator::initaliasenv_generator,h,init,$,p,:ctb::aliasenv_generatoraccess:,signature:,std::string,name,std::string,a,offset,ctb::aliasenv_generator::check_pos_aliasaliasenv_generator,h,boolcheck_pos_alias,std::string,name,std::string,a,offset,$,t,:ctb::aliasenv_generatoraccess:,ctb::aliasenv_generator::languagealiasenv_generator,h,language_emptylanguage,$,p,:ctb::aliasenv_generatoraccess:,signature:,std::string,a,bool,s,NULL,n,ctb::aliasenv_generator::aliasaliasenv_generator,h,std::stringalias,std::string,a,bool,s,NULL,n,$,p,:ctb::aliasenv_generatoraccess:,signature:,m,G,graph,std::stringname,ctb::aliasenv_generator::generatealiasenv_generator,h,writergenerate,m,G,graph,std::stringname,$,m,:ctb::aliasenv_generatorctb::aliasenv_generator::aliasesaliasenv_generator,h,std::mapaliasenv_generator::aliases,$,dcheck_pos_aliasaliasenv_generator,h,boolaliasenv_generator::check_pos_alias,std::string,name,std::string,a,offset,$,f,:ctb::aliasenv_generatorsignature:,std::string,name,std::string,a,offset,aliasaliasenv_generator,h,std::stringaliasenv_generator::alias,std::string,a,bool,s,n,$,f,:ctb::aliasenv_generatorsignature:,std::string,a,bool,s,n,initaliasenv_generator,h,aliasenv_generator::init,$,f,:ctb::aliasenv_generatorsignature:,generatealiasenv_generator,h,writeraliasenv_generator::generate,max_granularity,G,graph,std::stringname,$,f,:ctb::aliasenv_generatorsignature:,max_granularity,G,graph,std::stringname,aliasenv_GUARDaliasenv_maker,h,naliasenv_makeraliasenv_maker,h,aliasenv_maker$,c,:ctbaliastab_taliasenv_maker,h,std::mapaliastab_t,$,t,:ctb::aliasenv_makeraccess:,aliasesaliasenv_maker,h,aliastab_taliases,$,m,:ctb::aliasenv_makeraccess:,initaliasenv_maker,h,init,$,p,:ctb::aliasenv_makeraccess:,signature:,noreportaliasenv_maker,h,aliasenv_makernoreport,$,t,:ctb::aliasenv_makeraccess:,languagealiasenv_maker,h,Llanguage,$,t,:ctb::aliasenv_makeraccess:,aliasaliasenv_maker,h,std::stringalias,std::string,a,bool,success,NULL,$,p,:ctb::aliasenv_makeraccess:,signature:,std::string,a,bool,success,NULL,clearaliasenv_maker,h,clear,$,p,:ctb::aliasenv_makeraccess:,signature:,accessaliasenv_maker,h,std::string,access,std::string,$,p,:ctb::aliasenv_makeraccess:,signature:,std::string,empty_tagaliasenv_maker,h,empty_tag
 aliasenv_empty	writer.h	/^  typedef aliasenv_maker<empty_tag, language_empty> aliasenv_empty;$/;"	t	namespace:ctb
 aliasenv_empty_cpp	writer.h	/^  typedef aliasenv_maker<empty_tag, language_cpp> aliasenv_empty_cpp;$/;"	t	namespace:ctb
 aliasenv_generator	aliasenv_generator.h	/^  class aliasenv_generator $/;"	c	namespace:ctb
@@ -1278,6 +1163,7 @@ aliasenv_maker	aliasenv_maker.h	/^    class aliasenv_maker$/;"	c	namespace:ctb
 aliasenv_record	ctb.h	/^        typedef std::function<std::string(std::string)> aliasenv_record;$/;"	t	class:ctb::ctb	access:private
 aliasenv_simple	aliasenv_simple.h	/^  class aliasenv_simple : public aliasenv_generator$/;"	c	namespace:ctb	inherits:aliasenv_generator
 aliasenv_simu	aliasenv_simu.h	/^  class aliasenv_simu : public aliasenv_generator$/;"	c	namespace:ctb	inherits:aliasenv_generator
+aliasenv_simu	tags	/^ctb::aliasenv_simu	aliasenv_simu.h	\/^  class aliasenv_simu : public aliasenv_generator$\/;"	c	namespace:ctb	inherits:aliasenv_generator$/;"	c	file:	inherits:aliasenv_generator$,t,:ctb::aliasenv_simuaccess:,ctb::aliasenv_simu::aliastab_taliasenv_simu,h,std::mapaliastab_t,$,m,:ctb::aliasenv_simuaccess:,ctb::aliasenv_simu::aliasesaliasenv_simu,h,aliastab_taliases,$,p,:ctb::aliasenv_simuaccess:,signature:,ctb::aliasenv_simu::initaliasenv_simu,h,init,$,p,:ctb::aliasenv_simuaccess:,signature:,m,G,generator,std::stringname,ctb::aliasenv_simu::generate_bodyaliasenv_simu,h,writergenerate_body,m,G,generator,std::stringname,$,t,:ctb::aliasenv_simuaccess:,ctb::aliasenv_simu::languagealiasenv_simu,h,language_cpplanguage,$,p,:ctb::aliasenv_simuaccess:,signature:,ctb::aliasenv_simu::get_namealiasenv_simu,h,std::stringget_name,$,p,:ctb::aliasenv_simuaccess:,signature:,std::string,a,bool,s,NULL,ctb::aliasenv_simu::aliasaliasenv_simu,h,std::stringalias,std::string,a,bool,s,NULL,$,p,:ctb::aliasenv_simuaccess:,signature:,m,G,generator,std::stringname,ctb::aliasenv_simu::generatealiasenv_simu,h,writergenerate,m,G,generator,std::stringname,$,m,:ctb::aliasenv_simuctb::aliasenv_simu::aliasesaliasenv_simu,h,std::mapaliasenv_simu::aliases,$,dget_namealiasenv_simu,h,std::stringaliasenv_simu::get_name,$,f,:ctb::aliasenv_simusignature:,aliasaliasenv_simu,h,std::stringaliasenv_simu::alias,std::string,a,bool,s,$,f,:ctb::aliasenv_simusignature:,std::string,a,bool,s,initaliasenv_simu,h,aliasenv_simu::init,$,f,:ctb::aliasenv_simusignature:,generatealiasenv_simu,h,writeraliasenv_simu::generate,granularity,G,generator,std::stringname,$,f,:ctb::aliasenv_simusignature:,granularity,G,generator,std::stringname,generate_bodyaliasenv_simu,h,writeraliasenv_simu::generate_body,granularity,G,generator,std::stringname,$,f,:ctb::aliasenv_simusignature:,granularity,G,generator,std::stringname,aliasenv_GENERATOR_GUARDaliasenv_generator,h,naliasenv_generatoraliasenv_generator,h,aliasenv_generator$,c,:ctbaliastab_taliasenv_generator,h,std::mapaliastab_t,$,t,:ctb::aliasenv_generatoraccess:,aliasesaliasenv_generator,h,aliastab_taliases,$,m,:ctb::aliasenv_generatoraccess:,initaliasenv_generator,h,init,$,p,:ctb::aliasenv_generatoraccess:,signature:,check_pos_aliasaliasenv_generator,h,boolcheck_pos_alias,std::string,name,std::string,a,offset,$,p,:ctb::aliasenv_generatoraccess:,signature:,std::string,name,std::string,a,offset,languagealiasenv_generator,h,language_emptylanguage,$,t,:ctb::aliasenv_generatoraccess:,aliasaliasenv_generator,h,std::stringalias,std::string,a,bool,s,NULL,n,$,p,:ctb::aliasenv_generatoraccess:,signature:,std::string,a,bool,s,NULL,n,generatealiasenv_generator,h,writergenerate,m,G,graph,std::stringname,$,p,:ctb::aliasenv_generatoraccess:,signature:,m,G,graph,std::stringname,aliasesaliasenv_generator,h,std::mapaliasenv_generator::aliases,$,m,:ctb::aliasenv_generatorADDaliasenv_generator,h,f,:ctb::aliasenv_generatorsignature:,std::string,name,std::string,a,offset,ctb::aliasenv_generator::check_pos_aliasaliasenv_generator,h,boolaliasenv_generator::check_pos_alias,std::string,name,std::string,a,offset,$,f,:ctb::aliasenv_generatorsignature:,std::string,a,bool,s,n,ctb::aliasenv_generator::aliasaliasenv_generator,h,std::stringaliasenv_generator::alias,std::string,a,bool,s,n,$,f,:ctb::aliasenv_generatorsignature:,ctb::aliasenv_generator::initaliasenv_generator,h,aliasenv_generator::init,$,f,:ctb::aliasenv_generatorsignature:,max_granularity,G,graph,std::stringname,ctb::aliasenv_generator::generatealiasenv_generator,h,writeraliasenv_generator::generate,max_granularity,G,graph,std::stringname,$,dctbaliasenv_maker,h,ctb$,c,:ctbctb::aliasenv_makeraliasenv_maker,h,aliasenv_maker$,t,:ctb::aliasenv_makeraccess:,ctb::aliasenv_maker::aliastab_taliasenv_maker,h,std::mapaliastab_t,$,m,:ctb::aliasenv_makeraccess:,ctb::aliasenv_maker::aliasesaliasenv_maker,h,aliastab_taliases,$,p,:ctb::aliasenv_makeraccess:,signature:,ctb::aliasenv_maker::initaliasenv_maker,h,init,$,t,:ctb::aliasenv_makeraccess:,ctb::aliasenv_maker::noreportaliasenv_maker,h,aliasenv_makernoreport,$,t,:ctb::aliasenv_makeraccess:,ctb::aliasenv_maker::languagealiasenv_maker,h,Llanguage,$,p,:ctb::aliasenv_makeraccess:,signature:,std::string,a,bool,success,NULL,ctb::aliasenv_maker::aliasaliasenv_maker,h,std::stringalias,std::string,a,bool,success,NULL,$,p,:ctb::aliasenv_makeraccess:,signature:,ctb::aliasenv_maker::clearaliasenv_maker,h,clear,$,p,:ctb::aliasenv_makeraccess:,signature:,std::string,ctb::aliasenv_maker::accessaliasenv_maker,h,std::string,access,std::string,$,s,:ctbctb::empty_tagaliasenv_maker,h,empty_tag
 aliases	aliasenv_bobox.h	/^      static aliastab_t aliases;$/;"	m	class:ctb::aliasenv_bobox	access:protected
 aliases	aliasenv_bobox.h	/^  std::map<std::string, std::string> aliasenv_bobox::aliases;$/;"	m	class:ctb::aliasenv_bobox
 aliases	aliasenv_generator.h	/^      static aliastab_t aliases;$/;"	m	class:ctb::aliasenv_generator	access:protected
@@ -1298,7 +1184,7 @@ aligned	templates/bobox_align.h	/^bool aligned = true;;$/;"	v
 alignedio	sse_set/C_table_expanded.csv	/^sse_IO	instruction	double	double	ST_double	output	2	2	_mm_store_pd(&$$output,(__m128d)$$arg1)		sse,alignedio,shiftedio	10$/;"	v
 alignedio	sse_set/C_table_expanded.csv	/^sse_IO	instruction	float	float	ST_float	output	4	4	_mm_store_ps(&$$output,(__m128)$$arg1)		sse,alignedio,shiftedio	10$/;"	v
 allowed	tagmaster.h	/^        F allowed;$/;"	m	class:ctb::tagmaster	access:private
-ancestor_t	graph_factor.h	/^      typedef graph_basic<T,I,directed,O...> ancestor_t;$/;"	t	class:ctb::graph_factor	access:protected
+ancestor_t	graph_factor.h	/^      typedef graph_basic<T,I,directed> ancestor_t;$/;"	t	class:ctb::graph_factor	access:protected
 append	writer.h	/^        \/*printing*\/ template<dolar_mode dolars = I, typename Types> writer<M,I,O,P>& append(Types str) ;$/;"	p	class:ctb::writer	access:public	signature:(Types str)
 append	writer.h	/^    template <dolar_mode dolars , typename Type> writer<M,I,O,P>& writer<M,I,O,P>::append(Type str)$/;"	f	class:ctb::writer	signature:(Type str)
 arguments	instructions.h	/^              const std::vector<typename T::opid_t> arguments;$/;"	m	struct:ctb::instruction_table::operation::expansion	access:public
@@ -1310,7 +1196,7 @@ begin	cartesian_multiplier.h	/^      cartesian_multiplier::constant begin() cons
 begin	cartesian_multiplier.h	/^  cartesian_multiplier<T> cartesian_multiplier<T>::begin()$/;"	f	class:ctb::cartesian_multiplier	signature:()
 begin	cartesian_multiplier.h	/^  typename cartesian_multiplier<T>::constant cartesian_multiplier<T>::begin() const$/;"	f	class:ctb::cartesian_multiplier	signature:() const
 begins	cartesian_multiplier.h	/^      itr begins;$/;"	m	class:ctb::cartesian_multiplier	access:private
-bitwidth	instructions.h	/^            \/*EAPI*\/proxy<int> bitwidth;$/;"	m	class:ctb::instruction_table::type	access:public
+bitwidth	instructions.h	/^            \/*EAPI*\/int bitwidth;$/;"	m	class:ctb::instruction_table::type	access:public
 bool	sse_set/C_table.csv	/^logical	instruction	bool	bool,bool	${op,c->GE,>=,LE,<=,GT,>,LT,<}_bool		1	1	$$arg1 $c $$arg2 		C,universal	10$/;"	v
 bool	sse_set/C_table.csv	/^logical	instruction	bool	bool,bool	AND_bool		1	1	$$arg1 && $$arg2		C,universal	10$/;"	v
 bool	sse_set/C_table.csv	/^logical	instruction	bool	bool,bool	EQ_bool		1	1	$$arg1 == $$arg2		C,universal	10$/;"	v
@@ -1376,7 +1262,7 @@ buffer	writer.h	/^        std::string buffer; \/** serves as an intermediate buf
 calculate	parser.h	/^      static int calculate(const std::string&);$/;"	p	class:ctb::parser	access:public	signature:(const std::string&)
 calculate	parser.h	/^  int parser::calculate(const std::string& s)$/;"	f	class:ctb::parser	signature:(const std::string& s)
 calculate_distances	graph.h	/^        void calculate_distances(); \/**performs bellman-ford algorithm *\/$/;"	p	class:ctb::graph_basic	access:public	signature:()
-calculate_distances	graph.h	/^    void graph_basic<T,I,directed,O...>::calculate_distances()  $/;"	f	class:ctb::graph_basic	signature:()
+calculate_distances	graph.h	/^    void graph_basic<T,I,directed>::calculate_distances()  $/;"	f	class:ctb::graph_basic	signature:()
 cartesian_multiplier	cartesian_multiplier.h	/^      cartesian_multiplier();$/;"	p	class:ctb::cartesian_multiplier	access:public	signature:()
 cartesian_multiplier	cartesian_multiplier.h	/^    cartesian_multiplier<T>::cartesian_multiplier() : end_b(true)$/;"	f	class:ctb::cartesian_multiplier	signature:()
 cartesian_multiplier	cartesian_multiplier.h	/^   class cartesian_multiplier : std::forward_iterator_tag$/;"	c	namespace:ctb	inherits:std::forward_iterator_tag
@@ -1405,7 +1291,6 @@ ceOutType	loader_csv.h	/^        enum cols_expansion   {ceNote,ceType,ceOutType,
 ceTransformer	loader_csv.h	/^        enum cols_expansion   {ceNote,ceType,ceOutType,ceInTypes,ceOpId,ceFlags,ceName,ceTransformer,ceArgs};$/;"	e	enum:ctb::csv_loader::cols_expansion
 ceType	loader_csv.h	/^        enum cols_expansion   {ceNote,ceType,ceOutType,ceInTypes,ceOpId,ceFlags,ceName,ceTransformer,ceArgs};$/;"	e	enum:ctb::csv_loader::cols_expansion
 cf_transform	cf_transform.h	/^    class cf_transform {$/;"	c	namespace:ctb
-check_existence	tags	/^openstream	datatypes.h	\/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$\/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)$/;"	m	class:__anon2::__anon3	file:	access:private
 check_pos_alias	aliasenv_generator.h	/^      static bool check_pos_alias(const std::string& name, const std::string& a, int offset);$/;"	p	class:ctb::aliasenv_generator	access:protected	signature:(const std::string& name, const std::string& a, int offset)
 check_pos_alias	aliasenv_generator.h	/^  bool aliasenv_generator::check_pos_alias(const std::string& name, const std::string& a, int offset)$/;"	f	class:ctb::aliasenv_generator	signature:(const std::string& name, const std::string& a, int offset)
 ciCode	loader_csv.h	/^        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};$/;"	e	enum:ctb::csv_loader::cols_instruction
@@ -1420,13 +1305,14 @@ ciTag	loader_csv.h	/^        enum cols_instruction {ciNote,ciType,ciOutType,ciIn
 ciType	loader_csv.h	/^        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};$/;"	e	enum:ctb::csv_loader::cols_instruction
 ciWIn	loader_csv.h	/^        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};$/;"	e	enum:ctb::csv_loader::cols_instruction
 ciWOut	loader_csv.h	/^        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};$/;"	e	enum:ctb::csv_loader::cols_instruction
-classid	graph.h	/^            proxy<int> classid;$/;"	m	class:ctb::graph_basic::node	access:public
+classcount	graph.h	/^        int classcount;$/;"	m	class:ctb::graph_basic	access:public
+classid	graph.h	/^            int classid;$/;"	m	class:ctb::graph_basic::node	access:public
 clear	aliasenv_maker.h	/^        static void clear();$/;"	p	class:ctb::aliasenv_maker	access:public	signature:()
 clear	aliasenv_maker.h	/^    void aliasenv_maker<T,L,R>::clear()$/;"	f	class:ctb::aliasenv_maker	signature:()
 clear	generator.h	/^        void clear();$/;"	p	class:ctb::generator	access:public	signature:()
 clear	generator.h	/^    void generator<T,IT>::clear()  $/;"	f	class:ctb::generator	signature:()
 clear	graph.h	/^        void clear();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-clear	graph.h	/^    void graph_basic<T,I,directed,O...>::clear()$/;"	f	class:ctb::graph_basic	signature:()
+clear	graph.h	/^    void graph_basic<T,I,directed>::clear()$/;"	f	class:ctb::graph_basic	signature:()
 clear	instructions.h	/^        void clear(bool tags = false) ;$/;"	p	class:ctb::instruction_table	access:public	signature:(bool tags = false)
 clear	instructions.h	/^    void instruction_table<T>::clear(bool tags)$/;"	f	class:ctb::instruction_table	signature:(bool tags)
 clear	tagmaster.h	/^        void clear();$/;"	p	class:ctb::tagmaster	access:public	signature:()
@@ -1473,18 +1359,18 @@ conversion	instructions.h	/^              conversion() = delete;$/;"	p	struct:ct
 conversion	instructions.h	/^              conversion(int in, int out, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&, const std::string&, int r, bool s);$/;"	p	struct:ctb::instruction_table::type::conversion	access:public	signature:(int in, int out, const std::string& c1, const std::string& c2,const std::string&,const std::string&,const std::string&, const std::string&, int r, bool s)
 conversion	instructions.h	/^            struct conversion$/;"	s	class:ctb::instruction_table::type	access:private
 conversion	instructions.h	/^    instruction_table<T>::type::conversion::conversion(int i, int o, const std::string& c1, const std::string& c2,const std::string& cc, const std::string& cg, const std::string& n,const std::string& t,int r, bool s) : width_in(i), width_out(o), code1(c1), code2(c2), code_custom(cc), code_generic(cg), note(n), tags(t), rating(r), satisfactory(s)$/;"	f	class:ctb::instruction_table::type::conversion	signature:(int i, int o, const std::string& c1, const std::string& c2,const std::string& cc, const std::string& cg, const std::string& n,const std::string& t,int r, bool s)
-conversions	instructions.h	/^            \/*EAPI*\/proxy<std::vector<conversion>> conversions;$/;"	m	class:ctb::instruction_table::type	access:public
+conversions	instructions.h	/^            \/*EAPI*\/std::vector<conversion> conversions;$/;"	m	class:ctb::instruction_table::type	access:public
 convert	conversions.h	/^  static A convert(const A& a){return a;};$/;"	f	struct:ctb::cvt	access:public	signature:(const A& a)
 convert	conversions.h	/^  static B convert(const B&);$/;"	p	struct:ctb::cvt	access:public	signature:(const B&)
 convert	conversions.h	/^  static int convert(const std::string& a)$/;"	f	struct:ctb::cvt	access:public	signature:(const std::string& a)
 convert	conversions.h	/^template <> struct cvt<int,std::string> { static std::string convert(const int& a){return std::to_string(a);}; };$/;"	f	struct:ctb::cvt	access:public	signature:(const int& a)
 cpo_save	.exrc	/^let s:cpo_save=&cpo$/;"	v
 crawl	graph.h	/^            template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL); \/** see the documentation written in the actual code, for example see implementation of the calculate_distances() function *\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL)
-crawl	graph.h	/^    void graph_basic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
+crawl	graph.h	/^    void graph_basic<T,I,directed>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
 crawl_topological	graph.h	/^            void crawl_topological(std::function<void(node*)> f); \/** this is an overload of crawl for topological search*\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:(std::function<void(node*)> f)
 crawl_topological	graph.h	/^        void crawl_topological(std::function<void(node*)> f); \/** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(std::function<void(node*)> f)
-crawl_topological	graph.h	/^    void graph_basic<T,I,directed,O...>::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic	signature:(std::function<void(node*)> f)
-crawl_topological	graph.h	/^    void graph_basic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<void(node*)> f)
+crawl_topological	graph.h	/^    void graph_basic<T,I,directed>::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic	signature:(std::function<void(node*)> f)
+crawl_topological	graph.h	/^    void graph_basic<T,I,directed>::node::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<void(node*)> f)
 csv_loader	loader_csv.h	/^    class csv_loader$/;"	c	namespace:ctb
 csvloader_default	loader_csv.h	/^  typedef csv_loader<traits, generator_default, instruction_table_default> csvloader_default;$/;"	t	namespace:ctb
 ctb	aliasenv_bobox.h	/^namespace ctb$/;"	n
@@ -1631,6 +1517,7 @@ ctb::cf_transform::get_name	cf_transform.h	/^        static std::string get_name
 ctb::cf_transform::id_t	cf_transform.h	/^        typedef typename G::id_t id_t;$/;"	t	class:ctb::cf_transform	access:private
 ctb::cf_transform::node	cf_transform.h	/^        typedef typename G::node_t node;$/;"	t	class:ctb::cf_transform	access:private
 ctb::cf_transform::transform	cf_transform.h	/^        void transform(G& g)$/;"	f	class:ctb::cf_transform	access:public	signature:(G& g)
+ctb::cf_transform::transform_merge	cf_transform.h	/^        void transform_merge(node* n, const std::vector<id_t>&)$/;"	f	class:ctb::cf_transform	access:private	signature:(node* n, const std::vector<id_t>&)
 ctb::cf_transform::transform_split	cf_transform.h	/^        void transform_split(node* n, const std::vector<id_t>&)$/;"	f	class:ctb::cf_transform	access:private	signature:(node* n, const std::vector<id_t>&)
 ctb::csv_loader	loader_csv.h	/^    class csv_loader$/;"	c	namespace:ctb
 ctb::csv_loader::ccBW	loader_csv.h	/^        enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating};$/;"	e	enum:ctb::csv_loader::cols_conversion
@@ -1767,7 +1654,7 @@ ctb::ctb::register_command	ctb.h	/^  void ctb<T,IT>::register_command(const std:
 ctb::ctb::register_loader	ctb.h	/^        template<template <typename ... > class L> void register_loader() ;$/;"	p	class:ctb::ctb	access:public	signature:()
 ctb::ctb::register_loader	ctb.h	/^    template<template <typename...> class L> void ctb<T,IT>::register_loader()$/;"	f	class:ctb::ctb	signature:()
 ctb::ctb::register_transform	ctb.h	/^        template<template <typename ... > class L> void register_transform() ;$/;"	p	class:ctb::ctb	access:public	signature:()
-ctb::ctb::register_transform	ctb.h	/^    template<template <typename...> class L> void ctb<T,IT>::register_transform()$/;"	f	class:ctb::ctb	signature:()
+ctb::ctb::register_transform	ctb.h	/^    template<template <typename ...> class L> void ctb<T,IT>::register_transform()$/;"	f	class:ctb::ctb	signature:()
 ctb::ctb::self_test	ctb.h	/^        static void self_test() ;$/;"	p	class:ctb::ctb	access:public	signature:()
 ctb::ctb::self_test	ctb.h	/^    void ctb<T,IT>::self_test()$/;"	f	class:ctb::ctb	signature:()
 ctb::ctb::transform_graph	ctb.h	/^        template<template <typename ...> class L, typename...P> void        transform_graph(P...params) ;$/;"	p	class:ctb::ctb	access:public	signature:(P....params)
@@ -1838,7 +1725,8 @@ ctb::generator::data_t::newid	generator.h	/^            static int newid(bool re
 ctb::generator::data_t::newid	generator.h	/^    int generator<T,IT>::data_t::newid(bool reset)$/;"	f	class:ctb::generator::data_t	signature:(bool reset)
 ctb::generator::data_t::newname	generator.h	/^            std::string newname(std::string tag) ;$/;"	p	class:ctb::generator::data_t	access:private	signature:(std::string tag)
 ctb::generator::data_t::newname	generator.h	/^    std::string generator<T,IT>::data_t::newname(std::string tag)$/;"	f	class:ctb::generator::data_t	signature:(std::string tag)
-ctb::generator::data_t::opid	generator.h	/^            proxy<id_t> opid;$/;"	m	class:ctb::generator::data_t	access:public
+ctb::generator::data_t::op	generator.h	/^            const op_t* op;$/;"	m	class:ctb::generator::data_t	access:public
+ctb::generator::data_t::opid	generator.h	/^            id_t opid;$/;"	m	class:ctb::generator::data_t	access:public
 ctb::generator::data_t::parameters	generator.h	/^            std::vector<param_t> parameters;$/;"	m	class:ctb::generator::data_t	access:private
 ctb::generator::data_t::push_params	generator.h	/^            template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);$/;"	p	class:ctb::generator::data_t	access:private	signature:(P&&, Ps&&... params)
 ctb::generator::data_t::push_params	generator.h	/^            void push_params();$/;"	p	class:ctb::generator::data_t	access:private	signature:()
@@ -1850,10 +1738,10 @@ ctb::generator::generator	generator.h	/^        generator( IT& i);$/;"	p	class:c
 ctb::generator::generator	generator.h	/^    generator<T,IT>::generator( IT & i) : instab(i), graph(), compiletest(false)$/;"	f	class:ctb::generator	signature:( IT & i)
 ctb::generator::get_broadest	generator.h	/^        int get_broadest(int upperbound = 10000000) ;$/;"	p	class:ctb::generator	access:public	signature:(int upperbound = 10000000)
 ctb::generator::get_broadest	generator.h	/^    int generator<T,IT>::get_broadest(int upperbound)$/;"	f	class:ctb::generator	signature:(int upperbound)
-ctb::generator::graph	generator.h	/^        proxy<graph_t> graph;$/;"	m	class:ctb::generator	access:public
-ctb::generator::graph_t	generator.h	/^        typedef graph_general<data_t, typename T::vid_t, true, generator> graph_t;$/;"	t	class:ctb::generator	access:public
+ctb::generator::graph	generator.h	/^        graph_t graph;$/;"	m	class:ctb::generator	access:public
+ctb::generator::graph_t	generator.h	/^        typedef graph_general<data_t, typename T::vid_t, true> graph_t;$/;"	t	class:ctb::generator	access:public
 ctb::generator::id_t	generator.h	/^        typedef typename T::opid_t id_t;$/;"	t	class:ctb::generator	access:private
-ctb::generator::instab	generator.h	/^        proxy< IT&> instab;$/;"	m	class:ctb::generator	access:public
+ctb::generator::instab	generator.h	/^         IT& instab;$/;"	m	class:ctb::generator	access:public
 ctb::generator::node_t	generator.h	/^        typedef typename graph_t::node_t node_t;$/;"	t	class:ctb::generator	access:public
 ctb::generator::op_t	generator.h	/^        typedef typename IT::operation_t op_t;$/;"	t	class:ctb::generator	access:private
 ctb::generator::param_t	generator.h	/^        typedef typename T::param_t param_t;$/;"	t	class:ctb::generator	access:private
@@ -1872,91 +1760,95 @@ ctb::generator_default	generator.h	/^  typedef generator<traits, instruction_tab
 ctb::gmCOUNT	datatypes.h	/^  const int gmCOUNT = 3;$/;"	m	namespace:ctb
 ctb::graph_basic	graph.h	/^    class graph_basic$/;"	c	namespace:ctb
 ctb::graph_basic::addedge	graph.h	/^        template <typename J> void addedge(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0) ; \/** self describing I believe*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0)
-ctb::graph_basic::addedge	graph.h	/^    void graph_basic<T,I,directed,O...>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int b_argpos, int a_argpos, int l)
+ctb::graph_basic::addedge	graph.h	/^    void graph_basic<T,I,directed>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int b_argpos, int a_argpos, int l)
 ctb::graph_basic::addvert	graph.h	/^        template <typename...L> node* addvert(I v, bool in , bool out , L&&... p) ; \/** v is identifier of a vetes, in and out specify whether vertex should be registered as output\/input, p... are parameters to be passed to the 'data' member upon construction*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(I v, bool in , bool out , L&&... p)
-ctb::graph_basic::addvert	graph.h	/^    typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::addvert(I v, bool bin, bool bout, L&&... p)  $/;"	f	class:ctb::graph_basic	signature:(I v, bool bin, bool bout, L&&... p)
+ctb::graph_basic::addvert	graph.h	/^    typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::addvert(I v, bool bin, bool bout, L&&... p)  $/;"	f	class:ctb::graph_basic	signature:(I v, bool bin, bool bout, L&&... p)
 ctb::graph_basic::calculate_distances	graph.h	/^        void calculate_distances(); \/**performs bellman-ford algorithm *\/$/;"	p	class:ctb::graph_basic	access:public	signature:()
-ctb::graph_basic::calculate_distances	graph.h	/^    void graph_basic<T,I,directed,O...>::calculate_distances()  $/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::calculate_distances	graph.h	/^    void graph_basic<T,I,directed>::calculate_distances()  $/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::classcount	graph.h	/^        int classcount;$/;"	m	class:ctb::graph_basic	access:public
 ctb::graph_basic::clear	graph.h	/^        void clear();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-ctb::graph_basic::clear	graph.h	/^    void graph_basic<T,I,directed,O...>::clear()$/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::clear	graph.h	/^    void graph_basic<T,I,directed>::clear()$/;"	f	class:ctb::graph_basic	signature:()
 ctb::graph_basic::crawl_topological	graph.h	/^        void crawl_topological(std::function<void(node*)> f); \/** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(std::function<void(node*)> f)
-ctb::graph_basic::crawl_topological	graph.h	/^    void graph_basic<T,I,directed,O...>::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic	signature:(std::function<void(node*)> f)
+ctb::graph_basic::crawl_topological	graph.h	/^    void graph_basic<T,I,directed>::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic	signature:(std::function<void(node*)> f)
 ctb::graph_basic::factorize	graph.h	/^        void factorize();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-ctb::graph_basic::factorize	graph.h	/^  void graph_basic<T,I,directed,O...>::factorize()$/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::factorize	graph.h	/^  void graph_basic<T,I,directed>::factorize()$/;"	f	class:ctb::graph_basic	signature:()
 ctb::graph_basic::get_dist	graph.h	/^        int get_dist(I a, I b, I* c = NULL) const; \/** returns distance from a to b and the next vertex on path from a to b into c (if not null)*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(I a, I b, I* c = NULL) const
-ctb::graph_basic::get_dist	graph.h	/^    int graph_basic<T,I,directed,O...>::get_dist(I a, I b, I* c) const$/;"	f	class:ctb::graph_basic	signature:(I a, I b, I* c) const
+ctb::graph_basic::get_dist	graph.h	/^    int graph_basic<T,I,directed>::get_dist(I a, I b, I* c) const$/;"	f	class:ctb::graph_basic	signature:(I a, I b, I* c) const
 ctb::graph_basic::graph_basic	graph.h	/^        graph_basic();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-ctb::graph_basic::graph_basic	graph.h	/^    graph_basic<T,I,directed,O...>::graph_basic() : in(), out(), verts(), index(0)$/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::graph_basic	graph.h	/^    graph_basic<T,I,directed>::graph_basic() : in(), out(), verts(), index(0)$/;"	f	class:ctb::graph_basic	signature:()
 ctb::graph_basic::id_t	graph.h	/^        typedef I id_t;$/;"	t	class:ctb::graph_basic	access:public
-ctb::graph_basic::in	graph.h	/^        proxy<vertex_list_t> in;$/;"	m	class:ctb::graph_basic	access:public
+ctb::graph_basic::in	graph.h	/^        vertex_list_t in;$/;"	m	class:ctb::graph_basic	access:public
 ctb::graph_basic::index	graph.h	/^        int index;$/;"	m	class:ctb::graph_basic	access:protected
 ctb::graph_basic::node	graph.h	/^        class node$/;"	c	class:ctb::graph_basic	access:protected
-ctb::graph_basic::node::classid	graph.h	/^            proxy<int> classid;$/;"	m	class:ctb::graph_basic::node	access:public
+ctb::graph_basic::node::classid	graph.h	/^            int classid;$/;"	m	class:ctb::graph_basic::node	access:public
 ctb::graph_basic::node::crawl	graph.h	/^            template <bool recurse = false, bool inverse = false> void crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL); \/** see the documentation written in the actual code, for example see implementation of the calculate_distances() function *\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q = NULL)
-ctb::graph_basic::node::crawl	graph.h	/^    void graph_basic<T,I,directed,O...>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
+ctb::graph_basic::node::crawl	graph.h	/^    void graph_basic<T,I,directed>::node::crawl(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<bool(node*)> f, std::function<bool(node*)> g, std::queue<node*>* q)
 ctb::graph_basic::node::crawl_topological	graph.h	/^            void crawl_topological(std::function<void(node*)> f); \/** this is an overload of crawl for topological search*\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:(std::function<void(node*)> f)
-ctb::graph_basic::node::crawl_topological	graph.h	/^    void graph_basic<T,I,directed,O...>::node::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<void(node*)> f)
+ctb::graph_basic::node::crawl_topological	graph.h	/^    void graph_basic<T,I,directed>::node::crawl_topological(std::function<void(node*)> f)$/;"	f	class:ctb::graph_basic::node	signature:(std::function<void(node*)> f)
+ctb::graph_basic::node::data	graph.h	/^            T data; \/**vertex user data*\/$/;"	m	class:ctb::graph_basic::node	access:public
 ctb::graph_basic::node::get_path	graph.h	/^            node * get_path(node * n);$/;"	p	class:ctb::graph_basic::node	access:private	signature:(node * n)
-ctb::graph_basic::node::get_path	graph.h	/^    typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::node::get_path(node * n)$/;"	f	class:ctb::graph_basic::node	signature:(node * n)
-ctb::graph_basic::node::id	graph.h	/^            proxy<I> id;$/;"	m	class:ctb::graph_basic::node	access:public
-ctb::graph_basic::node::in	graph.h	/^            proxy<multicont<std::vector<node*>> > in;$/;"	m	class:ctb::graph_basic::node	access:public
+ctb::graph_basic::node::get_path	graph.h	/^    typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::node::get_path(node * n)$/;"	f	class:ctb::graph_basic::node	signature:(node * n)
+ctb::graph_basic::node::id	graph.h	/^            I id;$/;"	m	class:ctb::graph_basic::node	access:public
+ctb::graph_basic::node::in	graph.h	/^            multicont<std::vector<node*>> in;$/;"	m	class:ctb::graph_basic::node	access:public
 ctb::graph_basic::node::index	graph.h	/^            int index; \/** I believe this is used as an identifier in maps*\/$/;"	m	class:ctb::graph_basic::node	access:private
 ctb::graph_basic::node::init_map	graph.h	/^            bool init_map(int size);$/;"	p	class:ctb::graph_basic::node	access:private	signature:(int size)
-ctb::graph_basic::node::init_map	graph.h	/^    bool graph_basic<T,I,directed,O...>::node::init_map(int size)$/;"	f	class:ctb::graph_basic::node	signature:(int size)
+ctb::graph_basic::node::init_map	graph.h	/^    bool graph_basic<T,I,directed>::node::init_map(int size)$/;"	f	class:ctb::graph_basic::node	signature:(int size)
 ctb::graph_basic::node::lastpass	graph.h	/^            int lastpass; \/** is used mostly for keeping track of whether or not we've visited this node in current crawl*\/$/;"	m	class:ctb::graph_basic::node	access:private
 ctb::graph_basic::node::map	graph.h	/^            mutable std::vector<route> map;$/;"	m	class:ctb::graph_basic::node	access:private
 ctb::graph_basic::node::newid	graph.h	/^            static int newid();$/;"	p	class:ctb::graph_basic::node	access:protected	signature:()
-ctb::graph_basic::node::newid	graph.h	/^    int graph_basic<T,I,directed,O...>::node::newid()$/;"	f	class:ctb::graph_basic::node	signature:()
+ctb::graph_basic::node::newid	graph.h	/^    int graph_basic<T,I,directed>::node::newid()$/;"	f	class:ctb::graph_basic::node	signature:()
 ctb::graph_basic::node::node	graph.h	/^            template <typename... L> node(I vid, int index, L&&... p);$/;"	p	class:ctb::graph_basic::node	access:private	signature:(I vid, int index, L&&... p)
-ctb::graph_basic::node::node	graph.h	/^    graph_basic<T,I,directed,O...>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)$/;"	f	class:ctb::graph_basic::node	signature:(I vid, int idx, L&&... p)
-ctb::graph_basic::node::operator ->	graph.h	/^            proxy<T,O...>& operator->(); \/**provides diect access to the data member*\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:()
-ctb::graph_basic::node::operator ->	graph.h	/^    graph_basic<T,I,directed,O...>::node::proxy<T,O...>& graph_basic<T,I,directed,O...>::node::operator->()  $/;"	f	class:ctb::graph_basic::node	signature:()
-ctb::graph_basic::node::out	graph.h	/^            proxy<multicont<std::vector<node*>> > out;$/;"	m	class:ctb::graph_basic::node	access:public
+ctb::graph_basic::node::node	graph.h	/^    graph_basic<T,I,directed>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)$/;"	f	class:ctb::graph_basic::node	signature:(I vid, int idx, L&&... p)
+ctb::graph_basic::node::operator ->	graph.h	/^            T& operator->(); \/**provides diect access to the data member*\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:()
+ctb::graph_basic::node::operator ->	graph.h	/^    T& graph_basic<T,I,directed>::node::operator->()  $/;"	f	class:ctb::graph_basic::node	signature:()
+ctb::graph_basic::node::out	graph.h	/^            multicont<std::vector<node*>> out;$/;"	m	class:ctb::graph_basic::node	access:public
 ctb::graph_basic::node::parent	graph.h	/^            graph_basic* parent;$/;"	m	class:ctb::graph_basic::node	access:private
 ctb::graph_basic::node::route	graph.h	/^            typedef std::pair<node*, int> route;$/;"	t	class:ctb::graph_basic::node	access:private
 ctb::graph_basic::node::update_distances	graph.h	/^            bool update_distances();$/;"	p	class:ctb::graph_basic::node	access:private	signature:()
-ctb::graph_basic::node::update_distances	graph.h	/^    bool graph_basic<T,I,directed,O...>::node::update_distances()$/;"	f	class:ctb::graph_basic::node	signature:()
+ctb::graph_basic::node::update_distances	graph.h	/^    bool graph_basic<T,I,directed>::node::update_distances()$/;"	f	class:ctb::graph_basic::node	signature:()
 ctb::graph_basic::node_t	graph.h	/^        typedef node node_t;$/;"	t	class:ctb::graph_basic	access:public
-ctb::graph_basic::out	graph.h	/^        proxy<vertex_list_t> out;$/;"	m	class:ctb::graph_basic	access:public
+ctb::graph_basic::out	graph.h	/^        vertex_list_t out;$/;"	m	class:ctb::graph_basic	access:public
 ctb::graph_basic::rmat	graph.h	/^        void rmat(std::vector<node*>& list, node* to);$/;"	p	class:ctb::graph_basic	access:protected	signature:(std::vector<node*>& list, node* to)
-ctb::graph_basic::rmat	graph.h	/^  void graph_basic<T,I,directed,O...>::rmat(std::vector<node*>& list, node* to)$/;"	f	class:ctb::graph_basic	signature:(std::vector<node*>& list, node* to)
+ctb::graph_basic::rmat	graph.h	/^  void graph_basic<T,I,directed>::rmat(std::vector<node*>& list, node* to)$/;"	f	class:ctb::graph_basic	signature:(std::vector<node*>& list, node* to)
 ctb::graph_basic::rmatv	graph.h	/^        void rmatv(node* a,node* to);$/;"	p	class:ctb::graph_basic	access:protected	signature:(node* a,node* to)
-ctb::graph_basic::rmatv	graph.h	/^  void graph_basic<T,I,directed,O...>::rmatv(node* a,node* to)$/;"	f	class:ctb::graph_basic	signature:(node* a,node* to)
+ctb::graph_basic::rmatv	graph.h	/^  void graph_basic<T,I,directed>::rmatv(node* a,node* to)$/;"	f	class:ctb::graph_basic	signature:(node* a,node* to)
 ctb::graph_basic::rmedge	graph.h	/^        template <typename J> void rmedge(J aid, J bid, int level = 0);$/;"	p	class:ctb::graph_basic	access:public	signature:(J aid, J bid, int level = 0)
-ctb::graph_basic::rmedge	graph.h	/^  void graph_basic<T,I,directed,O...>::rmedge(J aid, J bid, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int l)
+ctb::graph_basic::rmedge	graph.h	/^  void graph_basic<T,I,directed>::rmedge(J aid, J bid, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int l)
 ctb::graph_basic::rmvert	graph.h	/^        template <typename J> void rmvert(J v);$/;"	p	class:ctb::graph_basic	access:public	signature:(J v)
-ctb::graph_basic::rmvert	graph.h	/^  void graph_basic<T,I,directed,O...>::rmvert(J v)$/;"	f	class:ctb::graph_basic	signature:(J v)
+ctb::graph_basic::rmvert	graph.h	/^  void graph_basic<T,I,directed>::rmvert(J v)$/;"	f	class:ctb::graph_basic	signature:(J v)
 ctb::graph_basic::self_test	graph.h	/^        static void self_test();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-ctb::graph_basic::self_test	graph.h	/^    void graph_basic<T,I,directed,O...>::self_test()$/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::self_test	graph.h	/^    void graph_basic<T,I,directed>::self_test()$/;"	f	class:ctb::graph_basic	signature:()
 ctb::graph_basic::tovert	graph.h	/^        node* tovert(I);$/;"	p	class:ctb::graph_basic	access:protected	signature:(I)
 ctb::graph_basic::tovert	graph.h	/^        node* tovert(node&);$/;"	p	class:ctb::graph_basic	access:protected	signature:(node&)
 ctb::graph_basic::tovert	graph.h	/^        node* tovert(node*);$/;"	p	class:ctb::graph_basic	access:protected	signature:(node*)
-ctb::graph_basic::tovert	graph.h	/^  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(I v)$/;"	f	class:ctb::graph_basic	signature:(I v)
-ctb::graph_basic::tovert	graph.h	/^  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(node& v)$/;"	f	class:ctb::graph_basic	signature:(node& v)
-ctb::graph_basic::tovert	graph.h	/^  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(node* v)$/;"	f	class:ctb::graph_basic	signature:(node* v)
+ctb::graph_basic::tovert	graph.h	/^  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(I v)$/;"	f	class:ctb::graph_basic	signature:(I v)
+ctb::graph_basic::tovert	graph.h	/^  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(node& v)$/;"	f	class:ctb::graph_basic	signature:(node& v)
+ctb::graph_basic::tovert	graph.h	/^  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(node* v)$/;"	f	class:ctb::graph_basic	signature:(node* v)
 ctb::graph_basic::vertex_container_t	graph.h	/^        typedef std::map<I, node*> vertex_container_t;$/;"	t	class:ctb::graph_basic	access:protected
 ctb::graph_basic::vertex_list_t	graph.h	/^        typedef std::vector<node*> vertex_list_t;$/;"	t	class:ctb::graph_basic	access:protected
-ctb::graph_basic::verts	graph.h	/^        proxy<vertex_container_t> verts;$/;"	m	class:ctb::graph_basic	access:public
+ctb::graph_basic::verts	graph.h	/^        vertex_container_t verts;$/;"	m	class:ctb::graph_basic	access:public
 ctb::graph_basic::~graph_basic	graph.h	/^        ~graph_basic();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-ctb::graph_basic::~graph_basic	graph.h	/^    graph_basic<T,I,directed,O...>::~graph_basic()$/;"	f	class:ctb::graph_basic	signature:()
+ctb::graph_basic::~graph_basic	graph.h	/^    graph_basic<T,I,directed>::~graph_basic()$/;"	f	class:ctb::graph_basic	signature:()
 ctb::graph_basic_default	graph.h	/^  typedef graph_basic<dummy,int,true> graph_basic_default;$/;"	t	namespace:ctb
 ctb::graph_default	graph.h	/^  typedef graph_basic<dummy,int,true> graph_default;$/;"	t	namespace:ctb
-ctb::graph_factor	graph_factor.h	/^    class graph_factor : public graph_basic<T,I,directed,O...>$/;"	c	namespace:ctb	inherits:graph_basic
+ctb::graph_factor	graph_factor.h	/^    class graph_factor : public graph_basic<T,I,directed>$/;"	c	namespace:ctb	inherits:graph_basic
 ctb::graph_factor::add_factor_edge	graph_factor.h	/^        void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);$/;"	p	class:ctb::graph_factor	access:protected	signature:(typename ancestor_t::node*, typename ancestor_t::node*)
-ctb::graph_factor::add_factor_edge	graph_factor.h	/^  void graph_factor<T,I,directed,O...>::add_factor_edge(node_t* from, node_t* to)$/;"	f	class:ctb::graph_factor	signature:(node_t* from, node_t* to)
-ctb::graph_factor::ancestor_t	graph_factor.h	/^      typedef graph_basic<T,I,directed,O...> ancestor_t;$/;"	t	class:ctb::graph_factor	access:protected
+ctb::graph_factor::add_factor_edge	graph_factor.h	/^  void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)$/;"	f	class:ctb::graph_factor	signature:(node_t* from, node_t* to)
+ctb::graph_factor::ancestor_t	graph_factor.h	/^      typedef graph_basic<T,I,directed> ancestor_t;$/;"	t	class:ctb::graph_factor	access:protected
 ctb::graph_factor::factor_class	graph_factor.h	/^        class factor_class $/;"	c	class:ctb::graph_factor	access:protected
 ctb::graph_factor::factor_class::factor_class	graph_factor.h	/^            factor_class(typename factorgraph_myt::node_t* m) : me(m){};$/;"	f	class:ctb::graph_factor::factor_class	access:public	signature:(typename factorgraph_myt::node_t* m)
-ctb::graph_factor::factor_class::in	graph_factor.h	/^            proxy<std::set<typename ancestor_t::node*>> in;$/;"	m	class:ctb::graph_factor::factor_class	access:public
+ctb::graph_factor::factor_class::in	graph_factor.h	/^            std::set<typename ancestor_t::node*> in;$/;"	m	class:ctb::graph_factor::factor_class	access:public
 ctb::graph_factor::factor_class::me	graph_factor.h	/^            typename factorgraph_myt::node_t* me;$/;"	m	class:ctb::graph_factor::factor_class	access:protected
-ctb::graph_factor::factor_class::out	graph_factor.h	/^            proxy<std::set<typename ancestor_t::node*>> out;$/;"	m	class:ctb::graph_factor::factor_class	access:public
-ctb::graph_factor::factorgraph_myt	graph_factor.h	/^      typedef graph_basic<factor_class,int,true,graph_factor> factorgraph_myt;$/;"	t	class:ctb::graph_factor	access:protected
+ctb::graph_factor::factor_class::out	graph_factor.h	/^            std::set<typename ancestor_t::node*> out;$/;"	m	class:ctb::graph_factor::factor_class	access:public
+ctb::graph_factor::factor_class::vertices	graph_factor.h	/^            std::set<typename ancestor_t::node*> vertices;$/;"	m	class:ctb::graph_factor::factor_class	access:public
+ctb::graph_factor::factorgraph_myt	graph_factor.h	/^      typedef graph_basic<factor_class,int,true> factorgraph_myt;$/;"	t	class:ctb::graph_factor	access:protected
 ctb::graph_factor::factorgraph_t	graph_factor.h	/^      typedef factorgraph_myt factorgraph_t;$/;"	t	class:ctb::graph_factor	access:public
 ctb::graph_factor::factorize	graph_factor.h	/^      void factorize();$/;"	p	class:ctb::graph_factor	access:public	signature:()
-ctb::graph_factor::factorize	graph_factor.h	/^  void graph_factor<T,I,directed,O...>::factorize()$/;"	f	class:ctb::graph_factor	signature:()
+ctb::graph_factor::factorize	graph_factor.h	/^  void graph_factor<T,I,directed>::factorize()$/;"	f	class:ctb::graph_factor	signature:()
+ctb::graph_factor::id_t	graph_factor.h	/^      typedef typename ancestor_t::id_t id_t;$/;"	t	class:ctb::graph_factor	access:public
 ctb::graph_factor::node_t	graph_factor.h	/^      typedef typename ancestor_t::node node_t;$/;"	t	class:ctb::graph_factor	access:public
 ctb::graph_factor::self_test	graph_factor.h	/^      static void self_test();$/;"	p	class:ctb::graph_factor	access:public	signature:()
-ctb::graph_factor::self_test	graph_factor.h	/^  void graph_factor<T,I,directed,O...>::self_test()$/;"	f	class:ctb::graph_factor	signature:()
+ctb::graph_factor::self_test	graph_factor.h	/^  void graph_factor<T,I,directed>::self_test()$/;"	f	class:ctb::graph_factor	signature:()
 ctb::graph_factor_default	graph_factor.h	/^  typedef graph_factor<dummy,int,true> graph_factor_default;$/;"	t	namespace:ctb
 ctb::instruction_table	instructions.h	/^    class instruction_table \/\/provides transition from opcode to abstract operation$/;"	c	namespace:ctb
 ctb::instruction_table::add_tags	instructions.h	/^        \/*API*\/ void add_tags(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT); $/;"	p	class:ctb::instruction_table	access:public	signature:(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT)
@@ -1975,7 +1867,7 @@ ctb::instruction_table::empty	instructions.h	/^        bool empty();$/;"	p	class
 ctb::instruction_table::empty	instructions.h	/^    bool instruction_table<T>::empty()$/;"	f	class:ctb::instruction_table	signature:()
 ctb::instruction_table::get_tag_mask	instructions.h	/^        typename T::flag_t get_tag_mask(const std::string& tags);$/;"	p	class:ctb::instruction_table	access:private	signature:(const std::string& tags)
 ctb::instruction_table::get_tag_mask	instructions.h	/^  typename T::flag_t instruction_table<T>::get_tag_mask(const std::string& tags)$/;"	f	class:ctb::instruction_table	signature:(const std::string& tags)
-ctb::instruction_table::instab	instructions.h	/^        \/*EAPI*\/proxy<instab_t> instab;$/;"	m	class:ctb::instruction_table	access:public
+ctb::instruction_table::instab	instructions.h	/^        \/*EAPI*\/instab_t instab;$/;"	m	class:ctb::instruction_table	access:public
 ctb::instruction_table::instab_t	instructions.h	/^        typedef std::map<typename T::opid_t, operation*> instab_t;$/;"	t	class:ctb::instruction_table	access:private
 ctb::instruction_table::is_tag_satisfactory	instructions.h	/^        \/*API*\/ bool is_tag_satisfactory(const std::string&) const;$/;"	p	class:ctb::instruction_table	access:public	signature:(const std::string&) const
 ctb::instruction_table::is_tag_satisfactory	instructions.h	/^  bool instruction_table<T>::is_tag_satisfactory(const std::string& tags) const$/;"	f	class:ctb::instruction_table	signature:(const std::string& tags) const
@@ -1993,8 +1885,8 @@ ctb::instruction_table::operation::expansion::name	instructions.h	/^            
 ctb::instruction_table::operation::expansion::note	instructions.h	/^              const std::string note;$/;"	m	struct:ctb::instruction_table::operation::expansion	access:public
 ctb::instruction_table::operation::expansion::transformer_name	instructions.h	/^              const std::string transformer_name;$/;"	m	struct:ctb::instruction_table::operation::expansion	access:public
 ctb::instruction_table::operation::expansion_t	instructions.h	/^            \/*TAPI*\/typedef expansion expansion_t;$/;"	t	class:ctb::instruction_table::operation	access:public
-ctb::instruction_table::operation::expansions	instructions.h	/^            \/*TAPI*\/proxy<std::vector<expansion>> expansions;$/;"	m	class:ctb::instruction_table::operation	access:public
-ctb::instruction_table::operation::flags	instructions.h	/^            \/*EAPI*\/proxy<typename T::flag_t> flags; \/*EAPI*\/proxy<typename T::opid_t> opid;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::expansions	instructions.h	/^            \/*TAPI*\/std::vector<expansion> expansions;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::flags	instructions.h	/^            \/*EAPI*\/typename T::flag_t flags; $/;"	m	class:ctb::instruction_table::operation	access:public
 ctb::instruction_table::operation::get_conv_string	instructions.h	/^            \/*API*\/bool get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string&cc, std::string& type, std::size_t&)const;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(int from, int to, std::string& c1, std::string& c2, std::string&cc, std::string& type, std::size_t&) const
 ctb::instruction_table::operation::get_conv_string	instructions.h	/^    bool instruction_table<T>::operation::get_conv_string(int from, int to, std::string& c1, std::string& c2, std::string& cc, std::string& t, std::size_t& printability) const$/;"	f	class:ctb::instruction_table::operation	signature:(int from, int to, std::string& c1, std::string& c2, std::string& cc, std::string& t, std::size_t& printability) const
 ctb::instruction_table::operation::get_conversion_graph	instructions.h	/^            \/*API*\/const typename type::graph_distance_t& get_conversion_graph() const;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:() const
@@ -2008,7 +1900,7 @@ ctb::instruction_table::operation::get_op_string	instructions.h	/^    bool instr
 ctb::instruction_table::operation::get_type_string	instructions.h	/^            \/*API*\/bool get_type_string(int w, std::string&)const;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(int w, std::string&) const
 ctb::instruction_table::operation::get_type_string	instructions.h	/^    bool instruction_table<T>::operation::get_type_string(int w, std::string& c)const$/;"	f	class:ctb::instruction_table::operation	signature:(int w, std::string& c) const
 ctb::instruction_table::operation::imbued_width	instructions.h	/^            mutable int imbued_width;$/;"	m	class:ctb::instruction_table::operation	access:private
-ctb::instruction_table::operation::in_types	instructions.h	/^            \/*EAPI*\/proxy<typename std::vector<typename T::tid_t>> in_types;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::in_types	instructions.h	/^            \/*EAPI*\/typename std::vector<typename T::tid_t> in_types;$/;"	m	class:ctb::instruction_table::operation	access:public
 ctb::instruction_table::operation::instruction	instructions.h	/^            struct instruction \/\/holds information for generation$/;"	s	class:ctb::instruction_table::operation	access:private
 ctb::instruction_table::operation::instruction::code	instructions.h	/^              const std::string code;$/;"	m	struct:ctb::instruction_table::operation::instruction	access:public
 ctb::instruction_table::operation::instruction::code_custom	instructions.h	/^              const std::string code_custom;$/;"	m	struct:ctb::instruction_table::operation::instruction	access:public
@@ -2024,16 +1916,16 @@ ctb::instruction_table::operation::instruction::width_in	instructions.h	/^      
 ctb::instruction_table::operation::instruction::width_out	instructions.h	/^              const int width_out;$/;"	m	struct:ctb::instruction_table::operation::instruction	access:public
 ctb::instruction_table::operation::is	instructions.h	/^            \/*API*\/bool is(typename T::flag_t f) const ;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(typename T::flag_t f) const
 ctb::instruction_table::operation::is	instructions.h	/^    bool instruction_table<T>::operation::is(typename T::flag_t f) const $/;"	f	class:ctb::instruction_table::operation	signature:(typename T::flag_t f) const
-ctb::instruction_table::operation::mytype	instructions.h	/^            \/*EAPI*\/proxy<type*> mytype;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::mytype	instructions.h	/^            \/*EAPI*\/type* mytype;$/;"	m	class:ctb::instruction_table::operation	access:public
 ctb::instruction_table::operation::operation	instructions.h	/^            operation() = delete;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:()
 ctb::instruction_table::operation::operation	instructions.h	/^            operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table* parent);$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table* parent)
 ctb::instruction_table::operation::operation	instructions.h	/^    instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table<T>* p) : opid(i), mytype(t), out_type(ot), flags(f), parent(p), in_types(it)$/;"	f	class:ctb::instruction_table::operation	signature:(typename T::opid_t i, typename T::tid_t ot, const std::vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table<T>* p)
-ctb::instruction_table::operation::opid	instructions.h	/^            \/*EAPI*\/proxy<typename T::flag_t> flags; \/*EAPI*\/proxy<typename T::opid_t> opid;$/;"	m	class:ctb::instruction_table::operation	access:public
-ctb::instruction_table::operation::out_type	instructions.h	/^            \/*EAPI*\/proxy<typename T::tid_t> out_type;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::opid	instructions.h	/^            \/*EAPI*\/typename T::opid_t opid;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::out_type	instructions.h	/^            \/*EAPI*\/typename T::tid_t out_type;$/;"	m	class:ctb::instruction_table::operation	access:public
 ctb::instruction_table::operation::parent	instructions.h	/^            instruction_table* parent;$/;"	m	class:ctb::instruction_table::operation	access:private
 ctb::instruction_table::operation::update_tags	instructions.h	/^            void update_tags() const;$/;"	p	class:ctb::instruction_table::operation	access:private	signature:() const
 ctb::instruction_table::operation::update_tags	instructions.h	/^  void instruction_table<T>::operation::update_tags() const$/;"	f	class:ctb::instruction_table::operation	signature:() const
-ctb::instruction_table::operation::versions	instructions.h	/^            \/*EAPI*\/proxy<std::vector<instruction>> versions;$/;"	m	class:ctb::instruction_table::operation	access:public
+ctb::instruction_table::operation::versions	instructions.h	/^            \/*EAPI*\/std::vector<instruction> versions;$/;"	m	class:ctb::instruction_table::operation	access:public
 ctb::instruction_table::operation_t	instructions.h	/^        typedef operation operation_t; $/;"	t	class:ctb::instruction_table	access:public
 ctb::instruction_table::rm_tags	instructions.h	/^        \/*API*\/ void rm_tags(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT);$/;"	p	class:ctb::instruction_table	access:public	signature:(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT)
 ctb::instruction_table::rm_tags	instructions.h	/^    void instruction_table<T>::rm_tags(std::shared_ptr<taghandler_base> ptr, std::size_t l)$/;"	f	class:ctb::instruction_table	signature:(std::shared_ptr<taghandler_base> ptr, std::size_t l)
@@ -2045,7 +1937,7 @@ ctb::instruction_table::type::addcode_conversion	instructions.h	/^            \/
 ctb::instruction_table::type::addcode_conversion	instructions.h	/^    void instruction_table<T>::type::addcode_conversion(int in, int out, const std::string& c1,const std::string& c2,const std::string& cc,const std::string& cg, const std::string& n,const std::string& t,int r)$/;"	f	class:ctb::instruction_table::type	signature:(int in, int out, const std::string& c1,const std::string& c2,const std::string& cc,const std::string& cg, const std::string& n,const std::string& t,int r)
 ctb::instruction_table::type::addcode_type	instructions.h	/^            \/*IAPI*\/void addcode_type(int w, const std::string& c,const std::string&) ;$/;"	p	class:ctb::instruction_table::type	access:public	signature:(int w, const std::string& c,const std::string&)
 ctb::instruction_table::type::addcode_type	instructions.h	/^    void instruction_table<T>::type::addcode_type(int w, const std::string& c,const std::string& n)$/;"	f	class:ctb::instruction_table::type	signature:(int w, const std::string& c,const std::string& n)
-ctb::instruction_table::type::bitwidth	instructions.h	/^            \/*EAPI*\/proxy<int> bitwidth;$/;"	m	class:ctb::instruction_table::type	access:public
+ctb::instruction_table::type::bitwidth	instructions.h	/^            \/*EAPI*\/int bitwidth;$/;"	m	class:ctb::instruction_table::type	access:public
 ctb::instruction_table::type::conversion	instructions.h	/^            struct conversion$/;"	s	class:ctb::instruction_table::type	access:private
 ctb::instruction_table::type::conversion::code1	instructions.h	/^              const std::string code1;$/;"	m	struct:ctb::instruction_table::type::conversion	access:public
 ctb::instruction_table::type::conversion::code2	instructions.h	/^              const std::string code2;$/;"	m	struct:ctb::instruction_table::type::conversion	access:public
@@ -2060,12 +1952,12 @@ ctb::instruction_table::type::conversion::satisfactory	instructions.h	/^        
 ctb::instruction_table::type::conversion::tags	instructions.h	/^              const std::string tags;$/;"	m	struct:ctb::instruction_table::type::conversion	access:public
 ctb::instruction_table::type::conversion::width_in	instructions.h	/^              const int width_in;$/;"	m	struct:ctb::instruction_table::type::conversion	access:public
 ctb::instruction_table::type::conversion::width_out	instructions.h	/^              const int width_out;$/;"	m	struct:ctb::instruction_table::type::conversion	access:public
-ctb::instruction_table::type::conversions	instructions.h	/^            \/*EAPI*\/proxy<std::vector<conversion>> conversions;$/;"	m	class:ctb::instruction_table::type	access:public
-ctb::instruction_table::type::debug_op	instructions.h	/^            proxy<typename T::opid_t> debug_op;$/;"	m	class:ctb::instruction_table::type	access:public
+ctb::instruction_table::type::conversions	instructions.h	/^            \/*EAPI*\/std::vector<conversion> conversions;$/;"	m	class:ctb::instruction_table::type	access:public
+ctb::instruction_table::type::debug_op	instructions.h	/^            typename T::opid_t debug_op;$/;"	m	class:ctb::instruction_table::type	access:public
 ctb::instruction_table::type::distances	instructions.h	/^            mutable graph_distance_t distances; \/\/technically taken just a cache$/;"	m	class:ctb::instruction_table::type	access:public
-ctb::instruction_table::type::graph_distance_t	instructions.h	/^            typedef graph_general<dummy, int, false, type> graph_distance_t;$/;"	t	class:ctb::instruction_table::type	access:public
+ctb::instruction_table::type::graph_distance_t	instructions.h	/^            typedef graph_general<dummy, int, false> graph_distance_t;$/;"	t	class:ctb::instruction_table::type	access:public
 ctb::instruction_table::type::parent	instructions.h	/^            instruction_table* parent;$/;"	m	class:ctb::instruction_table::type	access:private
-ctb::instruction_table::type::tid	instructions.h	/^            \/*EAPI*\/proxy<typename T::tid_t> tid;$/;"	m	class:ctb::instruction_table::type	access:public
+ctb::instruction_table::type::tid	instructions.h	/^            \/*EAPI*\/typename T::tid_t tid;$/;"	m	class:ctb::instruction_table::type	access:public
 ctb::instruction_table::type::type	instructions.h	/^            type() = delete;$/;"	p	class:ctb::instruction_table::type	access:public	signature:()
 ctb::instruction_table::type::type	instructions.h	/^            type(instruction_table*, int bitwidth);$/;"	p	class:ctb::instruction_table::type	access:public	signature:(instruction_table*, int bitwidth)
 ctb::instruction_table::type::type	instructions.h	/^    instruction_table<T>::type::type(instruction_table<T>* p, int bw) : parent(p), bitwidth(bw)$/;"	f	class:ctb::instruction_table::type	signature:(instruction_table<T>* p, int bw)
@@ -2078,9 +1970,9 @@ ctb::instruction_table::type::type_version::type_version	instructions.h	/^    in
 ctb::instruction_table::type::type_version::width	instructions.h	/^              const int width;$/;"	m	struct:ctb::instruction_table::type::type_version	access:public
 ctb::instruction_table::type::update_tags	instructions.h	/^            void update_tags() const;$/;"	p	class:ctb::instruction_table::type	access:private	signature:() const
 ctb::instruction_table::type::update_tags	instructions.h	/^  void instruction_table<T>::type::update_tags() const$/;"	f	class:ctb::instruction_table::type	signature:() const
-ctb::instruction_table::type::versions	instructions.h	/^            \/*EAPI*\/proxy<std::vector<type_version>> versions;$/;"	m	class:ctb::instruction_table::type	access:public
+ctb::instruction_table::type::versions	instructions.h	/^            \/*EAPI*\/std::vector<type_version> versions;$/;"	m	class:ctb::instruction_table::type	access:public
 ctb::instruction_table::type_t	instructions.h	/^        typedef type type_t;$/;"	t	class:ctb::instruction_table	access:public
-ctb::instruction_table::typetab	instructions.h	/^        \/*EAPI*\/proxy<typetab_t> typetab;$/;"	m	class:ctb::instruction_table	access:public
+ctb::instruction_table::typetab	instructions.h	/^        \/*EAPI*\/typetab_t typetab;$/;"	m	class:ctb::instruction_table	access:public
 ctb::instruction_table::typetab_t	instructions.h	/^        typedef std::map<typename T::tid_t, type*> typetab_t;$/;"	t	class:ctb::instruction_table	access:private
 ctb::instruction_table::update_tags	instructions.h	/^        \/*API*\/ void update_tags() const;$/;"	p	class:ctb::instruction_table	access:public	signature:() const
 ctb::instruction_table::update_tags	instructions.h	/^    void instruction_table<T>::update_tags() const$/;"	f	class:ctb::instruction_table	signature:() const
@@ -2408,11 +2300,11 @@ cvt	conversions.h	/^struct cvt$/;"	s	namespace:ctb
 cvt	conversions.h	/^struct cvt<A,A>$/;"	s	namespace:ctb
 cvt	conversions.h	/^template <> struct cvt<int,std::string> { static std::string convert(const int& a){return std::to_string(a);}; };$/;"	s	namespace:ctb
 cvt	conversions.h	/^template <> struct cvt<std::string,int>$/;"	s	namespace:ctb
-d	tags	/^split	datatypes.h	\/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$\/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)$/;"	m	class:__anon2::__anon3	file:	access:private
 dEat	writer.h	/^  enum dolar_mode { dEat, dLet, dExpand, dIgnore };$/;"	e	enum:ctb::dolar_mode
 dExpand	writer.h	/^  enum dolar_mode { dEat, dLet, dExpand, dIgnore };$/;"	e	enum:ctb::dolar_mode
 dIgnore	writer.h	/^  enum dolar_mode { dEat, dLet, dExpand, dIgnore };$/;"	e	enum:ctb::dolar_mode
 dLet	writer.h	/^  enum dolar_mode { dEat, dLet, dExpand, dIgnore };$/;"	e	enum:ctb::dolar_mode
+data	graph.h	/^            T data; \/**vertex user data*\/$/;"	m	class:ctb::graph_basic::node	access:public
 data	proxy.h	/^      T data;$/;"	m	class:ctb::proxy_	access:private
 data	proxy.h	/^      T data;$/;"	m	class:ctb::proxy_rw	access:private
 data	writer.h	/^        stringlist data; \/**holds (formatted) data*\/$/;"	m	class:ctb::writer	access:private
@@ -2428,7 +2320,7 @@ data_t	generator.h	/^            template <typename... L> data_t( node_t* me, co
 data_t	generator.h	/^        class data_t$/;"	c	class:ctb::generator	access:private
 data_t	generator.h	/^    generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(o)$/;"	f	class:ctb::generator::data_t	signature:( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p)
 dbgframe	templates/simu_box.h	/^  int dbgframe;$/;"	m	class:tester	access:private
-debug_op	instructions.h	/^            proxy<typename T::opid_t> debug_op;$/;"	m	class:ctb::instruction_table::type	access:public
+debug_op	instructions.h	/^            typename T::opid_t debug_op;$/;"	m	class:ctb::instruction_table::type	access:public
 debug_sse	sse_set/C_table_expanded.csv	/^debug_sse,universal	instruction	bool	bool	DEBUG_bool	debug	128	1	DEBUG_SSE($$arg1,"$$arg1")		sse,universal	10$/;"	v
 debug_sse	sse_set/C_table_expanded.csv	/^debug_sse,universal	instruction	bool	bool	DEBUG_bool	debug	64	1	DEBUG_SSE($$arg1,"$$arg1")		sse,universal	10$/;"	v
 debug_sse	sse_set/C_table_expanded.csv	/^debug_sse,universal	instruction	double	double	DEBUG_double	debug	16	1	DEBUG_SSE($$arg1,"$$arg1")		sse,universal	10$/;"	v
@@ -2516,7 +2408,7 @@ expansion	instructions.h	/^              expansion(const std::string&,const std:
 expansion	instructions.h	/^            struct expansion$/;"	s	class:ctb::instruction_table::operation	access:private
 expansion	instructions.h	/^    instruction_table<T>::operation::expansion::expansion(const std::string& n, const std::string& t, const std::vector<typename T::opid_t>& a, const std::string& m) : name(n), transformer_name(t), arguments(a), note(m)$/;"	f	class:ctb::instruction_table::operation::expansion	signature:(const std::string& n, const std::string& t, const std::vector<typename T::opid_t>& a, const std::string& m)
 expansion_t	instructions.h	/^            \/*TAPI*\/typedef expansion expansion_t;$/;"	t	class:ctb::instruction_table::operation	access:public
-expansions	instructions.h	/^            \/*TAPI*\/proxy<std::vector<expansion>> expansions;$/;"	m	class:ctb::instruction_table::operation	access:public
+expansions	instructions.h	/^            \/*TAPI*\/std::vector<expansion> expansions;$/;"	m	class:ctb::instruction_table::operation	access:public
 export_graph	ctb.h	/^        template<template <typename ...> class L, typename...P> void        export_graph(P...params) ;$/;"	p	class:ctb::ctb	access:public	signature:(P....params)
 export_graph	ctb.h	/^    template<template <typename ...> class L, typename...P> void ctb<T,IT>::export_graph(P...params)$/;"	f	class:ctb::ctb	signature:(P....params)
 export_graph	loader_csv.h	/^        void export_graph(G& instab, std::ostream&) ;$/;"	p	class:ctb::csv_loader	access:public	signature:(G& instab, std::ostream&)
@@ -2535,46 +2427,20 @@ export_instab	loader_xml.h	/^        void export_instab(IT& instab, std::ostream
 export_instab	loader_xml.h	/^    void xml_loader<T,G,IT>::export_instab(IT& instab, std::ostream& stream)$/;"	f	class:ctb::xml_loader	signature:(IT& instab, std::ostream& stream)
 f	control-flow-notes/ex1.h	/^void f(...)$/;"	f	signature:(....)
 fDEBUG	datatypes.h	/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$/;"	e	enum:ctb::flags
-fDEBUG	tags	/^ctb::fDEBUG	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-fDEBUG	tags	/^ctb::fINPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-fDEBUG	tags	/^ctb::fOUTPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
 fINPUT	datatypes.h	/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$/;"	e	enum:ctb::flags
 fOUTPUT	datatypes.h	/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$/;"	e	enum:ctb::flags
-fOUTPUT	tags	/^ctb::fDEBUG	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-fOUTPUT	tags	/^ctb::fINPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
-fOUTPUT	tags	/^ctb::fOUTPUT	datatypes.h	\/^    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4$\/;"	e	enum:ctb::flags$/;"	m	class:__anon2::__anon3	file:	access:private
 factor_class	graph_factor.h	/^            factor_class(typename factorgraph_myt::node_t* m) : me(m){};$/;"	f	class:ctb::graph_factor::factor_class	access:public	signature:(typename factorgraph_myt::node_t* m)
 factor_class	graph_factor.h	/^        class factor_class $/;"	c	class:ctb::graph_factor	access:protected
-factorgraph_myt	graph_factor.h	/^      typedef graph_basic<factor_class,int,true,graph_factor> factorgraph_myt;$/;"	t	class:ctb::graph_factor	access:protected
+factorgraph_myt	graph_factor.h	/^      typedef graph_basic<factor_class,int,true> factorgraph_myt;$/;"	t	class:ctb::graph_factor	access:protected
 factorgraph_t	graph_factor.h	/^      typedef factorgraph_myt factorgraph_t;$/;"	t	class:ctb::graph_factor	access:public
 factorize	graph.h	/^        void factorize();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-factorize	graph.h	/^  void graph_basic<T,I,directed,O...>::factorize()$/;"	f	class:ctb::graph_basic	signature:()
+factorize	graph.h	/^  void graph_basic<T,I,directed>::factorize()$/;"	f	class:ctb::graph_basic	signature:()
 factorize	graph_factor.h	/^      void factorize();$/;"	p	class:ctb::graph_factor	access:public	signature:()
-factorize	graph_factor.h	/^  void graph_factor<T,I,directed,O...>::factorize()$/;"	f	class:ctb::graph_factor	signature:()
+factorize	graph_factor.h	/^  void graph_factor<T,I,directed>::factorize()$/;"	f	class:ctb::graph_factor	signature:()
 fideg	ctb.h	/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$/;"	e	enum:ctb::functor_id
-fideg	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fideg	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fideg	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fideg	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fideg	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
 fidei	ctb.h	/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$/;"	e	enum:ctb::functor_id
-fidei	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidei	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidei	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidei	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidei	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
 fidlg	ctb.h	/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$/;"	e	enum:ctb::functor_id
-fidlg	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidlg	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidlg	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidlg	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidlg	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
 fidli	ctb.h	/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$/;"	e	enum:ctb::functor_id
-fidli	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidli	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidli	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidli	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	e	enum:__anon2::functor_id	file:
-fidli	tags	/^ctb::functor_id	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	g	namespace:ctb$/;"	m	class:__anon2	file:	access:private
 fileexists	datatypes.h	/^  bool fileexists(const char *name)$/;"	f	namespace:ctb	signature:(const char *name)
 fileexists	split.h	/^  bool fileexists(const char *name)$/;"	f	namespace:ctb	signature:(const char *name)
 files	split.sh	/^our @files = @ARGV;$/;"	v
@@ -2586,7 +2452,7 @@ fillin	multicont.h	/^    void fillin(int i) const$/;"	f	class:multicont	access:p
 flag_t	datatypes.h	/^    typedef uint32_t flag_t;$/;"	t	struct:ctb::traits	access:public
 flag_t	datatypes.h	/^    typedef uint32_t flag_t;$/;"	t	struct:ctb::traits_conv_test	access:public
 flags	datatypes.h	/^  enum flags $/;"	g	namespace:ctb
-flags	instructions.h	/^            \/*EAPI*\/proxy<typename T::flag_t> flags; \/*EAPI*\/proxy<typename T::opid_t> opid;$/;"	m	class:ctb::instruction_table::operation	access:public
+flags	instructions.h	/^            \/*EAPI*\/typename T::flag_t flags; $/;"	m	class:ctb::instruction_table::operation	access:public
 flags	loader_csv.h	/^        static std::map<std::string, int> flags;$/;"	m	class:ctb::csv_loader	access:private
 flags_to_string	datatypes.h	/^    std::string flags_to_string(F f)$/;"	f	namespace:ctb	signature:(F f)
 format	tags	/^!_TAG_FILE_FORMAT	2	\/extended format; --format=1 will not append ;" to lines\/$/;"	v
@@ -2595,25 +2461,9 @@ from_file	writer.h	/^        \/*static*\/   static std::string from_file(const s
 from_file	writer.h	/^    std::string writer<M,I,O,P>::from_file(const std::string& filename)$/;"	f	class:ctb::writer	signature:(const std::string& filename)
 full	tagmaster.h	/^        F full;$/;"	m	class:ctb::tagmaster	access:private
 functor_id	ctb.h	/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$/;"	g	namespace:ctb
-functor_id	tags	/^ctb::fideg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
-functor_id	tags	/^ctb::fidei	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
-functor_id	tags	/^ctb::fidlg	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
-functor_id	tags	/^ctb::fidli	ctb.h	\/^        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};$\/;"	e	enum:ctb::functor_id$/;"	g	class:__anon2	file:	access:private
 gONCE	datatypes.h	/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$/;"	e	enum:ctb::maskmodes
-gONCE	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gONCE	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gONCE	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gONCE	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
 gPRINT	datatypes.h	/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$/;"	e	enum:ctb::maskmodes
-gPRINT	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gPRINT	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gPRINT	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gPRINT	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
 gSELECT	datatypes.h	/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$/;"	e	enum:ctb::maskmodes
-gSELECT	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gSELECT	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gSELECT	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	e	enum:__anon2::__anon3::maskmodes	file:
-gSELECT	tags	/^ctb::maskmodes	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	g	namespace:ctb$/;"	m	class:__anon2::__anon3	file:	access:private
 gendbg	loader_test.h	/^        void gendbg(G& gen, const IT& it, typename T::vid_t v);$/;"	p	class:ctb::test_loader	access:private	signature:(G& gen, const IT& it, typename T::vid_t v)
 gendbg	loader_test.h	/^  void test_loader<T,G,IT>::gendbg(G& gen, const IT& it, typename T::vid_t v)$/;"	f	class:ctb::test_loader	signature:(G& gen, const IT& it, typename T::vid_t v)
 generate	aliasenv_bobox.h	/^      template <class G> static writer<aliasenv_bobox> generate(int m,  G& generator, std::string name);$/;"	p	class:ctb::aliasenv_bobox	access:public	signature:(int m, G& generator, std::string name)
@@ -2655,7 +2505,7 @@ get_conversion_graph	instructions.h	/^    const typename instruction_table<T>::t
 get_debug_opid	instructions.h	/^            \/*API*\/typename T::opid_t get_debug_opid() const;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:() const
 get_debug_opid	instructions.h	/^  typename T::opid_t instruction_table<T>::operation::get_debug_opid() const$/;"	f	class:ctb::instruction_table::operation	signature:() const
 get_dist	graph.h	/^        int get_dist(I a, I b, I* c = NULL) const; \/** returns distance from a to b and the next vertex on path from a to b into c (if not null)*\/$/;"	p	class:ctb::graph_basic	access:public	signature:(I a, I b, I* c = NULL) const
-get_dist	graph.h	/^    int graph_basic<T,I,directed,O...>::get_dist(I a, I b, I* c) const$/;"	f	class:ctb::graph_basic	signature:(I a, I b, I* c) const
+get_dist	graph.h	/^    int graph_basic<T,I,directed>::get_dist(I a, I b, I* c) const$/;"	f	class:ctb::graph_basic	signature:(I a, I b, I* c) const
 get_inner_name	ctb.h	/^        static std::string get_inner_name(std::string fname);$/;"	p	class:ctb::ctb	access:private	signature:(std::string fname)
 get_inner_name	ctb.h	/^    std::string ctb<T,IT>::get_inner_name(std::string f)$/;"	f	class:ctb::ctb	signature:(std::string f)
 get_inout_pos	generator.h	/^            int get_inout_pos() const;$/;"	p	class:ctb::generator::data_t	access:public	signature:() const
@@ -2682,7 +2532,7 @@ get_op_name	loader_test.h	/^    typename T::vid_t test_loader<T,G,IT>::get_op_na
 get_op_string	instructions.h	/^            \/*API*\/bool get_op_string(int w, std::string& c, std::string& cc, std::size_t&)const;$/;"	p	class:ctb::instruction_table::operation	access:public	signature:(int w, std::string& c, std::string& cc, std::size_t&) const
 get_op_string	instructions.h	/^    bool instruction_table<T>::operation::get_op_string(int w, std::string& c, std::string& cc, std::size_t& printability)const$/;"	f	class:ctb::instruction_table::operation	signature:(int w, std::string& c, std::string& cc, std::size_t& printability) const
 get_path	graph.h	/^            node * get_path(node * n);$/;"	p	class:ctb::graph_basic::node	access:private	signature:(node * n)
-get_path	graph.h	/^    typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::node::get_path(node * n)$/;"	f	class:ctb::graph_basic::node	signature:(node * n)
+get_path	graph.h	/^    typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::node::get_path(node * n)$/;"	f	class:ctb::graph_basic::node	signature:(node * n)
 get_prefix	ctb.h	/^        static std::string get_prefix(std::string fname);$/;"	p	class:ctb::ctb	access:private	signature:(std::string fname)
 get_prefix	ctb.h	/^    std::string ctb<T,IT>::get_prefix(std::string f)$/;"	f	class:ctb::ctb	signature:(std::string f)
 get_string	writer.h	/^        std::string get_string() const; \/\/does handle dolars internally!$/;"	p	class:ctb::writer	access:private	signature:() const
@@ -2711,17 +2561,17 @@ getstr	loader_xml.h	/^        static std::string getstr(tinyxml2::XMLNode * node
 getstr	loader_xml.h	/^    std::string xml_loader<T,G,IT>::getstr(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:ctb::xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
 gmCOUNT	datatypes.h	/^  const int gmCOUNT = 3;$/;"	m	namespace:ctb
 graph	README.md	/^The default project accepts a xml representation of an instruction table (which describes the conversion of instructions) and of a graph, which uses opcodes defined by the instruction table, and produces a simple c++ test unit.$/;"	v
-graph	generator.h	/^        proxy<graph_t> graph;$/;"	m	class:ctb::generator	access:public
+graph	generator.h	/^        graph_t graph;$/;"	m	class:ctb::generator	access:public
 graph	tags	/^table	README.md	\/^The default project accepts a xml representation of an instruction table (which describes the conversion of instructions) and of a graph, which uses opcodes defined by the instruction table, and produces a simple c++ test unit.$\/;"	v$/;"	v
 graph_basic	graph.h	/^        graph_basic();$/;"	p	class:ctb::graph_basic	access:public	signature:()
 graph_basic	graph.h	/^    class graph_basic$/;"	c	namespace:ctb
-graph_basic	graph.h	/^    graph_basic<T,I,directed,O...>::graph_basic() : in(), out(), verts(), index(0)$/;"	f	class:ctb::graph_basic	signature:()
+graph_basic	graph.h	/^    graph_basic<T,I,directed>::graph_basic() : in(), out(), verts(), index(0)$/;"	f	class:ctb::graph_basic	signature:()
 graph_basic_default	graph.h	/^  typedef graph_basic<dummy,int,true> graph_basic_default;$/;"	t	namespace:ctb
 graph_default	graph.h	/^  typedef graph_basic<dummy,int,true> graph_default;$/;"	t	namespace:ctb
-graph_distance_t	instructions.h	/^            typedef graph_general<dummy, int, false, type> graph_distance_t;$/;"	t	class:ctb::instruction_table::type	access:public
-graph_factor	graph_factor.h	/^    class graph_factor : public graph_basic<T,I,directed,O...>$/;"	c	namespace:ctb	inherits:graph_basic
+graph_distance_t	instructions.h	/^            typedef graph_general<dummy, int, false> graph_distance_t;$/;"	t	class:ctb::instruction_table::type	access:public
+graph_factor	graph_factor.h	/^    class graph_factor : public graph_basic<T,I,directed>$/;"	c	namespace:ctb	inherits:graph_basic
 graph_factor_default	graph_factor.h	/^  typedef graph_factor<dummy,int,true> graph_factor_default;$/;"	t	namespace:ctb
-graph_t	generator.h	/^        typedef graph_general<data_t, typename T::vid_t, true, generator> graph_t;$/;"	t	class:ctb::generator	access:public
+graph_t	generator.h	/^        typedef graph_general<data_t, typename T::vid_t, true> graph_t;$/;"	t	class:ctb::generator	access:public
 handling	journal	/^optimize tag handling; decoding of tags should be unified and moved a few call-layers higher$/;"	v
 hash_aliasenv	ctb.h	/^        std::map<std::string, aliasenv_record> hash_aliasenv;$/;"	m	class:ctb::ctb	access:private
 hash_command	ctb.h	/^        std::map<std::string, command_record> hash_command;$/;"	m	class:ctb::ctb	access:private
@@ -2735,15 +2585,16 @@ help_command_stream	ctb.h	/^        void help_command_stream();$/;"	p	class:ctb:
 help_command_stream	ctb.h	/^    void ctb<T,IT>::help_command_stream()$/;"	f	class:ctb::ctb	signature:()
 helplang	.exrc	/^set helplang=en$/;"	v
 i	.exrc	/^snoremap <silent> <S-Tab> i<Right>=BackwardsSnippet()$/;"	v
-id	graph.h	/^            proxy<I> id;$/;"	m	class:ctb::graph_basic::node	access:public
+id	graph.h	/^            I id;$/;"	m	class:ctb::graph_basic::node	access:public
 id_t	cf_transform.h	/^        typedef typename G::id_t id_t;$/;"	t	class:ctb::cf_transform	access:private
 id_t	generator.h	/^        typedef typename T::opid_t id_t;$/;"	t	class:ctb::generator	access:private
 id_t	graph.h	/^        typedef I id_t;$/;"	t	class:ctb::graph_basic	access:public
+id_t	graph_factor.h	/^      typedef typename ancestor_t::id_t id_t;$/;"	t	class:ctb::graph_factor	access:public
 imbued_width	instructions.h	/^            mutable int imbued_width;$/;"	m	class:ctb::instruction_table::operation	access:private
-in	graph.h	/^            proxy<multicont<std::vector<node*>> > in;$/;"	m	class:ctb::graph_basic::node	access:public
-in	graph.h	/^        proxy<vertex_list_t> in;$/;"	m	class:ctb::graph_basic	access:public
-in	graph_factor.h	/^            proxy<std::set<typename ancestor_t::node*>> in;$/;"	m	class:ctb::graph_factor::factor_class	access:public
-in_types	instructions.h	/^            \/*EAPI*\/proxy<typename std::vector<typename T::tid_t>> in_types;$/;"	m	class:ctb::instruction_table::operation	access:public
+in	graph.h	/^            multicont<std::vector<node*>> in;$/;"	m	class:ctb::graph_basic::node	access:public
+in	graph.h	/^        vertex_list_t in;$/;"	m	class:ctb::graph_basic	access:public
+in	graph_factor.h	/^            std::set<typename ancestor_t::node*> in;$/;"	m	class:ctb::graph_factor::factor_class	access:public
+in_types	instructions.h	/^            \/*EAPI*\/typename std::vector<typename T::tid_t> in_types;$/;"	m	class:ctb::instruction_table::operation	access:public
 index	graph.h	/^            int index; \/** I believe this is used as an identifier in maps*\/$/;"	m	class:ctb::graph_basic::node	access:private
 index	graph.h	/^        int index;$/;"	m	class:ctb::graph_basic	access:protected
 init	aliasenv_bobox.h	/^      static void init();$/;"	p	class:ctb::aliasenv_bobox	access:protected	signature:()
@@ -2757,13 +2608,13 @@ init	aliasenv_simple.h	/^  void aliasenv_simple::init()$/;"	f	class:ctb::aliasen
 init	aliasenv_simu.h	/^      static void init();$/;"	p	class:ctb::aliasenv_simu	access:protected	signature:()
 init	aliasenv_simu.h	/^  void aliasenv_simu::init()$/;"	f	class:ctb::aliasenv_simu	signature:()
 init_map	graph.h	/^            bool init_map(int size);$/;"	p	class:ctb::graph_basic::node	access:private	signature:(int size)
-init_map	graph.h	/^    bool graph_basic<T,I,directed,O...>::node::init_map(int size)$/;"	f	class:ctb::graph_basic::node	signature:(int size)
+init_map	graph.h	/^    bool graph_basic<T,I,directed>::node::init_map(int size)$/;"	f	class:ctb::graph_basic::node	signature:(int size)
 ins	loader_test.h	/^        std::map<typename T::tid_t, std::vector<typename T::opid_t> > ins;$/;"	m	class:ctb::test_loader	access:private
 insert	loader_csv.h	/^        static void insert(IT& instab, std::string line);$/;"	p	class:ctb::csv_loader	access:private	signature:(IT& instab, std::string line)
 insert	loader_csv.h	/^    void csv_loader<T,G,IT,D>::insert(IT& instab, std::string line)$/;"	f	class:ctb::csv_loader	signature:(IT& instab, std::string line)
 instab	ctb.h	/^        IT instab;$/;"	m	class:ctb::ctb	access:private
-instab	generator.h	/^        proxy< IT&> instab;$/;"	m	class:ctb::generator	access:public
-instab	instructions.h	/^        \/*EAPI*\/proxy<instab_t> instab;$/;"	m	class:ctb::instruction_table	access:public
+instab	generator.h	/^         IT& instab;$/;"	m	class:ctb::generator	access:public
+instab	instructions.h	/^        \/*EAPI*\/instab_t instab;$/;"	m	class:ctb::instruction_table	access:public
 instab_t	instructions.h	/^        typedef std::map<typename T::opid_t, operation*> instab_t;$/;"	t	class:ctb::instruction_table	access:private
 instruction	instructions.h	/^              instruction() = delete;$/;"	p	struct:ctb::instruction_table::operation::instruction	access:public	signature:()
 instruction	instructions.h	/^              instruction(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r, bool satisfactory);$/;"	p	struct:ctb::instruction_table::operation::instruction	access:public	signature:(int wi, int wo, const std::string& c,const std::string&,const std::string&,const std::string&,int r, bool satisfactory)
@@ -2930,20 +2781,8 @@ load_instab	loader_xml.h	/^    void xml_loader<T,G,IT>::load_instab(IT& instab, 
 loader_default	loader_xml.h	/^  typedef xml_loader<traits, generator_default, instruction_table_default> loader_default;$/;"	t	namespace:ctb
 loader_record	ctb.h	/^        typedef std::tuple< std::function<void(std::istream&)>, std::function<void(std::istream&)>, std::function<void(std::ostream&)>, std::function<void(std::ostream&)>> loader_record;$/;"	t	class:ctb::ctb	access:private
 mONCE	datatypes.h	/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$/;"	e	enum:ctb::maskmodes_masks
-mONCE	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mONCE	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mONCE	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mONCE	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
 mPRINT	datatypes.h	/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$/;"	e	enum:ctb::maskmodes_masks
-mPRINT	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mPRINT	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mPRINT	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mPRINT	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
 mSELECT	datatypes.h	/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$/;"	e	enum:ctb::maskmodes_masks
-mSELECT	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mSELECT	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mSELECT	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
-mSELECT	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	e	enum:__anon2::__anon3::maskmodes_masks	file:
 main	main.cpp	/^int main(int count, char**args)$/;"	f	signature:(int count, char**args)
 main	templates/simu.cpp	/^int main()$/;"	f	signature:()
 main	test.cpp	/^int main(int c, char** cc)$/;"	f	signature:(int c, char** cc)
@@ -2955,14 +2794,7 @@ main	unit_test6/main.cpp	/^int main(int argc, char *argv[])$/;"	f	signature:(int
 main	unit_test6/model.bobolang	/^model main()->() {$/;"	f	signature:()
 map	graph.h	/^            mutable std::vector<route> map;$/;"	m	class:ctb::graph_basic::node	access:private
 maskmodes	datatypes.h	/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$/;"	g	namespace:ctb
-maskmodes	tags	/^ctb::gONCE	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	g	class:__anon2::__anon3	file:	access:private
-maskmodes	tags	/^ctb::gPRINT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	g	class:__anon2::__anon3	file:	access:private
-maskmodes	tags	/^ctb::gSELECT	datatypes.h	\/^  enum maskmodes { gSELECT = 0, gPRINT = 1, gONCE = 2};$\/;"	e	enum:ctb::maskmodes$/;"	g	class:__anon2::__anon3	file:	access:private
 maskmodes_masks	datatypes.h	/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$/;"	g	namespace:ctb
-maskmodes_masks	tags	/^ctb::mONCE	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	g	class:__anon2::__anon3	file:	access:private
-maskmodes_masks	tags	/^ctb::mPRINT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	g	class:__anon2::__anon3	file:	access:private
-maskmodes_masks	tags	/^ctb::mSELECT	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	e	enum:ctb::maskmodes_masks$/;"	g	class:__anon2::__anon3	file:	access:private
-maskmodes_masks	tags	/^ctb::maskmodes_masks	datatypes.h	\/^  enum maskmodes_masks { mSELECT = 1 , mPRINT = 2, mONCE = 4 };$\/;"	g	namespace:ctb$/;"	g	class:__anon2::__anon3	file:	access:private
 maxarity	datatypes.h	/^    static const int maxarity = 3;$/;"	m	struct:ctb::traits	access:public
 maxarity	datatypes.h	/^    static const int maxarity = 3;$/;"	m	struct:ctb::traits_conv_test	access:public
 me	generator.h	/^            node_t* me;$/;"	m	class:ctb::generator::data_t	access:private
@@ -2982,19 +2814,18 @@ multicont::vec	multicont.h	/^    mutable std::vector<T> vec;$/;"	m	class:multico
 multicont_default	multicont.h	/^typedef multicont<std::vector<int>> multicont_default;$/;"	t
 mygenerator	ctb.h	/^        generator_t mygenerator;$/;"	m	class:ctb::ctb	access:private
 mytags	ctb.h	/^        std::shared_ptr<tagmaster<uint32_t>> mytags;$/;"	m	class:ctb::ctb	access:private
-mytype	instructions.h	/^            \/*EAPI*\/proxy<type*> mytype;$/;"	m	class:ctb::instruction_table::operation	access:public
+mytype	instructions.h	/^            \/*EAPI*\/type* mytype;$/;"	m	class:ctb::instruction_table::operation	access:public
 name	instructions.h	/^              const std::string name;$/;"	m	struct:ctb::instruction_table::operation::expansion	access:public
-name	tags	/^openstream	datatypes.h	\/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$\/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)$/;"	m	class:__anon2::__anon3	file:	access:private
 newid	generator.h	/^            static int newid(bool reset);$/;"	p	class:ctb::generator::data_t	access:private	signature:(bool reset)
 newid	generator.h	/^    int generator<T,IT>::data_t::newid(bool reset)$/;"	f	class:ctb::generator::data_t	signature:(bool reset)
 newid	graph.h	/^            static int newid();$/;"	p	class:ctb::graph_basic::node	access:protected	signature:()
-newid	graph.h	/^    int graph_basic<T,I,directed,O...>::node::newid()$/;"	f	class:ctb::graph_basic::node	signature:()
+newid	graph.h	/^    int graph_basic<T,I,directed>::node::newid()$/;"	f	class:ctb::graph_basic::node	signature:()
 newname	generator.h	/^            std::string newname(std::string tag) ;$/;"	p	class:ctb::generator::data_t	access:private	signature:(std::string tag)
 newname	generator.h	/^    std::string generator<T,IT>::data_t::newname(std::string tag)$/;"	f	class:ctb::generator::data_t	signature:(std::string tag)
 node	cf_transform.h	/^        typedef typename G::node_t node;$/;"	t	class:ctb::cf_transform	access:private
 node	graph.h	/^            template <typename... L> node(I vid, int index, L&&... p);$/;"	p	class:ctb::graph_basic::node	access:private	signature:(I vid, int index, L&&... p)
 node	graph.h	/^        class node$/;"	c	class:ctb::graph_basic	access:protected
-node	graph.h	/^    graph_basic<T,I,directed,O...>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)$/;"	f	class:ctb::graph_basic::node	signature:(I vid, int idx, L&&... p)
+node	graph.h	/^    graph_basic<T,I,directed>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (std::forward<L>(p))...), index(idx)$/;"	f	class:ctb::graph_basic::node	signature:(I vid, int idx, L&&... p)
 node_t	generator.h	/^        typedef typename graph_t::node_t node_t;$/;"	t	class:ctb::generator	access:public
 node_t	graph.h	/^        typedef node node_t;$/;"	t	class:ctb::graph_basic	access:public
 node_t	graph_factor.h	/^      typedef typename ancestor_t::node node_t;$/;"	t	class:ctb::graph_factor	access:public
@@ -3005,6 +2836,7 @@ note	instructions.h	/^              const std::string note;$/;"	m	struct:ctb::in
 note	instructions.h	/^              const std::string note;$/;"	m	struct:ctb::instruction_table::type::conversion	access:public
 note	instructions.h	/^              const std::string note;$/;"	m	struct:ctb::instruction_table::type::type_version	access:public
 oid	loader_test.h	/^        int oid;$/;"	m	class:ctb::test_loader	access:private
+op	generator.h	/^            const op_t* op;$/;"	m	class:ctb::generator::data_t	access:public
 op_t	generator.h	/^        typedef typename IT::operation_t op_t;$/;"	t	class:ctb::generator	access:private
 openstream	datatypes.h	/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)
 openstream	split.h	/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)
@@ -3033,8 +2865,8 @@ operator ->	cartesian_multiplier.h	/^      const iterator* operator->() const;$/
 operator ->	cartesian_multiplier.h	/^      iterator* operator->();$/;"	p	class:ctb::cartesian_multiplier	access:public	signature:()
 operator ->	cartesian_multiplier.h	/^    const typename cartesian_multiplier<T>::iterator* cartesian_multiplier<T>::operator->() const$/;"	f	class:ctb::cartesian_multiplier	signature:() const
 operator ->	cartesian_multiplier.h	/^    typename cartesian_multiplier<T>::iterator* cartesian_multiplier<T>::operator->()$/;"	f	class:ctb::cartesian_multiplier	signature:()
-operator ->	graph.h	/^            proxy<T,O...>& operator->(); \/**provides diect access to the data member*\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:()
-operator ->	graph.h	/^    graph_basic<T,I,directed,O...>::node::proxy<T,O...>& graph_basic<T,I,directed,O...>::node::operator->()  $/;"	f	class:ctb::graph_basic::node	signature:()
+operator ->	graph.h	/^            T& operator->(); \/**provides diect access to the data member*\/$/;"	p	class:ctb::graph_basic::node	access:public	signature:()
+operator ->	graph.h	/^    T& graph_basic<T,I,directed>::node::operator->()  $/;"	f	class:ctb::graph_basic::node	signature:()
 operator ->	proxy.h	/^      const result_dereferenced_t* operator->() const { return &dereference(data); }$/;"	f	class:ctb::proxy_	access:public	signature:() const
 operator ->	proxy.h	/^      result_t* operator->() { return &data; }$/;"	f	class:ctb::proxy_rw	access:public	signature:()
 operator =	writer.h	/^        \/*operators*\/template<typename N> writer& operator=( const writer<N>& w) ;$/;"	p	class:ctb::writer	access:public	signature:( const writer<N>& w)
@@ -3049,14 +2881,14 @@ operator T&	proxy.h	/^      operator T&() { return data; }$/;"	f	class:ctb::prox
 operator []	proxy.h	/^      template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }$/;"	f	class:ctb::proxy_	access:public	signature:(U args) const
 operator []	proxy.h	/^      template <typename U> typename br_t<U>::type operator [](U args) { return data[args]; }$/;"	f	class:ctb::proxy_rw	access:public	signature:(U args)
 operator const T&	proxy.h	/^      operator const T&() const { return data; }$/;"	f	class:ctb::proxy_	access:public	signature:() const
-opid	generator.h	/^            proxy<id_t> opid;$/;"	m	class:ctb::generator::data_t	access:public
-opid	instructions.h	/^            \/*EAPI*\/proxy<typename T::flag_t> flags; \/*EAPI*\/proxy<typename T::opid_t> opid;$/;"	m	class:ctb::instruction_table::operation	access:public
+opid	generator.h	/^            id_t opid;$/;"	m	class:ctb::generator::data_t	access:public
+opid	instructions.h	/^            \/*EAPI*\/typename T::opid_t opid;$/;"	m	class:ctb::instruction_table::operation	access:public
 opid_t	datatypes.h	/^    typedef int opid_t;$/;"	t	struct:ctb::traits_conv_test	access:public
 opid_t	datatypes.h	/^    typedef std::string opid_t;$/;"	t	struct:ctb::traits	access:public
-out	graph.h	/^            proxy<multicont<std::vector<node*>> > out;$/;"	m	class:ctb::graph_basic::node	access:public
-out	graph.h	/^        proxy<vertex_list_t> out;$/;"	m	class:ctb::graph_basic	access:public
-out	graph_factor.h	/^            proxy<std::set<typename ancestor_t::node*>> out;$/;"	m	class:ctb::graph_factor::factor_class	access:public
-out_type	instructions.h	/^            \/*EAPI*\/proxy<typename T::tid_t> out_type;$/;"	m	class:ctb::instruction_table::operation	access:public
+out	graph.h	/^            multicont<std::vector<node*>> out;$/;"	m	class:ctb::graph_basic::node	access:public
+out	graph.h	/^        vertex_list_t out;$/;"	m	class:ctb::graph_basic	access:public
+out	graph_factor.h	/^            std::set<typename ancestor_t::node*> out;$/;"	m	class:ctb::graph_factor::factor_class	access:public
+out_type	instructions.h	/^            \/*EAPI*\/typename T::tid_t out_type;$/;"	m	class:ctb::instruction_table::operation	access:public
 output_list_$1	templates/bobox_send.h	/^send_poisoned( outputs::output_list_$1());$/;"	p	signature:()
 output_offset	templates/bobox_align.h	/^std::size_t output_offset = pos_out_$3 % $1;$/;"	v
 outs	loader_test.h	/^        std::map<typename T::tid_t, std::vector<typename T::opid_t> > outs;$/;"	m	class:ctb::test_loader	access:private
@@ -3171,7 +3003,7 @@ register_command	ctb.h	/^  void ctb<T,IT>::register_command(const std::string& c
 register_loader	ctb.h	/^        template<template <typename ... > class L> void register_loader() ;$/;"	p	class:ctb::ctb	access:public	signature:()
 register_loader	ctb.h	/^    template<template <typename...> class L> void ctb<T,IT>::register_loader()$/;"	f	class:ctb::ctb	signature:()
 register_transform	ctb.h	/^        template<template <typename ... > class L> void register_transform() ;$/;"	p	class:ctb::ctb	access:public	signature:()
-register_transform	ctb.h	/^    template<template <typename...> class L> void ctb<T,IT>::register_transform()$/;"	f	class:ctb::ctb	signature:()
+register_transform	ctb.h	/^    template<template <typename ...> class L> void ctb<T,IT>::register_transform()$/;"	f	class:ctb::ctb	signature:()
 required	tagmaster.h	/^        F required;$/;"	m	class:ctb::tagmaster	access:private
 reset	cartesian_multiplier.h	/^      void reset();$/;"	p	class:ctb::cartesian_multiplier	access:public	signature:()
 reset	cartesian_multiplier.h	/^  void cartesian_multiplier<T>::reset()$/;"	f	class:ctb::cartesian_multiplier	signature:()
@@ -3188,13 +3020,13 @@ result_t	proxy.h	/^      typedef typename std::remove_reference<T>::type result_
 rm_tags	instructions.h	/^        \/*API*\/ void rm_tags(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT);$/;"	p	class:ctb::instruction_table	access:public	signature:(std::shared_ptr<taghandler_base>,std::size_t layer = gSELECT)
 rm_tags	instructions.h	/^    void instruction_table<T>::rm_tags(std::shared_ptr<taghandler_base> ptr, std::size_t l)$/;"	f	class:ctb::instruction_table	signature:(std::shared_ptr<taghandler_base> ptr, std::size_t l)
 rmat	graph.h	/^        void rmat(std::vector<node*>& list, node* to);$/;"	p	class:ctb::graph_basic	access:protected	signature:(std::vector<node*>& list, node* to)
-rmat	graph.h	/^  void graph_basic<T,I,directed,O...>::rmat(std::vector<node*>& list, node* to)$/;"	f	class:ctb::graph_basic	signature:(std::vector<node*>& list, node* to)
+rmat	graph.h	/^  void graph_basic<T,I,directed>::rmat(std::vector<node*>& list, node* to)$/;"	f	class:ctb::graph_basic	signature:(std::vector<node*>& list, node* to)
 rmatv	graph.h	/^        void rmatv(node* a,node* to);$/;"	p	class:ctb::graph_basic	access:protected	signature:(node* a,node* to)
-rmatv	graph.h	/^  void graph_basic<T,I,directed,O...>::rmatv(node* a,node* to)$/;"	f	class:ctb::graph_basic	signature:(node* a,node* to)
+rmatv	graph.h	/^  void graph_basic<T,I,directed>::rmatv(node* a,node* to)$/;"	f	class:ctb::graph_basic	signature:(node* a,node* to)
 rmedge	graph.h	/^        template <typename J> void rmedge(J aid, J bid, int level = 0);$/;"	p	class:ctb::graph_basic	access:public	signature:(J aid, J bid, int level = 0)
-rmedge	graph.h	/^  void graph_basic<T,I,directed,O...>::rmedge(J aid, J bid, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int l)
+rmedge	graph.h	/^  void graph_basic<T,I,directed>::rmedge(J aid, J bid, int l)$/;"	f	class:ctb::graph_basic	signature:(J aid, J bid, int l)
 rmvert	graph.h	/^        template <typename J> void rmvert(J v);$/;"	p	class:ctb::graph_basic	access:public	signature:(J v)
-rmvert	graph.h	/^  void graph_basic<T,I,directed,O...>::rmvert(J v)$/;"	f	class:ctb::graph_basic	signature:(J v)
+rmvert	graph.h	/^  void graph_basic<T,I,directed>::rmvert(J v)$/;"	f	class:ctb::graph_basic	signature:(J v)
 route	graph.h	/^            typedef std::pair<node*, int> route;$/;"	t	class:ctb::graph_basic::node	access:private
 runtime	unit_test6/main.cpp	/^class runtime : public bobox::runtime, public bobox::basic_object_factory {$/;"	c	file:	inherits:bobox::runtime,bobox::basic_object_factory
 rw	proxy.h	/^      result_t& rw() { return data; }$/;"	f	class:ctb::proxy_	access:private	signature:()
@@ -3209,9 +3041,9 @@ self_test	cartesian_multiplier.h	/^      void cartesian_multiplier<T>::self_test
 self_test	ctb.h	/^        static void self_test() ;$/;"	p	class:ctb::ctb	access:public	signature:()
 self_test	ctb.h	/^    void ctb<T,IT>::self_test()$/;"	f	class:ctb::ctb	signature:()
 self_test	graph.h	/^        static void self_test();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-self_test	graph.h	/^    void graph_basic<T,I,directed,O...>::self_test()$/;"	f	class:ctb::graph_basic	signature:()
+self_test	graph.h	/^    void graph_basic<T,I,directed>::self_test()$/;"	f	class:ctb::graph_basic	signature:()
 self_test	graph_factor.h	/^      static void self_test();$/;"	p	class:ctb::graph_factor	access:public	signature:()
-self_test	graph_factor.h	/^  void graph_factor<T,I,directed,O...>::self_test()$/;"	f	class:ctb::graph_factor	signature:()
+self_test	graph_factor.h	/^  void graph_factor<T,I,directed>::self_test()$/;"	f	class:ctb::graph_factor	signature:()
 self_test	loader_csv.h	/^        static void self_test() ;$/;"	p	class:ctb::csv_loader	access:public	signature:()
 self_test	loader_csv.h	/^    void csv_loader<T,G,IT,D>::self_test()$/;"	f	class:ctb::csv_loader	signature:()
 self_test	loader_test.h	/^          static void self_test() ;$/;"	p	class:ctb::test_loader	access:public	signature:()
@@ -3257,7 +3089,6 @@ source_box::model	unit_test6/main.cpp	/^	typedef generic_model<source_box> model
 source_box::source_box	unit_test6/main.cpp	/^	source_box(const bobox::box_parameters_pack &box_params) : bobox::basic_box(box_params) {}$/;"	f	class:source_box	access:public	signature:(const bobox::box_parameters_pack &box_params)
 split	datatypes.h	/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)
 split	split.h	/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)
-squash	tags	/^split	datatypes.h	\/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$\/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)$/;"	m	class:__anon2::__anon3	file:	access:private
 squash_add_sub	parser.h	/^      void squash_add_sub();$/;"	p	class:ctb::parser	access:private	signature:()
 squash_add_sub	parser.h	/^  void parser::squash_add_sub()$/;"	f	class:ctb::parser	signature:()
 squash_mul_div	parser.h	/^      void squash_mul_div();$/;"	p	class:ctb::parser	access:private	signature:()
@@ -3311,12 +3142,9 @@ stoi	datatypes.h	/^  int stoi(std::string str)$/;"	f	namespace:ctb	signature:(st
 store_bool	templates/macros.h	21;"	d
 store_bool	unit_test4/macros.h	21;"	d
 store_bool	unit_test5/macros.h	21;"	d
-str	tags	/^split	datatypes.h	\/^  std::vector<std::string> split(std::string str, char d, bool squash = false)$\/;"	f	namespace:ctb	signature:(std::string str, char d, bool squash = false)$/;"	m	class:__anon2::__anon3	file:	access:private
-stream	tags	/^openstream	datatypes.h	\/^    void openstream(S& stream, const std::string& name, bool check_existence = true)$\/;"	f	namespace:ctb	signature:(S& stream, const std::string& name, bool check_existence = true)$/;"	m	class:__anon2::__anon3	file:	access:private
 string_to_flags	datatypes.h	/^    F string_to_flags(std::string str)$/;"	f	namespace:ctb	signature:(std::string str)
 stringlist	datatypes.h	/^  typedef std::vector<std::string> stringlist;$/;"	t	namespace:ctb
 stringlist	split.h	/^  typedef std::vector<std::string> stringlist;$/;"	t	namespace:ctb
-stringlist	tags	/^ctb::stringlist	datatypes.h	\/^  typedef std::vector<std::string> stringlist;$\/;"	t	namespace:ctb$/;"	t	class:__anon2::__anon3	file:	access:private
 strings	writer.h	/^        \/*others*\/   const stringlist& strings();$/;"	p	class:ctb::writer	access:public	signature:()
 strings	writer.h	/^    const stringlist& writer<M,I,O,P>::strings()$/;"	f	class:ctb::writer	signature:()
 super_friend_maker	proxy.h	/^    struct super_friend_maker$/;"	s	namespace:ctb
@@ -3359,7 +3187,7 @@ tester::pull	templates/simu_box.h	/^  uint32_t pull()$/;"	f	class:tester	access:
 tester::reset	templates/simu_box.h	/^  void reset()$/;"	f	class:tester	access:private	signature:()
 tester::test	templates/simu_box.h	/^  void test(int frame = -1)$/;"	f	class:tester	access:public	signature:(int frame = -1)
 testloader_default	loader_test.h	/^  typedef test_loader<traits, generator_default, instruction_table_default> testloader_default;$/;"	t	namespace:ctb
-tid	instructions.h	/^            \/*EAPI*\/proxy<typename T::tid_t> tid;$/;"	m	class:ctb::instruction_table::type	access:public
+tid	instructions.h	/^            \/*EAPI*\/typename T::tid_t tid;$/;"	m	class:ctb::instruction_table::type	access:public
 tid_t	datatypes.h	/^    typedef int tid_t;$/;"	t	struct:ctb::traits_conv_test	access:public
 tid_t	datatypes.h	/^    typedef std::string tid_t;$/;"	t	struct:ctb::traits	access:public
 to_file	writer.h	/^        \/*static*\/   static void to_file(const std::string& filename, const std::string& contents);$/;"	p	class:ctb::writer	access:public	signature:(const std::string& filename, const std::string& contents)
@@ -3383,9 +3211,9 @@ tokenize	parser.h	/^  parser::token parser::tokenize(const char *& ptr)$/;"	f	cl
 tovert	graph.h	/^        node* tovert(I);$/;"	p	class:ctb::graph_basic	access:protected	signature:(I)
 tovert	graph.h	/^        node* tovert(node&);$/;"	p	class:ctb::graph_basic	access:protected	signature:(node&)
 tovert	graph.h	/^        node* tovert(node*);$/;"	p	class:ctb::graph_basic	access:protected	signature:(node*)
-tovert	graph.h	/^  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(I v)$/;"	f	class:ctb::graph_basic	signature:(I v)
-tovert	graph.h	/^  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(node& v)$/;"	f	class:ctb::graph_basic	signature:(node& v)
-tovert	graph.h	/^  typename graph_basic<T,I,directed,O...>::node* graph_basic<T,I,directed,O...>::tovert(node* v)$/;"	f	class:ctb::graph_basic	signature:(node* v)
+tovert	graph.h	/^  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(I v)$/;"	f	class:ctb::graph_basic	signature:(I v)
+tovert	graph.h	/^  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(node& v)$/;"	f	class:ctb::graph_basic	signature:(node& v)
+tovert	graph.h	/^  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(node* v)$/;"	f	class:ctb::graph_basic	signature:(node* v)
 traits	datatypes.h	/^  struct traits$/;"	s	namespace:ctb
 traits_conv_test	datatypes.h	/^  struct traits_conv_test$/;"	s	namespace:ctb
 transform	cf_transform.h	/^        void transform(G& g)$/;"	f	class:ctb::cf_transform	access:public	signature:(G& g)
@@ -3393,6 +3221,7 @@ transform	generator.h	/^        template<template <typename ...> class L, typena
 transform	generator.h	/^  void generator<T,IT>::transform(P...params)$/;"	f	class:ctb::generator	signature:(P....params)
 transform_graph	ctb.h	/^        template<template <typename ...> class L, typename...P> void        transform_graph(P...params) ;$/;"	p	class:ctb::ctb	access:public	signature:(P....params)
 transform_graph	ctb.h	/^    template<template <typename ...> class L, typename...P> void ctb<T,IT>::transform_graph(P...params)$/;"	f	class:ctb::ctb	signature:(P....params)
+transform_merge	cf_transform.h	/^        void transform_merge(node* n, const std::vector<id_t>&)$/;"	f	class:ctb::cf_transform	access:private	signature:(node* n, const std::vector<id_t>&)
 transform_record	ctb.h	/^        typedef std::function<void()> transform_record;$/;"	t	class:ctb::ctb	access:private
 transform_split	cf_transform.h	/^        void transform_split(node* n, const std::vector<id_t>&)$/;"	f	class:ctb::cf_transform	access:private	signature:(node* n, const std::vector<id_t>&)
 transformer_name	instructions.h	/^              const std::string transformer_name;$/;"	m	struct:ctb::instruction_table::operation::expansion	access:public
@@ -3416,7 +3245,7 @@ type_version	instructions.h	/^              type_version() = delete;$/;"	p	struc
 type_version	instructions.h	/^              type_version(int w, const std::string& c,const std::string&);$/;"	p	struct:ctb::instruction_table::type::type_version	access:public	signature:(int w, const std::string& c,const std::string&)
 type_version	instructions.h	/^            struct type_version$/;"	s	class:ctb::instruction_table::type	access:private
 type_version	instructions.h	/^    instruction_table<T>::type::type_version::type_version(int w, const std::string& c,const std::string& n) : width(w), code(c), note(n)$/;"	f	class:ctb::instruction_table::type::type_version	signature:(int w, const std::string& c,const std::string& n)
-typetab	instructions.h	/^        \/*EAPI*\/proxy<typetab_t> typetab;$/;"	m	class:ctb::instruction_table	access:public
+typetab	instructions.h	/^        \/*EAPI*\/typetab_t typetab;$/;"	m	class:ctb::instruction_table	access:public
 typetab_t	instructions.h	/^        typedef std::map<typename T::tid_t, type*> typetab_t;$/;"	t	class:ctb::instruction_table	access:private
 uint16_t	sse_set/C_table_expanded.csv	/^arithetic_std	instruction	uint16_t	uint16_t,uint16_t	ADD_uint16_t		1	1	$$arg1 + $$arg2		C,universal	10$/;"	v
 uint16_t	sse_set/C_table_expanded.csv	/^arithetic_std	instruction	uint16_t	uint16_t,uint16_t	DIV_uint16_t		1	1	$$arg1 \/ $$arg2		C,universal	10$/;"	v
@@ -3539,7 +3368,7 @@ uint8_t	sse_set/C_table_expanded.csv	/^sse_relational	instruction	ssebool	uint8_
 update	generator.h	/^        void update(); \/** In case instruction table is reloaded the operation pointers are no longer valid. This function updates them.*\/$/;"	p	class:ctb::generator	access:public	signature:()
 update	generator.h	/^    void generator<T,IT>::update()$/;"	f	class:ctb::generator	signature:()
 update_distances	graph.h	/^            bool update_distances();$/;"	p	class:ctb::graph_basic::node	access:private	signature:()
-update_distances	graph.h	/^    bool graph_basic<T,I,directed,O...>::node::update_distances()$/;"	f	class:ctb::graph_basic::node	signature:()
+update_distances	graph.h	/^    bool graph_basic<T,I,directed>::node::update_distances()$/;"	f	class:ctb::graph_basic::node	signature:()
 update_tags	instructions.h	/^            void update_tags() const;$/;"	p	class:ctb::instruction_table::operation	access:private	signature:() const
 update_tags	instructions.h	/^            void update_tags() const;$/;"	p	class:ctb::instruction_table::type	access:private	signature:() const
 update_tags	instructions.h	/^        \/*API*\/ void update_tags() const;$/;"	p	class:ctb::instruction_table	access:public	signature:() const
@@ -3554,11 +3383,12 @@ value	writer.h	/^  struct static_false{ const static bool value = false;};$/;"	m
 value	writer.h	/^  struct static_true{ const static bool value = true;};$/;"	m	struct:ctb::static_true	access:public
 value_container	datatypes.h	/^    struct value_container$/;"	s	namespace:ctb
 vec	multicont.h	/^    mutable std::vector<T> vec;$/;"	m	class:multicont	access:private
-versions	instructions.h	/^            \/*EAPI*\/proxy<std::vector<instruction>> versions;$/;"	m	class:ctb::instruction_table::operation	access:public
-versions	instructions.h	/^            \/*EAPI*\/proxy<std::vector<type_version>> versions;$/;"	m	class:ctb::instruction_table::type	access:public
+versions	instructions.h	/^            \/*EAPI*\/std::vector<instruction> versions;$/;"	m	class:ctb::instruction_table::operation	access:public
+versions	instructions.h	/^            \/*EAPI*\/std::vector<type_version> versions;$/;"	m	class:ctb::instruction_table::type	access:public
 vertex_container_t	graph.h	/^        typedef std::map<I, node*> vertex_container_t;$/;"	t	class:ctb::graph_basic	access:protected
 vertex_list_t	graph.h	/^        typedef std::vector<node*> vertex_list_t;$/;"	t	class:ctb::graph_basic	access:protected
-verts	graph.h	/^        proxy<vertex_container_t> verts;$/;"	m	class:ctb::graph_basic	access:public
+vertices	graph_factor.h	/^            std::set<typename ancestor_t::node*> vertices;$/;"	m	class:ctb::graph_factor::factor_class	access:public
+verts	graph.h	/^        vertex_container_t verts;$/;"	m	class:ctb::graph_basic	access:public
 vid_t	datatypes.h	/^    typedef int vid_t;$/;"	t	struct:ctb::traits_conv_test	access:public
 vid_t	datatypes.h	/^    typedef std::string vid_t;$/;"	t	struct:ctb::traits	access:public
 vid_t	generator.h	/^        typedef typename T::vid_t vid_t;$/;"	t	class:ctb::generator	access:private
@@ -3612,6 +3442,6 @@ writer_tag	writer.h	/^  template <class M, dolar_mode I, dolar_mode O, class P> 
 xml_loader	loader_xml.h	/^    class xml_loader$/;"	c	namespace:ctb
 xml_loader::getanystr	sort	/^std::string xml_loader<T,G,IT>::getanystr(tinyxml2::XMLNode * node, std::string name)$/;"	f	class:xml_loader	signature:(tinyxml2::XMLNode * node, std::string name)
 ~graph_basic	graph.h	/^        ~graph_basic();$/;"	p	class:ctb::graph_basic	access:public	signature:()
-~graph_basic	graph.h	/^    graph_basic<T,I,directed,O...>::~graph_basic()$/;"	f	class:ctb::graph_basic	signature:()
+~graph_basic	graph.h	/^    graph_basic<T,I,directed>::~graph_basic()$/;"	f	class:ctb::graph_basic	signature:()
 ~instruction_table	instructions.h	/^        ~instruction_table();$/;"	p	class:ctb::instruction_table	access:public	signature:()
 ~instruction_table	instructions.h	/^    instruction_table<T>::~instruction_table()  $/;"	f	class:ctb::instruction_table	signature:()

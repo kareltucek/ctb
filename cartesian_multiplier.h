@@ -1,8 +1,10 @@
 #ifndef CARTESIAN_GUARD
 #define CARTESIAN_GUARD
 
+#include "defines.h"
 #include <vector>
 #include <assert.h>
+#include <iostream>
 
 namespace ctb
 {
@@ -13,11 +15,11 @@ namespace ctb
    * */
 
   template <typename T>
-   class cartesian_multiplier : std::forward_iterator_tag
+   class cartesian_multiplier : forward_iterator_tag
   {
     private:
       bool end_b;
-      typedef std::vector<typename T::iterator> itr;
+      typedef vector<typename T::iterator> itr;
       itr begins;
       itr ends;
       itr middles;
@@ -47,7 +49,7 @@ cartesian_multiplier& operator++();
       static void self_test();
   };
 
-  typedef cartesian_multiplier<std::vector<int> > cartesian_multiplier_default;
+  typedef cartesian_multiplier<vector<int> > cartesian_multiplier_default;
 
     template <typename T>
   typename cartesian_multiplier<T>::constant cartesian_multiplier<T>::begin() const
@@ -149,11 +151,12 @@ cartesian_multiplier& operator++();
         template <typename T>
       void cartesian_multiplier<T>::self_test()
       {
-        std::vector<int> a = {1,2,3};
-        std::vector<int> b = {3,4,5};
-        std::vector<int> c = {1,3,1,4,1,5,2,3,2,4,2,5,3,3,3,4,3,5};
-        std::vector<int> d;
-        cartesian_multiplier<std::vector<int> > itr;
+        cout << "testing cartesian multiplier" << endl;
+        vector<int> a = {1,2,3};
+        vector<int> b = {3,4,5};
+        vector<int> c = {1,3,1,4,1,5,2,3,2,4,2,5,3,3,3,4,3,5};
+        vector<int> d;
+        cartesian_multiplier<vector<int> > itr;
         itr.add(a);
         itr.add(b);
 
