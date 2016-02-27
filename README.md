@@ -1,6 +1,6 @@
-doxygen documentation available at http://84.42.186.246/ctb-doc
+doxygen documentation available at http://ktweb.cz/ctb-doc
 
-repository hosted at http://84.42.186.246/ctb
+repository hosted at http://ktweb.cz/ctb
 
 alternative mirror is at http://github.com/kareltucek/ctb
 
