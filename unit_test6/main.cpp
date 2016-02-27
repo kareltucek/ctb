@@ -8,6 +8,10 @@
 
 #include "output.h"
 
+/**
+ * This file is taken from bobox source distributions
+ * */
+
 class source_box : public bobox::basic_box {
 public:
 	typedef generic_model<source_box> model;

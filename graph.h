@@ -79,6 +79,7 @@ namespace ctb
         void rmatv(node* a,node* to);
       public:
         typedef node node_t;
+        typedef I id_t;
         template <class A> using proxy = proxy_<A,graph_basic>;
         proxy<int> classcount;
         proxy<vertex_list_t> in;

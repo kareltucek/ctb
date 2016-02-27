@@ -32,8 +32,10 @@ namespace ctb
     public:
       typedef factorgraph_myt factorgraph_t;
       typedef typename ancestor_t::node node_t;
+      typedef typename ancestor_t::id_t id_t;
       using graph_basic<T,I,directed,O...>::graph_basic;
       template <class A> using proxy = proxy_<A,graph_factor>;
+
       proxy<factorgraph_t> factor;
       void factorize();
       static void self_test();
@@ -72,16 +74,22 @@ namespace ctb
   void graph_factor<T,I,directed,O...>::factorize()
   {
     factor.rw().clear();
-    graph_basic<T,I,directed,O...>::factorize();
+    graph_basic<T,I,directed,O...>::factorize(); //will assign class ids in the simple graph
     for(int i = 0; i < this->classcount.r(); ++i)
       factor.rw().addvert(i, false, false);
     this->crawl_topological([=](node_t* n){ this->factor->verts.r().find(n->classid.r())->second->data.rw().vertices.rw().insert(n);  });
-    this->crawl_topological([=](node_t* n){ 
-        for(auto i : n->out.r().getlevel(1)) 
-        {
-        this->add_factor_edge(n,i); 
-        }
-        });
+    this->crawl_topological([=](node_t* n){ for(auto i : n->out.r().getlevel(1)) { this->add_factor_edge(n,i); } });
+    std::set<int> ins;
+    std::set<int> outs;
+
+    for(auto n : this->in.r())
+      ins.insert(n->classid.r());
+    for(auto n : this->out.r())
+      outs.insert(n->classid.r());
+    for(auto n : ins)
+      factor.rw().in.rw().push_back(n);
+    for(auto n : outs)
+      factor.rw().outs.rw().push_back(n);
   }
 };
 

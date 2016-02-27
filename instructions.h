@@ -175,6 +175,7 @@ namespace ctb
             void update_tags() const;
           public:
             /*TAPI*/proxy<std::vector<expansion>> expansions;
+            /*TAPI*/typedef expansion expansion_t;
             /*EAPI*/proxy<std::vector<instruction>> versions;
             /*EAPI*/proxy<type*> mytype;
             /*EAPI*/proxy<typename T::tid_t> out_type;

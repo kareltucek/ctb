@@ -170,11 +170,11 @@ namespace ctb
     }
 
   template <class T, class IT>
-    template<template <typename...> class L> void ctb<T,IT>::register_transform()
+    template<template <typename ...> class L> void ctb<T,IT>::register_transform()
     {
-      if(L<generator_t>::get_name() == "")
+      if(L<typename generator_t::graph_t>::get_name() == "")
         error( "unnamed transformation passed - (have you defined a 'std::string get_name(){return \"whatever nonempty\";}' method?");
-      hash_transforms[L<generator_t>::get_name()] = transform_record(std::bind(&ctb<T,IT>::transform_graph<L>  , this));
+      hash_transforms[L<typename generator_t::graph_t>::get_name()] = transform_record(std::bind(&ctb<T,IT>::transform_graph<L>  , this));
     }
 
   template <class T, class IT>
