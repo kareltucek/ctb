@@ -37,7 +37,7 @@ class multicont : public T
 
     int getlevelcount()
     {
-      return vec.size();
+      return vec.size()+1;
     };
 
     static void self_test()

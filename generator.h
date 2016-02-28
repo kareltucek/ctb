@@ -30,9 +30,10 @@ namespace ctb
       public:
         typedef graph_general<data_t, typename T::vid_t, true> graph_t;
         typedef typename graph_t::node_t node_t;
-      private:
+        typedef typename T::opid_t opid_t;
         typedef typename T::opid_t id_t;
         typedef typename T::vid_t vid_t;
+      private:
         typedef typename T::param_t param_t;
         typedef typename IT::operation_t op_t;
 
@@ -69,8 +70,8 @@ namespace ctb
         generator( IT& i);
         void set_instab( IT& i);
 
-        template <typename...L> void addvert(vid_t v, id_t op, L... p) ;
-        void addedge(vid_t aid, vid_t bid, int b_argpos) ;
+        template <typename...L> typename graph_t::node_t* addvert(vid_t v, id_t op, L... p) ;
+        void addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos) ;
 
         template <class W> void generate(int granularity, W& w, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ;
         int get_broadest(int upperbound = 10000000) ;
@@ -90,8 +91,8 @@ namespace ctb
         template<template <typename ...> class L, typename...P> 
   void generator<T,IT>::transform(P...params)
   {
-    L<graph_t> l;
-    l.transform(graph,params...);
+    L<generator<T,IT>> l;
+    l.transform(*this ,params...);
   }
 
   template <class T, class IT>
@@ -137,10 +138,10 @@ namespace ctb
     }
 
   template <class T, class IT>
-    template <typename...L> void generator<T,IT>::addvert(vid_t v, id_t op, L... p)  
+    template <typename...L> typename generator<T,IT>::graph_t::node_t* generator<T,IT>::addvert(vid_t v, id_t op, L... p)  
     {
       auto ptr = &instab.dec(op);
-      graph.addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
+      return graph.addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
     }
 
   template <class T, class IT>
@@ -165,9 +166,9 @@ namespace ctb
     }
 
   template <class T, class IT>
-    void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos)  
+    void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos)  
     {
-      graph.addedge(aid, bid, b_argpos);
+      graph.addedge(aid, bid, b_argpos, a_argpos);
     }
 
 
@@ -212,7 +213,8 @@ namespace ctb
       {
         W empty;
         int myin, myout;
-        int mygran = op->is(fDEBUG) ? me->in[0]->data.op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
+        int mygran = op->is(fDEBUG) ? me->in_at(0)->from->data.op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
+
         if(mygran == 0)
           error( string("suitable width not found!"));
         if(granularity % mygran != 0)
@@ -222,11 +224,14 @@ namespace ctb
         if(me->in.size() != op->in_types.size())
           error( string("count of input nodes does not match operation specification"));
         for(int i = 0; i < me->in.size(); ++i)
-          if(me->in[i]->data.op->out_type != op->in_types[i])
-            error( string("argument ").append(to_string(i)).append(" does not match defined input type: got ").append(me->in[i]->data.op->out_type).append(" wanted ").append(op->in_types[i]));
+        {
+          auto e = me->in[i];
+          if(e->from->data.op->out_type != op->in_types[e->topos])
+            error( string("argument ").append(to_string(i)).append(" does not match defined input type: got ").append(e->from->data.op->out_type).append(" wanted ").append(op->in_types[i]));
+        }
         //op->imbue_width(mygran);
         acces_map.clear();
-#define ARG(a) (a-1 < me->in.size() ? W().print(me->in[a-1]->data.get_acces(myin, granularity, w, c), i*myout) : empty)
+#define ARG(a) (me->in_at(a-1, false) != NULL ? W().print(me->in_at(a-1, false)->from->data.get_acces(myin, granularity, w, c), i*myout) : empty)
         W acces({newname(print("w$1",myout))});
         acces_map.insert(acces_map_t::value_type(myout, acces));
         string type_string, op_c, op_cc;

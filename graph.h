@@ -45,12 +45,14 @@ namespace ctb
         class node;
         struct edge
         {
-          node* ptr;
+          node* from;
+          node* to;
           int frompos;
           int topos;
-          GLUE_PTR(node, ptr);
+          int level;
+          //GLUE_PTR(node, ptr);
         };
-        MAKE(edge);
+        //MAKE(edge);
 
         class node
         {
@@ -58,7 +60,7 @@ namespace ctb
             graph_basic* parent;
             typedef pair<node*, int> route;
             mutable vector<route> map;
-            int index; /** I believe this is used as an identifier in maps*/
+            int index; /** I believe I am using this as an identifier in maps*/
             int lastpass; /** is used mostly for keeping track of whether or not we've visited this node in current crawl*/
             friend class graph_basic;
             template <typename... L> node(I vid, int index, L&&... p);
@@ -71,9 +73,9 @@ namespace ctb
             T data; /**vertex user data*/
             I id;
             int classid;
-            multicont<vector<edge>> out;
-            multicont<vector<edge>> in;
-            T& operator->(); /**provides diect access to the data member*/
+            multicont<vector<edge*>> out;
+            multicont<vector<edge*>> in;
+            edge* in_at(int i, bool check_uniqueness = true);
             template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, queue<node*>* q = NULL); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
             void crawl_topological(function<void(node*)> f); /** this is an overload of crawl for topological search*/
         };
@@ -86,7 +88,8 @@ namespace ctb
         node* tovert(node*);
         node* tovert(node&);
         void rm_at(vector<node*>& list, node* to);
-        void rm_atv(node* a,node* to);
+        //void rm_at(vector<edge>& list, node* to);
+        //void rm_atv(node* a,node* to);
       public:
         typedef edge edge_t;
         typedef node node_t;
@@ -99,10 +102,11 @@ namespace ctb
         ~graph_basic();
         template <typename...L> node* addvert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
         template <typename J> void addedge(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0) ; /** self describing I believe*/
-        template <typename J> void rmedge(J aid, J bid, int level = 0);
+        //template <typename J> void rmedge(J aid, J bid, int level = 0);
         template <typename J> void rmvert(J v);
         template <typename J> void connect_as(J v, J as, bool inputs = true, bool outputs = true);
         template <typename J> void get_edge_b_pos(J a, J b, int i);
+        void rmedge(edge* e);
         void calculate_distances(); /**performs bellman-ford algorithm */
         int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
@@ -145,7 +149,10 @@ namespace ctb
       node* n = v.second;
       if(n->lastpass != passid)
       {
-        n->template crawl<true, false>( [=](node* n)-> bool { n->classid = classid; n->lastpass = passid; return true; }, [=](node* n)->bool { return n->lastpass != passid; } );
+        n->template crawl<true, false>( 
+            [&](node* n)-> bool { n->classid = classid; n->lastpass = passid; return true; }, 
+            [&](node* n)->bool { return n->lastpass != passid; } 
+        );
         ++classid;
       }
     }
@@ -198,12 +205,20 @@ namespace ctb
       h.calculate_distances(); //implicit test of crawling functions
       assert(h.get_dist(1,3) == 2);
       assert(h.get_dist(1,4) == 1);
-    }
 
-  template <class T, class I, bool directed>
-    T& graph_basic<T,I,directed>::node::operator->()  
-    {
-      return data;
+      i = 0;
+      graph_basic<dummy, int, true> k;
+      k.addvert(1, false, false);
+      auto v = k.addvert(2, false, false);
+      k.addvert(3, false, true);
+      k.addedge(1,2);
+      k.addedge(2,3);
+      k.crawl_topological([&](node* n){ i++;});
+      assert( i == 3);
+      k.rmvert(v);
+      k.crawl_topological([&](node* n){ i++;});
+      assert( i == 5);
+
     }
 
   template <class T, class I, bool directed>
@@ -217,6 +232,25 @@ namespace ctb
       if(c != NULL)
         *c = va->second->map[vb->second->index].first->id;
       return va->second->map[vb->second->index].second;
+    }
+
+  template <class T, class I, bool directed>
+    typename graph_basic<T,I,directed>::edge* graph_basic<T,I,directed>::node::in_at(int i, bool check_uniqueness)
+    {
+      edge* res = NULL;
+      for(auto v : in)
+      {
+        if(v->topos == i)
+        {
+          if(res == NULL)
+            res = v;
+          else if(check_uniqueness)
+            error("node has multiple incoming edges");
+        }
+      }
+      if(check_uniqueness && res == NULL)
+        error("incoming edge not found when expected!");
+      return res;
     }
 
   template <class T, class I, bool directed>
@@ -239,9 +273,16 @@ namespace ctb
         node* n = v.second;
         if(n->lastpass != passid)
         {
-          //TODO: a more explicit explanation should probably come here...
-      n->template crawl<true, true>([=](node* n)->bool{ n->init_map(size); n->lastpass = passid; return true;}, [=](node*n)->bool{return n->map.size() != size;} );
-      n->template crawl<directed, true>([=](node* n)->bool{ return n->update_distances();}, [=](node*n)->bool{return true;} );
+          //first we initialize a routing table (the "map"). I.e. fill it by empty records with infinite distances.
+      n->template crawl<true, true>(
+          [=](node* n)->bool{ n->init_map(size); n->lastpass = passid; return true;}, 
+          [=](node*n)->bool{return n->map.size() != size;} 
+          );
+          //then we update the distances. If we improved any route, the f function will add all neighbours to the queue. The g function lets the algorithm work undisturbed.
+      n->template crawl<directed, true>(
+          [=](node* n)->bool{ return n->update_distances();}, 
+          [=](node*n)->bool{return true;} 
+          );
     }
     }
     }
@@ -253,13 +294,13 @@ namespace ctb
       bool updated = false;
       for( auto n : out)
       {
-        for( int i = 0; i < n->map.size(); ++i)
+        for( int i = 0; i < n->to->map.size(); ++i)
         {
-          if( n->map[i].second + 1 < map[i].second)
+          if( n->to->map[i].second + 1 < map[i].second)
           {
-            map[i] = n->map[i];
-            map[i].second = n->map[i].second + 1;
-            map[i].first = n;
+            //map[i] = n->to->map[i];
+            map[i].second = n->to->map[i].second + 1;
+            map[i].first = n->to;
             updated = true;
           }
         }
@@ -280,18 +321,26 @@ namespace ctb
       return true;
     }
 
-      template <class T, class I, bool directed>
-  void graph_basic<T,I,directed>::rm_atv(node* a,node* to)
-  {
-    for( int i = 0; i < 2; i++)
-    {
-      auto& l = i == 0 ? a->in : a->out;
-      for(int j = 0; j < l.getlevelcount(); ++j)
-      {
-        rm_at(l.getlevel(j), to);
-      }
-    }
-  }
+  //    template <class T, class I, bool directed>
+  //void graph_basic<T,I,directed>::rm_atv(node* a,node* to)
+  //{
+  //  for( int i = 0; i < 2; i++)
+  //  {
+  //    auto& l = i == 0 ? a->in : a->out;
+  //    for(int j = 0; j < l.getlevelcount(); ++j)
+  //    {
+  //      rm_at(l.getlevel(j), to);
+  //    }
+  //  }
+  //}
+
+  //    template <class T, class I, bool directed>
+  //void graph_basic<T,I,directed>::rm_at(vector<edge>& list, node* to)
+  //{
+  //  for (auto itr = list.begin(); itr != list.end(); ++itr) 
+  //    if(itr->ptr == to) //(we want to preserve argument indices)
+  //      itr->ptr = NULL;
+  //}
 
       template <class T, class I, bool directed>
   void graph_basic<T,I,directed>::rm_at(vector<node*>& list, node* to)
@@ -301,15 +350,12 @@ namespace ctb
         *itr = NULL;
   }
 
-
       template <class T, class I, bool directed>
     template <typename J>
   void graph_basic<T,I,directed>::connect_as(J _u, J _as, bool inputs, bool outputs)
   {
     node* u = tovert(_u);
     node* as = tovert(_as);
-
-    throw "not implemented";
 
     if(inputs)
     {
@@ -318,7 +364,7 @@ namespace ctb
         for(int j = 0; j < as->in.getlevel(i).size(); ++j) 
         {
           auto e = as->in.getlevel(i)[j];
-          addedge(e.ptr, u, e.frompos, e.topos, i);
+          addedge(e->from, u, e->frompos, e->topos, i);
         }
       }
     }
@@ -330,7 +376,7 @@ namespace ctb
         for(int j = 0; j < as->out.getlevel(i).size(); ++j) 
         {
           auto e = as->in.getlevel(i)[j];
-          addedge(u, e.ptr, e.frompos, e.topos, i);
+          addedge(u, e->to, e->frompos, e->topos, i);
         }
       }
     }
@@ -344,43 +390,40 @@ namespace ctb
     auto a = tovert(v);
     if(a == NULL)
       error( "unknown vertex id in rmvert");
+    set<edge*> edges;
     for( int i = 0; i < 2; i++)
     {
       auto& l = i == 0 ? a->in : a->out;
       for(int j = 0; j < l.getlevelcount(); ++j)
-      {
         for(auto b : l.getlevel(j))
-        {
-          rm_atv(b, a);
-        }
-      }
+          edges.insert(b);
     }
+    for(auto b : edges)
+      rmedge(b);
+
     rm_at(in, a); 
     rm_at(out, a); 
-    verts.erase(a);
+    verts.erase(a->id);
     delete a; //not the safest thing to do. Now I admit that smart pointers should be used probably always.
   }
 
       template <class T, class I, bool directed>
-    template <typename J>
-  void graph_basic<T,I,directed>::rmedge(J aid, J bid, int l)
+  void graph_basic<T,I,directed>::rmedge(edge* v)
   {
-    auto a = tovert(aid);
-    auto b = tovert(bid);
-    if(a == NULL || b == NULL)
-      error( "unknown vertex id in rmedge");
-    if(directed)
+    for( int i = 0; i < 2; i++)
     {
-      rm_at(a->out.getlevel(l), b);
-      rm_at(b->in.getlevel(l), a);
+      auto& l = i == 0 ? v->to->in.getlevel(v->level) : v->from->out.getlevel(v->level);
+      for(auto itr = l.begin(); itr != l.end(); ++itr)
+      {
+        if (*itr == v) 
+        {
+          l.erase(itr);
+          break;    
+        }
+      }
     }
-    else
-    {
-      rm_at(a->out.getlevel(l), b);
-      rm_at(a->in.getlevel(l), b);
-      rm_at(b->in.getlevel(l), a);
-      rm_at(b->out.getlevel(l), a);
-    }
+
+    delete v;
   }
 
   template <class T, class I, bool directed>
@@ -389,34 +432,23 @@ namespace ctb
     {
       auto a = tovert(aid);
       auto b = tovert(bid);
+
       if(a == NULL || b == NULL)
-        error( "unknown vertex id");
+        error( string("unknown vertex in addedge"));
       if(directed)
       {
-        if(a_argpos != -1)
-        {
-          while(a->out.getlevel(l).size() < a_argpos+1)
-            a->out.getlevel(l).push_back((edge){NULL, 0, 0});
-          a->out.getlevel(l)[a_argpos] = make_edge({b, a_argpos, b_argpos});
-        }
-        else
-          a->out.push_back(make_edge({b, a_argpos, b_argpos}));
-
-        if(b_argpos != -1)
-        {
-          while(b->in.getlevel(l).size() < b_argpos+1)
-            b->in.getlevel(l).push_back(make_edge({NULL, 0, 0}));
-          b->in.getlevel(l)[b_argpos] = make_edge({a, a_argpos, b_argpos});
-        }
-        else
-          b->in.push_back(make_edge({a, a_argpos, b_argpos}));
+        edge* e = new edge({a, b, a_argpos, b_argpos, l});
+        a->out.getlevel(l).push_back(e);
+        b->in.getlevel(l).push_back(e);
       }
       else
       {
-        a->out.getlevel(l).push_back(make_edge({b, a_argpos, b_argpos}));
-        a->in.getlevel(l).push_back(make_edge({b, a_argpos, b_argpos}));
-        b->in.getlevel(l).push_back(make_edge({a, a_argpos, b_argpos}));
-        b->out.getlevel(l).push_back(make_edge({a, a_argpos, b_argpos}));
+        edge* e = new edge({a, b, a_argpos, b_argpos, l});
+        edge* f = new edge({b, a, b_argpos, a_argpos, l});
+        a->out.getlevel(l).push_back(e);
+        b->in.getlevel(l).push_back(e);
+        b->out.getlevel(l).push_back(f);
+        a->in.getlevel(l).push_back(f);
       }
     }
 
@@ -483,7 +515,7 @@ namespace ctb
    * the actual work is supposed to be done by the function f
    *
    * the flow is:
-   *   g ? return : ...
+   *   g ? ... : return
    *   recurse ? search parents : ...
    *   f ? enqueue childs : ...
    *
@@ -504,12 +536,17 @@ namespace ctb
       if(!g(this))
         return;
       if(recurse && directed)
-        for(auto inptr  : (!inverse ? in:out))
-          if(inptr.ptr != NULL)
-            inptr->template crawl<recurse,inverse>(f, g, q);
+        for(auto inptr  : (inverse ? out:in))
+        {
+          auto ptr = inverse ? inptr->to : inptr->from;
+          ptr->template crawl<recurse,inverse>(f, g, q);
+        }
       if(f(this))
-        for(auto outptr : (!inverse ? out:in))
-          q->push(outptr.ptr);
+        for(auto outptr : (inverse ? in:out))
+        {
+          auto ptr = inverse ? outptr->from : outptr->to;
+          q->push(ptr);
+        }
       if(root)
       {
         while(!q->empty())

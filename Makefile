@@ -3,7 +3,7 @@ FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -W
 
 CXX=clang++
 
-SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h
+SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h
 
 all : test ctb testdir1 testdir2 testdir3 ssedir testdir5 testdir4 testdir6
 
@@ -29,7 +29,10 @@ testdir5 : ctb
 	make -C test5_sse_simulation_simple_graph
 
 testdir6 : ctb
-	make -C test6_sse_bobox_with_preloads
+	-make -C test6_sse_bobox_with_preloads
+
+testdir7 : ctb
+	make -C test7_graph_transformations
 
 ssedir : ctb
 	make -C sse_set

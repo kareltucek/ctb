@@ -181,7 +181,7 @@ namespace ctb
       }
       for(XMLElement * itr = graphnode->FirstChildElement("edge"); itr != NULL; itr = itr->NextSiblingElement("edge"))
       {
-        graph.addedge( getstr(itr, "from"), getstr(itr, "to"), getint(itr, "to_pos"));
+        graph.addedge( getstr(itr, "from"), getstr(itr, "to"), getint(itr, "to_pos"), getanyint(itr, "from_pos", 0));
       }
     }
 

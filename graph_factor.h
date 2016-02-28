@@ -24,10 +24,11 @@ namespace ctb
           protected:
             typename factorgraph_myt::node_t* me;
           public:
+            typename factorgraph_myt::node_t* node;
             set<typename ancestor_t::node*> vertices;
             set<typename ancestor_t::node*> in;
             set<typename ancestor_t::node*> out;
-            factor_class(typename factorgraph_myt::node_t* m) : me(m){};
+            factor_class(typename factorgraph_myt::node_t* m) : me(m), node(m){ };
         };
         void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);
     public:
@@ -78,8 +79,8 @@ namespace ctb
     graph_basic<T,I,directed>::factorize(); //will assign class ids in the simple graph
     for(int i = 0; i < this->classcount; ++i)
       factor.addvert(i, false, false);
-    this->crawl_topological([=](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
-    this->crawl_topological([=](node_t* n){ for(auto i : n->out.getlevel(1)) { this->add_factor_edge(n,i); } });
+    this->crawl_topological([&](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
+    this->crawl_topological([&](node_t* n){ for(auto i : n->in.getlevel(1)) { this->add_factor_edge(i->from,n); } });
     set<int> ins;
     set<int> outs;
 

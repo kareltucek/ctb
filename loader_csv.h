@@ -131,9 +131,72 @@ namespace ctb
     }
 
   template <class T, class G, class IT, class D>
-    void csv_loader<T,G,IT,D>::export_graph(G& graph, ostream&)
+    void csv_loader<T,G,IT,D>::export_graph(G& generator, ostream& o)
     {
-      error( "csv loader does not support graph export");
+      auto& graph = generator.graph;
+      typedef typename G::graph_t::factorgraph_t::node_t fnode;
+      typedef typename G::graph_t::node_t node;
+
+      string prefix = "#";
+      int level = 1;
+      bool showempty = true;
+
+      //output edges of factor graph
+      auto f = [&](fnode* n)
+          { 
+            if(n->in.empty() && showempty)
+                o << prefix << n->id << endl;
+            for( auto e : n->in ) 
+                o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+          };
+
+      //output edges of standard graph
+      auto h = [&](node* n)
+          { 
+            if(n->in.empty() && showempty)
+              o << prefix <<  n->id << endl;
+            for( auto e : n->in.getlevel(level) ) 
+              o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+          };
+
+      //initialize crawling of partitions of a factor graph
+      auto g =  [&](fnode* n)
+          { 
+            if(n->data.vertices.empty())
+              o << prefix << "partition " << n->classid << " is empty" << endl;
+            else
+            {
+              o << prefix << "partition " << n->id << ":" << endl;
+              (*n->data.vertices.begin())->crawl_topological(h);
+            }
+          };
+
+      graph.factorize();
+
+      level = 0;
+      showempty = true;
+
+      o << prefix << "factor structure is:" << endl;
+      graph.factor.crawl_topological(f);
+
+      o << prefix << "partitions are:" << endl;
+      graph.factor.crawl_topological(g); 
+
+      level = 1;
+      o << prefix << "factor invisible edges are" << endl;
+      graph.crawl_topological(h);
+
+      prefix = "";
+      o << "digraph G {" << endl;
+      level = 1;
+      o << "edge [color = gray];" << endl;
+      graph.crawl_topological(h);
+      o << "edge [color = black];" << endl;
+      level = 0;
+      graph.crawl_topological(h);
+      o << "edge [color = red];" << endl;
+      graph.factor.crawl_topological(f);
+      o << "}" << endl;
     }
 
   template <class T, class G, class IT, class D>
@@ -166,6 +229,8 @@ namespace ctb
           s << w.list_concat("\t").write_str() << endl;
         }
       }
+      //e.g. split  expansion  int,int  int,bool  SPLIT_INT  none  split  cf  SPLIT_ST_INT,SPLIT_LD_INT,SPLIT_LD_INT"
+      //e.g. split  expansion  int,int,bool  int  MERGE_INT  none  merge  cf  MERGE_ST_INT,MERGE_LD_INT,MERGE_LD_INT,BUFF_ST_INT"
       s << "#note\ttype\toutput type\tinput types\top id\tflags\tname\ttransformer\targs" << endl;
       for(auto o : instab.instab)
       {

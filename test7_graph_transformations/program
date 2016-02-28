@@ -1,0 +1,6 @@
+loadinstab csv instab.csv
+loadgraph xml graph.xml
+exportgraph csv graph.out
+transform cf
+exportgraph csv graph_cf.out
+
