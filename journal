@@ -175,6 +175,12 @@ During this process I had been trying to humanize the C++ syntax using templates
 
 Also I have decided to throw out proxies entirely. I believe this will simplify further development, since there will no longer be any cases of unsolveable access conflicts or of trivial syntax typos masked as who-knows-whats. I am not happy about that, but for now I do not see any better solution.
 
+
+Sun Feb 28 19:25:11 CET 2016
+============================
+Today I have been trying to finish the basic control flow expansions. During this process I have came across one serious problem with the edge representation. As the result edges are now represented as separate objects containing all their information.
+
+
 TODO
 ====
 // TODO
@@ -189,7 +195,7 @@ control flow support
 -> //preprocessors - standalone graph preprocessors - done
 -> graph partitioning -> how? Most likely on the 'generator' level. The generator will get support for creating directly code of the partitions.
 -> //extend graph api by reference driven edits and by removes - done
--> write preprocessor for a control flow set
+-> //write preprocessor for a control flow set
 -> generator
 -> create cf generators -> what should these do? These should most likely be alias-env specific template compositors ('inserted between current generator and aliasenvs'); possibly 
 -> maybe cf-generators should be insertable as the original generators?

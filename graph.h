@@ -364,7 +364,7 @@ namespace ctb
         for(int j = 0; j < as->in.getlevel(i).size(); ++j) 
         {
           auto e = as->in.getlevel(i)[j];
-          addedge(e->from, u, e->frompos, e->topos, i);
+          addedge(e->from, u, e->topos, e->frompos, i);
         }
       }
     }
@@ -375,8 +375,8 @@ namespace ctb
       {
         for(int j = 0; j < as->out.getlevel(i).size(); ++j) 
         {
-          auto e = as->in.getlevel(i)[j];
-          addedge(u, e->to, e->frompos, e->topos, i);
+          auto e = as->out.getlevel(i)[j];
+          addedge(u, e->to, e->topos, e->frompos, i);
         }
       }
     }
@@ -494,7 +494,10 @@ namespace ctb
       {
         node* n = v.second;
         if(n->lastpass != passid)
-          n->template crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;} );
+          n->template crawl<true, false>(
+              [=](node* n)-> bool { f(n); return true;}, 
+              [=](node* n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res; } 
+              );
     }
     }
 
@@ -534,13 +537,17 @@ namespace ctb
         q = new queue<node*>();
       }
       if(!g(this))
+      {
         return;
+      }
       if(recurse && directed)
+      {
         for(auto inptr  : (inverse ? out:in))
         {
           auto ptr = inverse ? inptr->to : inptr->from;
           ptr->template crawl<recurse,inverse>(f, g, q);
         }
+      }
       if(f(this))
         for(auto outptr : (inverse ? in:out))
         {
