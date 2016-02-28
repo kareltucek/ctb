@@ -248,7 +248,7 @@ namespace ctb
 
       instruction_table_default tab;
       csvloader_default l;
-      ifstream s("unit_test1/instab.csv");
+      ifstream s("test1_simple/instab.csv");
       l.load_instab(tab, s);
     }
 

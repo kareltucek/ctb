@@ -33,6 +33,7 @@
 # Debug files
 *.dSYM/
 
+tags
 test
 ctb
 unit_test1/test

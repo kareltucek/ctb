@@ -23,7 +23,7 @@ namespace ctb
    *
    * Graph is implemented in the most straightforward way possible, which I believe does not need a further comment.
    *
-   * See the test files under 'unit_test1/'.
+   * See the test files under 'test1_simple/'.
    *
    * Xml format notes
    * ----------------
@@ -222,9 +222,9 @@ namespace ctb
       instruction_table_default tab;
       generator_default g(tab);
       xml_loader l;
-      ifstream i_xml("unit_test1/instab.xml");
+      ifstream i_xml("test1_simple/instab.xml");
       l.load_instab(tab, i_xml);
-      ifstream g_xml("unit_test1/graph.xml");
+      ifstream g_xml("test1_simple/graph.xml");
       l.load_graph(g, g_xml);
     }
 }

@@ -263,12 +263,12 @@ namespace ctb
       cout << "testing ctb" << endl;
       ctb b;
       ifstream file, g1, g2;
-      openstream(file,"unit_test1/instab.xml");
-      openstream(g1,"unit_test1/graph.xml");
-      openstream(g2,"unit_test1/graph.xml");
+      openstream(file,"test1_simple/instab.xml");
+      openstream(g1,"test1_simple/graph.xml");
+      openstream(g2,"test1_simple/graph.xml");
       b.load_instab<xml_loader,istream&>(file);
-      writer_default::to_file("unit_test1/test_simple.h", b.process<xml_loader, aliasenv_simple,istream&>( "test_simple", g1) );
-      //writer_default::to_file("unit_test1/test_bobox.h", b.process<xml_loader, aliasenv_bobox,istream&>( "test_bobox", g2) );
+      writer_default::to_file("test1_simple/test_simple.h", b.process<xml_loader, aliasenv_simple,istream&>( "test_simple", g1) );
+      //writer_default::to_file("test1_simple/test_bobox.h", b.process<xml_loader, aliasenv_bobox,istream&>( "test_bobox", g2) );
       assert(b.get_prefix("/test/test/last") == "/test/test/");
     }
 

@@ -14,34 +14,36 @@ ctb : main.cpp $(SOURCES)
 	${CXX} ${FLAGS} main.cpp -DTEMPLATED  -l tinyxml2 -o ctb
 
 testdir1 : test
-	./test && make -C unit_test1
+	./test && make -C test1_simple
 
 testdir2 : ctb
-	make -C unit_test2
+	make -C test2_exports
 
 testdir3 : ctb
-	make -C unit_test3
+	make -C test3_loaders
 
 testdir4 : ctb
-	make -C unit_test4
+	make -C test4_sse_simulation_complete_instruction_check
 
 testdir5 : ctb
-	make -C unit_test5
+	make -C test5_sse_simulation_simple_graph
 
 testdir6 : ctb
-	make -C unit_test6
+	make -C test6_sse_bobox_with_preloads
 
 ssedir : ctb
 	make -C sse_set
 
 clean :
 	-rm test ctb
-	-make -C unit_test2 clean
-	-make -C unit_test1 clean
-	-make -C unit_test3 clean
-	-make -C unit_test4 clean
-	-make -C unit_test5 clean
-	-make -C unit_test6 clean
+	-make -C test1_simple clean
+	-make -C test2_exports clean
+	-make -C test3_loaders clean
+	-make -C test4_sse_simulation_complete_instruction_check clean
+	-make -C test5_sse_simulation_simple_graph clean
+	-make -C test6_sse_bobox_with_preloads clean
+	
+
 
 
 
