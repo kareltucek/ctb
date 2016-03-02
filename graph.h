@@ -76,8 +76,8 @@ namespace ctb
             multicont<vector<edge*>> out;
             multicont<vector<edge*>> in;
             edge* in_at(int i, bool check_uniqueness = true);
-            template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, queue<node*>* q = NULL); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
-            void crawl_topological(function<void(node*)> f); /** this is an overload of crawl for topological search*/
+            template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels = {0}, queue<node*>* q = NULL); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
+            void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search*/
         };
 
 
@@ -111,7 +111,7 @@ namespace ctb
         int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
         void clear();
-        void crawl_topological(function<void(node*)> f); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
+        void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
         void factorize();
     };
 
@@ -486,7 +486,7 @@ namespace ctb
     }
 
   template <class T, class I, bool directed>
-    void graph_basic<T,I,directed>::crawl_topological(function<void(node*)> f)
+    void graph_basic<T,I,directed>::crawl_topological(function<void(node*)> f, std::vector<int> levels)
     {
       int passid = node::newid();
 
@@ -496,17 +496,18 @@ namespace ctb
         if(n->lastpass != passid)
           n->template crawl<true, false>(
               [=](node* n)-> bool { f(n); return true;}, 
-              [=](node* n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res; } 
+              [=](node* n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res; } ,
+              levels
               );
     }
     }
 
   template <class T, class I, bool directed>
-    void graph_basic<T,I,directed>::node::crawl_topological(function<void(node*)> f)
+    void graph_basic<T,I,directed>::node::crawl_topological(function<void(node*)> f, std::vector<int> levels)
     {
       int passid = node::newid();
 
-      crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;} );
+      crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;}, levels);
     }
 
   /**
@@ -528,7 +529,7 @@ namespace ctb
    * */
   template <class T, class I, bool directed>
     template <bool recurse, bool inverse>
-    void graph_basic<T,I,directed>::node::crawl(function<bool(node*)> f, function<bool(node*)> g, queue<node*>* q)
+    void graph_basic<T,I,directed>::node::crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels, queue<node*>* q)
     {
       bool root = false;
       if(q == NULL)
@@ -542,25 +543,33 @@ namespace ctb
       }
       if(recurse && directed)
       {
-        for(auto inptr  : (inverse ? out:in))
+        for(int l : levels)
         {
-          auto ptr = inverse ? inptr->to : inptr->from;
-          ptr->template crawl<recurse,inverse>(f, g, q);
+          for(auto inptr  : (inverse ? out:in).getlevel(l))
+          {
+            auto ptr = inverse ? inptr->to : inptr->from;
+            ptr->template crawl<recurse,inverse>(f, g, levels, q);
+          }
         }
       }
       if(f(this))
-        for(auto outptr : (inverse ? in:out))
+      {
+        for(int l : levels)
         {
-          auto ptr = inverse ? outptr->from : outptr->to;
-          q->push(ptr);
+          for(auto outptr : (inverse ? in:out).getlevel(l))
+          {
+            auto ptr = inverse ? outptr->from : outptr->to;
+            q->push(ptr);
+          }
         }
+      }
       if(root)
       {
         while(!q->empty())
         {
           node* n = q->front();
           q->pop();
-          n->crawl<recurse,inverse>(f,g,q);
+          n->crawl<recurse,inverse>(f,g,levels,q);
         }
         delete q;
       }
