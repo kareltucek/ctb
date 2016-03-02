@@ -86,6 +86,30 @@ namespace ctb
 
           generator.graph.rmvert(n);
         };
+
+        void transform_buffer(G& generator, node* n, const string& name)
+        {
+          const auto& expansion = generator.instab.find_expansion(get_name(), name, n->data.get_typespec());
+          const vector<opid_t>& ids = expansion.arguments;
+
+          if(ids.size() < 2)
+            error("not enough arguments for merge expansion in cf transform");
+
+          int buff_id = new_buff_id();
+
+          opid_t buff_st = ids[0];
+          opid_t buff_ld = ids[1];
+
+          node* st = generator.addvert(n->id + "_buff_st_" + ctb::to_string(buff_id), buff_st, buff_id);
+          node* ld = generator.addvert(n->id + "_buff_ld_" + ctb::to_string(buff_id), buff_ld, buff_id);
+
+          generator.graph.addedge(n->in_at(0)->from, st,  0, n->in_at(0)->frompos, 0);
+          generator.graph.connect_as(ld, n, false, true);
+
+          generator.graph.addedge(st, ld, 0, 0, 1);
+
+          generator.graph.rmvert(n);
+        };
         
       public:
 
@@ -109,6 +133,8 @@ namespace ctb
                 transform_split(generator, r.first, r.second.name);
               else if(r.second.name == "merge")
                 transform_merge(generator, r.first, r.second.name);
+              else if(r.second.name == "buffer")
+                transform_buffer(generator, r.first, r.second.name);
               else
                 error(string("unknown conversion type: '") + r.second.name + "' at transformer: " + get_name());
             }
