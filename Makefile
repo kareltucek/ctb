@@ -49,6 +49,7 @@ clean :
 	-make -C test4_sse_simulation_complete_instruction_check clean
 	-make -C test5_sse_simulation_simple_graph clean
 	-make -C test6_sse_bobox_with_preloads clean
+	-make -C test7_graph_transformations clean
 	
 
 
