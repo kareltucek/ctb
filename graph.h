@@ -143,19 +143,25 @@ namespace ctb
   void graph_basic<T,I,directed>::factorize()
   {
     int classid = 0;
-    int passid = node::newid();
-    for(auto v : this->verts) //this will ensure that all components will be crawled
+
+    //note that we *do* want to have the partitions sorted by the topological ordering of vertices they contain
+    auto make_class = [&](node* v)
     {
-      node* n = v.second;
-      if(n->lastpass != passid)
+      if(v->classid == -1)
       {
-        n->template crawl<true, false>( 
-            [&](node* n)-> bool { n->classid = classid; n->lastpass = passid; return true; }, 
-            [&](node* n)->bool { return n->lastpass != passid; } 
+        v->template crawl<true, false>( 
+            [&](node* n)-> bool { n->classid = classid; return true; }, 
+            [&](node* n)->bool { return n->classid == -1; } 
         );
         ++classid;
       }
-    }
+    };
+
+    //since the crawl is not reentrant, we will need to use positivness of classid as an indicator instead of lastpass
+    this->crawl_topological([&](node* n){n->classid = -1;}); 
+    //then we go topologically through the graph and form partitions from every not-yet-assigned vertex
+    this->crawl_topological(make_class, {0,1}); 
+
     classcount = classid;
   }
 

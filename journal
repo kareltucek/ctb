@@ -181,6 +181,28 @@ Sun Feb 28 19:25:11 CET 2016
 Today I have been trying to finish the basic control flow expansions. During this process I have came across one serious problem with the edge representation. As the result edges are now represented as separate objects containing all their information.
 
 
+Wed Mar  2 08:45:34 CET 2016
+============================
+For control flow version we will need to eliminate all cycles in factor graph. (factor graph is created by factorisation over graph with removed control flow boundaries E.g. a split ) (describe consistency requirements) The proposed algorithm is the following:
+
+while ( cycle_exists ) //dont forget to construct new factor graph
+{
+  v = first partition in pseudo topological ordering (where partitions are ordered by topological ordering of their childrens)
+  follow all outputs leading from v and colour all found vertices 
+  now use the coloured vertices to identify a cut in partition v
+  put a buffer on all edges in the cut
+}
+
+(the complexity is apparently n^4 since cycle check will take n^3 and we may repeat algorithm n times)
+
+Note that one iteration per partition may not be sufficient! On the other hand every iteration will increase number of partitions by one. We may observe that added buffers may not create another cycle (they have degree 1) and thus their connecting edges cannot be contained in any future cut. Thus the number of iterations of this algorithm is bound by number of vertices of the *original* graph.
+
+Also note that we may want to determine size of a buffer by its context (by the longest path leading between any previous and next partition)
+
+Ensuring the pseudotopological ordering of components. It suficces to perform it from within of a topological pass over the edge classes 1 and 2.
+
+Today I am going to ensure that parittions are sorted pseudo-topologically (I believe they should already be!), implement the cycle search algorithm and the splitting algorithm. 
+
 TODO
 ====
 // TODO
