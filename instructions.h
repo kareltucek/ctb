@@ -93,6 +93,9 @@ namespace ctb
   template <class T>
     class instruction_table //provides transition from opcode to abstract operation
     {
+      public:
+         typedef typename T::tid_t tid_t;
+         typedef typename T::opid_t opid_t;
       private:
         class type;
         class operation;
@@ -114,17 +117,15 @@ namespace ctb
               const string tags;
               const int rating;
               mutable typename T::flag_t satisfactory;
-              conversion(int in, int out, const string& c1, const string& c2,const string&,const string&,const string&, const string&, int r, bool s);
-              conversion() = delete;
             } ;
+            MAKE(conversion);
             struct type_version
             {
               const int width;
               const string code;
               const string note;
-              type_version(int w, const string& c,const string&);
-              type_version() = delete;
             } ;
+            MAKE(type_version);
             instruction_table* parent;
             void update_tags() const;
           public:
@@ -135,13 +136,22 @@ namespace ctb
             //TODO index this a bit intelligently...
             /*EAPI*/vector<type_version> versions;
             /*EAPI*/vector<conversion> conversions;
-            /*EAPI*/typename T::tid_t tid;
+            /*EAPI*/tid_t tid;
             /*EAPI*/int bitwidth;
             /*IAPI*/void addcode_type(int w, const string& c,const string&) ;
             /*IAPI*/void addcode_conversion(int from, int to, const string& c1, const string& c2,const string& cc,const string& cg, const string& n, const string& t,int r);
             mutable graph_distance_t distances; //technically taken just a cache
         }
         ;
+        struct expansion
+        {
+          const string name;
+          const string transformer_name;
+          const vector<opid_t> arguments;
+          const string note;
+          const vector<tid_t> in_types; //for possible type inference
+        };
+        MAKE(expansion);
         class operation //holds general operation traits
         {
           private:
@@ -158,19 +168,10 @@ namespace ctb
               const string tags;
               const int rating;
               mutable typename T::flag_t satisfactory;
-              instruction(int wi, int wo, const string& c,const string&,const string&,const string&,int r, bool satisfactory);
-              instruction() = delete;
             }
-            ;//vector<typename T::tid_t> in_types
-            struct expansion
-            {
-              const string name;
-              const string transformer_name;
-              const vector<typename T::opid_t> arguments;
-              const string note;
-              expansion(const string&,const string&,const vector<typename T::opid_t>&, const string&);
-              expansion() = delete;
-            };
+            ;
+            MAKE(instruction);
+            //vector<typename T::tid_t> in_types
             instruction_table* parent;
             void update_tags() const;
           public:
@@ -183,7 +184,7 @@ namespace ctb
             /*EAPI*/typename T::flag_t flags; 
             /*EAPI*/typename T::opid_t opid;
             /*IAPI*/void addcode(int wi, int wo, const string& c,const string&,const string&,const string&,int r);
-            /*IAPI*/void addexpansion(const string&, const string&, const vector<typename T::opid_t>& args, const string&);
+            /*IAPI*/void addexpansion(const string&, const string&, const vector<typename T::opid_t>& args, const string&, vector<typename T::tid_t>);
             /*API*/bool is(typename T::flag_t f) const ;
             /*API*/int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;
             /*API*//*DEPRECATED*///void imbue_width(int w)const;
@@ -196,18 +197,26 @@ namespace ctb
             operation() = delete;
         }
         ;
+        typedef vector<expansion> expansion_cont_t;
+        typedef map<string, expansion_cont_t> expansion_name_cont_t;
+        typedef map<string, expansion_name_cont_t> expansion_transformer_cont_t;
         typedef map<typename T::tid_t, type*> typetab_t;
         typedef map<typename T::opid_t, operation*> instab_t;
         typedef set<shared_ptr<taghandler_base>> taghandlerrec_t;
         typedef vector<taghandlerrec_t> taghandlertab_t;
         taghandlertab_t taglists;
         typename T::flag_t get_tag_mask(const string& tags);
+        expansion_transformer_cont_t exptab;
       public:
         /*EAPI*/instab_t instab;
         /*EAPI*/typetab_t typetab;
 
         typedef operation operation_t; 
         typedef type type_t;
+        typedef expansion expansion_t;
+        
+        /*API*/ const expansion_cont_t& find_expansion(const string& transformer, const string& expansion); 
+        /*API*/ const expansion_t& find_expansion(const string& transformer, const string& expansion, const vector<tid_t>& types); 
         /*API*/ void add_tags(shared_ptr<taghandler_base>,size_t layer = gSELECT); 
         /*API*/ void rm_tags(shared_ptr<taghandler_base>,size_t layer = gSELECT);
         /*API*/ bool is_tag_satisfactory(const string&) const;
@@ -257,20 +266,11 @@ namespace ctb
       return instab.empty();
     }
 
-  template <class T>
-    instruction_table<T>::type::type_version::type_version(int w, const string& c,const string& n) : width(w), code(c), note(n)
-  {
-  }
-
-  template <class T>
-    instruction_table<T>::type::conversion::conversion(int i, int o, const string& c1, const string& c2,const string& cc, const string& cg, const string& n,const string& t,int r, bool s) : width_in(i), width_out(o), code1(c1), code2(c2), code_custom(cc), code_generic(cg), note(n), tags(t), rating(r), satisfactory(s)
-  {
-  }
 
   template <class T>
     void instruction_table<T>::type::addcode_type(int w, const string& c,const string& n)
     {
-      versions.push_back(type_version(w, c,n));
+      versions.push_back(make_type_version({w, c,n}));
       distances.addvert(w, false, false);
     }
 
@@ -278,22 +278,13 @@ namespace ctb
     void instruction_table<T>::type::addcode_conversion(int in, int out, const string& c1,const string& c2,const string& cc,const string& cg, const string& n,const string& t,int r)
     {
       bool s = parent->is_tag_satisfactory(t);
-      conversions.push_back(conversion(in, out, c1, c2,cc,cg,n,t,r, s));
+      conversions.push_back(make_conversion({in, out, c1, c2,cc,cg,n,t,r, s}));
       distances.addvert(in, false, false);
       distances.addvert(out, false, false);
       if(s)
         distances.addedge(in,out);
     }
 
-  template <class T>
-    instruction_table<T>::operation::expansion::expansion(const string& n, const string& t, const vector<typename T::opid_t>& a, const string& m) : name(n), transformer_name(t), arguments(a), note(m)
-  {
-  }
-
-  template <class T>
-    instruction_table<T>::operation::instruction::instruction(int wi, int wo, const string& c,const string& cc,const string& n,const string& t,int r, bool s) : code(c), width_in(wi), width_out(wo), width(max(wi, wo)), code_custom(cc), note(n), tags(t), rating(r), satisfactory(s)
-  {
-  }
 
   template <class T>
     instruction_table<T>::operation::operation(typename T::opid_t i, typename T::tid_t ot, const vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table<T>* p) : opid(i), mytype(t), out_type(ot), flags(f), parent(p), in_types(it)
@@ -308,15 +299,16 @@ namespace ctb
     }
 
   template <class T>
-    void instruction_table<T>::operation::addexpansion(const string& n, const string& t, const vector<typename T::opid_t>& a, const string& m)
+    void instruction_table<T>::operation::addexpansion(const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types)
     {
-      expansions.push_back(expansion(n,t,a,m));
+      expansions.push_back(make_expansion({n,t,a,m,types}));
+      parent->exptab[t][n].push_back(make_expansion({n,t,a,m,types}));
     }
 
   template <class T>
     void instruction_table<T>::operation::addcode(int wi, int wo, const string& c,const string& cc,const string& n,const string& t,int r)
     {
-      versions.push_back(instruction(wi, wo, c,cc,n,t,r,parent->is_tag_satisfactory(t)));
+      versions.push_back(make_instruction({wi > wo ? wi : wo, wi, wo, c,cc,n,t,r,parent->is_tag_satisfactory(t)}));
     }
 
   template <class T>
@@ -473,6 +465,28 @@ namespace ctb
     void instruction_table<T>::rm_tags(shared_ptr<taghandler_base> ptr, size_t l)
     {
       taglists[l].erase(ptr);
+    }
+
+  template <class T>
+    const typename instruction_table<T>::expansion_cont_t& instruction_table<T>::find_expansion(const string& transformer, const string& name)
+    {
+      return exptab[transformer][name];
+    }
+
+  template <class T>
+    const typename instruction_table<T>::expansion_t& instruction_table<T>::find_expansion(const string& transformer, const string& name, const vector<tid_t>& types)
+    {
+      const auto& exps = find_expansion(transformer, name);
+      for(const auto& exp : exps)
+      {
+        if(exp.in_types == types)
+          return exp;
+      }
+      string buff;
+      for( const auto& t: types)
+        buff += ctb::to_string(t);
+      error(string("expansion not found in global expansion table: ") + transformer + ":" + name + ":" + buff);
+      throw "unreachable code preventing warnings";
     }
 
   template <class T>

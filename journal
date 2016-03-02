@@ -203,6 +203,8 @@ Ensuring the pseudotopological ordering of components. It suficces to perform it
 
 Today I am going to ensure that parittions are sorted pseudo-topologically (I believe they should already be!), implement the cycle search algorithm and the splitting algorithm. 
 
+!!!Currently we support only 1:1 width explicit instructions. In case we add support for general widths we may also want to be able to optimize width choice. Sensible way to do this seems to be by standard critical-path algorithm (either in respect to number of instructions or their cost).)
+
 TODO
 ====
 // TODO

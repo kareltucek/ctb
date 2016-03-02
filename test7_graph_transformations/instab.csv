@@ -13,10 +13,12 @@
 	instruction		INT	MERGE_ST_INT	output	4	4	MERGE_ST($$arg1)			0
 	instruction	INT		MERGE_LD_INT	input	4	4	MERGE_LD($$arg1)			0
 	instruction		INT	BUFF_ST_INT	output	4	4	BUFF_ST($$arg1)			0
+	instruction		INT	BUFF_LD_INT	output	4	4	BUFF_LD($$arg1)			0
 
 #note	type	output type	input types	op id	flags	name	transformer	args
 split	expansion	INT,INT	INT,INT	SPLIT_INT		split	cf	SPLIT_ST_INT,SPLIT_LD_INT,SPLIT_LD_INT
-split	expansion	INT,INT,INT	INT	MERGE_INT		merge	cf	MERGE_LD_INT,MERGE_ST_INT,MERGE_ST_INT,BUFF_ST_INT
+split	expansion	INT	INT,INT,INT	MERGE_INT		merge	cf	MERGE_LD_INT,MERGE_ST_INT,MERGE_ST_INT,BUFF_ST_INT
+split	expansion	INT	INT	BUFF_INT		buffer	cf	BUFF_ST_INT, BUFF_LD_INT
 
 #note	type	type id	bitwidth	width	code
 	type_version	FLOAT	32	1	float

@@ -10,6 +10,8 @@ namespace ctb
    * */
   template <class G>
     class cf_transform {
+      public: 
+        static string get_name(){ return "cf";};
       private:
         typedef typename G::graph_t::node_t node;
         typedef typename G::vid_t vid_t;
@@ -21,8 +23,11 @@ namespace ctb
         };
         
 
-        void transform_split(G& generator, node* n, const vector<opid_t>& ids)
+        void transform_split(G& generator, node* n, const string& name)
         {
+          const auto& expansion = generator.instab.find_expansion(get_name(), name, n->data.get_typespec());
+          const vector<opid_t>& ids = expansion.arguments;
+
           if(ids.size() < 3)
             error("not enough arguments for split expansion in cf transform");
 
@@ -50,9 +55,12 @@ namespace ctb
           generator.graph.rmvert(n);
         };
 
-        void transform_merge(G& generator, node* n, const vector<opid_t>& ids)
+        void transform_merge(G& generator, node* n, const string& name)
         {
-          if(ids.size() < 3)
+          const auto& expansion = generator.instab.find_expansion(get_name(), name, n->data.get_typespec());
+          const vector<opid_t>& ids = expansion.arguments;
+
+          if(ids.size() < 4)
             error("not enough arguments for merge expansion in cf transform");
 
           int buff_id = new_buff_id();
@@ -81,7 +89,6 @@ namespace ctb
         
       public:
 
-        static string get_name(){ return "cf";};
 
         /** 
          * We construct list of nodes that are to be transformed using this tranformer. This consists of pairs of a node pointer and an expansion structure reference)
@@ -99,9 +106,9 @@ namespace ctb
             try
             {
               if(r.second.name == "split")
-                transform_split(generator, r.first, r.second.arguments);
+                transform_split(generator, r.first, r.second.name);
               else if(r.second.name == "merge")
-                transform_merge(generator, r.first, r.second.arguments);
+                transform_merge(generator, r.first, r.second.name);
               else
                 error(string("unknown conversion type: '") + r.second.name + "' at transformer: " + get_name());
             }

@@ -33,6 +33,7 @@ namespace ctb
         typedef typename T::opid_t opid_t;
         typedef typename T::opid_t id_t;
         typedef typename T::vid_t vid_t;
+        typedef typename T::tid_t tid_t;
       private:
         typedef typename T::param_t param_t;
         typedef typename IT::operation_t op_t;
@@ -59,6 +60,7 @@ namespace ctb
             template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
             template <class W> void generate(int granularity, W& w, bool c);
             int get_inout_pos() const;
+            vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
 
         bool compiletest; /*abbreviated as plain 'c'*/
@@ -407,6 +409,20 @@ namespace ctb
         return 0;
       //throw string("envelope id not defined for vertex: ").append(id);
       return (int)parameters[0];
+    }
+
+  template <class T, class IT>
+    vector<typename generator<T,IT>::tid_t> generator<T,IT>::data_t::get_typespec() const
+    {
+      vector<tid_t> typespec;
+      for(int i = 0;; ++i)
+      {
+        AUTO(edge)* src = me->in_at(i, false);
+        if(src == NULL)
+          break;
+        typespec.push_back(src->from->data.op->out_type);
+      }
+      return typespec;
     }
 
   template <class T, class IT>

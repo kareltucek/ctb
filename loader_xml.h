@@ -207,11 +207,12 @@ namespace ctb
       for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
       {
         typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
-        typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), split(getanystr(itr,"in_types"),','), f);
+        auto in_types = split(getanystr(itr,"in_types"),',');
+        typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
           t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
         for(XMLElement * itr2 = itr->FirstChildElement("expansion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("expansion"))
-          t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), split(getstr(itr2, "arguments"),','), getanystr(itr2,"note"));
+          t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), split(getstr(itr2, "arguments"),','), getanystr(itr2,"note"), in_types);
       }
     }
 

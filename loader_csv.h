@@ -240,7 +240,7 @@ namespace ctb
           w.push(i.note);
           w.push("expansion");
           w.push(o.second->out_type);
-          w.push(writer_plain(o.second->in_types).list_concat(",").write_str());
+          w.push(writer_plain(i.in_types).list_concat(",").write_str());
           w.push(o.second->opid);
           w.push(flags_to_string(o.second->flags));
           w.push(i.name);
@@ -346,8 +346,9 @@ namespace ctb
       {
         int f = string_to_flags<typename T::flag_t>(data[ceFlags]);
         instab.addtype(data[ceOutType]);
-        typename IT::operation_t& operation = instab.addoperation(data[ceOpId],data[ceOutType],split(data[ceInTypes],','),f);
-        operation.addexpansion(data[ceName],data[ceTransformer],split(data[ceArgs],','),data[ceNote]);
+        auto in_types = split(data[ceInTypes],',');
+        typename IT::operation_t& operation = instab.addoperation(data[ceOpId],data[ceOutType],in_types,f);
+        operation.addexpansion(data[ceName],data[ceTransformer],split(data[ceArgs],','),data[ceNote], in_types);
       }
       else if (data[cvType] == "type_version")
       {
