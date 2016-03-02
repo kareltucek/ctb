@@ -87,6 +87,9 @@ namespace ctb
         node* tovert(I);
         node* tovert(node*);
         node* tovert(node&);
+        string toname(I);
+        string toname(node*);
+        string toname(node&);
         void rm_at(vector<node*>& list, node* to);
         //void rm_at(vector<edge>& list, node* to);
         //void rm_atv(node* a,node* to);
@@ -137,6 +140,24 @@ namespace ctb
     if(a == verts.end())
       return NULL;
     return a->second;
+  }
+
+      template <class T, class I, bool directed>
+  string graph_basic<T,I,directed>::toname(I v)
+  {
+    return ctb::to_string(v);
+  }
+
+      template <class T, class I, bool directed>
+  string graph_basic<T,I,directed>::toname(node& v)
+  {
+    return "<unknown: passed by reference>";
+  }
+
+      template <class T, class I, bool directed>
+  string graph_basic<T,I,directed>::toname(node* v)
+  {
+    return "<unknown: passed by pointer>";
   }
 
     template <class T, class I, bool directed>
@@ -439,8 +460,10 @@ namespace ctb
       auto a = tovert(aid);
       auto b = tovert(bid);
 
-      if(a == NULL || b == NULL)
-        error( string("unknown vertex in addedge"));
+      if(a == NULL)
+        error( string("unknown vertex in addedge: ") + toname(aid) + " (-> " + toname(bid) + ")");
+      if (b == NULL)
+        error( string("unknown vertex in addedge: ") + toname(bid) + " (<- " + toname(aid) + ")");
       if(directed)
       {
         edge* e = new edge({a, b, a_argpos, b_argpos, l});
