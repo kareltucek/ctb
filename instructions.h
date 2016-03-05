@@ -485,8 +485,8 @@ namespace ctb
       string buff;
       for( const auto& t: types)
         buff += ctb::to_string(t);
-      error(string("expansion not found in global expansion table: ") + transformer + ":" + name + ":" + buff);
-      throw "unreachable code preventing warnings";
+      error(string("expansion not found in global expansion table: ") + transformer + ":" + name + ":'" + buff + "'");
+      throw "unreachable throw preventing no-return-value warnings";
     }
 
   template <class T>
