@@ -28,11 +28,14 @@ namespace ctb
             set<typename ancestor_t::node*> vertices;
             set<typename ancestor_t::node*> in;
             set<typename ancestor_t::node*> out;
-            factor_class(typename factorgraph_myt::node_t* m) : me(m), node(m){ };
+            factor_class(typename factorgraph_myt::node_t* m) : me(m), node(m), vertices(), in(), out(){};
         };
         void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);
+
     public:
       typedef factorgraph_myt factorgraph_t;
+      typedef typename factorgraph_myt::node_t factornode_t;
+      typedef typename factorgraph_myt::node_t fnode_t;
       typedef typename ancestor_t::node node_t;
       typedef typename ancestor_t::id_t id_t;
       using graph_basic<T,I,directed>::graph_basic;
@@ -40,6 +43,9 @@ namespace ctb
       factorgraph_t factor;
       void factorize();
       static void self_test();
+
+        void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";});
+        void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
 
   };
   typedef graph_factor<dummy,int,true> graph_factor_default;
@@ -52,6 +58,91 @@ namespace ctb
     factor.verts.find(from->classid)->second->data.out.insert(from);
     factor.verts.find(to->classid)->second->data.in.insert(to);
   }
+
+  template <class T, class I, bool directed>
+    void graph_factor<T,I,directed>::dump_visual(function<string(node_t*)> f)
+    {
+      ofstream ofs;
+      ofs.open("/tmp/graphjfjfjf");
+      dump(ofs, f);
+      ofs.close();
+      system("bash -c \"cat /tmp/graphjfjfjf | dot -Tpng > /tmp/graphjfjfjf.png && gpicview /tmp/graphjfjfjf.png\"");
+    }
+
+  template <class T, class I, bool directed>
+    void graph_factor<T,I,directed>::dump(ostream& o, function<string(node_t*)> colour_callback)
+    {
+      auto& graph = *this;
+
+      string prefix = "#";
+      int level = 1;
+      bool showempty = true;
+
+      //output edges of factor graph
+      auto f = [&](fnode_t* n)
+          { 
+            if(n->in.empty() && showempty)
+                o << prefix << n->id << endl;
+            for( auto e : n->in ) 
+                o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+          };
+
+      //output edges of standard graph
+      auto h = [&](node_t* n)
+          { 
+            if(n->in.empty() && showempty)
+              o << prefix <<  n->id << endl;
+            for( auto e : n->in.getlevel(level) ) 
+              o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+          };
+
+      //initialize crawling of partitions of a factor graph
+      auto g =  [&](fnode_t* n)
+          { 
+            if(n->data.vertices.empty())
+              o << prefix << "partition " << n->classid << " is empty" << endl;
+            else
+            {
+              o << prefix << "partition " << n->id << ":" << endl;
+              (*n->data.vertices.begin())->crawl_topological(h);
+            }
+          };
+
+      //output color of node
+      auto i =  [&](node_t* n)
+      { 
+        o << n->id << " [color=\"" << colour_callback(n) << "\"];" << endl;
+      };
+
+      level = 0;
+      showempty = true;
+
+      //print comments
+      o << prefix << "factor structure is:" << endl;
+      graph.factor.crawl_topological(f);
+
+      o << prefix << "partitions are:" << endl;
+      graph.factor.crawl_topological(g); 
+
+      level = 1;
+      o << prefix << "factor invisible edges are" << endl;
+      graph.crawl_topological(h);
+
+      //print actual graph
+      prefix = "";
+      o << "digraph G {" << endl;
+      level = 1;
+      o << "edge [color = gray];" << endl;
+      graph.crawl_topological(h);
+      o << "edge [color = black];" << endl;
+      level = 0;
+      graph.crawl_topological(h);
+      o << "edge [color = red];" << endl;
+      graph.factor.crawl_topological(f);
+
+      graph.crawl_topological(i);//colorize by callback
+      o << "}" << endl;
+    }
 
   
   template <class T, class I, bool directed>
@@ -70,6 +161,16 @@ namespace ctb
       assert(g.verts.find(1)->second->classid == g.verts.find(2)->second->classid);
       assert(g.verts.find(3)->second->classid == g.verts.find(4)->second->classid);
       assert(g.verts.find(1)->second->classid != g.verts.find(4)->second->classid);
+      assert(g.factor.verts.find(0)->second->data.vertices.size() == 2);
+      assert(g.factor.verts.find(1)->second->data.vertices.size() == 2);
+      assert(g.factor.verts.find(0)->second->data.out.size() == 0);
+      assert(g.factor.verts.find(1)->second->data.out.size() == 0);
+      assert(g.factor.verts.find(0)->second->data.in.size() == 0);
+      assert(g.factor.verts.find(1)->second->data.in.size() == 0);
+      g.clear();
+      assert(g.verts.size() == 0);
+      assert(g.in.size() == 0);
+      assert(g.out.size() == 0);
   } 
 
     template <class T, class I, bool directed>
