@@ -12,6 +12,7 @@
 #include "multicont.h"
 #include <set>
 #include "ptrglue.h"
+#include <utility>
 
 namespace ctb
 {
@@ -76,7 +77,7 @@ namespace ctb
             multicont<vector<edge*>> out;
             multicont<vector<edge*>> in;
             edge* in_at(int i, bool check_uniqueness = true);
-            template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels = {0}, queue<node*>* q = NULL); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
+            template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels = {0}, queue<node*>* q = NULL, bool root = true); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
             void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search*/
         };
 
@@ -109,12 +110,15 @@ namespace ctb
         template <typename J> void rmvert(J v);
         template <typename J> void connect_as(J v, J as, bool inputs = true, bool outputs = true);
         template <typename J> void get_edge_b_pos(J a, J b, int i);
+        node* find_cycle_begin(vector<int> at_levels = {0}, vector<int> with_topology = {0,1});
         void rmedge(edge* e);
         void calculate_distances(); /**performs bellman-ford algorithm */
         int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
         void clear();
         void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
+        void crawl_topological_b(function<bool(node*)> f, std::vector<int> levels = {0}); 
+        bool cycle_exists(node* n, const vector<int>& at_levels = {0}, set<node*> vertices = {}, int remains = -1);
         void factorize();
     };
 
@@ -219,6 +223,7 @@ namespace ctb
       g.out.front()->crawl_topological([&](node* n){ assert(n->id == results[i++]);});
       g.calculate_distances();
       assert(g.get_dist(1,4) == 2);
+      assert(g.find_cycle_begin() == NULL);
       //  
       graph_basic<dummy, int, false> h;
       h.addvert(1, false, false);
@@ -369,6 +374,52 @@ namespace ctb
   //      itr->ptr = NULL;
   //}
 
+
+      template <class T, class I, bool directed>
+  bool graph_basic<T,I,directed>::cycle_exists(node* n, const vector<int>& at_levels, set<node*> vertices, int remains)
+  {
+    if(vertices.find(n) != vertices.end())
+      return true;
+    if(remains == 0)
+      return false;
+    if(remains < 0)
+    {
+      remains = vertices.size()+2;
+      vertices.insert(n);
+    }
+    set<node*> newverts;
+    for(auto v : vertices)
+    {
+      for(auto l : at_levels)
+      {
+        for(auto e : v->out.getlevel(l))
+        {
+          newverts.insert(e->to);
+        }
+      }
+    }
+    return cycle_exists(n, at_levels, newverts, remains-1);
+  }
+
+      template <class T, class I, bool directed>
+  typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::find_cycle_begin(vector<int> at_levels, vector<int> topology_levels)
+  {
+    node* found = NULL;
+    auto start_bfs = [&](node* n)->bool
+    {
+      if(cycle_exists(n, at_levels))
+      {
+        found = n;
+        return false;
+      }
+      return true;
+    };
+
+    crawl_topological(start_bfs, topology_levels);
+
+    return found;
+  }
+
       template <class T, class I, bool directed>
   void graph_basic<T,I,directed>::rm_at(vector<node*>& list, node* to)
   {
@@ -515,20 +566,26 @@ namespace ctb
     }
 
   template <class T, class I, bool directed>
-    void graph_basic<T,I,directed>::crawl_topological(function<void(node*)> f, std::vector<int> levels)
+    void graph_basic<T,I,directed>::crawl_topological_b(function<bool(node*)> f, std::vector<int> levels)
     {
       int passid = node::newid();
-
-      for(auto v : verts) //this will ensure that all components will be crawled
+      bool cont = true;
+      for(auto v : verts) //this will ensure that all components will be crawled (not neccessarily in topological order!)
       {
         node* n = v.second;
         if(n->lastpass != passid)
           n->template crawl<true, false>(
-              [=](node* n)-> bool { f(n); return true;}, 
-              [=](node* n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res; } ,
+              [&](node* n)-> bool { cont = f(n); return cont;}, 
+              [&](node* n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res && cont; } ,
               levels
               );
     }
+  }
+
+  template <class T, class I, bool directed>
+    void graph_basic<T,I,directed>::crawl_topological(function<void(node*)> f, std::vector<int> levels)
+    {
+      crawl_topological_b([=](node* n)->bool{ f(n); return true;}, levels);
     }
 
   template <class T, class I, bool directed>
