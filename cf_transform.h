@@ -14,6 +14,7 @@ namespace ctb
         static string get_name(){ return "cf";};
       private:
         typedef typename G::graph_t::node_t node;
+        typedef typename G::graph_t::edge_t edge;
         typedef typename G::vid_t vid_t;
         typedef typename G::opid_t opid_t;
 
@@ -21,7 +22,7 @@ namespace ctb
           static int id = 0;
           return ++id;
         };
-        
+
 
         void transform_split(G& generator, node* n, const string& name)
         {
@@ -110,9 +111,107 @@ namespace ctb
 
           generator.graph.rmvert(n);
         };
-        
-      public:
 
+        void transform_buffer_edge(G& generator, edge* e)
+        {
+          const auto& expansion = generator.instab.find_expansion(get_name(), "buffer", {e->from->data.op->out_type});
+          const vector<opid_t>& ids = expansion.arguments;
+
+          if(ids.size() < 2)
+            error("not enough arguments for merge expansion in cf transform");
+
+          int buff_id = new_buff_id();
+
+          opid_t buff_st = ids[0];
+          opid_t buff_ld = ids[1];
+
+          node* st = generator.addvert("generic_cf_node_buff_st_" + ctb::to_string(buff_id), buff_st, buff_id);
+          node* ld = generator.addvert("generic_cf_node_buff_ld_" + ctb::to_string(buff_id), buff_ld, buff_id);
+
+          generator.graph.addedge(e->from, st,  0, e->frompos, 0);
+          generator.graph.addedge(ld, e->to,  e->topos, 0, 0);
+
+          generator.graph.addedge(st, ld, 0, 0, 1);
+
+          generator.graph.rmedge(e);
+        };
+
+
+        void remove_cycles(G& generator)
+        {
+          AUTO(graph)& g = generator.graph;
+
+          g.factorize();
+          AUTO(node)* n = g.factor.find_cycle_begin({0},{0});
+          int remains = g.verts.size() + 2;
+          remains = 3;
+          while(n != NULL && remains-- > 0)
+          {
+            set<node*> outs;
+            //will need another crawl here
+            for(node* v : n->data.out)
+            {
+              for(edge* e : v->out.getlevel(1))
+              {
+                outs.insert(e->to);
+              }
+            }
+            queue<node*> q;
+            for(auto v : outs)
+              q.push(v);
+
+            if(q.size() == 0 )
+              error("cycle removal problem - found unsolveable situation");
+
+            //then we colour all these and all their children by red colour
+            int red = node::newid();
+            int blue = node::newid();
+            q.front()->template crawl<false,false>(
+                [&](node* n)->bool{ n->colourmark = red; return true;},
+                [&](node* n)->bool{ return n->colourmark != red;},
+                {0,1},
+                &q
+                );
+
+            //for debug
+            auto colourer = [=](node* n)->string{if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";}; 
+            //in this pass we get a list of all edges that go from nonred to red
+            //we crawl the current partition, marking crawled vertices as blue
+            vector<edge*> edges;
+            auto f = [&](node* n)->bool
+            { 
+              if(n->colourmark != red)
+              {
+                for(auto e : n->out)
+                  if(e->to->colourmark == red)
+                  {
+                    edges.push_back(e);
+                  }
+              }
+              n->colourmark = blue;
+              return true;
+            };
+
+            (*n->data.vertices.begin())->template crawl<true, false>(
+                f,
+                [&](node* n)->bool{ return n->colourmark != blue;},
+                {0}
+                );
+            //now we have a list of edges defining the cut between red and nonred vertices inside of our partition. (actually the entire partition is blue now)
+
+            //we use that list to make the cut
+            for(auto e : edges)
+              transform_buffer_edge(generator, e);
+
+            g.factorize();
+            n = g.factor.find_cycle_begin({0},{0});
+          }
+
+          if(remains < 0)
+            error("Failed on graph partitioning - there seems to be a cycle somewhere!");
+        };
+
+      public:
 
         /** 
          * We construct list of nodes that are to be transformed using this tranformer. This consists of pairs of a node pointer and an expansion structure reference)
@@ -144,6 +243,8 @@ namespace ctb
               error(err.first, err.second);
             }
           }
+
+          remove_cycles(generator);
         }
     };
 };

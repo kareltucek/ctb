@@ -10,15 +10,13 @@
       <vertex opid="STI" vid="final_out" param="0"></vertex>
       <vertex opid="SPLIT_INT" vid="split" param="0"></vertex>
       <vertex opid="MERGE_INT" vid="merge" param="0"></vertex>
-      <vertex opid="BUFF_INT" vid="buff" param="0"></vertex>
       <edge to="b_pl" from="a_in" to_pos="0"></edge>
       <edge to="b_pl" from="d_in" to_pos="1"></edge>
       <edge to="b_ml" from="a_in" to_pos="1"></edge>
       <edge to="b_ml" from="d_in" to_pos="0"></edge>
       <edge to="e_pl" from="b_ml" to_pos="0"></edge>
       <edge to="e_pl" from="b_pl" to_pos="1"></edge>
-      <edge to="buff" from="e_pl" to_pos="0"></edge>
-      <edge to="f_id" from="buff" to_pos="0"></edge>
+      <edge to="f_id" from="e_pl" to_pos="0"></edge>
       <edge to="split" from="f_id" to_pos="0"></edge>
       <edge to="split" from="f_id" to_pos="1"></edge>
       <edge to="merge" from="f_id" to_pos="2"></edge>

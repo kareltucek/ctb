@@ -3,11 +3,11 @@ FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -W
 
 CXX=clang++
 
-SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h
+SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h graph_factor.h
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir8
 
 fulltest : all testdir4
 
@@ -38,6 +38,9 @@ testdir6 : ctb
 testdir7 : ctb
 	make -C test7_graph_transformations
 
+testdir8 : ctb
+	make -C test8_graph_transformations2
+
 ssedir : ctb
 	make -C sse_set
 
@@ -50,6 +53,7 @@ clean :
 	-make -C test5_sse_simulation_simple_graph clean
 	-make -C test6_sse_bobox_with_preloads clean
 	-make -C test7_graph_transformations clean
+	-make -C test8_graph_transformations2 clean
 	
 
 
