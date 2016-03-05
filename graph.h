@@ -202,7 +202,11 @@ namespace ctb
       in.clear();
       out.clear();
       for(auto v : verts)
-        delete v.second;
+      {
+        rmvert(v.second);
+      }
+      classcount = 0;
+      index = 0;
       verts.clear();
     }
 
