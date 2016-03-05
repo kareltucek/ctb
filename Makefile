@@ -7,7 +7,7 @@ SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir8
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir8
 
 fulltest : all testdir4
 
