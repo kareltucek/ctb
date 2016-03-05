@@ -174,7 +174,8 @@ namespace ctb
                 );
 
             //for debug
-            auto colourer = [=](node* n)->string{if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";}; 
+            //auto colourer = [=](node* n)->string{if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";}; 
+
             //in this pass we get a list of all edges that go from nonred to red
             //we crawl the current partition, marking crawled vertices as blue
             vector<edge*> edges;
