@@ -192,6 +192,7 @@ while ( cycle_exists ) //dont forget to construct new factor graph
   now use the coloured vertices to identify a cut in partition v
   put a buffer on all edges in the cut
 }
+//cf contains some notes -> we may want explain this in detail in respect to our crawling methods
 
 (the complexity is apparently n^4 since cycle check will take n^3 and we may repeat algorithm n times)
 
