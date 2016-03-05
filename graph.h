@@ -68,8 +68,6 @@ namespace ctb
             bool update_distances();
             bool init_map(int size);
             node * get_path(node * n);
-          protected:
-            static int newid();
           public:
             T data; /**vertex user data*/
             I id;
@@ -79,6 +77,8 @@ namespace ctb
             edge* in_at(int i, bool check_uniqueness = true);
             template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels = {0}, queue<node*>* q = NULL, bool root = true); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
             void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search*/
+            static int newid();
+            int colourmark; /*public version of lastpass - may be used for construction of arbitrary crawls*/
         };
 
 
