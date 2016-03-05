@@ -615,12 +615,12 @@ namespace ctb
    * */
   template <class T, class I, bool directed>
     template <bool recurse, bool inverse>
-    void graph_basic<T,I,directed>::node::crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels, queue<node*>* q)
+    void graph_basic<T,I,directed>::node::crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels, queue<node*>* q, bool root)
     {
-      bool root = false;
+      bool myqueue = false;
       if(q == NULL)
       {
-        root = true;
+        myqueue = true;
         q = new queue<node*>();
       }
       if(!g(this))
@@ -634,7 +634,7 @@ namespace ctb
           for(auto inptr  : (inverse ? out:in).getlevel(l))
           {
             auto ptr = inverse ? inptr->to : inptr->from;
-            ptr->template crawl<recurse,inverse>(f, g, levels, q);
+            ptr->template crawl<recurse,inverse>(f, g, levels, q, false);
           }
         }
       }
@@ -655,12 +655,12 @@ namespace ctb
         {
           node* n = q->front();
           q->pop();
-          n->crawl<recurse,inverse>(f,g,levels,q);
+          n->crawl<recurse,inverse>(f,g,levels,q, false);
         }
-        delete q;
+        if(myqueue)
+          delete q;
       }
     }
-
 };
 
 #endif
