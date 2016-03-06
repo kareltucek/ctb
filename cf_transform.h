@@ -144,7 +144,6 @@ namespace ctb
           g.factorize();
           AUTO(node)* n = g.factor.find_cycle_begin({0},{0});
           int remains = g.verts.size() + 2;
-          remains = 3;
           while(n != NULL && remains-- > 0)
           {
             set<node*> outs;
