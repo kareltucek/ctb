@@ -53,8 +53,9 @@ namespace ctb
    *            7 width out
    *            8 code
    *            9 code custom
-   *            10 tags
-   *            11 rating
+   *            10 code declaration
+   *            11 tags
+   *            12 rating
    * for expansion:
    *          (operation definition)
    *            2 output type
@@ -101,14 +102,15 @@ namespace ctb
     class csv_loader
     {
       private:
-        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciTag,ciRating};
-        enum cols_expansion   {ceNote,ceType,ceOutType,ceInTypes,ceOpId,ceFlags,ceName,ceTransformer,ceArgs};
-        enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode};
-        enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating};
+        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciCodeDeclaration,ciTag,ciRating,ciSize};
+        enum cols_expansion   {ceNote,ceType,ceOutType,ceInTypes,ceOpId,ceFlags,ceName,ceTransformer,ceArgs,ceSize};
+        enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode,cvSize};
+        enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating,ccSize};
 
         static writer_plain preprocessline(string line);
         static void process(IT& instab, istream& s);
         static void insert(IT& instab, string line);
+        static void checksize(int size, const stringlist& data);
 
         static map<string, int> flags;
         static bool empty(const string& line);
@@ -145,7 +147,7 @@ namespace ctb
   template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::export_instab(IT& instab, ostream& s)
     {
-      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\tcode custom\ttags\trating" << endl;
+      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\tcode custom\tcode declaration\ttags\trating" << endl;
       for(auto o : instab.instab)
       {
         for(auto i : o.second->versions)
@@ -161,6 +163,7 @@ namespace ctb
           w.push(to_string(i.width_out));
           w.push(i.code);
           w.push(i.code_custom);
+          w.push(i.code_declaration);
           w.push(i.tags);
           w.push(i.rating);
           s << w.list_concat("\t").write_str() << endl;
@@ -265,6 +268,14 @@ namespace ctb
       return true;
     }
 
+
+  template <class T, class G, class IT, class D>
+    void csv_loader<T,G,IT,D>::checksize(int size, const stringlist& data)
+    {
+      if(data.size() < size)
+        error("line too short");
+    }
+
   template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::insert(IT& instab, string line)
     {
@@ -272,15 +283,21 @@ namespace ctb
         return;
 
       stringlist data = split(line, D::value);
+      if(data.size() < ciType + 1)
+      {
+        error("line too short (expected object type)");
+      }
       if(data[ciType] == "instruction")
       {
+        checksize(ciSize, data);
         int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
         instab.addtype(data[ciOutType]);
         typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],split(data[ciInTypes],','),f);
-        operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
+        operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciCodeDeclaration],data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
       }
       else if(data[ciType] == "expansion")
       {
+        checksize(ceSize, data);
         int f = string_to_flags<typename T::flag_t>(data[ceFlags]);
         instab.addtype(data[ceOutType]);
         auto in_types = split(data[ceInTypes],',');
@@ -289,11 +306,13 @@ namespace ctb
       }
       else if (data[cvType] == "type_version")
       {
+        checksize(cvSize, data);
         typename IT::type_t& type = instab.addtype(data[cvTId],::ctb::stoi(data[cvBW]));
         type.addcode_type(::ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
       }
       else if(data[ccType] == "type_conversion")
       {
+        checksize(ccSize, data);
         typename IT::type_t& type = instab.addtype(data[ccTId],::ctb::stoi(data[ccBW]));
         type.addcode_conversion(::ctb::stoi(data[ccWIn]), ::ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccCodeGeneric],data[ccNote],data[ccTag],::ctb::stoi(data[ccRating]));
       }
@@ -321,11 +340,11 @@ namespace ctb
           }
           catch(const error_struct& e)
           {
-            error(string("at line ").append(to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.first ), false);
+            error(string("at line ") + to_string(i) + ": " + line + "\n\t" + l + "\n\t" + e.first , false);
           }
           catch(exception& e)
           {
-            error(string("at line ").append(to_string(i)).append(": ").append(line).append("\n    expanded to:").append(l).append("\n    ").append(e.what() ), false);
+            error(string("at line ") + to_string(i) + ": " + line + "\n\t" + l + "\n\t" + e.what() , false);
           }
         }
         ++i;

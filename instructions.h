@@ -35,6 +35,10 @@ namespace ctb
    *     - instructions
    *       instruction structure represents realization of its parent operation on data of some length
    *     e.g. '$arg1 + $arg2'
+   *       Instruction code may be given in the following forms. Only one of {code|code custom} may be specified.
+   *       'code' - A rhs expression. Will be substitued into '$type $name = $code;'
+   *       'code custom' - A custom expression. Will be substitued into '$code'
+   *       'code declaration' - declaration code will be expanded just as code_custom, but result will be put into a special code container, so the handling environment can put these into global namespace.
    *   - types
    *     type represents again a logical type sucha as an integer
    *     - type versions
@@ -164,6 +168,7 @@ namespace ctb
               const int width_out;
               const string code;
               const string code_custom;
+              const string code_declaration;
               const string note;
               const string tags;
               const int rating;
@@ -183,14 +188,14 @@ namespace ctb
             /*EAPI*/vector<typename T::tid_t> in_types;
             /*EAPI*/typename T::flag_t flags; 
             /*EAPI*/typename T::opid_t opid;
-            /*IAPI*/void addcode(int wi, int wo, const string& c,const string&,const string&,const string&,int r);
+            /*IAPI*/void addcode(int wi, int wo, const string& c,const string& cc, const string& cd,const string&,const string&,int r);
             /*IAPI*/void addexpansion(const string&, const string&, const vector<typename T::opid_t>& args, const string&, vector<typename T::tid_t>);
             /*API*/bool is(typename T::flag_t f) const ;
             /*API*/int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;
             /*API*//*DEPRECATED*///void imbue_width(int w)const;
             /*API*/typename T::opid_t get_debug_opid() const;
             /*API*/bool get_type_string(int w, string&)const;
-            /*API*/bool get_op_string(int w, string& c, string& cc, size_t&)const;
+            /*API*/bool get_op_string(int w, string& c, string& cc, string& cd, size_t&)const;
             /*API*/bool get_conv_string(int from, int to, string& c1, string& c2, string&cc, string& type, size_t&)const;
             /*API*/const typename type::graph_distance_t& get_conversion_graph() const;
             operation(typename T::opid_t i, typename T::tid_t ot, const vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table* parent);
@@ -306,9 +311,9 @@ namespace ctb
     }
 
   template <class T>
-    void instruction_table<T>::operation::addcode(int wi, int wo, const string& c,const string& cc,const string& n,const string& t,int r)
+    void instruction_table<T>::operation::addcode(int wi, int wo, const string& c,const string& cc, const string&cd, const string& n,const string& t,int r)
     {
-      versions.push_back(make_instruction({wi > wo ? wi : wo, wi, wo, c,cc,n,t,r,parent->is_tag_satisfactory(t)}));
+      versions.push_back(make_instruction({wi > wo ? wi : wo, wi, wo, c,cc,cd,n,t,r,parent->is_tag_satisfactory(t)}));
     }
 
   template <class T>
@@ -359,7 +364,7 @@ namespace ctb
     }
 
   template <class T>
-    bool instruction_table<T>::operation::get_op_string(int w, string& c, string& cc, size_t& printability)const
+    bool instruction_table<T>::operation::get_op_string(int w, string& c, string& cc, string& cd, size_t& printability)const
     {
       if(w == -1)
         w = imbued_width;
@@ -371,6 +376,7 @@ namespace ctb
         {
           c = ins.code;
           cc = ins.code_custom;
+          cd = ins.code_declaration;
           r = ins.rating;
           s = true;
           printability = (ins.satisfactory & mPRINT) ? (ins.satisfactory & mONCE) ? 1 : 100000 : 0;

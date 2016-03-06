@@ -77,6 +77,7 @@ namespace ctb
       init();
       wrt ilist;
       wrt olist;
+      wrt dummy;
       string type_string;
 
       //construct box list definitions
@@ -140,20 +141,20 @@ namespace ctb
 
       //generate actual code
       wrt code_simple;
-      generator.generate(1, code_simple);
+      generator.generate(1, code_simple, dummy);
       
       wrt code_unaligned;
       auto pcu = make_shared<tagmaster_default>("","unalignedio,universal","","");
-      generator.generate(granularity, code_unaligned, pcu);
+      generator.generate(granularity, code_unaligned, dummy, pcu);
       wrt code_aligned;
-      generator.generate(granularity, code_aligned, make_shared<tagmaster_default>("","alignedio,universal","",""));
+      generator.generate(granularity, code_aligned, dummy, make_shared<tagmaster_default>("","alignedio,universal","",""));
 
       wrt code_shifted;
       for(int i = 1; i < granularity; ++i)
       {
         SET("alignoffset", wrt().print("$1", i).write_str());
         wrt tmpcode;
-        generator.generate(granularity, tmpcode, make_shared<tagmaster_default>("","shiftedio,universal","",""));
+        generator.generate(granularity, tmpcode, dummy, make_shared<tagmaster_default>("","shiftedio,universal","",""));
         code_shifted.print("$fcase", tmpcode, granularity);
       }
 
@@ -162,7 +163,7 @@ namespace ctb
       SET("alignoffset", "(align_offset + output_offset)");
       shared_ptr<tagmaster_default> tq = make_shared<tagmaster_default>("","preloadio,universal","","");
       shared_ptr<tagmaster_default> tp = make_shared<tagmaster_default>("preloadio","","","");
-      generator.generate(granularity, code_preload, tq, tp, tp);
+      generator.generate(granularity, code_preload, dummy, tq, tp, tp);
 
       wrt code;
       code.print("$fcode", code_aligned, code_shifted, code_unaligned, code_simple, code_preload, granularity);

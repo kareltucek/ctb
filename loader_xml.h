@@ -43,6 +43,7 @@ namespace ctb
    *          width_out (-||-)
    *          code (inner code which is to be used as a part of predefined template - e.g. "$arg1 + $arg2")
    *          code_custom (if nonempty, will be used *instead* of 'code' . Custom code does not use a predefined template - e.g. "$name = $arg1 + $arg2;" - can be used if default template does not fit (e.g. function call on output instead of assignment))
+   *          code_declaration can contain code which will be printed into a separate code container, e.g. a code which has to be put into global namespace (w.r.t. generation)
    *          note (an arbitrary note of yours - may be useful for debug or for sorting of your csv files)
    *          tags (comma separated list of tags for this specific code - meant for turning off and on usage of specific instruction sets (such as using only sse <= 2)
    *          rating (if more than one instruction fits, the one with higher rating isused)
@@ -210,7 +211,7 @@ namespace ctb
         auto in_types = split(getanystr(itr,"in_types"),',');
         typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
-          t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+          t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
         for(XMLElement * itr2 = itr->FirstChildElement("expansion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("expansion"))
           t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), split(getstr(itr2, "arguments"),','), getanystr(itr2,"note"), in_types);
       }

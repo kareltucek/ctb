@@ -114,6 +114,7 @@ namespace ctb
       wrt ilist;
       wrt olist;
 
+      wrt dummy;
       wrt decl;
       string type_string;
       for( auto n : generator.graph.in)
@@ -147,11 +148,11 @@ namespace ctb
         minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
 
       wrt code;
-      generator.generate(granularity, code);
+      generator.generate(granularity, code, dummy);
 
       wrt code2;
       if(granularity != 1)
-        generator.generate(1, code2);
+        generator.generate(1, code2, dummy);
 
       wrt inc;
       for(auto n : generator.graph.in)
