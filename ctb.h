@@ -108,6 +108,7 @@ namespace ctb
         void command_adddebug(stringlist&& args);
         void command_generate(stringlist&& args);
         void command_transform(stringlist&& args);
+        void command_visualize_graph(stringlist&& args);
         static string get_inner_name(string fname);
         static string get_prefix(string fname);
 
@@ -541,6 +542,7 @@ start:;
       register_command("testgraph",  bind(&ctb<T,IT>::command_testgraph                     , this, placeholders::_1),  "testgraph - special version of loadgraph which generates a graph based on current instruction table");
       register_command("adddebug",  bind(&ctb<T,IT>::command_adddebug                     , this, placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to its vertices");
       register_command("transform",  bind(&ctb<T,IT>::command_transform                     , this, placeholders::_1),  "transform  <transformer> - transforms the loaded graph somehow");
+      register_command("visualize",  bind(&ctb<T,IT>::command_visualize_graph                  , this, placeholders::_1),  "visualize - uses csv graph export method and executes dot and gpicview to actually show the result to the user");
       register_command("help",  bind(&ctb<T,IT>::command_help                  , this, placeholders::_1),  "help");
       register_command("?",  bind(&ctb<T,IT>::command_help                  , this, placeholders::_1),  "help");
     }
@@ -595,6 +597,12 @@ start:;
     void ctb<T,IT>::command_help(stringlist&& args)
     {
       help_command_stream();
+    }
+
+  template <class T, class IT>
+    void ctb<T,IT>::command_visualize_graph(stringlist&& args)
+    {
+      mygenerator.graph.dump_visual();
     }
 
 

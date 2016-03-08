@@ -7,9 +7,13 @@ all : graph.out graph_cf.out graph.out.png graph_cf.out.png run
 graph.out graph_cf.out : ../ctb graph.xml
 	../ctb -f program
 
+visual :
+	../ctb -f program_visual
+
 graph.out.png graph_cf.out.png : graph.out graph_cf.out
 	cat graph.out | dot -Tpng > graph.out.png
 	cat graph_cf.out | dot -Tpng > graph_cf.out.png
+
 
 run : graph.out
 	#diff graph_cf.out graph_cf.out.expected
