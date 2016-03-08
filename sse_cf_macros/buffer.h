@@ -7,10 +7,12 @@
  * BUFFER_DECL(size, id, type):
  * BUFFER_EMPTY(size, id):
  * BUFFER_FILLED(size, id):
- * BUFFER_CONSUME(size, id): decrements the size counter
+ * BUFFER_CONSUME(size, id): increments the read counter and decrements the size counter
  * BUFFER_PEEK(size, id, to): assigns current head to the <to> variable
  * BUFFER_POP(size, id, to): abbreviation for PEEK && CONSUME
  * BUFFER_PUSH(size, id, val): pushes val to the queue and increments the size counter
+ *
+ * For the resulting code, see the test9. There are tests altogether with an explicit preprocess step, which shows the resulting code and allows simple debug.
  * */
 
 #define BUFFER_SIMPLE_DECL(i, type, id)\
