@@ -1,21 +1,23 @@
 #FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0 
-FLAGS= -DTESTOVANI -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline
+FLAGS=  -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline 
+#-DTESTOVANI
+
 
 CXX=clang++
 
-SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h graph_factor.h
+SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h graph_factor.h aliasenv_cf.h
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir8 testdir9
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir8 testdir10
 
 fulltest : all testdir4
 
 test : test.cpp $(SOURCES)
-	${CXX} ${FLAGS} test.cpp -DTEMPLATED -l tinyxml2 -o test
+	${CXX} ${FLAGS} test.cpp -l tinyxml2 -o test
 
 ctb : main.cpp $(SOURCES)
-	${CXX} ${FLAGS} main.cpp -DTEMPLATED  -l tinyxml2 -o ctb
+	${CXX} ${FLAGS} main.cpp -l tinyxml2 -o ctb
 
 testdir1 : test
 	./test && make -C test1_simple
@@ -44,6 +46,9 @@ testdir8 : ctb
 testdir9 : ctb
 	make -C test9_cf_macros
 
+testdir10 : ctb
+	make -C test10_cf_macros
+
 
 ssedir : ctb
 	make -C sse_set
@@ -59,6 +64,7 @@ clean :
 	-make -C test7_graph_transformations clean
 	-make -C test8_graph_transformations2 clean
 	-make -C test9_cf_macros clean
+	-make -C test10_cf_macros clean
 	
 
 

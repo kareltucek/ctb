@@ -1,0 +1,2 @@
+preprocess cfmacros buffer_test.h buffer_test_preprocessed.h
+

@@ -12,7 +12,7 @@ namespace ctb
   class parser
   {
     public:
-      enum ttype{tNum,tMul,tDiv,tAdd,tSub,tPB,tPE,tEof};
+      enum ttype{tWhite,tMod,tNum,tMul,tDiv,tAdd,tSub,tPB,tPE,tEof};
     private:
       typedef pair<ttype, int> token;
       vector<token> stack;
@@ -36,11 +36,12 @@ namespace ctb
     assert(parser::calculate("2+3*4+2") == 16);
     assert(parser::calculate("(2+3)*(4-2)") == 10);
     assert(parser::calculate("22-(2+3)*(4-2)") == 12);
+    assert(parser::calculate("(1 + (0/4))% (12/4)") == 1);
   }
 
   void parser::squash_mul_div()
   {
-    while(stack.size() >= 3 && (type(get(1)) == tMul || type(get(1)) == tDiv))
+    while(stack.size() >= 3 && (type(get(1)) == tMul || type(get(1)) == tDiv || type(get(1)) == tMod))
     {
       if(type(get(0)) != tNum || type(get(2)) != tNum)
         error("something wrong found where number expected");
@@ -56,7 +57,10 @@ namespace ctb
           stack.push_back(token(tNum,b/a));
           break;
         case tMul:
-          stack.push_back(token(tNum,a*b));
+          stack.push_back(token(tNum,b*a));
+          break;
+        case tMod:
+          stack.push_back(token(tNum,b%a));
           break;
         default:
           error("this should have never happened");
@@ -140,6 +144,7 @@ namespace ctb
       {'/',tDiv},
       {'+',tAdd},
       {'-',tSub},
+      {'%',tMod},
       {'0',tNum},
       {'1',tNum},
       {'2',tNum},
@@ -150,9 +155,12 @@ namespace ctb
       {'7',tNum},
       {'8',tNum},
       {'9',tNum},
-      {'\0',tEof}
+      {'\0',tEof},
+      {' ',tWhite},
     };
-    ttype t = hash[*ptr];
+    if(hash.find(*ptr) == hash.end())
+      error("unexpected character, cannot tokenize");
+    ttype t = hash.find(*ptr)->second;
     if(t == tNum)
     {
       int i = 0;
@@ -175,6 +183,8 @@ namespace ctb
     {
       switch(type(t))
       {
+        case tWhite:
+          break;
         case tNum:
           {
             stack.push_back(t);  
@@ -199,6 +209,7 @@ namespace ctb
           break;
         case tMul:
         case tDiv:
+        case tMod:
           stack.push_back(t);
           break;
         case tAdd:

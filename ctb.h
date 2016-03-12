@@ -9,6 +9,7 @@
 #include "loader_csv.h"
 #include "loader_test.h"
 #include "aliasenv_maker.h"
+#include "aliasenv_cf.h"
 #include "aliasenv_bobox.h"
 #include "aliasenv_simple.h"
 #include "aliasenv_simu.h"
@@ -109,6 +110,7 @@ namespace ctb
         void command_generate(stringlist&& args);
         void command_transform(stringlist&& args);
         void command_visualize_graph(stringlist&& args);
+        void command_preprocess(stringlist&& args);
         static string get_inner_name(string fname);
         static string get_prefix(string fname);
 
@@ -119,6 +121,8 @@ namespace ctb
         typedef function<string(string)> aliasenv_record;
         typedef pair<function<void(stringlist&&)>,string> command_record;
         typedef function<void()> transform_record;
+        typedef function<void(string,string)> preprocessor_record;
+        map<string, preprocessor_record> hash_preprocessor;
         map<string, loader_record> hash_loader;
         map<string, aliasenv_record> hash_aliasenv;
         map<string, command_record> hash_command;
@@ -134,6 +138,7 @@ namespace ctb
         template<template <typename ...> class L, typename...P> void        transform_graph(P...params) ;
         template<template <typename ...> class L, typename M, typename...P> string process(string name, P...params) ;
         template<typename M>                                                string generate(string name) ;
+        template<typename M>                                                void preprocess(string from, string to) ;
 
         template<template <typename ... > class L> void register_loader() ;
         template<template <typename ... > class L> void register_transform() ;
@@ -166,6 +171,7 @@ namespace ctb
       register_aliasenv<aliasenv_simple>();
       register_aliasenv<aliasenv_simu>();
       register_aliasenv<aliasenv_bobox>();
+      register_aliasenv<aliasenv_cf>();
       register_loader<csv_loader>();
       register_loader<xml_loader>();
       register_transform<cf_transform>();
@@ -196,6 +202,7 @@ namespace ctb
     {
       if(M::get_name() == "")
         error( "unnamed aliasenv passed - (have you defined a 'string get_name(){return \"whatever nonempty\";}' method?");
+      hash_preprocessor[M::get_name()] = preprocessor_record(bind(&ctb::preprocess<M>, this, placeholders::_1, placeholders::_2));
       hash_aliasenv[M::get_name()] = aliasenv_record(bind(&ctb::generate<M>, this, placeholders::_1));
     }
 
@@ -236,6 +243,23 @@ namespace ctb
         warn("Warning: loading graph while instruction table is empty. Graph construction depends on correct input/output flags!");
       L<T, generator_t, IT> loader;
       loader.load_graph(mygenerator, params...);
+    }
+
+  template <class T, class IT>
+    template <typename M>
+    void ctb<T,IT>::preprocess(string from, string to)
+    {
+      typedef writer<M> W;
+      W m;
+      ifstream fromfile;
+      ofstream tofile;
+      openstream(fromfile, from, true);
+      string line;
+      while(getline(fromfile, line))
+        m.print(line+"\n");
+      
+      openstream(tofile, to);
+      return m.write(tofile);
     }
 
   template <class T, class IT>
@@ -543,6 +567,7 @@ start:;
       register_command("adddebug",  bind(&ctb<T,IT>::command_adddebug                     , this, placeholders::_1),  "adddebug  [<depth=1> [<list of vertex ids>]] - hooks a debug node to every vertex of currently loaded graph, if list is present, applies only to its vertices");
       register_command("transform",  bind(&ctb<T,IT>::command_transform                     , this, placeholders::_1),  "transform  <transformer> - transforms the loaded graph somehow");
       register_command("visualize",  bind(&ctb<T,IT>::command_visualize_graph                  , this, placeholders::_1),  "visualize - uses csv graph export method and executes dot and gpicview to actually show the result to the user");
+      register_command("preprocess",  bind(&ctb<T,IT>::command_preprocess                  , this, placeholders::_1),  "preprocess <aliasenv> <filein> <fileout> - you may use this this method if you want to see product of some aliasenv. I.e.this will create a writer, pipe the infile into the writer and then writes to the fileout.");
       register_command("help",  bind(&ctb<T,IT>::command_help                  , this, placeholders::_1),  "help");
       register_command("?",  bind(&ctb<T,IT>::command_help                  , this, placeholders::_1),  "help");
     }
@@ -552,7 +577,7 @@ start:;
       if(args.size() != 3)
         error( string("invalid number of arguments "), false);
       if(hash_aliasenv.find(args[1]) == hash_aliasenv.end())
-        error( string("aliasenv not found (did you register it in ctb.h?): ", false).append(args[1]));
+        error( string("aliasenv not found (did you register it in ctb.h?): ").append(args[1]));
       writer_plain::to_file(args[2], hash_aliasenv[args[1]](get_inner_name(args[2])));
     }
 
@@ -581,6 +606,14 @@ start:;
     if(args.size() != 2)
       error( string("invalid number of arguments "), false);
     hash_transforms[args[1]]();
+  }
+
+  template <class T, class IT>
+    void ctb<T,IT>::command_preprocess(stringlist&& args)
+  {
+    if(args.size() != 4)
+      error( string("invalid number of arguments "), false);
+    hash_preprocessor[args[1]](args[2], args[3]);
   }
 
   template <class T, class IT>

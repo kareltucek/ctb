@@ -1,5 +1,5 @@
-#ifndef DATATYPES_GUARD
-#define DATATYPES_GUARD
+#ifndef SPLIT_GUARD
+#define SPLIT_GUARD
 
 #include "defines.h"
 #include <string>
@@ -14,11 +14,17 @@
 
 namespace ctb
 {
-  template <typename ... T> void pass(T...)
-  {
-  }
-
   typedef vector<string> stringlist;
+
+  string trim(const string& s)
+    {
+      int end = s.find_last_not_of(" \n\r");
+      int begin = s.find_first_not_of(" \n\r");
+      if(end == -1)
+        return s;
+      else
+        return s.substr(begin, end-begin+1);
+    }
 
 
   bool fileexists(const char *name)
