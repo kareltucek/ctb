@@ -34,6 +34,11 @@ namespace ctb
         typedef typename T::opid_t id_t;
         typedef typename T::vid_t vid_t;
         typedef typename T::tid_t tid_t;
+        struct output_options{
+          bool once;
+          output_options() {once = false;};
+        };
+        MAKE(output_options);
       private:
         typedef typename T::param_t param_t;
         typedef typename IT::operation_t op_t;
@@ -58,7 +63,7 @@ namespace ctb
             id_t opid;
 
             template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
-            template <class W> void generate(int granularity, W& w, W& wd, bool c);
+            template <class W> void generate(int granularity, multicontA<W>& w,  multicontA<output_options>& , bool c);
             int get_inout_pos() const;
             vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
@@ -75,12 +80,14 @@ namespace ctb
         template <typename...L> typename graph_t::node_t* addvert(vid_t v, id_t op, L... p) ;
         void addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos) ;
 
-        template <class W> void generate(int granularity, W& w, W& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
+        template <class W> void generate(int granularity, multicontA<W>& w,  multicontA<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
         int get_broadest(int upperbound = 10000000) ;
 
         void set_compiletest(bool);
 
         template<template <typename ...> class L, typename...P> void transform(P...params) ;
+
+        multicontA<output_options> option_struct();
 
         void clear();
         void reset();
@@ -88,6 +95,12 @@ namespace ctb
     };
 
   typedef generator<traits, instruction_table_default> generator_default;
+
+    template <class T, class IT>
+  multicontA<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
+  {
+    return multicontA<output_options>();
+  }
 
     template <class T, class IT>
         template<template <typename ...> class L, typename...P> 
@@ -186,7 +199,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate(int packsize, W& w, W& wd, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
+    void generator<T,IT>::generate(int packsize, multicontA<W>& w,  multicontA<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
     {
       if(graph.out.empty())
         error( "graph is empty");
@@ -198,7 +211,7 @@ namespace ctb
         instab.add_tags(to,gONCE);
       instab.update_tags();
       data_t::newid(true); //resets ids
-      graph.crawl_topological([&](node_t* n) {n->data.generate(packsize, w, wd, compiletest); });
+      graph.crawl_topological([&](node_t* n) {n->data.generate(packsize, w, opts, compiletest); });
       if(to!=NULL)
         instab.rm_tags(to,gONCE);
       if(tp!=NULL)
@@ -209,7 +222,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::data_t::generate(int granularity, W& w, W& wd, bool c)
+    void generator<T,IT>::data_t::generate(int granularity, multicontA<W>&w, multicontA<output_options>& opts, bool c)
     {
       try
       {
@@ -236,37 +249,48 @@ namespace ctb
 #define ARG(a) (me->in_at(a-1, false) != NULL ? W().print(me->in_at(a-1, false)->from->data.get_acces(myin, granularity, w, c), i*myout) : empty)
         W acces({newname(print("w$1",myout))});
         acces_map.insert(acces_map_t::value_type(myout, acces));
-        string type_string, op_c, op_cc, op_cd;
+        string type_string, op_c;
+        stringlist op_cc;
         size_t printability; 
         op->get_type_string(mygran, type_string);
-        bool found = op->get_op_string(mygran, op_c, op_cc, op_cd, printability);
+        bool found = op->get_op_string(mygran, op_c, op_cc, printability);
         if(found && op_c.empty() && op_cc.empty())
           warn(string("instruction code and custom code are both empty for ").append(opid));
         /*even for unprintable code we want to consume ids -> cannot skip most of this function*/
-	W basename = W().print(acces,0);
+        W basename = W().print(acces,0);
         for(int i = 0; i < granularity/myin && i < printability; i++) 
         {
-	  W name = W().print(acces,i*myout);
-          if(i!=0 && c)
+          W name = W().print(acces,i*myout);
+          if(i!=0 && c) //print empty declaration in case we want compile test
           {
             w.print("$declcode",     type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
           }
-          else if(op_c.empty())
-          {
-            w.print(op_cc,           type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
-          }
           else
           {
-            if(op->is(fINPUT))
-              w.print("$inputcode" , type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-            else if(op->is(fOUTPUT))
-              w.print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-            else if(op->is(fDEBUG)) //same as output
-              w.print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-            else
-              w.print("$innercode" , type_string, name, basename, op_c, 0              , myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+            for(int wi = 0; wi < op_cc.size() || wi == 0; wi++)
+            {
+              if(opts[wi].once && i != 0)
+              {
+                cout << "ONCE!!!" << endl;
+                continue;
+              }
+              if(wi==0 && !op_c.empty())
+              {
+                if(op->is(fINPUT))
+                  w[0].print("$inputcode" , type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+                else if(op->is(fOUTPUT))
+                  w[0].print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+                else if(op->is(fDEBUG)) //same as output
+                  w[0].print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+                else
+                  w[0].print("$innercode" , type_string, name, basename, op_c, 0              , myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
+              }
+              else if(op_cc.size() < wi+2)
+              {
+                w[wi].print(op_cc[wi],           type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+              }
+            }
           }
-          wd.print(op_cd , type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
         }
       }
       catch (error_struct& err)

@@ -109,7 +109,8 @@ namespace ctb
   template <class G>
     writer<aliasenv_simu> aliasenv_simu::generate_body(int granularity, G& generator, string name)
     {
-      typedef writer<aliasenv_simu> wrt;
+      typedef multicontA<writer<aliasenv_simu>> wrt;
+      auto opts = generator.option_struct();
 
       wrt ilist;
       wrt olist;
@@ -148,11 +149,11 @@ namespace ctb
         minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
 
       wrt code;
-      generator.generate(granularity, code, dummy);
+      generator.generate(granularity, code, opts);
 
       wrt code2;
       if(granularity != 1)
-        generator.generate(1, code2, dummy);
+        generator.generate(1, code2, opts);
 
       wrt inc;
       for(auto n : generator.graph.in)

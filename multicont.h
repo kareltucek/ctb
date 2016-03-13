@@ -53,6 +53,18 @@ class multicont : public T
     }
 };
 
+template <class T>
+class multicontA : public multicont<T>
+{
+  public:
+    using multicont<T>::multicont;
+
+    T& operator[](int i)
+    {
+      return this->getlevel(i);
+    };
+};
+
 typedef multicont<vector<int>> multicont_default;
 
 #endif

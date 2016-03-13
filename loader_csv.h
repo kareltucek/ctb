@@ -102,7 +102,7 @@ namespace ctb
     class csv_loader
     {
       private:
-        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciCodeCustom,ciCodeDeclaration,ciTag,ciRating,ciSize};
+        enum cols_instruction {ciNote,ciType,ciOutType,ciInTypes,ciOpId,ciFlags,ciWIn,ciWOut,ciCode,ciTag,ciRating,ciSize};
         enum cols_expansion   {ceNote,ceType,ceOutType,ceInTypes,ceOpId,ceFlags,ceName,ceTransformer,ceArgs,ceSize};
         enum cols_version     {cvNote,cvType,cvTId,cvBW,cvW,cvCode,cvSize};
         enum cols_conversion  {ccNote,ccType,ccTId,ccBW,ccWIn,ccWOut,ccCode1,ccCode2,ccCodeCustom,ccCodeGeneric,ccTag,ccRating,ccSize};
@@ -147,7 +147,7 @@ namespace ctb
   template <class T, class G, class IT, class D>
     void csv_loader<T,G,IT,D>::export_instab(IT& instab, ostream& s)
     {
-      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\tcode custom\tcode declaration\ttags\trating" << endl;
+      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\ttags\trating\tcode_custom[0]\tcode_custom[1]..." << endl;
       for(auto o : instab.instab)
       {
         for(auto i : o.second->versions)
@@ -162,10 +162,10 @@ namespace ctb
           w.push(to_string(i.width_in));
           w.push(to_string(i.width_out));
           w.push(i.code);
-          w.push(i.code_custom);
-          w.push(i.code_declaration);
           w.push(i.tags);
           w.push(i.rating);
+          for(const auto& cc : i.code_custom)
+            w.push(cc);
           s << w.list_concat("\t").write_str() << endl;
         }
       }
@@ -291,9 +291,12 @@ namespace ctb
       {
         checksize(ciSize, data);
         int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
+        stringlist ccode = stringlist();
+        for(int i = ciSize; i < data.size(); i++)
+          ccode.push_back(data[i]);
         instab.addtype(data[ciOutType]);
         typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],split(data[ciInTypes],','),f);
-        operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],data[ciCodeCustom],data[ciCodeDeclaration],data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
+        operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],ccode,data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
       }
       else if(data[ciType] == "expansion")
       {

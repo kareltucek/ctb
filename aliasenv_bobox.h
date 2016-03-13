@@ -72,12 +72,12 @@ namespace ctb
   template <class G>
     writer<aliasenv_bobox> aliasenv_bobox::generate(int granularity, G& generator, string name)
     {
-      typedef writer<aliasenv_bobox> wrt;
+      typedef multicontA<writer<aliasenv_bobox>> wrt;
+      auto opts = generator.option_struct();
 
       init();
       wrt ilist;
       wrt olist;
-      wrt dummy;
       string type_string;
 
       //construct box list definitions
@@ -141,20 +141,20 @@ namespace ctb
 
       //generate actual code
       wrt code_simple;
-      generator.generate(1, code_simple, dummy);
+      generator.generate(1, code_simple, opts);
       
       wrt code_unaligned;
       auto pcu = make_shared<tagmaster_default>("","unalignedio,universal","","");
-      generator.generate(granularity, code_unaligned, dummy, pcu);
+      generator.generate(granularity, code_unaligned, opts, pcu);
       wrt code_aligned;
-      generator.generate(granularity, code_aligned, dummy, make_shared<tagmaster_default>("","alignedio,universal","",""));
+      generator.generate(granularity, code_aligned, opts, make_shared<tagmaster_default>("","alignedio,universal","",""));
 
       wrt code_shifted;
       for(int i = 1; i < granularity; ++i)
       {
         SET("alignoffset", wrt().print("$1", i).write_str());
         wrt tmpcode;
-        generator.generate(granularity, tmpcode, dummy, make_shared<tagmaster_default>("","shiftedio,universal","",""));
+        generator.generate(granularity, tmpcode, opts, make_shared<tagmaster_default>("","shiftedio,universal","",""));
         code_shifted.print("$fcase", tmpcode, granularity);
       }
 
@@ -163,7 +163,7 @@ namespace ctb
       SET("alignoffset", "(align_offset + output_offset)");
       shared_ptr<tagmaster_default> tq = make_shared<tagmaster_default>("","preloadio,universal","","");
       shared_ptr<tagmaster_default> tp = make_shared<tagmaster_default>("preloadio","","","");
-      generator.generate(granularity, code_preload, dummy, tq, tp, tp);
+      generator.generate(granularity, code_preload, opts, tq, tp, tp);
 
       wrt code;
       code.print("$fcode", code_aligned, code_shifted, code_unaligned, code_simple, code_preload, granularity);

@@ -77,12 +77,12 @@ namespace ctb
     writer<aliasenv_simple> aliasenv_simple::generate(int granularity, G& generator, string name)
     {
       init();
-      typedef writer<aliasenv_simple> wrt;
+      typedef multicontA<writer<aliasenv_simple>> wrt;
+      auto opts = generator.option_struct();
 
       wrt ilist;
       wrt olist;
 
-      wrt dummy;
       wrt decl;
       string type_string;
       for( auto n : generator.graph.in)
@@ -116,10 +116,10 @@ namespace ctb
         minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
 
       wrt code;
-      generator.generate(granularity, code, dummy);
+      generator.generate(granularity, code, opts);
 
       wrt code2;
-      generator.generate(1, code2, dummy);
+      generator.generate(1, code2, opts);
 
       wrt inc;
       for(auto n : generator.graph.in)

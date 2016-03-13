@@ -138,13 +138,13 @@ namespace ctb
   template <class T, class G, class IT>
     string xml_loader<T,G,IT>::getstr(tinyxml2::XMLNode * node, string name)
     {
-      if(node->FirstChildElement(name.c_str()) != NULL)
-        return node->FirstChildElement(name.c_str())->GetText() == NULL ? "" :  string(node->FirstChildElement(name.c_str())->GetText());
-      else
-      {
-        tinyxml2::XMLElement * ptr = node->ToElement();
+      tinyxml2::XMLElement * ptr = node->ToElement();
+      if( ptr->Attribute(name.c_str()) != NULL)
         return ptr->Attribute(name.c_str());
-      }
+      else if(node->FirstChildElement(name.c_str()) != NULL)
+        return node->FirstChildElement(name.c_str())->GetText() == NULL ? "" :  string(node->FirstChildElement(name.c_str())->GetText());
+      error(string("xml loader could not retrieve any string, when required, at  ")+name);
+      return "";
     }
 
   template <class T, class G, class IT>
@@ -210,8 +210,17 @@ namespace ctb
         typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
         auto in_types = split(getanystr(itr,"in_types"),',');
         typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
+
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
-          t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),getanystr(itr2,"code_custom"),getanystr(itr2,"code_custom"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+        {
+          stringlist ccode;
+          if(hasval(itr2, "code_custom"))
+            ccode.push_back(getstr(itr2, "code_custom"));
+          for(XMLElement * itr3 = itr->FirstChildElement("code_custom"); itr3 != NULL; itr3 = itr3->NextSiblingElement("code_custom"))
+            ccode.push_back(itr3->GetText());
+          t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),ccode,getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+        }
+
         for(XMLElement * itr2 = itr->FirstChildElement("expansion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("expansion"))
           t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), split(getstr(itr2, "arguments"),','), getanystr(itr2,"note"), in_types);
       }
