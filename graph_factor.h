@@ -82,7 +82,7 @@ namespace ctb
       auto f = [&](fnode_t* n)
           { 
             if(n->in.empty() && showempty)
-                o << prefix << n->id << endl;
+                o << prefix << n->id << ";" << endl;
             for( auto e : n->in ) 
                 o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
           };

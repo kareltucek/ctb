@@ -1,5 +1,5 @@
 #factor structure is:
-#0
+#0;
 #0 -> 1;
 #0 -> 2;
 #0 -> 3;
@@ -69,7 +69,7 @@ split_split_ldfalse_1 -> merge_merge_stfalse_2;
 split_split_ldtrue_1
 split_split_ldtrue_1 -> merge_merge_sttrue_2;
 edge [color = red];
-0
+0;
 0 -> 1;
 0 -> 2;
 0 -> 3;
