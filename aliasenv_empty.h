@@ -11,20 +11,20 @@
 namespace ctb
 {
 
-    class aliasenv_empty
-    {
-      public:
-        typedef language_empty language;
-        static string alias(const string& a, bool* success = NULL);
-        static string get_name(){return "empty";};
-    };
+  class aliasenv_empty
+  {
+    public:
+      typedef language_empty language;
+      static string alias(const string& a, bool* success = NULL);
+      static string get_name(){return "empty";};
+  };
 
-    string aliasenv_empty::alias(const string& a, bool* s)
-    {
-        if(s != NULL)
-          *s = false;
-        return "";
-    }
+  string aliasenv_empty::alias(const string& a, bool* s)
+  {
+    if(s != NULL)
+      *s = false;
+    return "";
+  }
 };
 
 #endif

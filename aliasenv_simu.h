@@ -74,12 +74,12 @@ namespace ctb
     initialized = true;
   }
 
-    template <class G>
-      writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, string name)
-  {
+  template <class G>
+    writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, string name)
+    {
 #ifdef TMPTEST
-    if(granularity > 16)
-      granularity = 16;
+      if(granularity > 16)
+        granularity = 16;
 #endif
 
       init();
@@ -93,18 +93,18 @@ namespace ctb
         decl.print("$fdeclcont", n->data.get_inout_pos(), type_string);
       }
 
-    writer<aliasenv_simu> bodies;
-    writer<aliasenv_simu> calls;
-    for(int i = 1; i <= granularity; i *= 2)
-    {
-      bodies += generate_body(i, generator, name);
-      calls.print("test_body$1();", i);
-    }
+      writer<aliasenv_simu> bodies;
+      writer<aliasenv_simu> calls;
+      for(int i = 1; i <= granularity; i *= 2)
+      {
+        bodies += generate_body(i, generator, name);
+        calls.print("test_body$1();", i);
+      }
 
-    writer<aliasenv_simu> box;
-    box.print("$fbox", decl, bodies, calls) ;
-    return box;
-  }
+      writer<aliasenv_simu> box;
+      box.print("$fbox", decl, bodies, calls) ;
+      return box;
+    }
 
   template <class G>
     writer<aliasenv_simu> aliasenv_simu::generate_body(int granularity, G& generator, string name)

@@ -33,7 +33,7 @@ namespace ctb
 
 #ifdef TESTOVANI
 #define RETHROW(msg)\
-catch(std::exception& e)\
+  catch(std::exception& e)\
 {\
   error(string(e.what())+"\n    "+msg);\
 }\
@@ -43,7 +43,7 @@ catch (error_struct& err)\
 }
 #else
 #define RETHROW(msg)\
-catch (error_struct& err)\
+  catch (error_struct& err)\
 {\
   error(string(msg) + "\n    "+err.first, err.second);\
 }

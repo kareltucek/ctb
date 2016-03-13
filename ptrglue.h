@@ -19,12 +19,12 @@
 
 #define STRUCT(NAME, T) \
   struct NAME##_struct { T }; \
-    CONSTRUCTOR(NAME, NAME##_struct)
-  
+CONSTRUCTOR(NAME, NAME##_struct)
+
 
 #define GLUE_PTR(T, t) \
-      operator T*() { return t; } \
-      T operator*() { return *t; }\
-      T* operator->() { return t; }
+  operator T*() { return t; } \
+T operator*() { return *t; }\
+T* operator->() { return t; }
 
 #endif

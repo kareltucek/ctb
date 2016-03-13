@@ -8,34 +8,34 @@
 namespace ctb
 {
 
-template <typename A, typename B>
-struct cvt
-{
-  static B convert(const B&);
-};
+  template <typename A, typename B>
+    struct cvt
+    {
+      static B convert(const B&);
+    };
 
-template <typename A>
-struct cvt<A,A>
-{
-  static A convert(const A& a){return a;};
-};
+  template <typename A>
+    struct cvt<A,A>
+    {
+      static A convert(const A& a){return a;};
+    };
 
-template <> struct cvt<int,string> { static string convert(const int& a){return to_string(a);}; };
+  template <> struct cvt<int,string> { static string convert(const int& a){return to_string(a);}; };
 
-template <> struct cvt<string,int>
-{
-  static int convert(const string& a)
+  template <> struct cvt<string,int>
   {
-    try
+    static int convert(const string& a)
     {
-      return std::stoi(a);
-    }
-    catch(...)
-    {
-      return hash<string>()(a);
-    }
+      try
+      {
+        return std::stoi(a);
+      }
+      catch(...)
+      {
+        return hash<string>()(a);
+      }
+    };
   };
-};
 
 }
 

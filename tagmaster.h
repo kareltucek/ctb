@@ -26,45 +26,45 @@ namespace ctb
 
   template<typename F>
     class tagmaster : public taghandler_base
-    {
-      private:
-        F required;
-        F allowed;
-        F nonexcluded;
-        F excluded;
-        F at;
-        F full;
-        map<string,F> tags_used;
-      public:
-        tagmaster(const string& r = "",const string& a = "",const string& e = "", const string& ne = "");
-        bool is_satisfactory(const string&);
-        F to_mask(const string&);
-        void clear();
+  {
+    private:
+      F required;
+      F allowed;
+      F nonexcluded;
+      F excluded;
+      F at;
+      F full;
+      map<string,F> tags_used;
+    public:
+      tagmaster(const string& r = "",const string& a = "",const string& e = "", const string& ne = "");
+      bool is_satisfactory(const string&);
+      F to_mask(const string&);
+      void clear();
 
-        static void self_test();
-    };
+      static void self_test();
+  };
 
   typedef tagmaster<uint32_t> tagmaster_default;
 
-    template<typename F>
-  void tagmaster<F>::clear()
-  {
-    required = F(0);
-    allowed = F(0);
-    nonexcluded = F(0);
-    excluded = F(0);
-    at = F(1);
-    full = F(0);
-    tags_used.clear();
-  }
+  template<typename F>
+    void tagmaster<F>::clear()
+    {
+      required = F(0);
+      allowed = F(0);
+      nonexcluded = F(0);
+      excluded = F(0);
+      at = F(1);
+      full = F(0);
+      tags_used.clear();
+    }
 
   template<typename F>
     tagmaster<F>::tagmaster(const string& r,const string& a,const string& e,const string& ne) : at(1), full(0), tags_used()
   {
-      required=to_mask(r);
-      allowed=to_mask(a);
-      nonexcluded=to_mask(ne);
-      excluded=to_mask(e);
+    required=to_mask(r);
+    allowed=to_mask(a);
+    nonexcluded=to_mask(ne);
+    excluded=to_mask(e);
   }
 
   template<typename F>
@@ -101,22 +101,22 @@ namespace ctb
       return ((mask & required) == required) && ((mask & excluded) == 0 ) && ((mask & allowed) != 0 || allowed == 0) && (nonexcluded == 0 || (mask & nonexcluded) == mask);
     }
 
-    template<typename F>
-  void tagmaster<F>::self_test()
-  {
-    cout << "testing tag master" << endl;
-    tagmaster_default t;
-    auto l =t.to_mask("a,b,c");
-    auto k = t.to_mask("b,c,a");
-    assert(k==l);
-    assert(t.to_mask("a,a,c")==t.to_mask("a,c,a"));
-    tagmaster_default b("a,b","b,c","d,e","a,b,c,d");
-    assert(b.is_satisfactory("b,a,c") == true);
-    assert(b.is_satisfactory("a") == false);
-    assert(b.is_satisfactory("b,a,c,d") == false);
-    tagmaster_default c;
-    assert(c.is_satisfactory("a,b,c"));
-  }
+  template<typename F>
+    void tagmaster<F>::self_test()
+    {
+      cout << "testing tag master" << endl;
+      tagmaster_default t;
+      auto l =t.to_mask("a,b,c");
+      auto k = t.to_mask("b,c,a");
+      assert(k==l);
+      assert(t.to_mask("a,a,c")==t.to_mask("a,c,a"));
+      tagmaster_default b("a,b","b,c","d,e","a,b,c,d");
+      assert(b.is_satisfactory("b,a,c") == true);
+      assert(b.is_satisfactory("a") == false);
+      assert(b.is_satisfactory("b,a,c,d") == false);
+      tagmaster_default c;
+      assert(c.is_satisfactory("a,b,c"));
+    }
 
 
 }

@@ -15,7 +15,7 @@ namespace ctb
    * */
 
   template <typename T>
-   class cartesian_multiplier : forward_iterator_tag
+    class cartesian_multiplier : forward_iterator_tag
   {
     private:
       bool end_b;
@@ -30,7 +30,7 @@ namespace ctb
       //lets assume that default constructors and operators will work
 
       cartesian_multiplier();
-cartesian_multiplier& operator++();
+      cartesian_multiplier& operator++();
       void add(T&);
       void reset();
       iterator& operator*();
@@ -51,25 +51,25 @@ cartesian_multiplier& operator++();
 
   typedef cartesian_multiplier<vector<int> > cartesian_multiplier_default;
 
-    template <typename T>
-  typename cartesian_multiplier<T>::constant cartesian_multiplier<T>::begin() const
-  {
-    return cartesian_multiplier::constant(*this);
-  }
+  template <typename T>
+    typename cartesian_multiplier<T>::constant cartesian_multiplier<T>::begin() const
+    {
+      return cartesian_multiplier::constant(*this);
+    }
 
-      template <typename T>
+  template <typename T>
     typename cartesian_multiplier<T>::constant cartesian_multiplier<T>::end() const
     {
       return cartesian_multiplier::constant();
     }
 
-    template <typename T>
-  cartesian_multiplier<T> cartesian_multiplier<T>::begin()
-  {
-    return cartesian_multiplier(*this);
-  }
+  template <typename T>
+    cartesian_multiplier<T> cartesian_multiplier<T>::begin()
+    {
+      return cartesian_multiplier(*this);
+    }
 
-      template <typename T>
+  template <typename T>
     cartesian_multiplier<T> cartesian_multiplier<T>::end()
     {
       return cartesian_multiplier();
@@ -77,27 +77,27 @@ cartesian_multiplier& operator++();
 
   template <typename T>
     cartesian_multiplier<T>::cartesian_multiplier() : end_b(true)
-    {
-    }
-
-    template <typename T>
-  void cartesian_multiplier<T>::reset()
   {
+  }
+
+  template <typename T>
+    void cartesian_multiplier<T>::reset()
+    {
       for(int i = middles.size()-1; i >= 0; i--)
         middles[i] = begins[i];
       end_b = false;
-  }
+    }
 
-    template <typename T>
-  void cartesian_multiplier<T>::add(T& t)
-  {
-    begins.push_back(t.begin()); 
-    ends.push_back(t.end()); 
-    middles.push_back(t.begin()); 
-    end_b = false;
-  }
+  template <typename T>
+    void cartesian_multiplier<T>::add(T& t)
+    {
+      begins.push_back(t.begin()); 
+      ends.push_back(t.end()); 
+      middles.push_back(t.begin()); 
+      end_b = false;
+    }
 
-    template <typename T>
+  template <typename T>
     cartesian_multiplier<T>& cartesian_multiplier<T>::operator++()
     {
       for(int i = middles.size()-1; i >= 0; i--)
@@ -109,69 +109,69 @@ cartesian_multiplier& operator++();
           return *this;
       }
       end_b = true;
-          return *this;
+      return *this;
     }
 
-    template <typename T>
+  template <typename T>
     const typename cartesian_multiplier<T>::iterator* cartesian_multiplier<T>::operator->() const
     {
       return &middles;
     }
 
-    template <typename T>
-   const typename cartesian_multiplier<T>::iterator& cartesian_multiplier<T>::operator*() const
+  template <typename T>
+    const typename cartesian_multiplier<T>::iterator& cartesian_multiplier<T>::operator*() const
     {
       return middles;
     }
 
-    template <typename T>
+  template <typename T>
     typename cartesian_multiplier<T>::iterator* cartesian_multiplier<T>::operator->()
     {
       return &middles;
     }
 
-    template <typename T>
-   typename cartesian_multiplier<T>::iterator& cartesian_multiplier<T>::operator*()
+  template <typename T>
+    typename cartesian_multiplier<T>::iterator& cartesian_multiplier<T>::operator*()
     {
       return middles;
     }
 
-      template <typename T>
+  template <typename T>
     bool cartesian_multiplier<T>::operator!=(const cartesian_multiplier& c) const
     {
       return !(this->operator==(c)); 
     }
 
-      template <typename T>
+  template <typename T>
     bool cartesian_multiplier<T>::operator==(const cartesian_multiplier& c) const
     {
       return c.end_b == end_b || (middles == c.middles && c.begins == begins && c.ends == ends); 
     }
 
-        template <typename T>
-      void cartesian_multiplier<T>::self_test()
+  template <typename T>
+    void cartesian_multiplier<T>::self_test()
+    {
+      cout << "testing cartesian multiplier" << endl;
+      vector<int> a = {1,2,3};
+      vector<int> b = {3,4,5};
+      vector<int> c = {1,3,1,4,1,5,2,3,2,4,2,5,3,3,3,4,3,5};
+      vector<int> d;
+      cartesian_multiplier<vector<int> > itr;
+      itr.add(a);
+      itr.add(b);
+
+      for( auto r : itr)
       {
-        cout << "testing cartesian multiplier" << endl;
-        vector<int> a = {1,2,3};
-        vector<int> b = {3,4,5};
-        vector<int> c = {1,3,1,4,1,5,2,3,2,4,2,5,3,3,3,4,3,5};
-        vector<int> d;
-        cartesian_multiplier<vector<int> > itr;
-        itr.add(a);
-        itr.add(b);
-
-        for( auto r : itr)
+        for( auto s : r)
         {
-          for( auto s : r)
-          {
-            d.push_back(*s);
-          }
+          d.push_back(*s);
         }
-
-        assert(c==d);
-
       }
-  
+
+      assert(c==d);
+
+    }
+
 };
 
 #endif

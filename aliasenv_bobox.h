@@ -142,7 +142,7 @@ namespace ctb
       //generate actual code
       wrt code_simple;
       generator.generate(1, code_simple, opts);
-      
+
       wrt code_unaligned;
       auto pcu = make_shared<tagmaster_default>("","unalignedio,universal","","");
       generator.generate(granularity, code_unaligned, opts, pcu);

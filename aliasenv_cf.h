@@ -51,7 +51,7 @@ namespace ctb
     return true;
 
   }
-  
+
 #define S(a) ++i; aliasenv_subtab::access(a) = string("$")+ctb::to_string(i);
 #define TOINT(a) ctb::stoi(writer<aliasenv_subtab>().print(a,args, i ).write_str())
 #define P(s) w.print(s, args, i); 
@@ -146,9 +146,9 @@ namespace ctb
     }
     else if(name == "BUFFER_CONSUME_VECTOR")
     {
-       S("id") S("i") C();
-       P("gendecl_readat_$id = ((gendecl_readat_$id + gendecl_vsize_$id) % gendecl_size_$id);");
-       P("gendecl_contains_$id -= gendecl_vsize_$id;");
+      S("id") S("i") C();
+      P("gendecl_readat_$id = ((gendecl_readat_$id + gendecl_vsize_$id) % gendecl_size_$id);");
+      P("gendecl_contains_$id -= gendecl_vsize_$id;");
     }
     else if(name == "BUFFER_PEEK_VECTOR")
     {
@@ -172,7 +172,7 @@ namespace ctb
 #undef S
 #undef P
 #undef TOINT
-  
+
   string aliasenv_cf::alias(const string& a, bool* s, int n)
   {
     string ret;
@@ -213,12 +213,12 @@ namespace ctb
       return writer<aliasenv_cf>();
     }
 
-    void aliasenv_cf::self_test()
-    {
-      writer<aliasenv_cf> w;
-      w.print("${BUFFER_EMPTY_GRANULAR(myid)}");
-      //assert(w.write_str() == " (gendecl_contains_myid < gendecl_outgran_myid) "); 
-    }
+  void aliasenv_cf::self_test()
+  {
+    writer<aliasenv_cf> w;
+    w.print("${BUFFER_EMPTY_GRANULAR(myid)}");
+    //assert(w.write_str() == " (gendecl_contains_myid < gendecl_outgran_myid) "); 
+  }
 
 };
 

@@ -36,9 +36,9 @@ namespace ctb
     };
 
   template<class...T>
-  struct dummy_friend_v
-  {
-  };
+    struct dummy_friend_v
+    {
+    };
 
   struct dummy_friend
   {
@@ -88,27 +88,27 @@ namespace ctb
   template <class T, class A = dummy_friend, class B = dummy_friend, class C = dummy_friend,  class D = dummy_friend, class E = dummy_friend>
     class proxy_rw {
       private:
-      //T operator=(const T& arg) { data = arg; return data; }
-      T data;
-      typedef typename remove_reference<typename remove_pointer<T>::type>::type result_dereferenced_t;
-      typedef typename remove_reference<T>::type result_t;
-      template <typename U> struct br_ct  { typedef decltype(declval<T const>()[declval<U>()]) type; };
-      template <typename U> struct br_t { typedef decltype(declval<T      >()[declval<U>()]) type; };
-      template <typename U> U& dereference( U* t) const {return *t;};
-      template <typename U> const U& dereference(const U& t) const {return t;};
+        //T operator=(const T& arg) { data = arg; return data; }
+        T data;
+        typedef typename remove_reference<typename remove_pointer<T>::type>::type result_dereferenced_t;
+        typedef typename remove_reference<T>::type result_t;
+        template <typename U> struct br_ct  { typedef decltype(declval<T const>()[declval<U>()]) type; };
+        template <typename U> struct br_t { typedef decltype(declval<T      >()[declval<U>()]) type; };
+        template <typename U> U& dereference( U* t) const {return *t;};
+        template <typename U> const U& dereference(const U& t) const {return t;};
       public:
-      result_t& rw() { return data; }
-      result_t& r() { return data; }
-      operator T&() { return data; }
-      T& operator*() { return data; }
-      result_t* operator->() { return &data; }
-      template <typename U> typename br_t<U>::type operator [](U args) { return data[args]; }
-      //const result_t& r() const { return data; }
-      //operator const T&() const { return data; }
-      //const T& operator*() const { return data; }
-      //const result_dereferenced_t* operator->() const { return &dereference(data); }
-      //template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }
-      template <typename...L> proxy_rw(L&&... args) : data((forward<L>(args))...){}
+        result_t& rw() { return data; }
+        result_t& r() { return data; }
+        operator T&() { return data; }
+        T& operator*() { return data; }
+        result_t* operator->() { return &data; }
+        template <typename U> typename br_t<U>::type operator [](U args) { return data[args]; }
+        //const result_t& r() const { return data; }
+        //operator const T&() const { return data; }
+        //const T& operator*() const { return data; }
+        //const result_dereferenced_t* operator->() const { return &dereference(data); }
+        //template <typename U> typename br_ct<U>::type operator [](U args) const { return data[args]; }
+        template <typename...L> proxy_rw(L&&... args) : data((forward<L>(args))...){}
     };
 };
 #endif 

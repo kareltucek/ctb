@@ -71,7 +71,7 @@ namespace ctb
         bool compiletest; /*abbreviated as plain 'c'*/
       public:
 
-         IT& instab;
+        IT& instab;
         graph_t graph;
 
         generator( IT& i);
@@ -96,19 +96,19 @@ namespace ctb
 
   typedef generator<traits, instruction_table_default> generator_default;
 
-    template <class T, class IT>
-  multicontA<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
-  {
-    return multicontA<output_options>();
-  }
+  template <class T, class IT>
+    multicontA<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
+    {
+      return multicontA<output_options>();
+    }
 
-    template <class T, class IT>
-        template<template <typename ...> class L, typename...P> 
-  void generator<T,IT>::transform(P...params)
-  {
-    L<generator<T,IT>> l;
-    l.transform(*this ,params...);
-  }
+  template <class T, class IT>
+    template<template <typename ...> class L, typename...P> 
+    void generator<T,IT>::transform(P...params)
+    {
+      L<generator<T,IT>> l;
+      l.transform(*this ,params...);
+    }
 
   template <class T, class IT>
     void generator<T,IT>::update()
@@ -335,7 +335,7 @@ namespace ctb
                 if(i!=0 && c)
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                      w.print("$declcode", t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                    w.print("$declcode", t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
                 }
                 else if(!c1.empty())
                 {
@@ -354,7 +354,7 @@ namespace ctb
                 else if(!cg.empty())
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                      w.print(cg, t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                    w.print(cg, t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
                 }
                 else
                   error("conversion with all codes empty encountered!", false);
@@ -380,7 +380,7 @@ namespace ctb
                   for(int j = 0; j < itr.first/width; ++j)
                     sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
                   w.print(cc, t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width, 0, sl);
-                //  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                  //  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
                 }
                 else if(!cg.empty())
                 {

@@ -19,18 +19,18 @@ namespace ctb
       typedef graph_basic<T,I,directed> ancestor_t;
       typedef graph_basic<factor_class,int,true> factorgraph_myt;
 
-        class factor_class 
-        {
-          protected:
-            typename factorgraph_myt::node_t* me;
-          public:
-            typename factorgraph_myt::node_t* node;
-            set<typename ancestor_t::node*> vertices;
-            set<typename ancestor_t::node*> in;
-            set<typename ancestor_t::node*> out;
-            factor_class(typename factorgraph_myt::node_t* m) : me(m), node(m), vertices(), in(), out(){};
-        };
-        void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);
+      class factor_class 
+      {
+        protected:
+          typename factorgraph_myt::node_t* me;
+        public:
+          typename factorgraph_myt::node_t* node;
+          set<typename ancestor_t::node*> vertices;
+          set<typename ancestor_t::node*> in;
+          set<typename ancestor_t::node*> out;
+          factor_class(typename factorgraph_myt::node_t* m) : me(m), node(m), vertices(), in(), out(){};
+      };
+      void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);
 
     public:
       typedef factorgraph_myt factorgraph_t;
@@ -44,20 +44,20 @@ namespace ctb
       void factorize();
       static void self_test();
 
-        void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";});
-        void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
+      void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";});
+      void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
 
   };
   typedef graph_factor<dummy,int,true> graph_factor_default;
   template <class T, class I, bool directed> using graph_general = graph_factor<T,I,directed>;
 
   template <class T, class I, bool directed>
-  void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)
-  {
-    factor.addedge(from->classid, to->classid); 
-    factor.verts.find(from->classid)->second->data.out.insert(from);
-    factor.verts.find(to->classid)->second->data.in.insert(to);
-  }
+    void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)
+    {
+      factor.addedge(from->classid, to->classid); 
+      factor.verts.find(from->classid)->second->data.out.insert(from);
+      factor.verts.find(to->classid)->second->data.in.insert(to);
+    }
 
   template <class T, class I, bool directed>
     void graph_factor<T,I,directed>::dump_visual(function<string(node_t*)> f)
@@ -80,33 +80,33 @@ namespace ctb
 
       //output edges of factor graph
       auto f = [&](fnode_t* n)
-          { 
-            if(n->in.empty() && showempty)
-                o << prefix << n->id << ";" << endl;
-            for( auto e : n->in ) 
-                o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
-          };
+      { 
+        if(n->in.empty() && showempty)
+          o << prefix << n->id << ";" << endl;
+        for( auto e : n->in ) 
+          o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+      };
 
       //output edges of standard graph
       auto h = [&](node_t* n)
-          { 
-            if(n->in.empty() && showempty)
-              o << prefix <<  n->id << endl;
-            for( auto e : n->in.getlevel(level) ) 
-              o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
-          };
+      { 
+        if(n->in.empty() && showempty)
+          o << prefix <<  n->id << endl;
+        for( auto e : n->in.getlevel(level) ) 
+          o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+      };
 
       //initialize crawling of partitions of a factor graph
       auto g =  [&](fnode_t* n)
-          { 
-            if(n->data.vertices.empty())
-              o << prefix << "partition " << n->classid << " is empty" << endl;
-            else
-            {
-              o << prefix << "partition " << n->id << ":" << endl;
-              (*n->data.vertices.begin())->crawl_topological(h);
-            }
-          };
+      { 
+        if(n->data.vertices.empty())
+          o << prefix << "partition " << n->classid << " is empty" << endl;
+        else
+        {
+          o << prefix << "partition " << n->id << ":" << endl;
+          (*n->data.vertices.begin())->crawl_topological(h);
+        }
+      };
 
       //output color of node
       auto i =  [&](node_t* n)
@@ -144,11 +144,11 @@ namespace ctb
       o << "}" << endl;
     }
 
-  
+
   template <class T, class I, bool directed>
-  void graph_factor<T,I,directed>::self_test()
-  {
-    cout << "testing factor graph" << endl;
+    void graph_factor<T,I,directed>::self_test()
+    {
+      cout << "testing factor graph" << endl;
       typedef graph_factor_default g_t;
       g_t g;
       g.addvert(1, true, false);
@@ -171,29 +171,29 @@ namespace ctb
       assert(g.verts.size() == 0);
       assert(g.in.size() == 0);
       assert(g.out.size() == 0);
-  } 
+    } 
 
-    template <class T, class I, bool directed>
-  void graph_factor<T,I,directed>::factorize()
-  {
-    factor.clear();
-    graph_basic<T,I,directed>::factorize(); //will assign class ids in the simple graph
-    for(int i = 0; i < this->classcount; ++i)
-      factor.addvert(i, false, false);
-    this->crawl_topological([&](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
-    this->crawl_topological([&](node_t* n){ for(auto i : n->in.getlevel(1)) { this->add_factor_edge(i->from,n); } });
-    set<int> ins;
-    set<int> outs;
+  template <class T, class I, bool directed>
+    void graph_factor<T,I,directed>::factorize()
+    {
+      factor.clear();
+      graph_basic<T,I,directed>::factorize(); //will assign class ids in the simple graph
+      for(int i = 0; i < this->classcount; ++i)
+        factor.addvert(i, false, false);
+      this->crawl_topological([&](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
+      this->crawl_topological([&](node_t* n){ for(auto i : n->in.getlevel(1)) { this->add_factor_edge(i->from,n); } });
+      set<int> ins;
+      set<int> outs;
 
-    for(auto n : this->in)
-      ins.insert(n->classid);
-    for(auto n : this->out)
-      outs.insert(n->classid);
-    for(auto n : ins)
-      factor.in.push_back(factor.verts.find(n)->second);
-    for(auto n : outs)
-      factor.out.push_back(factor.verts.find(n)->second);
-  }
+      for(auto n : this->in)
+        ins.insert(n->classid);
+      for(auto n : this->out)
+        outs.insert(n->classid);
+      for(auto n : ins)
+        factor.in.push_back(factor.verts.find(n)->second);
+      for(auto n : outs)
+        factor.out.push_back(factor.verts.find(n)->second);
+    }
 };
 
 #endif

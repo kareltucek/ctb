@@ -17,14 +17,14 @@ namespace ctb
   typedef vector<string> stringlist;
 
   string trim(const string& s)
-    {
-      int end = s.find_last_not_of(" \n\r");
-      int begin = s.find_first_not_of(" \n\r");
-      if(end == -1)
-        return s;
-      else
-        return s.substr(begin, end-begin+1);
-    }
+  {
+    int end = s.find_last_not_of(" \n\r");
+    int begin = s.find_first_not_of(" \n\r");
+    if(end == -1)
+      return s;
+    else
+      return s.substr(begin, end-begin+1);
+  }
 
 
   bool fileexists(const char *name)
@@ -64,7 +64,7 @@ namespace ctb
       {
         if(!fileexists(name.c_str()) && check_existence)
         {
-            error(string("file does not exist: ").append(name));
+          error(string("file does not exist: ").append(name));
         }
         else
         {

@@ -89,9 +89,9 @@ namespace ctb
    *
    *
   * */
-        enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};
+    enum functor_id{fidli = 0, fidlg = 1, fidei = 2, fideg = 3};
 
-    template <class T, class IT>
+  template <class T, class IT>
     class ctb
     {
       private:
@@ -257,7 +257,7 @@ namespace ctb
       string line;
       while(getline(fromfile, line))
         m.print(line+"\n");
-      
+
       openstream(tofile, to);
       return m.write(tofile);
     }
@@ -277,7 +277,7 @@ namespace ctb
     {
       generator_t g(instab);
       L<T, generator_t, IT> l;
-     l.load_graph(g, params...);
+      l.load_graph(g, params...);
       auto m = M::generate(g.get_broadest(), g, name);
       return m.write_str();
     }
@@ -483,9 +483,9 @@ namespace ctb
                   i+=1;
                   goto start;
                   break;
-                  case 'c':
-               mygenerator.set_compiletest(true);
-                break;
+                case 'c':
+                  mygenerator.set_compiletest(true);
+                  break;
                 case 'h':
                   help_command_stream();
                   return 0;
@@ -548,11 +548,11 @@ start:;
       return r;
     }
 
-    template <class T, class IT>
-  void ctb<T,IT>::register_command(const string& cmd, function<void(stringlist&&)> f, const string& description)
-  {
-    hash_command[cmd] = command_record(f, description); 
-  }
+  template <class T, class IT>
+    void ctb<T,IT>::register_command(const string& cmd, function<void(stringlist&&)> f, const string& description)
+    {
+      hash_command[cmd] = command_record(f, description); 
+    }
 
   template <class T, class IT>
     void ctb<T,IT>::fill_commands()
@@ -592,29 +592,29 @@ start:;
 
   template <class T, class IT>
     void ctb<T,IT>::command_adddebug(stringlist&& args)
-  {
+    {
       test_loader<T,generator_t,IT> l;
       args.erase(args.begin());
       int depth = args.empty() ? 1 : ::ctb::stoi(args[0]);
       args.erase(args.begin());
       l.adddebug(mygenerator,instab,depth,args);
-  }
+    }
 
   template <class T, class IT>
     void ctb<T,IT>::command_transform(stringlist&& args)
-  {
-    if(args.size() != 2)
-      error( string("invalid number of arguments "), false);
-    hash_transforms[args[1]]();
-  }
+    {
+      if(args.size() != 2)
+        error( string("invalid number of arguments "), false);
+      hash_transforms[args[1]]();
+    }
 
   template <class T, class IT>
     void ctb<T,IT>::command_preprocess(stringlist&& args)
-  {
-    if(args.size() != 4)
-      error( string("invalid number of arguments "), false);
-    hash_preprocessor[args[1]](args[2], args[3]);
-  }
+    {
+      if(args.size() != 4)
+        error( string("invalid number of arguments "), false);
+      hash_preprocessor[args[1]](args[2], args[3]);
+    }
 
   template <class T, class IT>
     void ctb<T,IT>::command_source(stringlist&& args)

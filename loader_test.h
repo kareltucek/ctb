@@ -44,13 +44,13 @@ namespace ctb
         int oid;
         int pid;
       public:
-          void adddebug(G& graph, const IT&, int frame, const stringlist&) ;
-          void load_graph(G& graph, const IT&) ;
-          void load_instab(IT& instab, istream&) ;
-          void export_graph(G& instab, ostream&) ;
-          void export_instab(IT& instab, ostream&) ;
-          static string get_name();
-          static void self_test() ;
+        void adddebug(G& graph, const IT&, int frame, const stringlist&) ;
+        void load_graph(G& graph, const IT&) ;
+        void load_instab(IT& instab, istream&) ;
+        void export_graph(G& instab, ostream&) ;
+        void export_instab(IT& instab, ostream&) ;
+        static string get_name();
+        static void self_test() ;
     } ;
 
   typedef test_loader<traits, generator_default, instruction_table_default> testloader_default;
@@ -62,61 +62,61 @@ namespace ctb
       return "test";
     }
 
-    template <class T, class G, class IT>
-  void test_loader<T,G,IT>::gendbg(G& gen, const IT& it, typename T::vid_t v)
-  {
-    static int id = 1;
-    typename T::opid_t v_opid = gen.graph.verts.find(v)->second->data.opid;
-    typename T::opid_t debug_id = it.dec(v_opid).get_debug_opid();
-    typename T::vid_t name = get_op_name(debug_id,"DEBUG", id++);
-    gen.addvert(name, debug_id, 0);
-    gen.addedge(v,name,0, 0);
-  }
-
-
-    //bfs so that we cant get exponential...
-    template <class T, class G, class IT>
-  void test_loader<T,G,IT>::adddebug(G& gen, const IT& it, int depth, const stringlist& v)
-  {
-    set<typename T::vid_t> l;
-    queue<const typename G::node_t*>* q = new queue<const typename G::node_t*>();
-    if(v.empty())
+  template <class T, class G, class IT>
+    void test_loader<T,G,IT>::gendbg(G& gen, const IT& it, typename T::vid_t v)
     {
-      for(auto n : gen.graph.verts)
-        if(!n.second->data.op->is(fDEBUG) && !n.second->data.op->is(fOUTPUT))
-          q->push(n.second);
+      static int id = 1;
+      typename T::opid_t v_opid = gen.graph.verts.find(v)->second->data.opid;
+      typename T::opid_t debug_id = it.dec(v_opid).get_debug_opid();
+      typename T::vid_t name = get_op_name(debug_id,"DEBUG", id++);
+      gen.addvert(name, debug_id, 0);
+      gen.addedge(v,name,0, 0);
     }
-    else
+
+
+  //bfs so that we cant get exponential...
+  template <class T, class G, class IT>
+    void test_loader<T,G,IT>::adddebug(G& gen, const IT& it, int depth, const stringlist& v)
     {
-      for(auto n : v)
+      set<typename T::vid_t> l;
+      queue<const typename G::node_t*>* q = new queue<const typename G::node_t*>();
+      if(v.empty())
       {
-        auto itr = gen.graph.verts.find(cvt<string, typename T::vid_t>::convert(n));
-        if(itr != gen.graph.verts.end() && !itr->second->data.op->is(fOUTPUT))
-          q->push(itr->second);
-        else
-          warning(string("vertex for debug not found" ).append(n));
+        for(auto n : gen.graph.verts)
+          if(!n.second->data.op->is(fDEBUG) && !n.second->data.op->is(fOUTPUT))
+            q->push(n.second);
       }
-    }
-    for(int i = depth; i > 0; i--)
-    {
-      queue<const typename G::node_t*>* qn = new queue<const typename G::node_t*>();
-      while(!q->empty())
+      else
       {
-        l.insert(q->front()->id);
-        for(auto m : q->front()->in)
+        for(auto n : v)
         {
-          qn->push(m->from);
+          auto itr = gen.graph.verts.find(cvt<string, typename T::vid_t>::convert(n));
+          if(itr != gen.graph.verts.end() && !itr->second->data.op->is(fOUTPUT))
+            q->push(itr->second);
+          else
+            warning(string("vertex for debug not found" ).append(n));
         }
-        q->pop();
+      }
+      for(int i = depth; i > 0; i--)
+      {
+        queue<const typename G::node_t*>* qn = new queue<const typename G::node_t*>();
+        while(!q->empty())
+        {
+          l.insert(q->front()->id);
+          for(auto m : q->front()->in)
+          {
+            qn->push(m->from);
+          }
+          q->pop();
+        }
+        delete q;
+        q = qn;
       }
       delete q;
-      q = qn;
+      for(auto n : l)
+        gendbg(gen, it, n);
+      //      l.insert(n.second->id);
     }
-    delete q;
-    for(auto n : l)
-      gendbg(gen, it, n);
-    //      l.insert(n.second->id);
-  }
 
   template <class T, class G, class IT>
     typename T::vid_t test_loader<T,G,IT>::get_op_name(typename T::opid_t t, const string& base, int v)

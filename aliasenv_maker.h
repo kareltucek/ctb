@@ -45,7 +45,7 @@ namespace ctb
 
 
 
-    struct empty_tag{};
+  struct empty_tag{};
 
   template <typename T, typename L, bool R, typename F> stack<map<string, string>> aliasenv_maker<T,L,R,F>::my_aliases;
 

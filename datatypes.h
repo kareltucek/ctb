@@ -127,9 +127,9 @@ namespace ctb
 
   template <typename T, T V>
     struct value_container
-  {
-    static const T value = V;
-  };
+    {
+      static const T value = V;
+    };
 
 
 };
