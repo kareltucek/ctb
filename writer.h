@@ -362,10 +362,12 @@ namespace ctb
       if(end == -1)
       {
         data.pop_back();
-        last_terminated = true;
       }
       else
+      {
         data.back() = data.back().substr(begin, end-begin+1);
+      }
+        last_terminated = true;
     }
 
   template <class M, dollar_mode I, dollar_mode O, bool C>
@@ -408,7 +410,7 @@ namespace ctb
           {
             if( from == pos)
             {
-              last_terminated = true;
+              add(move(string("")), true);
             }
             else
             {
@@ -685,6 +687,9 @@ namespace ctb
   template <class M, dollar_mode I, dollar_mode O, bool C>
     template<dollar_mode dollars, typename ... Types> writer<M,I,O,C>& writer<M,I,O,C>::print_cartesian(const string& format, const Types&... params)  
     {
+#ifdef TESTOVANI
+      char* err = format.c_str();
+#endif
       try
       {
       if(C)
