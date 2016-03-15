@@ -42,8 +42,8 @@ namespace ctb
    *          width_in (width of vector this instruction accepts (e.g. 4 integers))
    *          width_out (-||-)
    *          code (inner code which is to be used as a part of predefined template - e.g. "$arg1 + $arg2")
-   *          code_custom (if nonempty, will be used *instead* of 'code' . Custom code does not use a predefined template - e.g. "$name = $arg1 + $arg2;" - can be used if default template does not fit (e.g. function call on output instead of assignment))
-   *          code_declaration can contain code which will be printed into a separate code container, e.g. a code which has to be put into global namespace (w.r.t. generation)
+   *          /TODO update this/ code_custom (if nonempty, will be used *instead* of 'code' . Custom code does not use a predefined template - e.g. "$name = $arg1 + $arg2;" - can be used if default template does not fit (e.g. function call on output instead of assignment))
+   *          /TODO UPDATE THIS/code_declaration can contain code which will be printed into a separate code container, e.g. a code which has to be put into global namespace (w.r.t. generation)
    *          note (an arbitrary note of yours - may be useful for debug or for sorting of your csv files)
    *          tags (comma separated list of tags for this specific code - meant for turning off and on usage of specific instruction sets (such as using only sse <= 2)
    *          rating (if more than one instruction fits, the one with higher rating isused)
@@ -70,7 +70,7 @@ namespace ctb
    *  graph_list
    *    graph
    *      vertex
-   *        param (reserved for special parameters such as input and output index of LD and ST instructions)
+   *        /TODO update this/ param (reserved for special parameters such as input and output index of LD and ST instructions)
    *        vid (a unique string)
    *        opid (instab operation id)
    *      edge
@@ -175,10 +175,7 @@ namespace ctb
       XMLNode * graphnode = xmlDoc.FirstChildElement("graph_list")->FirstChildElement("graph");
       for(XMLElement * itr = graphnode->FirstChildElement("vertex"); itr != NULL; itr = itr->NextSiblingElement("vertex"))
       {
-        if(hasval(itr, "param"))
-          graph.addvert( getstr(itr, "vid"), getstr(itr, "opid"), getint(itr, "param"));
-        else
-          graph.addvert( getstr(itr, "vid"), getstr(itr, "opid"));
+        graph.addvert( getstr(itr, "vid"), getstr(itr, "opid"), splitparams(getanystr(itr, "params")));
       }
       for(XMLElement * itr = graphnode->FirstChildElement("edge"); itr != NULL; itr = itr->NextSiblingElement("edge"))
       {

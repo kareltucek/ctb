@@ -55,6 +55,38 @@ namespace ctb
     return l;
   }
 
+  vector<string> split_first(string str, char d)
+  {
+    int pos = str.find(d);
+    if(pos == string::npos)
+      error(string("expected ")+d+" in string "+str);
+    vector<string> res;
+    res.push_back( str.substr(0, pos) );
+    res.push_back( str.substr(pos+1, str.length()-pos-1));
+    return res;
+  }
+
+  map<string,string> splitparams(string str, char d = ',', char d2 = '=', bool trim_ = true)
+  {
+    map<string, string> res;
+    vector<string> pairs = split(str, d, true);
+    for(const auto& pair : pairs)
+    {
+      if(pair.empty())
+        continue;
+      vector<string> p = split_first(pair, d2);
+      if(p.size() != 2)
+        error(string("expected ") + d2 + " in " + str + " while splitting parameters");
+      if(trim_ && trim(p[0]).empty())
+        error(string("key empty in parameter splitting with string: " ) + str);
+      if(trim_)
+        res[trim(p[0])] = trim(p[1]);
+      else
+        res[p[0]] = p[1];
+    }
+    return res;
+  }
+
 
   template <typename S>
     void openstream(S& stream, const string& name, bool check_existence = true)

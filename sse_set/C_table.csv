@@ -99,17 +99,17 @@ sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	
 sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t	$t$w_t	ST_$t$w_t	output	$n	$n	_mm_store_si128((__m128i*)&$$output,$$arg1)	sse,alignedio,shiftedio	10		
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n	_mm_load_$c(&$$input)	sse,alignedio	10		
 sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}	$t	ST_$t	output	$n	$n	_mm_store_$c(&$$output,(__m128$l)$$arg1)	sse,alignedio,shiftedio	10		
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		sse,shiftedio	10	$type $name = preload_$basename;preload_$basename = ($type)_mm_load_si128((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8($name, preload_$basename, $alignoffset % $n);	
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		sse,shiftedio	10	$type $name = preload_$basename;preload_$basename = ($type)_mm_load_$c((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8((__m128i)$name, (__m128i)preload_$basename, $alignoffset % $n);	
-sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		sse,preloadio	10	$type preload_$basename = _mm_load_si128((__m128i*)(&$$input - $alignoffset % $n));	
-sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		sse,preloadio	10	$type preload_$basename = _mm_load_$c(&$$input - $alignoffset % $n);	
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		sse,shiftedio	10	default:$type $name = preload_$basename;preload_$basename = ($type)_mm_load_si128((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8($name, preload_$basename, $alignoffset % $n);	
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		sse,shiftedio	10	default:$type $name = preload_$basename;preload_$basename = ($type)_mm_load_$c((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8((__m128i)$name, (__m128i)preload_$basename, $alignoffset % $n);	
+sse_IO	instruction	${t->int,uint}${w,n->8,16,16,8,32,4,64,2}_t		LD_$t$w_t	input	$n	$n		sse,preloadio	10	default:$type preload_$basename = _mm_load_si128((__m128i*)(&$$input - $alignoffset % $n));	
+sse_IO	instruction	${t,n,c,l->float,4,ps,,double,2,pd,d}		LD_$t	input	$n	$n		sse,preloadio	10	default:$type preload_$basename = _mm_load_$c(&$$input - $alignoffset % $n);	
 sse_IO	instruction	bool		LD_bool_byte	input	1	1	$$input	C,universal	10		
 sse_IO	instruction	bool		LD_bool_vector	input	1	1	load_bool($$inputg)/*do some magic here now*/	C,universal	10		
 sse_IO	instruction	bool		LD_bool_vector	input	32	32	$$input	C,universal	10		
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_loadu_si128((const __m128i*)&$$input)	sse,unalignedio	11		
 sse_IO	instruction	bool		LD_bool_vector	input	128	128	_mm_load_si128((const __m128i*)&$$input)	sse,alignedio	10		
 #sse_IO	instruction	bool		LD_bool_vector	input	128	128	/*cant generate shift for 128 bool*/	sse,shiftedio	10		
-#sse_IO	instruction	bool		LD_bool_vector	input	128	128		sse,preloadio	10	$type preload_$basename = _mm_load_si128,(const __m128i*)&$$input);	
+#sse_IO	instruction	bool		LD_bool_vector	input	128	128		sse,preloadio	10	default:$type preload_$basename = _mm_load_si128,(const __m128i*)&$$input);	
 sse_IO	instruction	bool	bool	ST_bool_byte	output	1	1	$$output = $$arg1	C,universal	10		
 sse_IO	instruction	bool	bool	ST_bool_vector	output	1	1	store_bool($$outputg,$$arg1)	C,universal	10		
 sse_IO	instruction	bool	bool	ST_bool_vector	output	32	32	$$output = $$arg1	C,universal	10		
@@ -129,8 +129,8 @@ conversions	instruction	${t->ssebool}	${u->bool}	CVRT_$u_$t		1	1	$$arg1 != 0	C,u
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	1	1	$$input	sse,universal	10		
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_loadu_si128((const __m128i*)&$$input)	sse,unalignedio	11		
 sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16	_mm_load_si128((const __m128i*)&$$input)	sse,alignedio	10		
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	${n->16}	$n		sse,shiftedio	10	$type $name = preload_$basename;preload_$basename = ($type)_mm_load_si128((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8($name,preload_$basename,$alignoffset % $n);	
-sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16		sse,preloadio	10	$type preload_$basename = _mm_load_si128((const __m128i*)(((uint8_t*)&$$input) - $alignoffset % $n));	
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	${n->16}	$n		sse,shiftedio	10	default:$type $name = preload_$basename;preload_$basename = ($type)_mm_load_si128((__m128i*)(&$$input + $n - $alignoffset % $n));$name = _mm_alignr_epi8($name,preload_$basename,$alignoffset % $n);	
+sse_IO	instruction	ssebool		LD_ssebool_byte	input	16	16		sse,preloadio	10	default:$type preload_$basename = _mm_load_si128((const __m128i*)(((uint8_t*)&$$input) - $alignoffset % $n));	
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	1	1	$$output = $$arg1	C,universal	10		
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_storeu_si128((__m128i*)&$$output,$$arg1)	sse,unalignedio	11		
 sse_IO	instruction	ssebool	ssebool	ST_ssebool_byte	output	16	16	_mm_store_si128((__m128i*)&$$output,$$arg1)	sse,alignedio,shiftedio	10		

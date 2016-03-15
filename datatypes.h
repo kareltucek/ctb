@@ -109,6 +109,11 @@ namespace ctb
     return std::to_string(i);
   }
 
+  string to_string(char* c)
+  {
+    return std::string(c);
+  }
+
   int stoi(string str)
   {
     //may want some evaluation here later...
@@ -122,6 +127,12 @@ namespace ctb
       error(string("'").append(str).append("' does not look like an integer"), false);
     }
     return result;
+  }
+
+  template <typename A, typename B>
+  map<string,string> toparam(A a, B b)
+  {
+    return {{ctb::to_string(a), ctb::to_string(b)}};
   }
 
 

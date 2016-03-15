@@ -38,9 +38,9 @@ namespace ctb
           opid_t split_ld_true = ids[1];
           opid_t split_ld_false = ids[2];
 
-          auto st = generator.addvert(n->id + "_split_st_" + ctb::to_string(buff_id), split_st, buff_id);
-          auto ldtrue = generator.addvert(n->id + "_split_ldtrue_" + ctb::to_string(buff_id), split_ld_true, buff_id);
-          auto ldfalse = generator.addvert(n->id + "_split_ldfalse_" + ctb::to_string(buff_id), split_ld_false, buff_id);
+          auto st = generator.addvert(n->id + "_split_st_" + ctb::to_string(buff_id), split_st, toparam("ioindex", buff_id));
+          auto ldtrue = generator.addvert(n->id + "_split_ldtrue_" + ctb::to_string(buff_id), split_ld_true, toparam("ioindex", buff_id));
+          auto ldfalse = generator.addvert(n->id + "_split_ldfalse_" + ctb::to_string(buff_id), split_ld_false, toparam("ioindex", buff_id));
 
           generator.graph.addedge(n->in_at(0)->from, st, 0, n->in_at(0)->frompos, 0);
           for( auto outvert : n->out)
@@ -71,10 +71,10 @@ namespace ctb
           opid_t merge_st_false = ids[2];
           opid_t buff_st = ids[3];
 
-          node* ld = generator.addvert(n->id + "_merge_ld_" + ctb::to_string(buff_id), merge_ld, buff_id);
-          node* sttrue = generator.addvert(n->id + "_merge_sttrue_" + ctb::to_string(buff_id), merge_st_true, buff_id);
-          node* stfalse = generator.addvert(n->id + "_merge_stfalse_" + ctb::to_string(buff_id), merge_st_false, buff_id);
-          node* stbuff = generator.addvert(n->id + "_merge_stbuff_" + ctb::to_string(buff_id), buff_st, buff_id);
+          node* ld = generator.addvert(n->id + "_merge_ld_" + ctb::to_string(buff_id), merge_ld, toparam("ioindex", buff_id));
+          node* sttrue = generator.addvert(n->id + "_merge_sttrue_" + ctb::to_string(buff_id), merge_st_true, toparam("ioindex", buff_id));
+          node* stfalse = generator.addvert(n->id + "_merge_stfalse_" + ctb::to_string(buff_id), merge_st_false, toparam("ioindex", buff_id));
+          node* stbuff = generator.addvert(n->id + "_merge_stbuff_" + ctb::to_string(buff_id), buff_st, toparam("ioindex", buff_id));
 
           generator.graph.addedge(n->in_at(0)->from, sttrue,  0, n->in_at(0)->frompos, 0);
           generator.graph.addedge(n->in_at(1)->from, stfalse, 0, n->in_at(1)->frompos, 0);
@@ -101,8 +101,8 @@ namespace ctb
           opid_t buff_st = ids[0];
           opid_t buff_ld = ids[1];
 
-          node* st = generator.addvert(n->id + "_buff_st_" + ctb::to_string(buff_id), buff_st, buff_id);
-          node* ld = generator.addvert(n->id + "_buff_ld_" + ctb::to_string(buff_id), buff_ld, buff_id);
+          node* st = generator.addvert(n->id + "_buff_st_" + ctb::to_string(buff_id), buff_st, toparam("ioindex", buff_id));
+          node* ld = generator.addvert(n->id + "_buff_ld_" + ctb::to_string(buff_id), buff_ld, toparam("ioindex", buff_id));
 
           generator.graph.addedge(n->in_at(0)->from, st,  0, n->in_at(0)->frompos, 0);
           generator.graph.connect_as(ld, n, false, true);
@@ -125,8 +125,8 @@ namespace ctb
           opid_t buff_st = ids[0];
           opid_t buff_ld = ids[1];
 
-          node* st = generator.addvert("generic_cf_node_buff_st_" + ctb::to_string(buff_id), buff_st, buff_id);
-          node* ld = generator.addvert("generic_cf_node_buff_ld_" + ctb::to_string(buff_id), buff_ld, buff_id);
+          node* st = generator.addvert("generic_cf_node_buff_st_" + ctb::to_string(buff_id), buff_st, toparam("ioindex", buff_id));
+          node* ld = generator.addvert("generic_cf_node_buff_ld_" + ctb::to_string(buff_id), buff_ld, toparam("ioindex", buff_id));
 
           generator.graph.addedge(e->from, st,  0, e->frompos, 0);
           generator.graph.addedge(ld, e->to,  e->topos, 0, 0);

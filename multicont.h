@@ -4,6 +4,7 @@
 #include "defines.h"
 #include <vector>
 #include <assert.h>
+#include "errorhandling.h"
 
 /* Multicont is a class which mimics its template parameter, but provides an additional method which allows access to a vector of 'nondefault' instances of the template parameter. 
  *
@@ -62,6 +63,37 @@ class multicontA : public multicont<T>
     T& operator[](int i)
     {
       return this->getlevel(i);
+    };
+};
+
+template <class T>
+class multicontB : public T
+{
+  private:
+    mutable map<string, T> vec;
+  public:
+    using T::T;
+
+    T& operator[](const string& k)
+    {
+      if(k == "default")
+        return *this;
+      else
+        return vec[k];
+    };
+
+    T const & operator[](const string& k) const
+    {
+      if(k == "default")
+        return *this;
+      else
+      {
+        auto itr = vec.find(k);
+        if(itr == vec.end())
+          throw(string("key not found: ") + k);
+        return
+          *itr;
+      }
     };
 };
 

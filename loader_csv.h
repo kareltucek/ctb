@@ -165,7 +165,8 @@ namespace ctb
            w.push(i.tags);
            w.push(i.rating);
            for(const auto& cc : i.code_custom)
-             w.push(cc);
+             if(!cc.code.empty())
+               w.push(cc.name + ":" + cc.code);
            s << w.list_concat("\t").write_str() << endl;
          }
        }
@@ -293,7 +294,8 @@ namespace ctb
          int f = string_to_flags<typename T::flag_t>(data[ciFlags]);
          stringlist ccode = stringlist();
          for(int i = ciSize; i < data.size(); i++)
-           ccode.push_back(data[i]);
+           if(!data[i].empty())
+             ccode.push_back(data[i]);
          instab.addtype(data[ciOutType]);
          typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],split(data[ciInTypes],','),f);
          operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],ccode,data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));

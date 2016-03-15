@@ -40,7 +40,6 @@ namespace ctb
         };
         MAKE(output_options);
       private:
-        typedef typename T::param_t param_t;
         typedef typename IT::operation_t op_t;
 
         class data_t
@@ -51,10 +50,8 @@ namespace ctb
 
             node_t* me;
             acces_map_t acces_map;
-            vector<param_t> parameters;
+            map<string,string> params;
 
-            template<typename P, typename...Ps> void push_params(P&&, Ps&&... params);
-            void push_params();
             static int newid(bool reset);
             string newname(string tag) ;
             template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w, bool c);
@@ -62,9 +59,9 @@ namespace ctb
             const op_t* op;
             id_t opid;
 
-            template <typename... L> data_t( node_t* me, const typename IT::operation_t* o, id_t opi, L&&... p);
-            template <class W> void generate(int granularity, multicontA<W>& w,  multicontA<output_options>& , bool c);
-            int get_inout_pos() const;
+            data_t( node_t* me, const typename IT::operation_t* o, id_t opi, const map<string,string>& params = {});
+            template <class W> void generate(int granularity, multicontB<W>& w,  multicontB<output_options>& , bool c);
+            string get_param(const string&) const;
             vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
 
@@ -80,14 +77,14 @@ namespace ctb
         template <typename...L> typename graph_t::node_t* addvert(vid_t v, id_t op, L... p) ;
         void addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos) ;
 
-        template <class W> void generate(int granularity, multicontA<W>& w,  multicontA<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
+        template <class W> void generate(int granularity, multicontB<W>& w,  multicontB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
         int get_broadest(int upperbound = 10000000) ;
 
         void set_compiletest(bool);
 
         template<template <typename ...> class L, typename...P> void transform(P...params) ;
 
-        multicontA<output_options> option_struct();
+        multicontB<output_options> option_struct();
 
         void clear();
         void reset();
@@ -97,9 +94,9 @@ namespace ctb
   typedef generator<traits, instruction_table_default> generator_default;
 
   template <class T, class IT>
-    multicontA<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
+    multicontB<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
     {
-      return multicontA<output_options>();
+      return multicontB<output_options>();
     }
 
   template <class T, class IT>
@@ -160,10 +157,8 @@ namespace ctb
     }
 
   template <class T, class IT>
-    template <typename... L>
-    generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, L&&... p) : me(m), opid(opi), acces_map(), op(o)
+    generator<T,IT>::data_t::data_t( node_t* m, const typename IT::operation_t* o, id_t opi, const map<string, string>& p) : me(m), opid(opi), acces_map(), op(o), params(p)
     {
-      push_params((forward<L>(p))...);
     }
 
   template <class T, class IT>
@@ -173,23 +168,9 @@ namespace ctb
     }
 
   template <class T, class IT>
-    template <typename P, typename...Ps>
-    void generator<T,IT>::data_t::push_params(P&& p, Ps&&...params)
-    {
-      parameters.push_back(forward<P>(p));
-      push_params((forward<Ps>(params))...);
-    }
-
-  template <class T, class IT>
     void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos)  
     {
       graph.addedge(aid, bid, b_argpos, a_argpos);
-    }
-
-
-  template <class T, class IT>
-    void generator<T,IT>::data_t::push_params()
-    {
     }
 
   template <class T, class IT>
@@ -199,7 +180,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate(int packsize, multicontA<W>& w,  multicontA<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
+    void generator<T,IT>::generate(int packsize, multicontB<W>& w,  multicontB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
     {
       if(graph.out.empty())
         error( "graph is empty");
@@ -222,12 +203,14 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::data_t::generate(int granularity, multicontA<W>&w, multicontA<output_options>& opts, bool c)
+    void generator<T,IT>::data_t::generate(int granularity, multicontB<W>&w, multicontB<output_options>& opts, bool c)
     {
+      aliasenv_generator::setparammap(&params);
       try
       {
         W empty;
         int myin, myout;
+        int classid = me->classid;
         int mygran = op->is(fDEBUG) ? me->in_at(0)->from->data.op->get_max_width(granularity, &myin, &myout) : op->get_max_width(granularity,&myin, &myout);
 
         if(mygran == 0)
@@ -249,8 +232,9 @@ namespace ctb
 #define ARG(a) (me->in_at(a-1, false) != NULL ? W().print(me->in_at(a-1, false)->from->data.get_acces(myin, granularity, w, c), i*myout) : empty)
         W acces({newname(print("w$1",myout))});
         acces_map.insert(acces_map_t::value_type(myout, acces));
-        string type_string, op_c;
-        stringlist op_cc;
+        string type_string;
+        string op_c;
+        typename IT::operation_t::ccode_cont_t  op_cc;
         size_t printability; 
         op->get_type_string(mygran, type_string);
         bool found = op->get_op_string(mygran, op_c, op_cc, printability);
@@ -263,31 +247,33 @@ namespace ctb
           W name = W().print(acces,i*myout);
           if(i!=0 && c) //print empty declaration in case we want compile test
           {
-            w.print("$declcode",     type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+            w.print("$declcode",     type_string, name, basename, ""  ,  myin*i, myin*i, 0, classid, ARG(1), ARG(2), ARG(3));
           }
           else
           {
-            for(int wi = 0; wi < op_cc.size() || wi == 0; wi++)
+            if(!op_c.empty()) //neccessary!
             {
-              if(opts[wi].once && i != 0)
+              if(op->is(fINPUT)) 
+                w["default"].print("$inputcode" , type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
+              else if(op->is(fOUTPUT))
+                w["default"].print("$outputcode", type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
+              else if(op->is(fDEBUG)) //same as output
+                w["default"].print("$outputcode", type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
+              else
+                w["default"].print("$innercode" , type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
+            }
+
+            for(int wi = 0; wi < op_cc.size(); wi++)
+            {
+              string wname = op_cc[wi].name;
+              if(opts[wname].once && i != 0)
               {
                 cout << "ONCE!!!" << endl;
                 continue;
               }
-              if(wi==0 && !op_c.empty())
+              else 
               {
-                if(op->is(fINPUT))
-                  w[0].print("$inputcode" , type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-                else if(op->is(fOUTPUT))
-                  w[0].print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-                else if(op->is(fDEBUG)) //same as output
-                  w[0].print("$outputcode", type_string, name, basename, op_c, get_inout_pos(), myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-                else
-                  w[0].print("$innercode" , type_string, name, basename, op_c, 0              , myin*i, myin*i, 0,ARG(1), ARG(2), ARG(3));
-              }
-              else if(op_cc.size() < wi+2)
-              {
-                w[wi].print(op_cc[wi],           type_string, name, basename, ""  , get_inout_pos(), myin*i, myin*i, 0, ARG(1), ARG(2), ARG(3));
+                w[wname].print(op_cc[wi].code,           type_string, name, basename, ""  , myin*i, myin*i, 0, classid, ARG(1), ARG(2), ARG(3));
               }
             }
           }
@@ -302,6 +288,7 @@ namespace ctb
         else
           cerr << s.str() << endl;
       }
+      aliasenv_generator::setparammap(NULL);
     }
 
   template <class T, class IT>
@@ -309,6 +296,7 @@ namespace ctb
     writer<aliasenv_generator> generator<T,IT>::data_t::get_acces(int width, int granularity, W& w, bool c)
     {
       auto itr = acces_map.find(width);
+      int classid = me->classid;
       if(itr != acces_map.end())
       {
         return itr->second;
@@ -335,26 +323,26 @@ namespace ctb
                 if(i!=0 && c)
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                    w.print("$declcode", t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                    w.print("$declcode", t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", i*itr.first, i*itr.first+j*width, j*width, classid, W().print(itr.second, i*itr.first), "", "");
                 }
                 else if(!c1.empty())
                 {
                   if(width != itr.first/2)
                     error("basic halving code used for split where width_in != 2*width_out");
-                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ), basename,    c1, get_inout_pos(), i*itr.first, i*itr.first      , 0    , W().print(itr.second, i*itr.first), "", "");
-                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width), basename,    c2, get_inout_pos(), i*itr.first, i*itr.first+width, width, W().print(itr.second, i*itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first      ), basename,    c1, i*itr.first, i*itr.first      , 0    , classid, W().print(itr.second, i*itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*itr.first+width), basename,    c2, i*itr.first, i*itr.first+width, width, classid, W().print(itr.second, i*itr.first), "", "");
                 }
                 else if(!cc.empty())
                 {
                   stringlist sl;
                   for(int j = 0; j < itr.first/width; ++j)
                     sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
-                  w.print(cc, t, W().print(acces, i*itr.first ), basename, "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first, 0, W().print(itr.second, i*itr.first), sl);
+                  w.print(cc, t, W().print(acces, i*itr.first ), basename, "recursive argument here", i*itr.first, i*itr.first, 0, classid, W().print(itr.second, i*itr.first), sl);
                 }
                 else if(!cg.empty())
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                    w.print(cg, t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", get_inout_pos(), i*itr.first, i*itr.first+j*width, j*width, W().print(itr.second, i*itr.first), "", "");
+                    w.print(cg, t, W().print(acces, i*itr.first+j*width), basename,    "recursive argument here", i*itr.first, i*itr.first+j*width, j*width, classid, W().print(itr.second, i*itr.first), "", "");
                 }
                 else
                   error("conversion with all codes empty encountered!", false);
@@ -368,24 +356,24 @@ namespace ctb
               {
                 if(i!=0 && c)
                 {
-                  w.print("$declcode", t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width, 0);
+                  w.print("$declcode", t, W().print(acces, i*width ), basename, "recursive argument here", i*width, i*width, 0, classid);
                 }
                 else if(!c1.empty())
                 {  
-                  w.print("$conversioncode", t, W().print(acces, i*width         ), basename, c1, get_inout_pos(), i*width, i*width, 0, W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                  w.print("$conversioncode", t, W().print(acces, i*width         ), basename, c1, i*width, i*width, 0, classid, W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
                 }
                 else if(!cc.empty())
                 {
                   stringlist sl;
                   for(int j = 0; j < itr.first/width; ++j)
                     sl.push_back(W().print(itr.second, i*width+j*itr.first).write_str());
-                  w.print(cc, t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width, 0, sl);
-                  //  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", get_inout_pos(), W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
+                  w.print(cc, t, W().print(acces, i*width ), basename, "recursive argument here", i*width, i*width, 0, classid, sl);
+                  //  w.print(cc, t, W().print(acces, i*width ), "recursive argument here", W().print(itr.second, i*width),  W().print(itr.second, i*width+itr.first), "", "");
                 }
                 else if(!cg.empty())
                 {
                   for(int j = 0; j < itr.first/width; ++j)
-                    w.print(cg, t, W().print(acces, i*width ), basename, "recursive argument here", get_inout_pos(), i*width, i*width+j*itr.first, j*itr.first, W().print(itr.second, i*width+j*itr.first), "", "");
+                    w.print(cg, t, W().print(acces, i*width ), basename, "recursive argument here", i*width, i*width+j*itr.first, j*itr.first, classid, W().print(itr.second, i*width+j*itr.first), "", "");
                 }
                 else
                   error("conversion with all codes empty encountered!", false);
@@ -428,12 +416,15 @@ namespace ctb
     };
 
   template <class T, class IT>
-    int generator<T,IT>::data_t::get_inout_pos() const
+    string generator<T,IT>::data_t::get_param(const string& name) const
     {
-      if(parameters.empty())
-        return 0;
-      //throw string("envelope id not defined for vertex: ").append(id);
-      return (int)parameters[0];
+      auto itr = params.find(name);
+      if(itr == params.end())
+      {
+        error(string("vertex parameter not found: ")+name);
+        return "";
+      }
+      return itr->second;
     }
 
   template <class T, class IT>

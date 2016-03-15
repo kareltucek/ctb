@@ -60,7 +60,7 @@ namespace ctb
    * - $name      - name generated for the variable
    * - $basename  - name of the first variable in vector - e.g. for the purpose of generating one unique variable for every pipe (e.g. for preloads)
    * - $operation - operation::instruction::code
-   * - $cindex    - for input or output node this is the serial number of this node (e.g. id of the input list which is associated with the instruction in question)
+   * - $ioindex    - for input or output node this is the serial number of this node (e.g. id of the input list which is associated with the instruction in question)
    * - $arg1      - access code obtained 'from the input edges'...
    * - $arg2
    * - $arg3
@@ -161,13 +161,20 @@ namespace ctb
          private:
            mutable int imbued_width;
            friend instruction_table;
+           struct ccode_pair
+           {
+             string name;
+             string code;
+           };
+           MAKE(ccode_pair);
+           typedef vector<ccode_pair> ccode_cont;
            struct instruction //holds information for generation
            {
              const int width;
              const int width_in;
              const int width_out;
              const string code;
-             const stringlist code_custom;
+             const ccode_cont code_custom;
              const string note;
              const string tags;
              const int rating;
@@ -179,6 +186,7 @@ namespace ctb
            instruction_table* parent;
            void update_tags() const;
          public:
+           typedef ccode_cont ccode_cont_t;
            /*TAPI*/vector<expansion> expansions;
            /*TAPI*/typedef expansion expansion_t;
            /*EAPI*/vector<instruction> versions;
@@ -194,7 +202,7 @@ namespace ctb
            /*API*//*DEPRECATED*///void imbue_width(int w)const;
            /*API*/typename T::opid_t get_debug_opid() const;
            /*API*/bool get_type_string(int w, string&)const;
-           /*API*/bool get_op_string(int w, string& c, stringlist& cc, size_t&)const;
+           /*API*/bool get_op_string(int w, string& c, ccode_cont_t& cc, size_t&)const;
            /*API*/bool get_conv_string(int from, int to, string& c1, string& c2, string&cc, string& type, size_t&)const;
            /*API*/const typename type::graph_distance_t& get_conversion_graph() const;
            operation(typename T::opid_t i, typename T::tid_t ot, const vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table* parent);
@@ -312,7 +320,17 @@ namespace ctb
    template <class T>
      void instruction_table<T>::operation::addcode(int wi, int wo, const string& c, const stringlist& cc, const string& n,const string& t,int r)
      {
-       versions.push_back(make_instruction({wi > wo ? wi : wo, wi, wo, c,cc,n,t,r,parent->is_tag_satisfactory(t)}));
+       ccode_cont_t ccode_split;
+       for(const string& code: cc)
+       {
+         try
+         {
+           auto res = split_first(code, ':');
+           ccode_split.push_back(make_ccode_pair({res[0], res[1]}));
+         }
+         RETHROW("in definition of instruction code: "+ ctb::to_string(this->opid) + ". Note that current format of code is '<output writer name>:<code itself>', e.g. 'default:$$name = add($$arg1, $$arg2);");
+       }
+       versions.push_back(make_instruction({wi > wo ? wi : wo, wi, wo, c,ccode_split,n,t,r,parent->is_tag_satisfactory(t)}));
      }
 
    template <class T>
@@ -363,7 +381,7 @@ namespace ctb
      }
 
    template <class T>
-     bool instruction_table<T>::operation::get_op_string(int w, string& c, stringlist& cc, size_t& printability)const
+     bool instruction_table<T>::operation::get_op_string(int w, string& c, ccode_cont_t& cc, size_t& printability)const
      {
        if(w == -1)
          w = imbued_width;

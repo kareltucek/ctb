@@ -52,8 +52,8 @@ namespace ctb
 
     aliasenv_generator::init();
 
-    ADD("input", "data_in_$cindex[pos_in_$cindex+j]");
-    ADD("output", "data_out_$cindex[pos_out_$cindex+j]");
+    ADD("input", "data_in_$ioindex[pos_in_$ioindex+j]");
+    ADD("output", "data_out_$ioindex[pos_out_$ioindex+j]");
 
     ADD("fdeclin",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/bobox_decl_in.h")));
     ADD("fdeclout", writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/bobox_decl_out.h")));
@@ -72,7 +72,7 @@ namespace ctb
   template <class G>
     writer<aliasenv_bobox> aliasenv_bobox::generate(int granularity, G& generator, string name)
     {
-      typedef multicontA<writer<aliasenv_bobox>> wrt;
+      typedef multicontB<writer<aliasenv_bobox>> wrt;
       auto opts = generator.option_struct();
 
       init();
@@ -82,11 +82,11 @@ namespace ctb
 
       //construct box list definitions
       for(auto n : generator.graph.in)
-        ilist.push("input_list_$1, $1", n->data.get_inout_pos());
+        ilist.push("input_list_$1, $1", n->data.get_param("ioindex"));
       ilist.list_concat(",");
 
       for(auto n : generator.graph.out)
-        olist.push("output_list_$1, $1", n->data.get_inout_pos());
+        olist.push("output_list_$1, $1", n->data.get_param("ioindex"));
       olist.list_concat(",");
 
       //construct declarations
@@ -94,12 +94,12 @@ namespace ctb
       for(auto n : generator.graph.in)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclin", n->data.get_inout_pos(), type_string);
+        decl.print("$fdeclin", n->data.get_param("ioindex"), type_string);
       }
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclout", n->data.get_inout_pos(), type_string);
+        decl.print("$fdeclout", n->data.get_param("ioindex"), type_string);
       }
 
       //accept envelopes
@@ -107,21 +107,21 @@ namespace ctb
       for(auto n : generator.graph.in)
       {
         n->data.op->get_type_string(1, type_string);
-        envelopes.print("$fenvin", n->data.get_inout_pos(), type_string);
+        envelopes.print("$fenvin", n->data.get_param("ioindex"), type_string);
       }
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        envelopes.print("$fenvout", n->data.get_inout_pos(),  type_string);
+        envelopes.print("$fenvout", n->data.get_param("ioindex"),  type_string);
       }
 
       //get batch size
       wrt minlist;
       minlist.print("std::numeric_limits<unsigned>::max()");
       for(auto n : generator.graph.in)
-        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_inout_pos(), minlist);
+        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_param("ioindex"), minlist);
       for(auto n : generator.graph.out)
-        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
+        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_param("ioindex"), minlist);
 
       //alignment code
       wrt alignment;
@@ -131,12 +131,12 @@ namespace ctb
       }
       else
       {
-        alignment.print("$falign", granularity, generator.graph.in.front()->data.get_inout_pos(), generator.graph.in.front()->data.get_inout_pos());
+        alignment.print("$falign", granularity, generator.graph.in.front()->data.get_param("ioindex"), generator.graph.in.front()->data.get_param("ioindex"));
         alignment.print("/*check alignment*/;");
         for(auto n : generator.graph.in)
-          alignment.print("aligned &= align_offset == pos_in_$2 % $1;", granularity, n->data.get_inout_pos());
+          alignment.print("aligned &= align_offset == pos_in_$2 % $1;", granularity, n->data.get_param("ioindex"));
         for(auto n : generator.graph.out)
-          alignment.print("aligned &= output_offset == pos_out_$2 % $1;", granularity, n->data.get_inout_pos());
+          alignment.print("aligned &= output_offset == pos_out_$2 % $1;", granularity, n->data.get_param("ioindex"));
       }
 
       //generate actual code
@@ -171,16 +171,16 @@ namespace ctb
       //increment counters
       wrt inc;
       for(auto n : generator.graph.in)
-        inc.print("pos_in_$1 += batch_size;", n->data.get_inout_pos());
+        inc.print("pos_in_$1 += batch_size;", n->data.get_param("ioindex"));
       for(auto n : generator.graph.out)
-        inc.print("pos_out_$1 += batch_size;", n->data.get_inout_pos());
+        inc.print("pos_out_$1 += batch_size;", n->data.get_param("ioindex"));
 
       //send envelopes
       wrt send;
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        send.print("$fsend", n->data.get_inout_pos(), type_string);
+        send.print("$fsend", n->data.get_param("ioindex"), type_string);
       }
 
       //put everything together

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <graph_list Name="list">
    <graph Name="graph1">
-      <vertex opid="LDI" param="2" vid="a_in"></vertex>
-      <vertex opid="LDI" param="1" vid="d_in"></vertex>
+      <vertex opid="LDI" params="ioindex=2" vid="a_in"></vertex>
+      <vertex opid="LDI" params="ioindex=1" vid="d_in"></vertex>
       <vertex opid="ADDI" vid="b_pl"></vertex>
       <vertex opid="MULI" vid="b_ml"></vertex>
       <vertex opid="ADDI" vid="e_pl"></vertex>
-      <vertex opid="STI" param="0" vid="c_out"></vertex>
+      <vertex opid="STI" params="ioindex=0" vid="c_out"></vertex>
       <edge to="b_pl" from="a_in" to_pos="0"></edge>
       <edge to="c_out" from="e_pl" to_pos="0"></edge>
       <edge to="b_pl" from="d_in" to_pos="1"></edge>

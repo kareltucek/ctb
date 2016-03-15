@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <graph_list Name="list">
    <graph Name="graph1">
-      <vertex opid="LDI" vid="a_in" param="2"></vertex>
-      <vertex opid="LDI" vid="d_in" param="1"></vertex>
+      <vertex opid="LDI" vid="a_in" params="ioindex=2"></vertex>
+      <vertex opid="LDI" vid="d_in" params="ioindex=1"></vertex>
       <vertex opid="ADDI" vid="b_pl"></vertex>
       <vertex opid="MULI" vid="b_ml"></vertex>
       <vertex opid="ADDI" vid="e_pl"></vertex>
-      <vertex opid="ADDI" vid="f_pl" param="0"></vertex>
-      <vertex opid="ADDI" vid="g_pl" param="0"></vertex>
-      <vertex opid="STI" vid="h_st" param="0"></vertex>
-      <vertex opid="SPLIT_INT" vid="split" param="0"></vertex>
-      <vertex opid="MERGE_INT" vid="merge" param="0"></vertex>
-      <vertex opid="BUFF_INT" vid="buff" param="0"></vertex>
+      <vertex opid="ADDI" vid="f_pl" params="ioindex=0"></vertex>
+      <vertex opid="ADDI" vid="g_pl" params="ioindex=0"></vertex>
+      <vertex opid="STI" vid="h_st" params="ioindex=0"></vertex>
+      <vertex opid="SPLIT_INT" vid="split" params="ioindex=0"></vertex>
+      <vertex opid="MERGE_INT" vid="merge" params="ioindex=0"></vertex>
+      <vertex opid="BUFF_INT" vid="buff" params="ioindex=0"></vertex>
       <edge to="b_pl" from="a_in" to_pos="0"></edge>
       <edge to="f_pl" from="e_pl" to_pos="1"></edge>
       <edge to="h_st" from="g_pl" to_pos="1"></edge>

@@ -69,7 +69,7 @@ namespace ctb
       typename T::opid_t v_opid = gen.graph.verts.find(v)->second->data.opid;
       typename T::opid_t debug_id = it.dec(v_opid).get_debug_opid();
       typename T::vid_t name = get_op_name(debug_id,"DEBUG", id++);
-      gen.addvert(name, debug_id, 0);
+      gen.addvert(name, debug_id);
       gen.addedge(v,name,0, 0);
     }
 
@@ -129,7 +129,7 @@ namespace ctb
     {
       typename T::vid_t vid = get_op_name(op->opid, base, i);
 
-      graph.addvert(vid, op->opid, 0);
+      graph.addvert(vid, op->opid);
       int j = 0;
       for( typename vector<typename vector<typename T::opid_t>::iterator>::const_iterator in = it->begin(); in != it->end(); ++in)
       {
@@ -143,7 +143,7 @@ namespace ctb
         for(auto itro : itre->second)
         {
           typename T::vid_t n = cvt<string,typename T::vid_t>::convert(cvt<typename T::vid_t, string>::convert(get_op_name(itro,"OUTPUT", j)).append(cvt<typename T::vid_t,string>::convert(vid)));
-          graph.addvert(n,itro,++oid);
+          graph.addvert(n,itro,splitparams(string("ioindex=")+ctb::to_string(++oid)));
           graph.addedge(vid, n, 0, 0);
           ++j;
         }
@@ -173,7 +173,7 @@ namespace ctb
       for(int i = 0; i < T::maxarity; ++i)
         for ( auto type : ins)
           for ( auto op : type.second)
-            graph.addvert(get_op_name(op, "INPUT", i), op, pid++); 
+            graph.addvert(get_op_name(op, "INPUT", i), op, splitparams(string("ioindex=")+ctb::to_string(pid++))); 
 
       list<typename IT::operation_t*>* q = new list<typename IT::operation_t*>();
 

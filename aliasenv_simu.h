@@ -58,10 +58,10 @@ namespace ctb
 
     aliasenv_generator::init();
 
-    ADD("input", "data_in_$cindex[pos_in_$cindex+j+$iindex]");
-    ADD("inputg", "data_in_$cindex,pos_in_$cindex+j+$iindex");
-    ADD("output", "data_out_$cindex[pos_out_$cindex+j+$iindex]");
-    ADD("outputg", "data_out_$cindex,pos_out_$cindex+j+$iindex");
+    ADD("input", "data_in_$ioindex[pos_in_$ioindex+j+$iindex]");
+    ADD("inputg", "data_in_$ioindex,pos_in_$ioindex+j+$iindex");
+    ADD("output", "data_out_$ioindex[pos_out_$ioindex+j+$iindex]");
+    ADD("outputg", "data_out_$ioindex,pos_out_$ioindex+j+$iindex");
 
     ADD("fdeclin",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_decl_in.h")));
     ADD("fdeclcont",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simu_decl_cont.h")));
@@ -90,7 +90,7 @@ namespace ctb
       for( auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclcont", n->data.get_inout_pos(), type_string);
+        decl.print("$fdeclcont", n->data.get_param("ioindex"), type_string);
       }
 
       writer<aliasenv_simu> bodies;
@@ -109,7 +109,7 @@ namespace ctb
   template <class G>
     writer<aliasenv_simu> aliasenv_simu::generate_body(int granularity, G& generator, string name)
     {
-      typedef multicontA<writer<aliasenv_simu>> wrt;
+      typedef multicontB<writer<aliasenv_simu>> wrt;
       auto opts = generator.option_struct();
 
       wrt ilist;
@@ -121,32 +121,32 @@ namespace ctb
       for( auto n : generator.graph.in)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclin", n->data.get_inout_pos(), type_string, n->data.op->out_type, n->id);
+        decl.print("$fdeclin", n->data.get_param("ioindex"), type_string, n->data.op->out_type, n->id);
       }
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclout", n->data.get_inout_pos(), type_string, n->data.op->out_type, n->id);
+        decl.print("$fdeclout", n->data.get_param("ioindex"), type_string, n->data.op->out_type, n->id);
       }
 
       wrt envelopes;
       for(auto n : generator.graph.in)
       {
         n->data.op->get_type_string(1, type_string);
-        envelopes.print("$fenvin", n->data.get_inout_pos(), type_string, n->data.op->out_type);
+        envelopes.print("$fenvin", n->data.get_param("ioindex"), type_string, n->data.op->out_type);
       }
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        envelopes.print("$fenvout", n->data.get_inout_pos(),  type_string, n->data.op->out_type, granularity, n->id);
+        envelopes.print("$fenvout", n->data.get_param("ioindex"),  type_string, n->data.op->out_type, granularity, n->id);
       }
 
       wrt minlist;
       minlist.print("std::numeric_limits<unsigned>::max()");
       for(auto n : generator.graph.in)
-        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_inout_pos(), minlist);
+        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_param("ioindex"), minlist);
       for(auto n : generator.graph.out)
-        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
+        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_param("ioindex"), minlist);
 
       wrt code;
       generator.generate(granularity, code, opts);
@@ -157,9 +157,9 @@ namespace ctb
 
       wrt inc;
       for(auto n : generator.graph.in)
-        inc.print("pos_in_$1 += batch_size;", n->data.get_inout_pos());
+        inc.print("pos_in_$1 += batch_size;", n->data.get_param("ioindex"));
       for(auto n : generator.graph.out)
-        inc.print("pos_out_$1 += batch_size;", n->data.get_inout_pos());
+        inc.print("pos_out_$1 += batch_size;", n->data.get_param("ioindex"));
 
       wrt box;
       box.print("$fbody", name, ilist, olist,decl, envelopes, minlist, code, code2, inc, granularity);

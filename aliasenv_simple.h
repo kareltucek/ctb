@@ -60,8 +60,8 @@ namespace ctb
 
     aliasenv_generator::init();
 
-    ADD("input", "data_in_$cindex[pos_in_$cindex+j]");
-    ADD("output", "data_out_$cindex[pos_out_$cindex+j]");
+    ADD("input", "data_in_$ioindex[pos_in_$ioindex+j]");
+    ADD("output", "data_out_$ioindex[pos_out_$ioindex+j]");
 
     ADD("fdeclin",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simple_decl_in.h")));
     ADD("fdeclout", writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/simple_decl_out.h")));
@@ -77,7 +77,7 @@ namespace ctb
     writer<aliasenv_simple> aliasenv_simple::generate(int granularity, G& generator, string name)
     {
       init();
-      typedef multicontA<writer<aliasenv_simple>> wrt;
+      typedef multicontB<writer<aliasenv_simple>> wrt;
       auto opts = generator.option_struct();
 
       wrt ilist;
@@ -88,32 +88,32 @@ namespace ctb
       for( auto n : generator.graph.in)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclin", n->data.get_inout_pos(), type_string);
+        decl.print("$fdeclin", n->data.get_param("ioindex"), type_string);
       }
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        decl.print("$fdeclout", n->data.get_inout_pos(), type_string);
+        decl.print("$fdeclout", n->data.get_param("ioindex"), type_string);
       }
 
       wrt envelopes;
       for(auto n : generator.graph.in)
       {
         n->data.op->get_type_string(1, type_string);
-        envelopes.print("$fenvin", n->data.get_inout_pos(), type_string);
+        envelopes.print("$fenvin", n->data.get_param("ioindex"), type_string);
       }
       for(auto n : generator.graph.out)
       {
         n->data.op->get_type_string(1, type_string);
-        envelopes.print("$fenvout", n->data.get_inout_pos(),  type_string);
+        envelopes.print("$fenvout", n->data.get_param("ioindex"),  type_string);
       }
 
       wrt minlist;
       minlist.print("std::numeric_limits<unsigned>::max()");
       for(auto n : generator.graph.in)
-        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_inout_pos(), minlist);
+        minlist = wrt().print("std::min($2, size_in_$1 - pos_in_$1)", n->data.get_param("ioindex"), minlist);
       for(auto n : generator.graph.out)
-        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_inout_pos(), minlist);
+        minlist = wrt().print("std::min($2, size_out_$1 - pos_out_$1)", n->data.get_param("ioindex"), minlist);
 
       wrt code;
       generator.generate(granularity, code, opts);
@@ -123,9 +123,9 @@ namespace ctb
 
       wrt inc;
       for(auto n : generator.graph.in)
-        inc.print("pos_in_$1 += batch_size;", n->data.get_inout_pos());
+        inc.print("pos_in_$1 += batch_size;", n->data.get_param("ioindex"));
       for(auto n : generator.graph.out)
-        inc.print("pos_out_$1 += batch_size;", n->data.get_inout_pos());
+        inc.print("pos_out_$1 += batch_size;", n->data.get_param("ioindex"));
 
       wrt box;
       box.print("$fbox", name, ilist, olist,decl, envelopes, minlist, code, code2, inc, granularity);

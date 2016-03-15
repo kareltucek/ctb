@@ -31,18 +31,26 @@ namespace ctb
   {
     protected:
       typedef map<string, string> aliastab_t;
+      static map<string,string> const * params;
       static aliastab_t aliases;
       static void init();
       static bool check_pos_alias(const string& name, const string& a, int offset);
     public:
       typedef language_empty language;
       static string alias(const string& a, bool* s = NULL, int n = -1);
+      static void setparammap(map<string,string>const * map);
       template <class G> static writer<aliasenv_generator> generate(int m,  G& graph, string name) ;
   };
 
   map<string, string> aliasenv_generator::aliases;
+  map<string, string> const* aliasenv_generator::params = NULL;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
+
+  void aliasenv_generator::setparammap(map<string,string>const* map)
+  {
+    aliasenv_generator::params = map;
+  }
 
   bool aliasenv_generator::check_pos_alias(const string& name, const string& a, int offset)
   {
@@ -60,13 +68,25 @@ namespace ctb
 
   string aliasenv_generator::alias(const string& a, bool* s, int n)
   {
+    if(params == NULL)
+      warning("aliasenv_generator was invoked without specification of params. You are not supposed to use the generating aliasenv on its own.");
     auto itr = aliases.find(a);
     if(itr == aliases.end())
     {
-      if(check_pos_alias("arg", a, 7))
-        return alias(a,s,n);
-      if(check_pos_alias("name", a, 8))
-        return alias(a,s,n);
+      if(params != NULL)
+      {
+        auto itr2 = params->find(a);
+        if(itr2 != params->end())
+        {
+          if(s!= NULL)
+            *s = true;
+          return itr2->second;
+        }
+      }
+      //if(check_pos_alias("arg", a, 7))
+      //  return alias(a,s,n);
+      //if(check_pos_alias("name", a, 8))
+      //  return alias(a,s,n);
 
       if(s != NULL)
         *s = false;
@@ -99,10 +119,10 @@ namespace ctb
     ADD("basename", "$3");
     ADD("operation", "$4");
 
-    ADD("cindex", "$5");
-    ADD("iindex", "$6");
-    ADD("oindex", "$7");
-    ADD("vindex", "$8");
+    ADD("iindex", "$5");
+    ADD("oindex", "$6");
+    ADD("vindex", "$7");
+    ADD("classid", "$8");
     ADD("arg1", "$9");
     ADD("arg2", "$10");
     ADD("arg3", "$11");

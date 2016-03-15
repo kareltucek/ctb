@@ -31,9 +31,9 @@ namespace ctb
   }
 };
 
-#ifdef TESTOVANI
+#ifndef TESTOVANI
 #define RETHROW(msg)\
-  catch(std::exception& e)\
+catch(std::exception& e)\
 {\
   error(string(e.what())+"\n    "+msg);\
 }\
