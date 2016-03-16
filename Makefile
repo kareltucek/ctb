@@ -65,6 +65,7 @@ clean :
 	-make -C test8_graph_transformations2 clean
 	-make -C test9_cf_macros clean
 	-make -C test10_cf_macros clean
+	-make -C thesis clean
 	
 
 

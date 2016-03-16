@@ -1,0 +1,92 @@
+\chapter{Theoretical analysis and solution}
+
+    \section{Motivation, the bobox environment}
+
+    \section{Code generation}
+
+        \subsection{Simple code generation}
+
+        \subsection{Vectorized code generation}
+
+        \subsection{Note on preloads}
+
+    \section{Handling control flow}
+
+        \subsection{Partitioning the graph}
+
+        \subsection{First proposal - ordered tree crawler}
+
+        \subsection{Second proposal - unordered solution}
+
+        \subsection{Refinement of the second proposal}
+
+\chapter{General implementation}
+
+    \section{Brief introduction of components}
+
+        \subsection{Command environment}
+
+        \subsection{Instruction Table} 
+
+        \subsection{Graph}
+
+        \subsection{Generator}
+
+        \subsection{Loaders}
+
+        \subsection{Preprocessing environment and the Writer class}
+
+            \subsubsection{Writer}
+
+            \subsubsection{Alias environments}
+
+        \subsection{Alias environments as drivers of the generation}
+
+    \section{Flow example}
+
+    \section{Instruction representation and actual implementation of the generator}
+
+        %%....
+
+\section{Implementation of the SSE instruction set}
+
+    \section{Data types and conversions}
+
+    \section{Considering load and store problems} 
+
+    \section{Actual alias environments} 
+      
+        %%....
+
+    \section{Control-flow related objects} 
+
+        %%....
+
+\chapter{User guides}
+
+    \section{Commands available}
+
+    \section{Understanding the preprocessor}
+
+    \section{Format specifications}
+
+        \subsection{csv}
+
+        \subsection{xml}
+
+    \section{Detailed field semantics}
+
+    \section{FAQ}
+        \subsection{How do I extend or use existing tables/models}
+
+        \subsection{How do I add support for a new language?}
+
+\begin{code}
+for i in abc
+do
+done
+\end{code}
+
+\input{contents/graphs/simple}
+
+
