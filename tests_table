@@ -1,0 +1,20 @@
+This file explains structure of the tests.
+
+test1_simple - this folder contains output of the basic unit tests produced in the 'test' program. That is a simple generated code and a few templates
+test2_exports - here we just load and export graphs and ensure that we got the same exports
+test3_loaders - the same as the second, but here we also generate some code for comparison
+
+test4_sse_simulation_complete_instruction_check - this test generates a test graph for the provided SSE table and checks that vector and nonvector versions equal. This test may take very long time to generate and compute!
+test5_sse_simulation_simple_graph - this is the same as the previous one, but uses simple graph, so we check that generator still works without having to generate entire instruction set
+test6_sse_bobox_with_preloads - this is a showcase of a simple working bobox generator
+
+At this point we start implementing the control flow
+
+test7_graph_transformations - this is a simple test of the transformations. We wish to preserve this test for later use as a possible showcase since it is simple. Instruction tables are inconsistent in this test!
+test8_graph_transformations2 - inherits the structure of test 7, but becomes more complex for the purpose of testing partitioning Instruction tables are inconsistent in this test!
+test11_graph_basic_cf_test - inherits the structure of test 8, but targets generation of a simple control flow graph. We edit the instructions for sake of a simple test.
+
+test9_cf_macros - this test is no longer used. Its purpose was implementation of a set C macro buffer. 
+test10_cf_macros - Here we reimplement the same macros using our own preprocessor. Much more convenient
+
+
