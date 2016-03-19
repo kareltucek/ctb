@@ -205,7 +205,7 @@ namespace ctb
       for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
       {
         typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
-        auto in_types = split(getanystr(itr,"in_types"),',');
+        auto in_types = splitlist(getanystr(itr,"in_types"));
         typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
 
         for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
@@ -219,7 +219,7 @@ namespace ctb
         }
 
         for(XMLElement * itr2 = itr->FirstChildElement("expansion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("expansion"))
-          t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), split(getstr(itr2, "arguments"),','), getanystr(itr2,"note"), in_types);
+          t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), splitlist(getstr(itr2, "arguments")), getanystr(itr2,"note"), in_types);
       }
     }
 

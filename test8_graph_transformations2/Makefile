@@ -4,7 +4,10 @@ CXX=g++
 
 all : graph.out graph_cf.out graph.out.png graph_cf.out.png run
 
-graph.out graph_cf.out : ../ctb graph.xml
+make_anyway :
+
+
+graph.out graph_cf.out : ../ctb graph.xml instab.csv make_anyway
 	../ctb -f program
 
 visual :

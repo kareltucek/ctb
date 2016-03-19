@@ -14,6 +14,7 @@ namespace ctb
   template <class T, class I, bool directed>
     class graph_factor : public graph_basic<T,I,directed>
   {
+    public:
     protected:
       class factor_class;
       typedef graph_basic<T,I,directed> ancestor_t;
@@ -41,15 +42,24 @@ namespace ctb
       using graph_basic<T,I,directed>::graph_basic;
 
       factorgraph_t factor;
+      void update_factor();
       void factorize();
       static void self_test();
 
-      void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";});
+      void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";}, function<string(node_t*)> g = [](node_t* n){return "";});
       void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
+      void dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f = [](node_t* n){return "black";});
 
   };
   typedef graph_factor<dummy,int,true> graph_factor_default;
   template <class T, class I, bool directed> using graph_general = graph_factor<T,I,directed>;
+
+  template <class T, class I, bool directed>
+    void graph_factor<T,I,directed>::update_factor()
+    {
+      if(!this->classids_ok || ((this->size() == 0) != (factor.size() == 0)))
+        factorize();
+    }
 
   template <class T, class I, bool directed>
     void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)
@@ -62,15 +72,21 @@ namespace ctb
   template <class T, class I, bool directed>
     void graph_factor<T,I,directed>::dump_visual(function<string(node_t*)> f)
     {
+      dump_visual_label([](node_t* n){return "";}, f);
+    }
+
+  template <class T, class I, bool directed>
+    void graph_factor<T,I,directed>::dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f)
+    {
       ofstream ofs;
       ofs.open("/tmp/graphjfjfjf");
-      dump(ofs, f);
+      dump(ofs, f, g);
       ofs.close();
       system("bash -c \"cat /tmp/graphjfjfjf | dot -Tpng > /tmp/graphjfjfjf.png && gpicview /tmp/graphjfjfjf.png\"");
     }
 
   template <class T, class I, bool directed>
-    void graph_factor<T,I,directed>::dump(ostream& o, function<string(node_t*)> colour_callback)
+    void graph_factor<T,I,directed>::dump (ostream& o, function<string(node_t*)> colour_callback, function<string(node_t*)> label)
     {
       auto& graph = *this;
 
@@ -93,7 +109,7 @@ namespace ctb
         if(n->in.empty() && showempty)
           o << prefix <<  n->id << endl;
         for( auto e : n->in.getlevel(level) ) 
-          o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+          o << prefix << e->from->id << " -> " << e->to->id << " [label=\""+ ctb::to_string( e->frompos ) +"->"+ ctb::to_string( e->topos ) +"\"];" << endl;
       };
 
       //initialize crawling of partitions of a factor graph
@@ -111,7 +127,7 @@ namespace ctb
       //output color of node
       auto i =  [&](node_t* n)
       { 
-        o << n->id << " [color=\"" << colour_callback(n) << "\"];" << endl;
+        o << n->id << " [color=\"" << colour_callback(n) << "\",label=\"" + (ctb::to_string(n->id) + " " +label(n)) + "\"];" << endl;
       };
 
       level = 0;

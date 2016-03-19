@@ -376,7 +376,7 @@ namespace ctb
            return true;
          }
        }
-       error( string("type of width = ").append(to_string(w)).append(" at operation ").append(opid).append(" not found"));
+       error( string("type '") + ctb::to_string(mytype->tid) + "' of width = " + to_string(w) + " at operation " + opid + " not found");
        return false;
      }
 
@@ -433,13 +433,19 @@ namespace ctb
    template <class T>
      const typename instruction_table<T>::operation_t& instruction_table<T>::dec(typename T::opid_t type)   const
      {
-       return *instab.find(type)->second;
+       auto itr = instab.find(type);
+       if(itr == instab.end())
+         error(string("operation ")+type+" not found.");
+       return (*itr->second);
      }
 
    template <class T>
      const typename instruction_table<T>::type_t& instruction_table<T>::dectype(typename T::tid_t type)   const
      {
-       return *typetab.find(type)->second;
+       auto itr = typetab.find(type);
+       if(itr == typetab.end())
+         error(string("type ")+type+" not found.");
+       return (*itr->second);
      }
 
    template <class T>
@@ -504,10 +510,10 @@ namespace ctb
          if(exp.in_types == types)
            return exp;
        }
-       string buff;
+       writer_plain buff;
        for( const auto& t: types)
-         buff += ctb::to_string(t);
-       error(string("expansion not found in global expansion table: ") + transformer + ":" + name + ":'" + buff + "'");
+         buff.push(t);
+       error(string("expansion not found in global expansion table: ") + transformer + ":" + name + ":'" + buff.list_concat(",").write_str() + "'");
        throw "unreachable throw preventing no-return-value warnings";
      }
 

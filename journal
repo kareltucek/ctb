@@ -188,7 +188,7 @@ For control flow version we will need to eliminate all cycles in factor graph. (
 while ( cycle_exists ) //dont forget to construct new factor graph
 {
   v = first partition in pseudo topological ordering (where partitions are ordered by topological ordering of their childrens)
-  follow all outputs leading from v and colour all found vertices 
+  follow all outputs leading from v and colour all found vertices red
   now use the coloured vertices to identify a cut in partition v
   put a buffer on all edges in the cut
 }
@@ -205,6 +205,8 @@ Ensuring the pseudotopological ordering of components. It suficces to perform it
 Today I am going to ensure that parittions are sorted pseudo-topologically (I believe they should already be!), implement the cycle search algorithm and the splitting algorithm. 
 
 !!!Currently we support only 1:1 width explicit instructions. In case we add support for general widths we may also want to be able to optimize width choice. Sensible way to do this seems to be by standard critical-path algorithm (either in respect to number of instructions or their cost).)
+
+!!!This algorithm does not provide a minimal cut. We may propose an algorithm for this
 
 TODO
 ====

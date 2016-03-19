@@ -43,6 +43,7 @@ namespace ctb
           auto ldfalse = generator.addvert(n->id + "_split_ldfalse_" + ctb::to_string(buff_id), split_ld_false, toparam("ioindex", buff_id));
 
           generator.graph.addedge(n->in_at(0)->from, st, 0, n->in_at(0)->frompos, 0);
+          generator.graph.addedge(n->in_at(1)->from, st, 1, n->in_at(1)->frompos, 0);
           for( auto outvert : n->out)
           {
             if(outvert->frompos == 0)
@@ -76,9 +77,9 @@ namespace ctb
           node* stfalse = generator.addvert(n->id + "_merge_stfalse_" + ctb::to_string(buff_id), merge_st_false, toparam("ioindex", buff_id));
           node* stbuff = generator.addvert(n->id + "_merge_stbuff_" + ctb::to_string(buff_id), buff_st, toparam("ioindex", buff_id));
 
-          generator.graph.addedge(n->in_at(0)->from, sttrue,  0, n->in_at(0)->frompos, 0);
-          generator.graph.addedge(n->in_at(1)->from, stfalse, 0, n->in_at(1)->frompos, 0);
-          generator.graph.addedge(n->in_at(2)->from, stbuff,  0, n->in_at(2)->frompos, 0);
+          generator.graph.addedge(n->in_at(0)->from, stbuff,  0, n->in_at(0)->frompos, 0);
+          generator.graph.addedge(n->in_at(1)->from, sttrue,  0, n->in_at(1)->frompos, 0);
+          generator.graph.addedge(n->in_at(2)->from, stfalse, 0, n->in_at(2)->frompos, 0);
           generator.graph.connect_as(ld, n, false, true);
 
           generator.graph.addedge(stbuff, ld, 0, 0, 1);
@@ -141,62 +142,72 @@ namespace ctb
         {
           AUTO(graph)& g = generator.graph;
 
+          int red,green,blue;
+          auto colourer = [&](node* n)->string{if(n->colourmark == green) return "green"; else if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";};  // for debug
+
           g.factorize();
           AUTO(node)* n = g.factor.find_cycle_begin({0},{0});
           int remains = g.verts.size() + 2;
           while(n != NULL && remains-- > 0)
           {
-            set<node*> outs;
-            //will need another crawl here
-            for(node* v : n->data.out)
+
+            if(n->data.out.size() == 0 )
+              error("cycle removal problem - found unsolveable situation - component is marked as cycle begin and yet has no leveled output - this should not have happened");
+
+            set<edge*> edges;
+
+            for(node* bv : n->data.out)
             {
-              for(edge* e : v->out.getlevel(1))
+              queue<node*> q;
+              for(edge* e : bv->out.getlevel(1))
+                q.push(e->to);
+
+              //then we colour all these and all their children by red colour
+              red = node::newid();
+              blue = node::newid();
+              green = node::newid();
+              q.front()->template crawl<false,false>(
+                  [&](node* n)->bool{ n->colourmark = red; return true;},
+                  [&](node* n)->bool{ return n->colourmark != red;},
+                  {0,1},
+                  &q
+                  );
+
+              //and spread green colour from these, by this we identify only those edges that have to be cut! (note that we still dont have minimality)
+              bv->template crawl<true,false>(
+                  [&](node* n)->bool{ n->colourmark = green; return true;},
+                  [&](node* n)->bool{ return n->colourmark != green && n->colourmark != red;},
+                  {0, 1}
+                  );
+
+              if(bv->colourmark == red)
               {
-                outs.insert(e->to);
+                g.dump_visual(colourer);
+                error("cycle removal problem - cycle seem to exist in the original graph");
               }
+
+              //in this pass we get a list of all edges that go from green to red
+              //we crawl the current partition, marking crawled vertices as blue
+              auto f = [&](node* n)->bool
+              { 
+                if(n->colourmark == green)
+                {
+                  for(auto e : n->out)
+                    if(e->to->colourmark == red)
+                    {
+                      edges.insert(e);
+                    }
+                }
+                n->colourmark = blue;
+                return true;
+              };
+
+              (*n->data.vertices.begin())->template crawl<true, false>(
+                  f,
+                  [&](node* n)->bool{ return n->colourmark != blue;},
+                  {0}
+                  );
             }
-            queue<node*> q;
-            for(auto v : outs)
-              q.push(v);
-
-            if(q.size() == 0 )
-              error("cycle removal problem - found unsolveable situation");
-
-            //then we colour all these and all their children by red colour
-            int red = node::newid();
-            int blue = node::newid();
-            q.front()->template crawl<false,false>(
-                [&](node* n)->bool{ n->colourmark = red; return true;},
-                [&](node* n)->bool{ return n->colourmark != red;},
-                {0,1},
-                &q
-                );
-
-            //for debug
-            //auto colourer = [=](node* n)->string{if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";}; 
-
-            //in this pass we get a list of all edges that go from nonred to red
-            //we crawl the current partition, marking crawled vertices as blue
-            vector<edge*> edges;
-            auto f = [&](node* n)->bool
-            { 
-              if(n->colourmark != red)
-              {
-                for(auto e : n->out)
-                  if(e->to->colourmark == red)
-                  {
-                    edges.push_back(e);
-                  }
-              }
-              n->colourmark = blue;
-              return true;
-            };
-
-            (*n->data.vertices.begin())->template crawl<true, false>(
-                f,
-                [&](node* n)->bool{ return n->colourmark != blue;},
-                {0}
-                );
             //now we have a list of edges defining the cut between red and nonred vertices inside of our partition. (actually the entire partition is blue now)
 
             //we use that list to make the cut
@@ -208,7 +219,10 @@ namespace ctb
           }
 
           if(remains < 0)
-            error("Failed on graph partitioning - there seems to be a cycle somewhere!");
+          {
+            g.dump_visual(colourer);
+            error("Failed on graph partitioning (cf transform) - there seems to be a cycle somewhere!");
+          }
         };
 
       public:

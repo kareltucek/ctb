@@ -57,7 +57,7 @@ namespace ctb
 
         class node
         {
-          private:
+          protected:
             graph_basic* parent;
             typedef pair<node*, int> route;
             mutable vector<route> map;
@@ -94,6 +94,8 @@ namespace ctb
         void rm_at(vector<node*>& list, node* to);
         //void rm_at(vector<edge>& list, node* to);
         //void rm_atv(node* a,node* to);
+      protected:
+        bool classids_ok;
       public:
         typedef edge edge_t;
         typedef node node_t;
@@ -120,10 +122,17 @@ namespace ctb
         void crawl_topological_b(function<bool(node*)> f, std::vector<int> levels = {0}); 
         bool cycle_exists(node* n, const vector<int>& at_levels = {0}, set<node*> vertices = {}, int remains = -1);
         void factorize();
+        int size();
     };
 
   typedef graph_basic<dummy,int,true> graph_default;
   typedef graph_basic<dummy,int,true> graph_basic_default;
+
+  template <class T, class I, bool directed>
+    int graph_basic<T,I,directed>::size()
+    {
+      return verts.size();
+    }
 
   template <class T, class I, bool directed>
     typename graph_basic<T,I,directed>::node* graph_basic<T,I,directed>::tovert(node& v)
@@ -188,6 +197,7 @@ namespace ctb
       this->crawl_topological(make_class, {0,1}); 
 
       classcount = classid;
+      classids_ok = true;
     }
 
   template <class T, class I, bool directed>
@@ -208,6 +218,7 @@ namespace ctb
       classcount = 0;
       index = 0;
       verts.clear();
+      classids_ok = false;
     }
 
   template <class T, class I, bool directed>
@@ -430,6 +441,7 @@ namespace ctb
       for (auto itr = list.begin(); itr != list.end(); ++itr) 
         if(*itr == to) //(we want to preserve argument indices)
           *itr = NULL;
+      classids_ok = false;
     }
 
   template <class T, class I, bool directed>
@@ -462,6 +474,7 @@ namespace ctb
           }
         }
       }
+      classids_ok = false;
     }
 
 
@@ -487,6 +500,7 @@ namespace ctb
       rm_at(out, a); 
       verts.erase(a->id);
       delete a; //not the safest thing to do. Now I admit that smart pointers should be used probably always.
+      classids_ok = false;
     }
 
   template <class T, class I, bool directed>
@@ -506,6 +520,7 @@ namespace ctb
       }
 
       delete v;
+      classids_ok = false;
     }
 
   template <class T, class I, bool directed>
@@ -534,6 +549,7 @@ namespace ctb
         b->out.getlevel(l).push_back(f);
         a->in.getlevel(l).push_back(f);
       }
+      classids_ok = false;
     }
 
   template <class T, class I, bool directed>
@@ -546,6 +562,7 @@ namespace ctb
         in.push_back(ptr);
       if(bout)
         out.push_back(ptr);
+      classids_ok = false;
       return ptr;
     }
 
@@ -558,7 +575,7 @@ namespace ctb
 
 
   template <class T, class I, bool directed>
-    graph_basic<T,I,directed>::graph_basic() : in(), out(), verts(), index(0)
+    graph_basic<T,I,directed>::graph_basic() : in(), out(), verts(), index(0), classids_ok(false)
   {
   }
 

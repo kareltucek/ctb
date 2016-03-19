@@ -71,7 +71,7 @@ namespace ctb
     F tagmaster<F>::to_mask(const string& str)
     {
       F mask = F(0); 
-      stringlist tags = split(str,',');
+      stringlist tags = splitlist(str);
       for(const string& t : tags) 
       {
         if(t == "")

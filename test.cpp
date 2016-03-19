@@ -4,7 +4,7 @@
 #include "parser.h"
 #include "ctb.h"
 #include "multicont.h"
-#include "aliasenv_cf.h"
+#include "aliasenv_cfmacros.h"
 
 int main(int c, char** cc)
 {
@@ -22,7 +22,7 @@ int main(int c, char** cc)
     csvloader_default::self_test();
     tagmaster_default::self_test();
     parser::self_test();
-    aliasenv_cf::self_test();
+    aliasenv_cfmacros::self_test();
   }
   catch(const error_struct& err)
   {

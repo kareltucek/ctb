@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <graph_list Name="list">
    <graph Name="graph1">
-      <vertex opid="LDI" vid="a_in" params="ioindex=2"></vertex>
-      <vertex opid="LDI" vid="d_in" params="ioindex=1"></vertex>
-      <vertex opid="ADDI" vid="b_pl"></vertex>
-      <vertex opid="MULI" vid="b_ml"></vertex>
-      <vertex opid="ADDI" vid="e_pl"></vertex>
-      <vertex opid="STI" vid="f_id" params="ioindex=0"></vertex>
+      <vertex opid="LDI" vid="ldi1" params="ioindex=2"></vertex>
+      <vertex opid="LDI" vid="ldi2" params="ioindex=1"></vertex>
+      <vertex opid="ADDI" vid="add1"></vertex>
+      <vertex opid="MULI" vid="mul1"></vertex>
+      <vertex opid="ADDI" vid="add4"></vertex>
+      <vertex opid="ZERO" vid="zero"></vertex>
+      <vertex opid="STI" vid="add4" params="ioindex=0"></vertex>
       <vertex opid="STI" vid="final_out" params="ioindex=0"></vertex>
       <vertex opid="SPLIT_INT" vid="split" params="ioindex=0"></vertex>
       <vertex opid="MERGE_INT" vid="merge" params="ioindex=0"></vertex>
-      <edge to="b_pl" from="a_in" to_pos="0"></edge>
-      <edge to="b_pl" from="d_in" to_pos="1"></edge>
-      <edge to="b_ml" from="a_in" to_pos="1"></edge>
-      <edge to="b_ml" from="d_in" to_pos="0"></edge>
-      <edge to="e_pl" from="b_ml" to_pos="0"></edge>
-      <edge to="e_pl" from="b_pl" to_pos="1"></edge>
-      <edge to="f_id" from="e_pl" to_pos="0"></edge>
-      <edge to="split" from="f_id" to_pos="0"></edge>
-      <edge to="split" from="f_id" to_pos="1"></edge>
-      <edge to="merge" from="f_id" to_pos="2"></edge>
-      <edge to="merge" from="split" to_pos="0" from_pos="0"></edge>
-      <edge to="merge" from="split" to_pos="1" from_pos="1"></edge>
+      <edge to="zero" from="add4" to_pos="0"></edge>
+      <edge to="add1" from="ldi1" to_pos="0"></edge>
+      <edge to="add1" from="ldi2" to_pos="1"></edge>
+      <edge to="mul1" from="ldi1" to_pos="1"></edge>
+      <edge to="mul1" from="ldi2" to_pos="0"></edge>
+      <edge to="add4" from="mul1" to_pos="0"></edge>
+      <edge to="add4" from="add1" to_pos="1"></edge>
+      <edge to="split" from="zero" to_pos="0"></edge>
+      <edge to="split" from="add4" to_pos="1"></edge>
+      <edge to="merge" from="zero" to_pos="0"></edge>
+      <edge to="merge" from="split" to_pos="1" from_pos="0"></edge>
+      <edge to="merge" from="split" to_pos="2" from_pos="1"></edge>
       <edge to="final_out" from="merge" to_pos="0" from_pos="0"></edge>
    </graph>
 </graph_list>

@@ -60,7 +60,7 @@ namespace ctb
             id_t opid;
 
             data_t( node_t* me, const typename IT::operation_t* o, id_t opi, const map<string,string>& params = {});
-            template <class W> void generate(int granularity, multicontB<W>& w,  multicontB<output_options>& , bool c);
+            template <class W> void generate(graph_t& parent, int granularity, multicontB<W>& w,  multicontB<output_options>& , bool c);
             string get_param(const string&) const;
             vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
@@ -78,6 +78,7 @@ namespace ctb
         void addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos) ;
 
         template <class W> void generate(int granularity, multicontB<W>& w,  multicontB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
+        template <class W> void generate_partition(int partition, int granularity, multicontB<W>& w,  multicontB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
         int get_broadest(int upperbound = 10000000) ;
 
         void set_compiletest(bool);
@@ -89,6 +90,8 @@ namespace ctb
         void clear();
         void reset();
         void update(); /** In case instruction table is reloaded the operation pointers are no longer valid. This function updates them.*/
+
+        int partition_count();
     };
 
   typedef generator<traits, instruction_table_default> generator_default;
@@ -152,7 +155,12 @@ namespace ctb
   template <class T, class IT>
     template <typename...L> typename generator<T,IT>::graph_t::node_t* generator<T,IT>::addvert(vid_t v, id_t op, L... p)  
     {
-      auto ptr = &instab.dec(op);
+      const op_t* ptr;
+      try
+      {
+        ptr = &instab.dec(op);
+      }
+      RETHROW(string("while adding vertex '") + ctb::to_string(v) +"' of type '" + ctb::to_string(op) + "'");
       return graph.addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
     }
 
@@ -179,8 +187,15 @@ namespace ctb
   }
 
   template <class T, class IT>
+    int generator<T,IT>::partition_count()
+    {
+      graph.update_factor();
+      return graph.factor.size();
+    }
+
+  template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate(int packsize, multicontB<W>& w,  multicontB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
+    void generator<T,IT>::generate_partition(int partition, int packsize, multicontB<W>& w,  multicontB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
     {
       if(graph.out.empty())
         error( "graph is empty");
@@ -191,8 +206,16 @@ namespace ctb
       if(to!=NULL)
         instab.add_tags(to,gONCE);
       instab.update_tags();
-      data_t::newid(true); //resets ids
-      graph.crawl_topological([&](node_t* n) {n->data.generate(packsize, w, opts, compiletest); });
+      graph.update_factor();
+
+      node_t* some_vert;
+      try
+      {
+        some_vert = *graph.factor.verts[partition]->data.vertices.begin();
+      }
+      RETHROW(string("Could not access any vertex of required partition ") + ctb::to_string(partition) + " note that partition count is " + ctb::to_string(partition_count()) );
+      some_vert->crawl_topological([&](node_t* n) {n->data.generate(graph, packsize, w, opts, compiletest); });
+
       if(to!=NULL)
         instab.rm_tags(to,gONCE);
       if(tp!=NULL)
@@ -203,7 +226,16 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::data_t::generate(int granularity, multicontB<W>&w, multicontB<output_options>& opts, bool c)
+    void generator<T,IT>::generate(int packsize, multicontB<W>& w,  multicontB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
+    {
+      data_t::newid(true); //resets ids
+      for(int i = 0; i < partition_count(); ++i)
+        generate_partition(i, packsize, w, opts, ts, tp, to);
+    }
+
+  template <class T, class IT>
+    template <class W>
+    void generator<T,IT>::data_t::generate(graph_t& parent, int granularity, multicontB<W>&w, multicontB<output_options>& opts, bool c)
     {
       aliasenv_generator::setparammap(&params);
       try
@@ -220,12 +252,19 @@ namespace ctb
         if(myin != myout)
           error( string("asymetric instructions not supported"));
         if(me->in.size() != op->in_types.size())
-          error( string("count of input nodes does not match operation specification"));
+        {
+          cout << op->in_types[0] << endl;
+          parent.dump_visual_label([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
+          error( string("count of input nodes does not match operation specification, insize is ") + ctb::to_string(me->in.size()) +", expected is " + ctb::to_string(op->in_types.size()));
+        }
         for(int i = 0; i < me->in.size(); ++i)
         {
           auto e = me->in[i];
           if(e->from->data.op->out_type != op->in_types[e->topos])
-            error( string("argument ").append(to_string(i)).append(" does not match defined input type: got ").append(e->from->data.op->out_type).append(" wanted ").append(op->in_types[i]));
+          {
+            parent.dump_visual_label([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
+            error( string("argument ") + to_string(e->topos) + " does not match defined input type: got '" + e->from->data.op->out_type + "' wanted '" + op->in_types[e->topos] + "'");
+          }
         }
         //op->imbue_width(mygran);
         acces_map.clear();
@@ -236,7 +275,8 @@ namespace ctb
         string op_c;
         typename IT::operation_t::ccode_cont_t  op_cc;
         size_t printability; 
-        op->get_type_string(mygran, type_string);
+        if(!op->is(fOUTPUT))
+          op->get_type_string(mygran, type_string);
         bool found = op->get_op_string(mygran, op_c, op_cc, printability);
         if(found && op_c.empty() && op_cc.empty())
           warn(string("instruction code and custom code are both empty for ").append(opid));

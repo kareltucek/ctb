@@ -627,7 +627,7 @@ namespace ctb
        static const regex f ("\\$\\{ *([^ },]+)[^}]*->([^}]+)\\}");
        while (regex_search (line,m,e))
        {
-         subtab.push_back(sub_t(split(m[1],','), split(m[2], ',')));
+         subtab.push_back(sub_t(splitlist(m[1]), splitlist(m[2])));
          line = regex_replace(line, f, string("$$$1"), regex_constants::format_first_only);
        }
 #else
@@ -652,8 +652,8 @@ namespace ctb
            }
            pre = line.substr(0,s);
            pos = line.substr(e+1,line.length()-e-1);
-           subtab.push_back(sub_t(split(g1,','), split(g2, ',')));
-           line = pre + "$" + split(g1,',')[0] + pos;
+           subtab.push_back(sub_t(splitlist(g1), splitlist(g2)));
+           line = pre + "$" + splitlist(g1)[0] + pos;
          }
        }
 #endif

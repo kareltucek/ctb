@@ -55,6 +55,21 @@ namespace ctb
     return l;
   }
 
+  vector<string> splitlist(string str, bool just_nonempty = true)
+  {
+    auto list = split(str, ',', true);
+    for(int i = 0; i < list.size(); ++i)
+    {
+      string res = trim(list[i]);
+      if(res.empty() && just_nonempty && list.size() != 0)
+        warning(string("Empty record found in nonempty list: ")+str);
+      if(!res.empty() || !just_nonempty)
+        list[i] = trim(list[i]);
+    }
+    return list;
+  }
+
+
   vector<string> split_first(string str, char d)
   {
     int pos = str.find(d);

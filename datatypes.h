@@ -63,7 +63,7 @@ namespace ctb
     {
       static map<string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
       F f = 0;
-      stringlist words = split(str, ',');
+      stringlist words = splitlist(str);
       for(auto w : words)
       {
         if(hash.find(w) != hash.end() )

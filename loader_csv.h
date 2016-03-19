@@ -297,7 +297,7 @@ namespace ctb
            if(!data[i].empty())
              ccode.push_back(data[i]);
          instab.addtype(data[ciOutType]);
-         typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],split(data[ciInTypes],','),f);
+         typename IT::operation_t& operation = instab.addoperation(data[ciOpId],data[ciOutType],splitlist(data[ciInTypes]),f);
          operation.addcode(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],ccode,data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
        }
        else if(data[ciType] == "expansion")
@@ -305,9 +305,9 @@ namespace ctb
          checksize(ceSize, data);
          int f = string_to_flags<typename T::flag_t>(data[ceFlags]);
          instab.addtype(data[ceOutType]);
-         auto in_types = split(data[ceInTypes],',');
+         auto in_types = splitlist(data[ceInTypes]);
          typename IT::operation_t& operation = instab.addoperation(data[ceOpId],data[ceOutType],in_types,f);
-         operation.addexpansion(data[ceName],data[ceTransformer],split(data[ceArgs],','),data[ceNote], in_types);
+         operation.addexpansion(data[ceName],data[ceTransformer],splitlist(data[ceArgs]),data[ceNote], in_types);
        }
        else if (data[cvType] == "type_version")
        {
@@ -343,14 +343,7 @@ namespace ctb
            {
              insert(instab, l);
            }
-           catch(const error_struct& e)
-           {
-             error(string("at line ") + to_string(i) + ": " + line + "\n\t" + l + "\n\t" + e.first , false);
-           }
-           catch(exception& e)
-           {
-             error(string("at line ") + to_string(i) + ": " + line + "\n\t" + l + "\n\t" + e.what() , false);
-           }
+           RETHROW(string("at line ") + to_string(i) + ": " + line + l);
          }
          ++i;
        }

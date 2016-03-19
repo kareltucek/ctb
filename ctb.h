@@ -9,10 +9,11 @@
 #include "loader_csv.h"
 #include "loader_test.h"
 #include "aliasenv_maker.h"
-#include "aliasenv_cf.h"
+#include "aliasenv_cfmacros.h"
 #include "aliasenv_bobox.h"
 #include "aliasenv_simple.h"
 #include "aliasenv_simu.h"
+#include "aliasenv_cf.h"
 #include "cf_transform.h"
 
 namespace ctb
@@ -171,6 +172,7 @@ namespace ctb
       register_aliasenv<aliasenv_simple>();
       register_aliasenv<aliasenv_simu>();
       register_aliasenv<aliasenv_bobox>();
+      register_aliasenv<aliasenv_cfmacros>();
       register_aliasenv<aliasenv_cf>();
       register_loader<csv_loader>();
       register_loader<xml_loader>();
