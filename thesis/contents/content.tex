@@ -2,9 +2,59 @@
 
     \section{Motivation, the bobox environment}
 
+    %define a box
+
     \section{Code generation}
 
         \subsection{Simple code generation}
+
+        %define incoming and outgoing vertices
+        %describe the dollar notation
+
+        \paragraph 
+        Consider the following problem.
+
+        \begin{problem}
+          Let G be a directed acyclic graph (DAG). Let its vertices be annotated by pairs of operation names and resulting types. Furthermore let its edges be annotated by integers. The integers specify for every vertex an ordering of its incoming edges. We wish to generate a C code which will realize the graph G.
+        \end{problem}
+
+        Solution to this problem is simple. First we order vertices of G topologically. Then we take vertices in this order and process them one by one. For every vertex $v$ we use its annotation and its incoming edges to perform the operation represented by this vertex on the output data of its incoming vertices. Then we save the output data under some unique identifier for later use.
+
+        \paragraph 
+        We provide a graph representation and resulting code of an adder box, which simply loads two values, adds them and stores the result.
+
+        \input{contents/graphs/adder}
+
+        \begin{code}
+          int var_a = input_0[i];
+          int var_b = input_1[i];
+          int var_c = a + b;
+          output_0[i] = c;
+        \end{code}
+
+        \paragraph 
+        We may have noticed that vertices are basically of three types. 
+
+        \begin{itemize}
+          \item Input -- typically taking form of $<type> <variable name> = <load expression>;$
+          \item Output -- of form $<store expression>;$
+          \item Other -- of form $<type> <variable name> = <operation>(<argument 1>, <argument 2>);$
+        \end{itemize}
+
+        \paragraph 
+        This allows us to construct simple patterns which may be used for actual code generation. These may be the following:
+
+        \begin{itemize}
+          \item Input -- $\$type \$name = \$input;$
+          \item Other -- $\$type \$name = \$operation;$
+          \item Output -- $\$output;$
+        \end{itemize}
+
+        \paragraph 
+        Where $\$input$ and \$output evaluate to environment-dependent expressions, \$name evaluates to a new identifier and \$operation evaluates to a pattern identified by the operation name. The operation pattern may contain \$arg1, \$arg2, \$arg3 expressions. These evaluate to the saved names from incoming vertices.
+
+        \paragraph 
+        This scheme of generation is actually used --- our generator will be driven by a quite complex text-processing system, which will be based on recursive evaluation of shell-like variables in broader contexts provided by various extensions.
 
         \subsection{Vectorized code generation}
 
@@ -43,6 +93,8 @@
         \subsection{Alias environments as drivers of the generation}
 
     \section{Flow example}
+
+    \section{Graph algorithms}
 
     \section{Instruction representation and actual implementation of the generator}
 

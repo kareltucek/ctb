@@ -1,0 +1,7 @@
+digraph{
+a[label=LD]
+b[label=LD]
+a -> ADD
+b -> ADD
+ADD -> ST
+}
