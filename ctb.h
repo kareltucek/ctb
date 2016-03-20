@@ -121,7 +121,7 @@ namespace ctb
         typedef tuple< function<void(istream&)>, function<void(istream&)>, function<void(ostream&)>, function<void(ostream&)>> loader_record;
         typedef function<string(string)> aliasenv_record;
         typedef pair<function<void(stringlist&&)>,string> command_record;
-        typedef function<void()> transform_record;
+        typedef function<void(stringlist&&)> transform_record;
         typedef function<void(string,string)> preprocessor_record;
         map<string, preprocessor_record> hash_preprocessor;
         map<string, loader_record> hash_loader;
@@ -184,7 +184,7 @@ namespace ctb
     {
       if(L<generator_t>::get_name() == "")
         error( "unnamed transformation passed - (have you defined a 'string get_name(){return \"whatever nonempty\";}' method?");
-      hash_transforms[L<generator_t>::get_name()] = transform_record(bind(&ctb<T,IT>::transform_graph<L>  , this));
+      hash_transforms[L<generator_t>::get_name()] = transform_record(bind(&ctb<T,IT>::transform_graph<L, stringlist&&>  , this, placeholders::_1));
     }
 
   template <class T, class IT>
@@ -225,7 +225,7 @@ namespace ctb
   template <class T, class IT>
     template<template <typename ...> class L, typename...P> void ctb<T,IT>::transform_graph(P...params)
     {
-      mygenerator.template transform<L,P...>(params...);
+      mygenerator.template transform<L,P...>(move(params)...);
     }
 
   template <class T, class IT>
@@ -343,7 +343,8 @@ namespace ctb
       cout << "  -e <comma separated tags>   exclude code with any of these tags  " << endl;
       cout << "  -n <comma separated tags>   require all tags to be subset of this set of tags" << endl;
       cout << "  -c compile test - makes generator output only the first instruction of every vector  " << endl;
-      cout << "  -h            show some help" << endl;
+      cout << "  -w                          handle warnings as errors (gives traces)" << endl;
+      cout << "  -h                          show some help" << endl;
       cout << "" << endl;
       cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << endl;
       cout << "Actions:" << endl;
@@ -448,6 +449,9 @@ namespace ctb
             {
               switch (args[i][j])
               {
+                case 'w':
+                  warn_as_error = true;
+                  break;
                 case 'f':
                 case 'a':
                 case 'e':
@@ -577,7 +581,7 @@ start:;
     void ctb<T,IT>::command_generate(stringlist&& args)
     {
       if(args.size() != 3)
-        error( string("invalid number of arguments "), false);
+        error( string("invalid number of arguments, expected ") + ::ctb::to_string(3) + ", got " + ::ctb::to_string(args.size()), false);
       if(hash_aliasenv.find(args[1]) == hash_aliasenv.end())
         error( string("aliasenv not found (did you register it in ctb.h?): ").append(args[1]));
       writer_plain::to_file(args[2], hash_aliasenv[args[1]](get_inner_name(args[2])));
@@ -587,7 +591,7 @@ start:;
     void ctb<T,IT>::command_testgraph(stringlist&& args)
     {
       if(args.size() != 1)
-        error( string("invalid number of arguments "), false);
+        error( string("invalid number of arguments, expected ") + ::ctb::to_string(1) + ", got " + ::ctb::to_string(args.size()), false);
       test_loader<T,generator_t,IT> l;
       l.load_graph(mygenerator,instab);
     }
@@ -605,16 +609,16 @@ start:;
   template <class T, class IT>
     void ctb<T,IT>::command_transform(stringlist&& args)
     {
-      if(args.size() != 2)
-        error( string("invalid number of arguments "), false);
-      hash_transforms[args[1]]();
+      if(args.size() < 2)
+        error( string("invalid number of arguments, expected ") + ::ctb::to_string(2) + ", got " + ::ctb::to_string(args.size()), false);
+      hash_transforms[args[1]](move(args));
     }
 
   template <class T, class IT>
     void ctb<T,IT>::command_preprocess(stringlist&& args)
     {
       if(args.size() != 4)
-        error( string("invalid number of arguments "), false);
+        error( string("invalid number of arguments, expected ") + ::ctb::to_string(4) + ", got " + ::ctb::to_string(args.size()), false);
       hash_preprocessor[args[1]](args[2], args[3]);
     }
 
@@ -622,7 +626,7 @@ start:;
     void ctb<T,IT>::command_source(stringlist&& args)
     {
       if(args.size() != 2)
-        error( string("invalid number of arguments "), false);
+        error( string("invalid number of arguments, expected ") + ::ctb::to_string(2) + ", got " + ::ctb::to_string(args.size()), false);
       ifstream filei;
       openstream(filei,args[1]);
       parse_command_stream(filei);
@@ -645,7 +649,7 @@ start:;
     template<functor_id I, typename F, bool input> void ctb<T,IT>::command_io(stringlist&& args)
     {
       if(args.size() != 3)
-        error( string("invalid number of arguments "), false);
+        error( string("invalid number of arguments, expected ") + ::ctb::to_string(3) + ", got " + ::ctb::to_string(args.size()), false);
       if(hash_loader.find(args[1]) == hash_loader.end())
         error( string("loader not found (did you register it in ctb.h?): ", false).append(args[1]));
       F file;
@@ -656,7 +660,7 @@ start:;
   template <class T, class IT>
     int ctb<T,IT>::parse_command(string line)
     {
-      stringlist words = split(line, ' ',true);
+      stringlist words = split(line, ' ', true);
       if(words.empty())
         return 0;
       if(!words[0].empty() && words[0][0] == '#')

@@ -8,6 +8,7 @@
 namespace ctb
 {
   typedef pair<string,bool> error_struct;
+  static bool warn_as_error = false;
 
   void error(const string& e, bool critical = true)
   {
@@ -22,12 +23,15 @@ namespace ctb
 
   void warning(string e)
   {
-    cerr << endl << "warning: " << e << endl;
+    if(warn_as_error)
+      error(e);
+    else
+      cerr << endl << "warning: " << e << endl;
   }
 
   void warn(string e)
   {
-    cerr << endl << "warning: " << e << endl;
+    warning(e);
   }
 };
 

@@ -50,21 +50,22 @@ namespace ctb
       else
         l.push_back(item.substr(begin, end-begin+1));
     }
-    if(str[str.length()-1] == d)
+    if(str[str.length()-1] == d && !squash)
       l.push_back("");
     return l;
   }
 
   vector<string> splitlist(string str, bool just_nonempty = true)
   {
-    auto list = split(str, ',', true);
+    stringlist result;
+    stringlist list = split(str, ',', false);
     for(int i = 0; i < list.size(); ++i)
     {
       string res = trim(list[i]);
       if(res.empty() && just_nonempty && list.size() != 0)
         warning(string("Empty record found in nonempty list: ")+str);
       if(!res.empty() || !just_nonempty)
-        list[i] = trim(list[i]);
+        result.push_back(res);
     }
     return list;
   }

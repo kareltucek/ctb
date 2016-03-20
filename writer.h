@@ -173,6 +173,7 @@ namespace ctb
        /*operators*/writer& operator+=(const writer& w) ;
        /*operators*/writer& operator+=(writer&& w) ;
        /*operators*/writer(const initializer_list<string>& init);/*this one is literal! no parsing here*/
+       /*operators*/bool empty();
 
        ///*printing*/ template<dollar_mode dollars = I, typename S, typename ... Types> writer& printl (const Types&... params, const S& stringlist) ; /*print using a stringlist at the end of the parameter list - for dynamic numbr of arguments; the last argument has to be a stringlist, but deduction does not like knowing it*/
        /*printing*/ template<dollar_mode dollars = I, typename ... Types> writer& print (const Types&... params) ;
@@ -213,6 +214,12 @@ namespace ctb
    {
      return writer<aliasenv_empty>().print(params...).write_str();
    }
+
+   template <class M, dollar_mode I, dollar_mode O, bool C>
+     bool writer<M,I,O,C>::empty()
+     {
+       return data.empty() || (data.size() == 1 && ctb::trim(data[0]).empty()) ;
+     }
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
      writer<M,I,O,C>& writer<M,I,O,C>::operator+=(writer&& w)
@@ -433,7 +440,7 @@ namespace ctb
    template <class M, dollar_mode I, dollar_mode O, bool C>
      void writer<M,I,O,C>::getnth(int i, const string*& rs, const writer<M,I,O,C>*& rw)
      {
-       warning( "out of range on printnth");
+       warning( "print argument out of range");
        rs = NULL;
        rw = NULL;
      }
@@ -469,7 +476,7 @@ namespace ctb
    template <class M, dollar_mode I, dollar_mode O, bool C>
      void writer<M,I,O,C>::printnth(int i)
      {
-       error( "out of range on printnth");
+       error( "print argument out of range");
      }
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
@@ -627,7 +634,7 @@ namespace ctb
        static const regex f ("\\$\\{ *([^ },]+)[^}]*->([^}]+)\\}");
        while (regex_search (line,m,e))
        {
-         subtab.push_back(sub_t(splitlist(m[1]), splitlist(m[2])));
+         subtab.push_back(sub_t(splitlist(m[1], false), splitlist(m[2], false)));
          line = regex_replace(line, f, string("$$$1"), regex_constants::format_first_only);
        }
 #else
@@ -652,8 +659,8 @@ namespace ctb
            }
            pre = line.substr(0,s);
            pos = line.substr(e+1,line.length()-e-1);
-           subtab.push_back(sub_t(splitlist(g1), splitlist(g2)));
-           line = pre + "$" + splitlist(g1)[0] + pos;
+           subtab.push_back(sub_t(splitlist(g1, false), splitlist(g2, false)));
+           line = pre + "$" + splitlist(g1, false)[0] + pos;
          }
        }
 #endif
@@ -694,6 +701,8 @@ namespace ctb
        {
          if(C)
          {
+           if(aliasenv_cart::depth() > 10)
+             warning(string("writer has ")+ ctb::to_string(aliasenv_cart::depth())+" nested instances, run with -w to break and see the stack of printer");
            aliasenv_cart::push();
            preprocessline<dollars>(format, params...);
            aliasenv_cart::pop();
@@ -710,6 +719,11 @@ namespace ctb
    template <class M, dollar_mode I, dollar_mode O, bool C>
      template<dollar_mode dollars, typename ... Types> bool writer<M,I,O,C>::eval_name(const string& name, const string& ctx, int pos, const Types&... params)  
      {
+       static int depth = 0;
+       if(depth > 10)
+         warning(string("writer has ")+ ctb::to_string(aliasenv_cart::depth())+" nested eval_name instances, run with -w to break and see the stack of printer");
+       depth++;
+       string exp = "";
        try
        {
          if(name.empty())
@@ -719,6 +733,8 @@ namespace ctb
          else if( -1 == name.find_first_not_of("0123456789"))
          {
            int n = ctb::stoi(name);
+           if(n == 0)
+             error("$0 found, argument are indexed from 1");
            const string* sptr;
            const writer<M,I,O,C> * wptr;
            getnth(n, sptr, wptr, params...);
@@ -730,17 +746,19 @@ namespace ctb
          else
          {
            bool s;
-           string e = aliasenv_cart::alias(name,&s);
+           exp = aliasenv_cart::alias(name,&s);
            if(s)
-             print_internal<dollars>(e, params...);
+             print_internal<dollars>(exp, params...);
            else
            {
              add("$", false);
+             depth--;
              return false;
            }
          }
        }
-       RETHROW(string("at position ") + ctb::to_string(pos) + " in expression: " + ctx);
+       RETHROW(string("at position ") + ctb::to_string(pos) + " in expression: " + ctx + "\n    while printing $" + name + (exp.empty() ? "" : (string(" expanded to: ") + exp) ));
+       depth--;
        return true;
      }
 

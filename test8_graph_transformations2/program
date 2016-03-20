@@ -3,4 +3,6 @@ loadgraph xml graph.xml
 exportgraph csv graph.out
 transform cf
 exportgraph csv graph_cf.out
+generate cf output.cpp  
+preprocess cfmacros output.cpp output.preprocessed.cpp
 

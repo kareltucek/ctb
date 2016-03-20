@@ -3,21 +3,83 @@
 	instruction	BOOL	INT	ZERO		1	1	$$arg1 == 0		0		
 	instruction	INT	INT,INT	MULI		1	1	$$arg1 * $$arg2		0		
 	instruction	INT	INT	INC		1	1	$$arg1++		0		
-	instruction	INT		LDI	input	1	1	i_$ioindex++		0	global: int i_$ioindex = 0;	
-	instruction	INT	INT	STI	output	1	1	$$output = $$arg1		0		
-	instruction	BOOL		LDB	input	1	1	(i_$ioindex % 3) == 0		0	global: int i_$ioindex = 0;	
+	instruction	INT		LDI	input	1	1	i_$$ioindex++		0	global:  int i_$$ioindex = 0;	
+	instruction	INT	INT	STI	output	1	1	printf("OUTPUT %i\n", $$arg1)		0		
+	instruction	BOOL		LDB	input	1	1	(i_$ioindex++ % 3) == 0		0	global:  int i_$$ioindex = 0;	
 
 
-	instruction		BOOL,INT	SPLIT_ST_INT	output	1	1	SPLIT_ST($$arg1, $$arg2)		0		
-	instruction	INT		SPLIT_LD${side->L,R}_INT	input	1	1	SPLIT_LD($$arg1)		0		
-	instruction		INT	MERGE_ST${side->L,R}_INT	output	1	1	MERGE_ST($$arg1)		0		
-	instruction	INT		MERGE_LD_INT	input	1	1	MERGE_LD($$arg1)		0		
-	instruction		${type->INT,BOOL}	BUFF_ST_$type	output	1	1	BUFF_ST($$arg1)		0		
-	instruction	${type->INT,BOOL}		BUFF_LD_$type	input	1	1	BUFF_LD($$arg1)		0		
+split st	instruction		BOOL,${type,dtype->INT,int}	SPLIT_ST_$type	output	1	1			0\
+	labels: SPLIT_ST_$$ioindex: \
+	labels: REQ_SPLIT_ST_$$ioindex: \
+	gonext: if($$$${BUFFER_FULL(L_$$ioindex)}) goto SPLIT_LDL_$$ioindex; if($$$${BUFFER_FULL(R_$$ioindex)}) goto SPLIT_LDR_$$ioindex;\
+	default:if($$arg1){ $$$${BUFFER_PUSH_SIMPLE(3,1,L_$$ioindex,$$arg2)}; } else { $$$${BUFFER_PUSH_SIMPLE(3,1,R_$$ioindex,$$arg2)}; };
+
+split load	instruction	${type,dtype->INT,int}		SPLIT_LD${side->L,R}_$type	input	1	1			0	\
+	labels: SPLIT_LD$side_$$ioindex: \
+	labels: REQ_SPLIT_LD$side_$$ioindex: \
+	global: $$$${BUFFER_DECL(3,1,1,1,$side_$$ioindex,$dtype)};\
+	logs:   $$$${BUFFER_DUMP(3,$side_$$ioindex)};\
+	goprev: if($$$${BUFFER_EMPTY($side_$$ioindex)}) goto SPLIT_ST_$$ioindex;\
+	default:$$type $$name; $$$${BUFFER_PEEK_SIMPLE(3,1,$side_$$ioindex,$$name)}; $$$${BUFFER_CONSUME_ONE($side_$$ioindex)};
+
+
+merge st	instruction		${type,dtype->INT,int}	MERGE_ST${side->L,R}_$type	output	1	1			0\
+	labels: MERGE_ST$side_$$ioindex: \
+	labels: REQ_MERGE_ST$side_$$ioindex: \
+	global: $$$${BUFFER_DECL(3,1,1,1,$side_$$ioindex,$dtype)};\
+	logs:   $$$${BUFFER_DUMP(3,$side_$$ioindex)};\
+	gonext: if($$$${BUFFER_FULL($side_$$ioindex)}) goto MERGE_$$ioindex;\
+	default:$$$${BUFFER_PUSH_SIMPLE(3,1,$side_$$ioindex,$$arg1)};
+
+merge process	instruction	${type,dtype->INT,int}		MERGE_PROC_$type	input	1	1			0\
+	labels: MERGE_$$ioindex: BUFF_LD_$$ioindex:\
+	labels: REQ_MERGE_$$ioindex: REQ_BUFF_LD_$$ioindex:\
+	global: $$$${BUFFER_DECL(3,1,1,1,M_$$ioindex,$dtype)};\
+	logs:   $$$${BUFFER_DUMP(3,M_$$ioindex)};\
+	indicator: merge_part\
+	gonext: if($$$${BUFFER_FULL(M_$$ioindex)}) goto MERGE_LD_$$ioindex;\
+	goprev: if($$$${BUFFER_EMPTY($$ioindex)}) goto BUFF_ST_$$ioindex;\
+	default:\
+bool tmp; $$$${BUFFER_PEEK_SIMPLE(3,1,$$ioindex,tmp)}; $$$${BUFFER_CONSUME_ONE($$ioindex)};\
+$$type myval;\
+if(tmp)\
+{\
+  if($$$${BUFFER_EMPTY(L_$$ioindex)})\
+    goto REQ_MERGE_STL_$$ioindex;\
+  $$$${BUFFER_PEEK_SIMPLE(3,1,L_$$ioindex,myval)}; $$$${BUFFER_CONSUME_ONE(L_$$ioindex)};\
+}\
+else\
+{\
+  if($$$${BUFFER_EMPTY(R_$$ioindex)})\
+    goto REQ_MERGE_STR_$$ioindex;\
+  $$$${BUFFER_PEEK_SIMPLE(3,1,R_$$ioindex,myval)}; $$$${BUFFER_CONSUME_ONE(R_$$ioindex)};\
+}\
+$$$${BUFFER_PUSH_SIMPLE(3,1,M_$$ioindex,myval)};
+
+merge load	instruction	${type,dtype->INT,int}		MERGE_LD_$type	input	1	1			0	\
+	labels: MERGE_LD_$$ioindex: \
+	labels: REQ_MERGE_LD_$$ioindex: \
+	goprev: if($$$${BUFFER_EMPTY(M_$$ioindex)}) goto MERGE_$$ioindex;\
+	default:$$type $$name; $$$${BUFFER_PEEK_SIMPLE(3,1,M_$$ioindex,$$name)}; $$$${BUFFER_CONSUME_ONE(M_$$ioindex)};
+
+
+buffer st	instruction		${type,dtype->INT,int,BOOL,bool}	BUFF_ST_$type	output	1	1			0	\
+	labels: BUFF_ST_$$ioindex: \
+	labels: REQ_BUFF_ST_$$ioindex: \
+	global: $$$${BUFFER_DECL(3,1,1,1,$$ioindex,$dtype)};\
+	logs:   $$$${BUFFER_DUMP(3,$$ioindex)};\
+	gonext: if($$$${BUFFER_FULL($$ioindex)}) goto BUFF_LD_$$ioindex;\
+	default:$$$${BUFFER_PUSH_SIMPLE(3,1,$$ioindex,$$arg1)};
+
+buffer ld	instruction	${type,dtype->INT,int,BOOL,bool}		BUFF_LD_$type	input	1	1			0	\
+	labels: BUFF_LD_$$ioindex:\
+	labels: REQ_BUFF_LD_$$ioindex:\
+	goprev: if($$$${BUFFER_EMPTY($$ioindex)}) goto BUFF_ST_$$ioindex;\
+	default:$$type $$name; $$$${BUFFER_PEEK_SIMPLE(3,1,$$ioindex,$$name)}; $$$${BUFFER_CONSUME_ONE($$ioindex)};
 
 #note	type	output type	input types	op id	flags	name	transformer	args
 split	expansion	INT,INT	BOOL,INT	SPLIT_INT		split	cf	SPLIT_ST_INT,SPLIT_LDL_INT,SPLIT_LDR_INT
-split	expansion	INT	BOOL,INT,INT	MERGE_INT		merge	cf	MERGE_LD_INT,MERGE_STL_INT,MERGE_STR_INT,BUFF_ST_BOOL
+split	expansion	INT	BOOL,INT,INT	MERGE_INT		merge	cf	MERGE_LD_INT,MERGE_PROC_INT,MERGE_STL_INT,MERGE_STR_INT,BUFF_ST_BOOL
 split	expansion	${type->INT,BOOL}	$type	BUFF_$type		buffer	cf	BUFF_ST_$type, BUFF_LD_$type
 
 #note	type	type id	bitwidth	width	code

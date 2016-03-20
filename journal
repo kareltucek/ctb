@@ -189,7 +189,9 @@ while ( cycle_exists ) //dont forget to construct new factor graph
 {
   v = first partition in pseudo topological ordering (where partitions are ordered by topological ordering of their childrens)
   follow all outputs leading from v and colour all found vertices red
-  now use the coloured vertices to identify a cut in partition v
+  colour v and all its predecesors green
+  colour all successors of green to green as well, but do not pass partition boundaries
+  now use the coloured vertices to identify a cut in *all* partitions
   put a buffer on all edges in the cut
 }
 //cf contains some notes -> we may want explain this in detail in respect to our crawling methods
@@ -207,6 +209,9 @@ Today I am going to ensure that parittions are sorted pseudo-topologically (I be
 !!!Currently we support only 1:1 width explicit instructions. In case we add support for general widths we may also want to be able to optimize width choice. Sensible way to do this seems to be by standard critical-path algorithm (either in respect to number of instructions or their cost).)
 
 !!!This algorithm does not provide a minimal cut. We may propose an algorithm for this
+
+!!!Observation - this algorithm will work if we start from arbitrary component on the cycle
+
 
 TODO
 ====

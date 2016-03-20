@@ -14,6 +14,7 @@ namespace ctb
         static string get_name(){ return "cf";};
       private:
         typedef typename G::graph_t::node_t node;
+        typedef typename G::graph_t::fnode_t fnode;
         typedef typename G::graph_t::edge_t edge;
         typedef typename G::vid_t vid_t;
         typedef typename G::opid_t opid_t;
@@ -62,29 +63,32 @@ namespace ctb
           const auto& expansion = generator.instab.find_expansion(get_name(), name, n->data.get_typespec());
           const vector<opid_t>& ids = expansion.arguments;
 
-          if(ids.size() < 4)
+          if(ids.size() < 5)
             error("not enough arguments for merge expansion in cf transform");
 
           int buff_id = new_buff_id();
 
           opid_t merge_ld = ids[0];
-          opid_t merge_st_true = ids[1];
-          opid_t merge_st_false = ids[2];
-          opid_t buff_st = ids[3];
+          opid_t merge_proc = ids[1];
+          opid_t merge_st_true = ids[2];
+          opid_t merge_st_false = ids[3];
+          opid_t buff_st = ids[4];
 
           node* ld = generator.addvert(n->id + "_merge_ld_" + ctb::to_string(buff_id), merge_ld, toparam("ioindex", buff_id));
           node* sttrue = generator.addvert(n->id + "_merge_sttrue_" + ctb::to_string(buff_id), merge_st_true, toparam("ioindex", buff_id));
           node* stfalse = generator.addvert(n->id + "_merge_stfalse_" + ctb::to_string(buff_id), merge_st_false, toparam("ioindex", buff_id));
           node* stbuff = generator.addvert(n->id + "_merge_stbuff_" + ctb::to_string(buff_id), buff_st, toparam("ioindex", buff_id));
+          node* proc = generator.addvert(n->id + "_merge_proc_" + ctb::to_string(buff_id), merge_proc, toparam("ioindex", buff_id));
 
           generator.graph.addedge(n->in_at(0)->from, stbuff,  0, n->in_at(0)->frompos, 0);
           generator.graph.addedge(n->in_at(1)->from, sttrue,  0, n->in_at(1)->frompos, 0);
           generator.graph.addedge(n->in_at(2)->from, stfalse, 0, n->in_at(2)->frompos, 0);
           generator.graph.connect_as(ld, n, false, true);
 
-          generator.graph.addedge(stbuff, ld, 0, 0, 1);
-          generator.graph.addedge(sttrue, ld, 0, 0, 1);
-          generator.graph.addedge(stfalse, ld, 0, 0, 1);
+          generator.graph.addedge(stbuff, proc, 0, 0, 1);
+          generator.graph.addedge(sttrue, proc, 0, 0, 1);
+          generator.graph.addedge(stfalse, proc, 0, 0, 1);
+          generator.graph.addedge(proc, ld, 0, 0, 1);
 
           generator.graph.rmvert(n);
         };
@@ -138,17 +142,17 @@ namespace ctb
         };
 
 
-        void remove_cycles(G& generator)
+        void remove_cycles(G& generator, bool showsteps)
         {
           AUTO(graph)& g = generator.graph;
 
-          int red,green,blue;
-          auto colourer = [&](node* n)->string{if(n->colourmark == green) return "green"; else if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";};  // for debug
+          int red,green,blue, yellow;
+          auto colourer = [&](node* n)->string{if(n->colourmark == green) return "green"; else if(n->colourmark == yellow) return "yellow"; else if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";};  // for debug
 
-          g.factorize();
-          AUTO(node)* n = g.factor.find_cycle_begin({0},{0});
+          fnode* n = NULL;
           int remains = g.verts.size() + 2;
-          while(n != NULL && remains-- > 0)
+          g.update_factor();
+          while(g.factor.cycle_exists(&n) && remains-- > 0)
           {
 
             if(n->data.out.size() == 0 )
@@ -166,6 +170,7 @@ namespace ctb
               red = node::newid();
               blue = node::newid();
               green = node::newid();
+              yellow = node::newid();
               q.front()->template crawl<false,false>(
                   [&](node* n)->bool{ n->colourmark = red; return true;},
                   [&](node* n)->bool{ return n->colourmark != red;},
@@ -174,16 +179,36 @@ namespace ctb
                   );
 
               //and spread green colour from these, by this we identify only those edges that have to be cut! (note that we still dont have minimality)
-              bv->template crawl<true,false>(
-                  [&](node* n)->bool{ n->colourmark = green; return true;},
-                  [&](node* n)->bool{ return n->colourmark != green && n->colourmark != red;},
-                  {0, 1}
+              auto q2 = n->data.in; //make copy
+              q2.insert(bv);
+              for(node* cv : q2)
+              {
+                cv->template crawl<true,false>(
+                    [&](node* n)->bool{ n->colourmark = green; return false;},
+                    [&](node* n)->bool{ return n->colourmark != green && n->colourmark != red;},
+                    {0, 1}
+                    );
+              }
+              g.crawl_topological(
+                  [&](node* n) 
+                  {
+                    if(n->colourmark == green)
+                      for(auto e : n->out)
+                        if(e->to->colourmark != red)
+                          e->to->colourmark = green;
+                  }
                   );
 
               if(bv->colourmark == red)
               {
                 g.dump_visual(colourer);
-                error("cycle removal problem - cycle seem to exist in the original graph");
+                error("cycle removal problem - real cycle seem to exist in the original graph");
+              }
+
+              if(showsteps)
+              {
+                auto colourer2 = [&](node* n)->string{ if(n == bv) return "violet"; else if(n->colourmark == green) return "green"; else if(n->colourmark == red) return "red"; else if(n->colourmark == blue) return "blue"; else return "black";};  // for debug
+                g.dump_visual(colourer2);
               }
 
               //in this pass we get a list of all edges that go from green to red
@@ -205,17 +230,17 @@ namespace ctb
               (*n->data.vertices.begin())->template crawl<true, false>(
                   f,
                   [&](node* n)->bool{ return n->colourmark != blue;},
-                  {0}
+                  {0,1}
                   );
             }
             //now we have a list of edges defining the cut between red and nonred vertices inside of our partition. (actually the entire partition is blue now)
+
 
             //we use that list to make the cut
             for(auto e : edges)
               transform_buffer_edge(generator, e);
 
-            g.factorize();
-            n = g.factor.find_cycle_begin({0},{0});
+            g.update_factor();
           }
 
           if(remains < 0)
@@ -231,9 +256,15 @@ namespace ctb
          * We construct list of nodes that are to be transformed using this tranformer. This consists of pairs of a node pointer and an expansion structure reference)
          * Then we go through these and perform them.
          * */
-        void transform(G& generator)
+        void transform(G& generator, const stringlist& args)
         {
           typename G::graph_t& g = generator.graph;
+
+          bool visual;
+          for(const auto& arg : args)
+            if(arg == "show")
+              visual = true;
+
 
           typedef pair<node*,decltype(declval<node>().data.op->expansions.front())> p;
           vector<p> list;
@@ -258,7 +289,7 @@ namespace ctb
             }
           }
 
-          remove_cycles(generator);
+          remove_cycles(generator, visual);
         }
     };
 };

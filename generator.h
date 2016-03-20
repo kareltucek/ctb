@@ -36,7 +36,8 @@ namespace ctb
         typedef typename T::tid_t tid_t;
         struct output_options{
           bool once;
-          output_options() {once = false;};
+          bool global_once;
+          output_options() {once = false; global_once = false;};
         };
         MAKE(output_options);
       private:
@@ -254,7 +255,7 @@ namespace ctb
         if(me->in.size() != op->in_types.size())
         {
           cout << op->in_types[0] << endl;
-          parent.dump_visual_label([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
+          parent.template dump_visual_label<true>([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
           error( string("count of input nodes does not match operation specification, insize is ") + ctb::to_string(me->in.size()) +", expected is " + ctb::to_string(op->in_types.size()));
         }
         for(int i = 0; i < me->in.size(); ++i)
@@ -262,7 +263,7 @@ namespace ctb
           auto e = me->in[i];
           if(e->from->data.op->out_type != op->in_types[e->topos])
           {
-            parent.dump_visual_label([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
+            parent.template dump_visual_label<true>([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
             error( string("argument ") + to_string(e->topos) + " does not match defined input type: got '" + e->from->data.op->out_type + "' wanted '" + op->in_types[e->topos] + "'");
           }
         }
@@ -308,7 +309,10 @@ namespace ctb
               string wname = op_cc[wi].name;
               if(opts[wname].once && i != 0)
               {
-                cout << "ONCE!!!" << endl;
+                continue;
+              }
+              else if(opts[wname].global_once && !w[wname].empty())
+              {
                 continue;
               }
               else 

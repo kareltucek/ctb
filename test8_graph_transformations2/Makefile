@@ -5,20 +5,24 @@ CXX=g++
 all : graph.out graph_cf.out graph.out.png graph_cf.out.png run
 
 make_anyway :
+	make -C .. ctb
 
+test : output.preprocessed.cpp
+	${CXX} -ggdb output.preprocessed.cpp -o test
 
-graph.out graph_cf.out : ../ctb graph.xml instab.csv make_anyway
-	../ctb -f program
-
-visual :
+visual : make_anyway
 	../ctb -f program_visual
+
+graph.out graph_cf.out output.preprocessed.cpp : make_anyway graph.xml instab.csv
+	../ctb -f program
 
 graph.out.png graph_cf.out.png : graph.out graph_cf.out
 	cat graph.out | dot -Tpng > graph.out.png
 	cat graph_cf.out | dot -Tpng > graph_cf.out.png
 
 
-run : graph.out
+run : graph.out test
+	./test
 	#diff graph_cf.out graph_cf.out.expected
 
 clean :

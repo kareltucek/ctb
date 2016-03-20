@@ -100,7 +100,7 @@ namespace ctb
     stringlist args;
     if(!split_call(a, name, args))
     {
-      warning(string("aliasenv_cfmacros did recognize its macro pattern in ") + a );
+      //warning(string("aliasenv_cfmacros did not recognize its macro pattern in ") + a );
       return false;
     }
 
@@ -116,13 +116,25 @@ namespace ctb
     decl("BUFFER_DECL", "size, vsize, ingranularity, outgranularity, id, type")
     {
       for(int i = 0; i < TOINT("$[$size/$vsize]"); ++i)
+      {
         P("$type gendecl_${id}_${i};"); 
+      }
       P("int gendecl_readat_${id} = 0;"); 
       P("int gendecl_contains_${id} = 0;"); 
       P("int gendecl_size_${id} = $size;"); 
       P("static const int gendecl_outgran_${id} = $outgranularity;"); 
       P("static const int gendecl_ingran_${id} = $ingranularity;"); 
       P("static const int gendecl_vsize_${id} = $vsize;"); 
+    }
+    decl("BUFFER_DUMP", "size, id")
+    {
+      P("printf(\"  BUFFER $id, of size %i\\n\", gendecl_contains_${id});"); 
+      for(int i = 0; i < TOINT("$[$size]"); ++i)
+      {
+        P("printf(\"    %i\", gendecl_${id}_${i});"); 
+        P("if($i == gendecl_readat_${id}) printf(\" <--\");");
+        P("printf(\"\\n\");");
+      }
     }
     decl("BUFFER_FULL", "id")
     {

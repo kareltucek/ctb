@@ -3,7 +3,7 @@
    <graph Name="graph1">
       <vertex opid="LDI" vid="ldi1" params="ioindex=2"></vertex>
       <vertex opid="LDI" vid="ldi2" params="ioindex=1"></vertex>
-      <vertex opid="LDB" vid="ldb" params="ioindex=1"></vertex>
+      <vertex opid="LDB" vid="ldb" params="ioindex=3"></vertex>
       <vertex opid="ADDI" vid="add1"></vertex>
       <vertex opid="MULI" vid="mul1"></vertex>
       <vertex opid="ADDI" vid="add2"></vertex>

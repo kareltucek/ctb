@@ -68,6 +68,7 @@ namespace ctb
 
   string aliasenv_generator::alias(const string& a, bool* s, int n)
   {
+    aliasenv_generator::init();
     if(params == NULL)
       warning("aliasenv_generator was invoked without specification of params. You are not supposed to use the generating aliasenv on its own.");
     auto itr = aliases.find(a);

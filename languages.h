@@ -67,9 +67,17 @@ namespace ctb
             braf = true;
             break;
           case '}':
-          case '{':
             braf = true;
             brbf = true;
+            break;
+          case '{':
+            braf = true;
+            if(pos>0 && format[pos-1] != '$')
+            brbf = true;
+            break;
+          case '$':
+            if(format.size() > pos+1 && format[pos+1] == '{')
+              brbf = true;
             break;
         }
       };
@@ -88,6 +96,8 @@ namespace ctb
             outindent = indent;
             break;
           case '{':
+            if(line.length() > 1 && line[line.length()-2] == '$')
+              nobreak=3;
             ++indent;
             break;
           case ':':

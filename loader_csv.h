@@ -335,6 +335,14 @@ namespace ctb
        int i = 1;
        while(getline(s, line))
        {
+         while(line.back() == '\\')
+         {
+           string line2;
+           if(!getline(s, line2))
+             error("expected line continuation, but eof came");
+           line = line.substr(0, line.size()-1) + line2;
+           ++i;
+         }
          writer_plain lines = preprocessline(line);
          for(int j = 0; j < lines.size(); j++)
          {

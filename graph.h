@@ -51,6 +51,7 @@ namespace ctb
           int frompos;
           int topos;
           int level;
+          int order;
           //GLUE_PTR(node, ptr);
         };
         //MAKE(edge);
@@ -76,7 +77,7 @@ namespace ctb
             multicont<vector<edge*>> in;
             edge* in_at(int i, bool check_uniqueness = true);
             template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels = {0}, queue<node*>* q = NULL, bool root = true); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
-            void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search*/
+            template <bool Inverted = false> void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search*/
             static int newid();
             int colourmark; /*public version of lastpass - may be used for construction of arbitrary crawls*/
         };
@@ -95,7 +96,8 @@ namespace ctb
         //void rm_at(vector<edge>& list, node* to);
         //void rm_atv(node* a,node* to);
       protected:
-        bool classids_ok;
+        int classids;
+        int classids_current;
       public:
         typedef edge edge_t;
         typedef node node_t;
@@ -107,26 +109,61 @@ namespace ctb
         graph_basic();
         ~graph_basic();
         template <typename...L> node* addvert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
-        template <typename J> void addedge(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0) ; /** self describing I believe*/
+        template <typename J> void addedge(J aid, J bid, int b_argpos = -1, int a_argpos = -1, int level = 0, int order = 0) ; /** self describing I believe*/
         //template <typename J> void rmedge(J aid, J bid, int level = 0);
         template <typename J> void rmvert(J v);
         template <typename J> void connect_as(J v, J as, bool inputs = true, bool outputs = true);
         template <typename J> void get_edge_b_pos(J a, J b, int i);
-        node* find_cycle_begin(vector<int> at_levels = {0}, vector<int> with_topology = {0,1});
         void rmedge(edge* e);
         void calculate_distances(); /**performs bellman-ford algorithm */
         int get_dist(I a, I b, I* c = NULL) const; /** returns distance from a to b and the next vertex on path from a to b into c (if not null)*/
         static void self_test();
         void clear();
-        void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
-        void crawl_topological_b(function<bool(node*)> f, std::vector<int> levels = {0}); 
-        bool cycle_exists(node* n, const vector<int>& at_levels = {0}, set<node*> vertices = {}, int remains = -1);
+        template <bool Inverted = false> void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
+        template <bool Inverted = false> void crawl_topological_b(function<bool(node*)> f, std::vector<int> levels = {0}); 
+        //node* find_cycle_begin(vector<int> at_levels = {0}, vector<int> with_topology = {0,1});
+        //bool cycle_exists(node* n, const vector<int>& at_levels = {0}, set<node*> vertices = {}, int remains = -1);
+        bool cycle_exists(node** n = NULL);
         void factorize();
+        void update_factor();
         int size();
     };
 
   typedef graph_basic<dummy,int,true> graph_default;
   typedef graph_basic<dummy,int,true> graph_basic_default;
+
+  template <class T, class I, bool directed>
+    bool graph_basic<T,I,directed>::cycle_exists(node** n)
+    {
+      update_factor();
+      for(const auto& v : verts)
+      {
+        int maxin = 0;
+        int minout = 100000000;
+
+        for(int l : {0,1})
+          for(auto e : v.second->in.getlevel(l))
+            maxin = max(e->order, maxin);
+        for(int l : {0,1})
+          for(auto e : v.second->out.getlevel(l))
+            minout = min(e->order, minout);
+
+        if(maxin > minout)
+        {
+          if(n != NULL)
+            *n = v.second;
+          return true;
+        }
+      }
+      return false;
+    }
+
+  template <class T, class I, bool directed>
+    void graph_basic<T,I,directed>::update_factor()
+    {
+      if(classids != classids_current)
+        factorize();
+    }
 
   template <class T, class I, bool directed>
     int graph_basic<T,I,directed>::size()
@@ -179,25 +216,50 @@ namespace ctb
       int classid = 0;
 
       //note that we *do* want to have the partitions sorted by the topological ordering of vertices they contain
+      vector<int> minouts;
+      vector<int> maxins; //less than corresponding minouts
       auto make_class = [&](node* v)
       {
         if(v->classid == -1)
         {
+          int mine = 100000+classid; //want these unique - edge order will be unique with respect to vertices
           v->template crawl<true, false>( 
-              [&](node* n)-> bool { n->classid = classid; return true; }, 
-              [&](node* n)->bool { return n->classid == -1; } 
+              [&](node* n)-> bool { for(auto e : n->out.getlevel(1)) mine = min(e->order, mine); return true; }, 
+              [&](node* n)->bool { bool res = n->classid == -1; n->classid = classid; return res; } 
               );
+          minouts.push_back(mine);
+          maxins.push_back(-classid);
           ++classid;
         }
       };
 
       //since the crawl is not reentrant, we will need to use positivness of classid as an indicator instead of lastpass
-      this->crawl_topological([&](node* n){n->classid = -1;}); 
-      //then we go topologically through the graph and form partitions from every not-yet-assigned vertex
+      int i = 0;
+      this->crawl_topological([&](node* n){
+          n->classid = -1;  
+          i++;
+          for(int l : {0,1})
+             for(auto e : n->in.getlevel(l))
+               e->order = i;
+         }, {0,1}); 
+      //then we go topologically through the graph and form partitions from every not-yet-assigned vertex, also we construct minimum factor-output values
       this->crawl_topological(make_class, {0,1}); 
 
+      this->crawl_topological([&](node* n){ for(auto e: n->in.getlevel(1)) if(e->order < minouts[n->classid]) maxins[n->classid] = max(maxins[n->classid], e->order);}, {0,1}); 
+
+      //now we try to translate the found ids into some nicer ordering (although this is not a solution)
+      map<int,int> sortmap;
+      int translation[classid];
+      for (auto j = 0; j < maxins.size(); j++) 
+        sortmap[maxins[j]] = j;
+      i = 0;
+      for(auto itr : sortmap)
+        translation[itr.second] = i++;
+
+      this->crawl_topological([&](node* n){ n->classid = translation[n->classid];}, {0,1}); 
+
       classcount = classid;
-      classids_ok = true;
+      classids = classids_current;
     }
 
   template <class T, class I, bool directed>
@@ -218,7 +280,7 @@ namespace ctb
       classcount = 0;
       index = 0;
       verts.clear();
-      classids_ok = false;
+      classids_current++; 
     }
 
   template <class T, class I, bool directed>
@@ -238,7 +300,7 @@ namespace ctb
       g.out.front()->crawl_topological([&](node* n){ assert(n->id == results[i++]);});
       g.calculate_distances();
       assert(g.get_dist(1,4) == 2);
-      assert(g.find_cycle_begin() == NULL);
+      assert(g.cycle_exists() == false);
       //  
       graph_basic<dummy, int, false> h;
       h.addvert(1, false, false);
@@ -390,6 +452,7 @@ namespace ctb
   //}
 
 
+  /*
   template <class T, class I, bool directed>
     bool graph_basic<T,I,directed>::cycle_exists(node* n, const vector<int>& at_levels, set<node*> vertices, int remains)
     {
@@ -434,6 +497,7 @@ namespace ctb
 
       return found;
     }
+    */
 
   template <class T, class I, bool directed>
     void graph_basic<T,I,directed>::rm_at(vector<node*>& list, node* to)
@@ -441,7 +505,7 @@ namespace ctb
       for (auto itr = list.begin(); itr != list.end(); ++itr) 
         if(*itr == to) //(we want to preserve argument indices)
           *itr = NULL;
-      classids_ok = false;
+      classids_current++; 
     }
 
   template <class T, class I, bool directed>
@@ -474,7 +538,7 @@ namespace ctb
           }
         }
       }
-      classids_ok = false;
+      classids_current++; 
     }
 
 
@@ -500,7 +564,7 @@ namespace ctb
       rm_at(out, a); 
       verts.erase(a->id);
       delete a; //not the safest thing to do. Now I admit that smart pointers should be used probably always.
-      classids_ok = false;
+      classids_current++; 
     }
 
   template <class T, class I, bool directed>
@@ -520,12 +584,12 @@ namespace ctb
       }
 
       delete v;
-      classids_ok = false;
+      classids_current++; 
     }
 
   template <class T, class I, bool directed>
     template <typename J>
-    void graph_basic<T,I,directed>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l)
+    void graph_basic<T,I,directed>::addedge(J aid, J bid, int b_argpos, int a_argpos, int l, int order)
     {
       auto a = tovert(aid);
       auto b = tovert(bid);
@@ -536,20 +600,20 @@ namespace ctb
         error( string("unknown vertex in addedge: ") + toname(bid) + " (<- " + toname(aid) + ")");
       if(directed)
       {
-        edge* e = new edge({a, b, a_argpos, b_argpos, l});
+        edge* e = new edge({a, b, a_argpos, b_argpos, l, order});
         a->out.getlevel(l).push_back(e);
         b->in.getlevel(l).push_back(e);
       }
       else
       {
-        edge* e = new edge({a, b, a_argpos, b_argpos, l});
-        edge* f = new edge({b, a, b_argpos, a_argpos, l});
+        edge* e = new edge({a, b, a_argpos, b_argpos, l, order});
+        edge* f = new edge({b, a, b_argpos, a_argpos, l, order});
         a->out.getlevel(l).push_back(e);
         b->in.getlevel(l).push_back(e);
         b->out.getlevel(l).push_back(f);
         a->in.getlevel(l).push_back(f);
       }
-      classids_ok = false;
+      classids_current++; 
     }
 
   template <class T, class I, bool directed>
@@ -562,20 +626,20 @@ namespace ctb
         in.push_back(ptr);
       if(bout)
         out.push_back(ptr);
-      classids_ok = false;
+      classids_current++; 
       return ptr;
     }
 
 
   template <class T, class I, bool directed>
     template <typename... L> 
-    graph_basic<T,I,directed>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (forward<L>(p))...), index(idx)
+    graph_basic<T,I,directed>::node::node(I vid, int idx, L&&... p) : id(vid), out(), in(), data(this, (forward<L>(p))...), index(idx), classid(-1)
     {
     }
 
 
   template <class T, class I, bool directed>
-    graph_basic<T,I,directed>::graph_basic() : in(), out(), verts(), index(0), classids_ok(false)
+    graph_basic<T,I,directed>::graph_basic() : in(), out(), verts(), index(0), classids(0), classids_current(0)
   {
   }
 
@@ -587,6 +651,7 @@ namespace ctb
     }
 
   template <class T, class I, bool directed>
+    template <bool Inverted>
     void graph_basic<T,I,directed>::crawl_topological_b(function<bool(node*)> f, std::vector<int> levels)
     {
       int passid = node::newid();
@@ -595,26 +660,30 @@ namespace ctb
       {
         node* n = v.second;
         if(n->lastpass != passid)
-          n->template crawl<true, false>(
+        {
+          n->template crawl<true, Inverted>(
               [&](node* n)-> bool { cont = f(n); return cont;}, 
               [&](node* n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res && cont; } ,
               levels
               );
+        }
       }
     }
 
   template <class T, class I, bool directed>
+    template <bool Inverted>
     void graph_basic<T,I,directed>::crawl_topological(function<void(node*)> f, std::vector<int> levels)
     {
-      crawl_topological_b([=](node* n)->bool{ f(n); return true;}, levels);
+      crawl_topological_b<Inverted>([=](node* n)->bool{ f(n); return true;}, levels);
     }
 
   template <class T, class I, bool directed>
+    template <bool Inverted>
     void graph_basic<T,I,directed>::node::crawl_topological(function<void(node*)> f, std::vector<int> levels)
     {
       int passid = node::newid();
 
-      crawl<true, false>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;}, levels);
+      crawl<true, Inverted>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;}, levels);
     }
 
   /**

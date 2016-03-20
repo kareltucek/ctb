@@ -31,8 +31,9 @@ namespace ctb
           set<typename ancestor_t::node*> out;
           factor_class(typename factorgraph_myt::node_t* m) : me(m), node(m), vertices(), in(), out(){};
       };
-      void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*);
+      void add_factor_edge(typename ancestor_t::node*, typename ancestor_t::node*, int order);
 
+      int classids_factor;
     public:
       typedef factorgraph_myt factorgraph_t;
       typedef typename factorgraph_myt::node_t factornode_t;
@@ -47,8 +48,8 @@ namespace ctb
       static void self_test();
 
       void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";}, function<string(node_t*)> g = [](node_t* n){return "";});
-      void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
-      void dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f = [](node_t* n){return "black";});
+      template<bool detach = false> void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
+      template<bool detach = false> void dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f = [](node_t* n){return "black";});
 
   };
   typedef graph_factor<dummy,int,true> graph_factor_default;
@@ -57,37 +58,44 @@ namespace ctb
   template <class T, class I, bool directed>
     void graph_factor<T,I,directed>::update_factor()
     {
-      if(!this->classids_ok || ((this->size() == 0) != (factor.size() == 0)))
+      if(this->classids_factor != this->classids_current)
         factorize();
     }
 
   template <class T, class I, bool directed>
-    void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to)
+    void graph_factor<T,I,directed>::add_factor_edge(node_t* from, node_t* to, int order)
     {
-      factor.addedge(from->classid, to->classid); 
+      factor.addedge(from->classid, to->classid, 0, 0, 0, order); 
       factor.verts.find(from->classid)->second->data.out.insert(from);
       factor.verts.find(to->classid)->second->data.in.insert(to);
     }
 
   template <class T, class I, bool directed>
+      template<bool detach>
     void graph_factor<T,I,directed>::dump_visual(function<string(node_t*)> f)
     {
       dump_visual_label([](node_t* n){return "";}, f);
     }
 
   template <class T, class I, bool directed>
+      template<bool detach>
     void graph_factor<T,I,directed>::dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f)
     {
       ofstream ofs;
       ofs.open("/tmp/graphjfjfjf");
       dump(ofs, f, g);
       ofs.close();
-      system("bash -c \"cat /tmp/graphjfjfjf | dot -Tpng > /tmp/graphjfjfjf.png && gpicview /tmp/graphjfjfjf.png\"");
+      cout << "showing graph" << endl;
+      string command = "bash -c \"cat /tmp/graphjfjfjf | dot -Tpng > /tmp/graphjfjfjf.png && nohup gpicview /tmp/graphjfjfjf.png\"";
+      if(detach)
+        command.append(" & ");
+      system(command.c_str());
     }
 
   template <class T, class I, bool directed>
     void graph_factor<T,I,directed>::dump (ostream& o, function<string(node_t*)> colour_callback, function<string(node_t*)> label)
     {
+      bool printlabels = false;
       auto& graph = *this;
 
       string prefix = "#";
@@ -100,7 +108,7 @@ namespace ctb
         if(n->in.empty() && showempty)
           o << prefix << n->id << ";" << endl;
         for( auto e : n->in ) 
-          o << prefix << e->from->id << " -> " << e->to->id << ";" << endl;
+          o << prefix << e->from->id << " -> " << e->to->id << endl;// << "[label=\"" << e->order << "\"];" << endl;
       };
 
       //output edges of standard graph
@@ -109,7 +117,13 @@ namespace ctb
         if(n->in.empty() && showempty)
           o << prefix <<  n->id << endl;
         for( auto e : n->in.getlevel(level) ) 
-          o << prefix << e->from->id << " -> " << e->to->id << " [label=\""+ ctb::to_string( e->frompos ) +"->"+ ctb::to_string( e->topos ) +"\"];" << endl;
+        {
+          o << prefix << e->from->id << " -> " << e->to->id;
+          if(printlabels)
+            o << " [label=\"" << e->order << "\",taillabel=\""+ ctb::to_string( e->frompos ) +"\",headlabel=\""+ ctb::to_string( e->topos ) +"\"];" << endl;
+          else
+            o << ";" << endl;
+        }
       };
 
       //initialize crawling of partitions of a factor graph
@@ -178,6 +192,8 @@ namespace ctb
       assert(g.verts.find(3)->second->classid == g.verts.find(4)->second->classid);
       assert(g.verts.find(1)->second->classid != g.verts.find(4)->second->classid);
       assert(g.factor.verts.find(0)->second->data.vertices.size() == 2);
+      cout << "size is " <<g.factor.verts.find(1)->second->data.vertices.size()  << endl;
+      g.dump_visual();
       assert(g.factor.verts.find(1)->second->data.vertices.size() == 2);
       assert(g.factor.verts.find(0)->second->data.out.size() == 0);
       assert(g.factor.verts.find(1)->second->data.out.size() == 0);
@@ -193,11 +209,11 @@ namespace ctb
     void graph_factor<T,I,directed>::factorize()
     {
       factor.clear();
-      graph_basic<T,I,directed>::factorize(); //will assign class ids in the simple graph
+      graph_basic<T,I,directed>::update_factor(); //will assign class ids in the simple graph
       for(int i = 0; i < this->classcount; ++i)
         factor.addvert(i, false, false);
       this->crawl_topological([&](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
-      this->crawl_topological([&](node_t* n){ for(auto i : n->in.getlevel(1)) { this->add_factor_edge(i->from,n); } });
+      this->crawl_topological([&](node_t* n){ for(auto i : n->in.getlevel(1)) { this->add_factor_edge(i->from,n,i->order); } });
       set<int> ins;
       set<int> outs;
 
@@ -209,6 +225,8 @@ namespace ctb
         factor.in.push_back(factor.verts.find(n)->second);
       for(auto n : outs)
         factor.out.push_back(factor.verts.find(n)->second);
+
+      classids_factor = this->classids_current;
     }
 };
 

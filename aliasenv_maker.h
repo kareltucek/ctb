@@ -41,6 +41,7 @@ namespace ctb
         static string get_child_name();
         static void push();
         static void pop();
+        static int depth();
     };
 
 
@@ -50,6 +51,12 @@ namespace ctb
   template <typename T, typename L, bool R, typename F> stack<map<string, string>> aliasenv_maker<T,L,R,F>::my_aliases;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
+
+  template <typename T, typename L, bool R, typename F>
+    int aliasenv_maker<T,L,R,F>::depth()
+    {
+      return my_aliases.size();
+    }
 
   template <typename T, typename L, bool R, typename F>
     string aliasenv_maker<T,L,R,F>::get_child_name()
