@@ -72,8 +72,8 @@ namespace ctb
             break;
           case '{':
             braf = true;
-            if(pos>0 && format[pos-1] != '$')
-            brbf = true;
+            if(pos == 0 || (pos>0 && format[pos-1] != '$'))
+              brbf = true;
             break;
           case '$':
             if(format.size() > pos+1 && format[pos+1] == '{')

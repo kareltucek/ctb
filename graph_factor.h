@@ -192,8 +192,6 @@ namespace ctb
       assert(g.verts.find(3)->second->classid == g.verts.find(4)->second->classid);
       assert(g.verts.find(1)->second->classid != g.verts.find(4)->second->classid);
       assert(g.factor.verts.find(0)->second->data.vertices.size() == 2);
-      cout << "size is " <<g.factor.verts.find(1)->second->data.vertices.size()  << endl;
-      g.dump_visual();
       assert(g.factor.verts.find(1)->second->data.vertices.size() == 2);
       assert(g.factor.verts.find(0)->second->data.out.size() == 0);
       assert(g.factor.verts.find(1)->second->data.out.size() == 0);

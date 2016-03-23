@@ -121,7 +121,7 @@ namespace ctb
       }
       P("int gendecl_readat_${id} = 0;"); 
       P("int gendecl_contains_${id} = 0;"); 
-      P("int gendecl_size_${id} = $size;"); 
+      P("static const int gendecl_size_${id} = $size;"); 
       P("static const int gendecl_outgran_${id} = $outgranularity;"); 
       P("static const int gendecl_ingran_${id} = $ingranularity;"); 
       P("static const int gendecl_vsize_${id} = $vsize;"); 
@@ -132,7 +132,8 @@ namespace ctb
       for(int i = 0; i < TOINT("$[$size]"); ++i)
       {
         P("printf(\"    %i\", gendecl_${id}_${i});"); 
-        P("if($i == gendecl_readat_${id}) printf(\" <--\");");
+        P("if($i == gendecl_readat_${id}) printf(\" ->\");");
+        P("if($i == (gendecl_readat_${id} + gendecl_contains_${id}) % gendecl_size_${id}) printf(\" <-\");");
         P("printf(\"\\n\");");
       }
     }

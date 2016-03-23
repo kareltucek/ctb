@@ -59,14 +59,16 @@ namespace ctb
           body.print(
               "{ PARTITION_$1:  $2" //labels
               "{ "
-              "printf(\"jumped into %i\\n\", $1); "
-              " $$1 "
+              "printf(\"JUMPED INTO COMPONENT %i\\n\", $1); "
               "$3 $4" //go down, requie labels
               "if(remains_0 == 0) goto PARTITION_$[$1+1];"
               " $5 " //go up
-              "printf(\"in partition %i\\n\", $1);"
+              " $$1 "
+              "printf(\"sep\\n\"); "
               "remains_$1--;"
               " $6 " //perform body
+              " $$1 "
+              "printf(\"sep\\n\"); "
               "goto PARTITION_$1;} }", i, part["labels"], part["gonext"], part["labels_req"], part["goprev"], part["default"], part["logs"]);
         //else
         //{
@@ -74,11 +76,15 @@ namespace ctb
         //}
           logs.print("$1", part["logs"]);
       }
-
-      body_logs.print("$2", logs, body.write_str());
+      body_logs.print("printf(\"sep\\n\"); "); //initialize table
+      body_logs.print("$2 ", logs, body.write_str());
+      body_logs.print("PARTITION_$1: ", generator.partition_count()); //flush last table
+      body_logs.print("printf(\"JUMPED TO THE FINISH LOG PARTITION\\n\"); "); //flush last table
+      body_logs.print(" $1 ;", logs);
+      body_logs.print("printf(\"sep last\\n\"); return;"); //flush last table
 
       result.print("#include <stdio.h>\n");
-      result.print(" void test(){$1 $2 PARTITION_$3: return;}", decl, body_logs, generator.partition_count());
+      result.print(" void test(){$1 $2 /*PARTITION_$3: return;*/}", decl, body_logs, generator.partition_count());
       result.print("int main(){test(); return 0;}");
       result.print("");
 
