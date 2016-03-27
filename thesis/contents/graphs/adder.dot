@@ -1,8 +1,11 @@
 digraph{
-rankdir = LR;
-a[label=LD]
-b[label=LD]
-a -> ADD
-b -> ADD
-ADD -> ST
+#include
+  rankdir = LR;
+  a[label="a LD"]
+  b[label="b LD"]
+  c[label="c ADD"]
+  d[label="d ST"]
+  a -> c
+  b -> c
+  c -> d
 }

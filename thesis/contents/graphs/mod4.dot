@@ -1,8 +1,9 @@
 digraph{
-rankdir = LR;
-a[label="a LD"];
-b[label="b MOD4"];
-c[label="c ST"];
-a -> b;
-b -> c;
+#include
+  rankdir = LR;
+  a[label="a LD"];
+  b[label="b MOD4"];
+  c[label="c ST"];
+  a -> b;
+  b -> c;
 }
