@@ -3,6 +3,9 @@ all: content thesis
 content: 
 	make -C contents
 
+show : thesis
+	mupdf thesis.pdf
+
 # LaTeX must be run multiple times to get references right
 thesis: thesis.tex $(wildcard *.tex) bibliography.bib
 	pdflatex $<

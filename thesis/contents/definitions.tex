@@ -1,0 +1,41 @@
+Reader should be familiar with the~basic terminology of the~graph~theory. For now we will assume knowledge of the~following terms: \emph{directed~graph}, \emph{multigraph}, \emph{topological~ordering}. Definitions of these may be found in \cite{kapitoly}. We will also provide some definitions of our own.
+
+\begin{define}[operation and instruction]
+We will use the~term \emph{operation} for general identification of an~operation which is to be perofmed on some data. The~term \emph{instruction} will be used for a~specific way of performing an~operation. This way, multiple instructions may be assotiated with a~single operation.
+\end{define}
+
+E.g., multiplication by a constant power of two is a~unary operation. Associated instructions may be:
+\begin{itemize}
+  \item binary shift to left
+  \item multiplication using the~asterisk operator
+  \item a~vectorized version of multiplication
+\end{itemize}
+
+\begin{define}[width of an instruction]
+We will use the~term \emph{width} to denote the~number of independent data series a~single instruction operates~on.
+\end{define}
+
+\begin{define}[flow graph]
+We will use the~term \emph{flow~graph} for any tuple $(G(V,E),O,from:E \arrow \N, to:E \arrow \N, op:V \arrow O)$ which satisfies the~following conditions:
+\begin{itemize}
+  \item $G(V,E)$ is a~directed acyclic multigraph with annotations defined by $from$, $to$ and $op$.
+  \item $O$ is a~set of operations.
+  %\item $\forall(v) \in V |out(v)| \leq 1$ 
+  \item Any directed edge is uniquely identified by its destination vertex and the~$to$~annotation. I.e.:
+    $$ \forall{e=:(a,b),f=:(c,d)} \in {E(G)}: b = d \wedge to(b) = to(d) \implies e = f $$
+\end {itemize}
+    We will write $G(V,E)$ for brievity.
+\end{define}
+
+This definition of flow graph is almost identical to the definition of \emph{gate networks} given in \cite{ads} altough our use of flow graphs will resemble more the~use of \emph{kahn networks}.
+
+\begin{define}[realization of a flow graph]
+  Let $G(V,E)$ be a~flow graph and $I~\subseteq~V(G)$. \emph{Realization~of~a~flow~graph} will be an~algorithm which provided some annotations of outgoing edges of vertices in $I$ produces annotations of all other edges of $G$ such that semantics assigned to $O$ are preserved. 
+\end{define}
+
+Flow graphs will represent pipeline computations. Edges will represent data queues. Vertices will represent data transformations. A~transformation on vertex~$v$ will pop exactly one element from every incoming queue of $v$ and push exactly one element into every outgoing queue of $v$. Element pushed into an~outgoing queue~$e$~of~$v$ will be determined from the~elements taken from the~incoming queues~of~$v$, their~$to$~annotations, the~annotation~$op(v)$ and the~annotation~$from(e)$. The~$to$~annotation identifies arguments for operations represented by members~of~$O$. The~$to$~annotation identifies outputs of operations which return more than one value.
+
+\parspace
+
+Note that our definition~of~flow~graph does neither~require nor~ensure semantics~of~$O$ to be consistent. Thus some flow~graphs may have no realization. We will implicitly assume our flow~graphs to~be consistent with some~semantics assigned~to~$O$. This semantics will always be~clear from their context.
+

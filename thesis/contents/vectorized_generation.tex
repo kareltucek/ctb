@@ -1,0 +1,79 @@
+\begin{define}[width conversion]
+  We will use the~term \emph{width~conversion} for an~instruction which takes data from another instruction of~some~width and transforms them to data suitable for an~instruction of a~different width. 
+\end{define}
+
+Consider the~following problem.
+
+\begin{problem}[vectorized code generation]
+  Let $G(V,E)$ and $O$ be defined as in the~\emph{simple~code~generation} problem. Furthermore let there be a~set~$I$ (of SIMD instructions) and a~partial~function $enc: O \times \N -> I$. Let $enc$ be defined at~least~on $O \times \{1\}$. Also let there be a~set of~width conversions sufficient for direct conversion between any two widths present in $I$. Finally let all widths be powers~of~2. We wish to~generate C~code which will realize the~graph~G using instructions of highest possible widths. I.e., every vertex will be performed by the~broadest instruction its operation is assotiated with. 
+\end{problem}
+
+If highest instruction widths of all operations present in~$G$ were the same ones, we could use the~\emph{simple~generator}. We would simply replace all types by the corresponding vector versions and use vectorized coutnerparts of all instructions. Typically, the~width will vary with the~bit~length of the~data~type in question and thus we cannot use this approach with more than one data type present in~$G$.
+
+\parspace
+
+We present different approach. First we will find maximum width~$w$ of an~instruction which may be used in~$G$ (we will not consider operations which are not in~$G$ at~all). Then we will generate code processing $w$ data series in one iteration. Again we take vertices of~$G$ in~topological order and process them one by one. For a~vertex whose broadest instructions is of~width~$n$ we will generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from the~incoming vertices, only now we remember a~set of~names for every width that was generated. I.e., we look whether there is a~set of~names for~width~$n$. If there is, then we use it. If there is no such set, we will use some width conversion to obtain data for width~$n$. 
+
+\parspace
+
+Pseudo code for vectorized generation thus may be:
+
+\begin{code}
+fun gen_instruction(instruction, result_name, arg_1, arg_2, ...) 
+  { generate actual text representation from arguments; }
+fun gen_conversion_ins(from_width, to_width, result_names, arguments) 
+  { generate actual text representation from arguments; }
+fun vertex::in(index) 
+  { return u such that there exists e = (u, v) and to(e) == index; } 
+fun vertex::results(w) 
+  { return array of names for width w } 
+
+fun gen_conversion(v, to_width)
+{
+  from_width = native width of v;
+  for(int i = 0; i < w; i+= max(from_width,to_width))
+  {
+    result_names, arguments;
+    for(int j = 0; j < from_width/to_width || j == 0; ++j)
+      result_names.push("$v_conversion_w${to_width}_${i+j}");
+    for(int j = 0; j < to_width/from_width || j == 0; ++j)
+      arguments.push(v.results(from_width)[i+j]);
+    gen_conversion_ins(from_width, to_width, result_names, arguments);
+    v.results(n).push(result_name);
+  }
+}
+
+fun gen_vertex(v)
+{
+  for(vertex u : incoming to v)
+    if( u does not have results for width n )
+      gen_conversion(u, n);
+  for(int i = 0; i < w/n; ++i)
+  {
+    result_name = "$v_$i";
+    gen_instruction(enc(op(v), n), result_name, 
+        v.in(1).results(n)[i], v.in(2).results(n)[i], ...);
+    v.results(n).push(result_name);
+  }
+}
+\end{code}
+
+\FloatBarrier
+    
+As an~example, we provide a~simple box which performs modulo~4 on integers. We will use nonvectorized store and load instructions and a~vectorized mod4 instruction on 16~bit integers as our instruction set.
+
+\graph{mod4}
+
+\FloatBarrier
+
+\begin{code}
+uint_16 a_0 = input_a[i++];
+uint_16 a_1 = input_a[i++];
+uint_32 a_conversion_w2_0 = a_0 | (a_1 << 16);
+uint_32 b = a_conversion_w2_0 & 0x0303;
+uint_16 b_conversion_w1_0 = b & 0xFF;
+uint_16 b_conversion_w1_1 = (b & 0xFF00) >> 16;
+output_c[j++] = b_conversion_w1_0;
+output_c[j++] = b_conversion_w1_1;
+\end{code}
+

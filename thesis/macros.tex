@@ -42,12 +42,17 @@
 \newtheorem{problem}{Problem}
 
 \theoremstyle{plain}
-\newtheorem{defn}{Definition}
+\newtheorem{define}{Definition}
 
 \theoremstyle{remark}
 \newtheorem*{cor}{Corollary}
 \newtheorem*{rem}{Remark}
 \newtheorem*{example}{Example}
+
+%moje pridavky
+\newcommand{\expr}[1]{$#1$}
+\newcommand{\graph}[1]{\begin{figure}\centering\input{contents/graphs/#1}\end{figure}}
+\newcommand{\parspace}{\vspace{1\baselineskip}}
 
 %%% An environment for proofs
 
@@ -67,6 +72,7 @@
 %%% The field of all real and natural numbers
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\arrow}{\rightarrow}
 
 %%% Useful operators for statistics and probability
 \DeclareMathOperator{\pr}{\textsf{P}}
