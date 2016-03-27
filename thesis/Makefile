@@ -3,7 +3,7 @@ all: content thesis
 content: 
 	make -C contents
 
-show : thesis
+show : all
 	mupdf thesis.pdf
 
 # LaTeX must be run multiple times to get references right
