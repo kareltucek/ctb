@@ -9,7 +9,7 @@ SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir8 testdir10
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir10 testdir11
 
 fulltest : all testdir4
 
@@ -49,6 +49,8 @@ testdir9 : ctb
 testdir10 : ctb
 	make -C test10_cf_macros
 
+testdir11 : ctb
+	make -C test11_simple_cf_test
 
 ssedir : ctb
 	make -C sse_set
@@ -66,6 +68,7 @@ clean :
 	-make -C test9_cf_macros clean
 	-make -C test10_cf_macros clean
 	-make -C thesis clean
+	-make -C test11_simple_cf_test clean
 	
 
 

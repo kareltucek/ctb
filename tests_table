@@ -11,10 +11,10 @@ test6_sse_bobox_with_preloads - this is a showcase of a simple working bobox gen
 At this point we start implementing the control flow
 
 test7_graph_transformations - this is a simple test of the transformations. We wish to preserve this test for later use as a possible showcase since it is simple. Instruction tables are inconsistent in this test!
-test8_graph_transformations2 - inherits the structure of test 7, but becomes more complex for the purpose of testing partitioning Instruction tables are inconsistent in this test!
+test8_graph_transformations2 - inherits the structure of test 7, but becomes more complex for the purpose of testing partitioning. Instruction tables are inconsistent in this test! This test is now part of test11.
 test11_graph_basic_cf_test - inherits the structure of test 8, but targets generation of a simple control flow graph. We edit the instructions for sake of a simple test.
 
-test9_cf_macros - this test is no longer used. Its purpose was implementation of a set C macro buffer. 
+test9_cf_macros - this test is no longer used. Its purpose was implementation of a C macro buffer. 
 test10_cf_macros - Here we reimplement the same macros using our own preprocessor. Much more convenient
 
 

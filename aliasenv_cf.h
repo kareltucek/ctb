@@ -61,12 +61,14 @@ namespace ctb
               "{ "
               "printf(\"JUMPED INTO COMPONENT %i\\n\", $1); "
               "$3 $4" //go down, requie labels
-              "if(remains_0 == 0) goto PARTITION_$[$1+1];"
+              "if(remains_$1 == 0) goto PARTITION_$[$1+1];"
+              "if(remains_0 == 0) goto PARTITION_$1_PROC;"
               " $5 " //go up
+              "PARTITION_$1_PROC: "
               " $$1 "
               "printf(\"sep\\n\"); "
-              "remains_$1--;"
               " $6 " //perform body
+              "remains_$1--;"
               " $$1 "
               "printf(\"sep\\n\"); "
               "goto PARTITION_$1;} }", i, part["labels"], part["gonext"], part["labels_req"], part["goprev"], part["default"], part["logs"]);
