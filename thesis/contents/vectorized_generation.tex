@@ -5,18 +5,18 @@
 Consider the~following problem.
 
 \begin{problem}[vectorized code generation]
-  Let $G(V,E)$ and $O$ be defined as in the~\emph{simple~code~generation} problem. Furthermore let there be a~set~$I$ (of SIMD instructions) and a~partial~function $enc: O \times \N -> I$. Let $enc$ be defined at~least~on $O \times \{1\}$. Also let there be a~set of~width conversions sufficient for direct conversion between any two widths present in $I$. Finally let all widths be powers~of~2. We wish to~generate C~code which will realize the~graph~G using instructions of highest possible widths. I.e., every vertex will be performed by the~broadest instruction its operation is assotiated with. 
+  Let $G(V,E)$ and $O$ be defined as in the~\emph{simple~code~generation} problem. Furthermore, let there be a~set~$I$ (of SIMD instructions) and a~partial~function $enc (operation, width): O \times \N \arrow I$. Let $enc$ be defined at~least~on $O \times \{1\}$. Also, let there be a~set of~width conversions sufficient for direct conversion between any two widths present in $I$. Finally, let all widths be powers~of~2. We wish to~generate C~code which will realize the~graph~G using instructions of highest possible widths. I.e., every vertex will be performed by the~broadest instruction its operation is associated with. 
 \end{problem}
 
 If highest instruction widths of all operations present in~$G$ were the same ones, we could use the~\emph{simple~generator}. We would simply replace all types by the corresponding vector versions and use vectorized coutnerparts of all instructions. Typically, the~width will vary with the~bit~length of the~data~type in question and thus we cannot use this approach with more than one data type present in~$G$.
 
 \parspace
 
-We present different approach. First we will find maximum width~$w$ of an~instruction which may be used in~$G$ (we will not consider operations which are not in~$G$ at~all). Then we will generate code processing $w$ data series in one iteration. Again we take vertices of~$G$ in~topological order and process them one by one. For a~vertex whose broadest instructions is of~width~$n$ we will generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from the~incoming vertices, only now we remember a~set of~names for every width that was generated. I.e., we look whether there is a~set of~names for~width~$n$. If there is, then we use it. If there is no such set, we will use some width conversion to obtain data for width~$n$. 
+We present different approach. First, we will find maximum width~$w$ of an~instruction which may be used in~$G$ (we will not consider operations which are not in~$G$ at~all). Then we will generate code processing $w$ data series in one iteration. Again, we take vertices of~$G$ in~topological order and process them one by one. For a~vertex whose broadest instructions is of~width~$n$ we will generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from the~incoming vertices, only now we remember a~set of~names for every width that was generated. I.e., we look whether there is a~set of~names for~width~$n$. If there is, then we use it. If there is no such set, we will use some width conversion to obtain data for width~$n$. 
 
 \parspace
 
-Pseudo code for vectorized generation thus may be:
+Thus, pseudo code for vectorized generation may be:
 
 \begin{code}
 fun gen_instruction(instruction, result_name, arg_1, arg_2, ...) 
@@ -70,9 +70,9 @@ As an~example, we provide a~simple box which performs modulo~4 on integers. We w
 uint_16 a_0 = input_a[i++];
 uint_16 a_1 = input_a[i++];
 uint_32 a_conversion_w2_0 = a_0 | (a_1 << 16);
-uint_32 b = a_conversion_w2_0 & 0x0303;
-uint_16 b_conversion_w1_0 = b & 0xFF;
-uint_16 b_conversion_w1_1 = (b & 0xFF00) >> 16;
+uint_32 b = a_conversion_w2_0 & 0x00030003;
+uint_16 b_conversion_w1_0 = b & 0xFFFF;
+uint_16 b_conversion_w1_1 = (b & 0xFFFF0000) >> 16;
 output_c[j++] = b_conversion_w1_0;
 output_c[j++] = b_conversion_w1_1;
 \end{code}

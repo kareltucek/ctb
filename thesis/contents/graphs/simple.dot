@@ -1,6 +1,12 @@
 digraph g {
-rankdir = LR;
-  a->b
-  b->c
-  c->d
+rankdir="LR";
+#include
+  a->b;
+  b->c;
+  c->d;
+  c->dd;
+  d->e;
+  dd->e;
+  e->f;
+  f->g;
 }

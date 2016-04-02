@@ -1,0 +1,34 @@
+digraph G{
+#vertical 40
+#include
+  a[label=" preamble ",shape="circle"]
+  ac[label=" condition ",shape="circle"]
+  d[label=" epilogue ",shape="circle"]
+  b[label="if#newlinebranch",shape="circle"]
+  c[label="else#newlinebranch",shape="circle"]
+  s[label="SPLIT"]
+  m[label="MERGE"]
+  a -> s;
+  ac -> s;
+  s -> b;
+  s -> c;
+  c -> m;
+  b -> m;
+  ac -> m;
+  m -> d;
+
+  aa -> mm;
+  mm -> bb;
+  mm -> ss;
+  bb -> ss;
+  bb -> ss;
+  ss -> cc;
+  cc -> mm;
+  ss -> dd;
+  aa[label="preamble",shape="circle"]
+  dd[label="epilogue",shape="circle"]
+  cc[label="loop body",shape="circle"]
+  bb[label="construct#newlinecondition",shape="circle"]
+  ss[label="SPLIT"]
+  mm[label="LOOP MERGE"]
+}

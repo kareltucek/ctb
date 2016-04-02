@@ -1,12 +1,12 @@
 Consider the~following problem.
 
 \begin{problem}[simple code generation]
-Let $G(V,E)$ be a~flow~graph. Let $O$ denote some subset of arithmetic operations of~the~C~language. Also let $G$ be~consistent with the~semantics of the~C~language. We wish to~generate a~C~code which will~ realize the~graph~$G$.
+Let $G(V,E)$ be a~flow~graph. Let $O$ denote some subset of arithmetic operations of~the~C~language. Also, let $G$ be~consistent with the~semantics of these operations. We wish to~generate a~C~code which will~ realize the~graph~$G$.
 \end{problem}
 
 \FloatBarrier
 
-Solution to this~problem is straightforward. First we order vertices~of~$G$ topologically. Then we take vertices in this order and process them one~by~one. For every vertex~$v$ we use its~annotation to transform its~input~data into its~output~data. Then we save the~output~data under some unique identifier for~later~use.
+Solution to this~problem is straightforward. First, we order vertices~of~$G$ topologically. Then we take vertices in this order and process them one~by~one. For every vertex~$v$ we use its~annotation to transform its~input~data into its~output~data. Then we save the~output~data under some unique identifier for~later~use.
 
 \parspace
 

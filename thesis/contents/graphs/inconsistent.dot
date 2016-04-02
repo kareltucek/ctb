@@ -1,0 +1,20 @@
+digraph{
+#vertical 10
+#include
+  rankdir = LR;
+  a[label="preamble",shape="circle"]
+  b[label="condition",shape="circle"]
+  c[label="SPLIT"]
+
+  g1[style="invis"];
+  g2[style="invis"];
+
+  e[label="ADD"]
+
+  a->c;
+  b->c;
+  c->g1 [dir=none];
+  c->g2 [dir=none];
+  g1->e;
+  g2->e;
+}

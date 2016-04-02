@@ -1,0 +1,8 @@
+digraph{
+#vertical 10
+#include
+  rankdir = LR;
+  e -> f[label="layer 2",style=dotted,arrowhead=odot];
+  c -> d[label="layer 1",style=dotted];
+  a -> b[label="layer 0"];
+}

@@ -44,7 +44,7 @@ while(ii > maxcols)
 }
 
 unit = 380/ii;
-maxunit = 70;
+maxunit = 120;
 if(unit > maxunit)
   unit = maxunit;
 for(j=0; j < i; j++)

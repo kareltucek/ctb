@@ -1,0 +1,91 @@
+At this point we would like to introduce control flow into our pipelines. We shall do so by introducing three new types of operations. These will not be required to fullfill the condition that an operation has to pop/push the same amount of data to/from every queue. 
+
+
+\begin{define}[node types]
+  We shall distinguish the following types of operations:
+\begin{itemize}
+  \item \emph{regular operation} will be an operation whose semantics is taking one element from every incoming queue of a vertex and pushing one element into every outgoing queue of this vertex. Data to be pushed into an outgoing queue may depend only on the input data and the from annotation of the outgoing queue.
+  \item \emph{split operation} will take one data input and one condition input (Boolean value typically). Depending on the condition input it will decide upon exactly one of its outgoing $from$ annotations and push data into all outgoing queues with this annotation. All other outgoing queues will remain unchanged. The data input and the condition input will be consumed.
+  \item \emph{merge operation} will take two data inputs and one condition input. Depending on the condition input it will take data from one of the inputs and push them to all output queues. Data in the chosen input and in the condition input will be consumed. All other incoming queues will remain unchanged.
+
+  %Some generation systems may decide against using the condition input and just take data in unspecified order.
+  %The observations would not hold with this.
+  \item \emph{loop merge operation} will take two data inputs. If there is any data in the second input, this node takes the data from the second input and puts it into all outgoing queues. Otherwise it does the same thing with the first input. Moreover, we will allow the second input to be on cycles, i.e., we will not consider the second input edge when saying \emph{acyclic} or \emph{topological ordering}. By doing this we will not void semantical meaning of flow graphs since standard edges represent data dependencies unlike these edges.
+\end{itemize}
+\end{define}
+
+Using the standard \emph{split} and \emph{merge} nodes we will be able to perform standard branching, i.e., to realize the \texttt{ if \string{\string} else \string{\string} } construct. The \emph{loop merge} node in combination with the standard \emph{split} node will allow us to realize the \texttt{ while(condition) \string{\string} } construct. We show this in a picture.
+
+\begin{rem}
+  Until now we have used only rectangular nodes in our graphs. From now on we will also use circular nodes which will denote connected parts of graphs.
+\end{rem}
+
+\graph{cf_constructs}
+
+Until now we have performed all data transformations \emph{regulary}. Thanks to that we did not need to bother ourselves with checking of the consistency of graphs. Now we will have to.
+
+\begin{define}[consistency of a flow graph]
+  We shall say that a flow graph $G(V,E)$ with a set of operations $O$ is \emph{consistent} if and only if the following conditions hold:
+  \begin{itemize}
+    \item Semantics of $O$ are satisfied. That is:
+      \begin{itemize}
+        \item Counts of incoming and outgoing edges and their $from$ and $to$ annotations match the semantics assigned to $O$.
+        \item Data type semantics of $O$ are satisfied.
+        \item Any other semantic restrictions of $O$ relating to the graph structure are satisfied. 
+      \end{itemize}
+    \item Only elements from the same data serie may interfere in any realization of G.
+  \end{itemize}
+\end{define}
+
+
+Apparently not all graphs satisfy the second condition. Here is one such graph. Here two values from different data series will be added.
+
+\FloatBarrier
+
+\graph{inconsistent}
+
+\FloatBarrier
+
+We will not present any way of consistency testing of general flow graphs. We will content ourselves with an observation that nontrivial consistent flow graphs exist.
+
+\begin{observation}[consistency of schemas]
+  The examples of node type usage are consistent if the following conditions hold:
+  \begin{itemize}
+    \item Branch or loop bodies, conditions, peamble and epilogue consist only of regular operations.
+    \item The branching preamble may be connected with the condition by a regular operation without voiding consistency.
+    \item There are no concealed paths inbetween:
+      \begin{itemize}
+        \item if branch and else branch
+        \item any branch and a preamble/condition/epilogue
+        \item loop body and loop condition
+        \item loop body/condition and a preamble/epilogue
+      \end{itemize}
+    \item Semantics of $O$ are preserved.
+    \end{itemize}
+  \begin{proof} 
+    Assume that two different data series come into contact. We have banned any direct contact between any two queues which may cause this. Thus, the only thing to consider is the merge and the split node. But flow of data from every split leads to a merge which merges according the same condition, which means that the two data flows are merged in such manner that both order and quantity of the data series is preserved.
+  \end{proof}
+\end{observation}
+
+\begin{observation}[schema nesting]
+  Let $G(V,E)$ with $O$ be a consistent flow graph and $C$ a connected subgraph of $G$ composed only of regular nodes, i.e., of vertices annotated by regular operations. Now we create a new graph by nesting a graph $H$ corresponding to either of the provided example schemas into $C$. We do so by connecting vertices of $C$ and $H$ by edges and by changing some regular operations into another regular operations. Then the new graph is consistent if the following conditions are satisfied:
+  \begin{itemize}
+    \item The nested schema satisfies the conditions from previous observation.
+    \item The nested schema is connected to C only by the preamble and epilogue.
+    \item The nested schema does not contain any input operations. (According to our definition of graph realization these are exactly vertices with no input edges)
+    \item We have not introduced any new cycle except for cycles containing second input of any loop node.
+    \item Semantics of $O$ are preserved.
+  \end{itemize}
+  \begin{proof} 
+    This follows directly from the proof of the previous observation and the structure of $G$.
+  \end{proof}
+\end{observation}
+
+\begin{observation}[schema sequencing]
+  Let $G(V,E)$, $O$ and $C$ be defined as in the previous observation. Now we take one of the example schemas and embed it multiple times into $C$ in the means of the previous observation. If we use the same condition for all inserted instances of the chosen schema, then we may join the corresponding bodies of the embeded schemas without voiding consistency of the new graph.
+  \begin{proof} 
+    By structure of $G$ using an argument analogical to the proof of the \emph{consistency of schemas}.
+  \end{proof}
+\end{observation}
+
+
