@@ -1,0 +1,113 @@
+TODO: fillin some of the formal notes from last summer
+
+Consider the following problem:
+
+\begin{problem}[ordered realization of control flow]
+Let $G(V,E)$ be a consistent flow~graph with $O$ and $I$ defined as in the \emph{vectorized code generation}. Also, let control flow nodes of $G$ be expanded according to the previous section and let the factor graph of $G$ be acyclic. We wish to generate code which will realize graph $G$ on an arbitrary number of data series, utilizing SIMD instructions whenever possible. 
+\end{problem}
+
+\begin{rem} 
+Note that by expanding nodes we have obtained a graph which contains \emph{only} regular operations.
+\end{rem}
+
+We already know that components of $G$ can be processed as basic blocks. We suggest components of $G$ to be connected by constant-sized register-mapped buffers in place of layer 1 and 2 edges. Reason for our decision to make buffers register-mapped is that we wish to minimize communication with RAM. Reason to make our buffers constant-sized is apparently the fact that register space is limited. We will again choose $w$ as a number of data series processed in any partitions. In this proposal we also wish to preserve the order of data series in all merges.
+
+\parspace
+
+To illustrate the problem, we present the following algorithm.
+
+\begin{code}
+enter the first compontent, 
+  effectively pushing w data records into pipeline.
+DFS( component C in factor of G )
+{
+  if (C has >= w records in every input)
+    while (C has >= w records in every input)
+      process C;
+  else
+    abandon current branch;
+}
+\end{code}
+
+There are two problems:
+
+\begin{itemize}
+  \item If we wanted to process all data available in one go, the size of the buffers would have to increase exponentially with every merge, since every merge may have both its buffers full and thus output $2*w$ records.
+  \item Since we wish merges to preserve order of all data, there may arise a situation in which a single element will prevent merge. If we waited with processing of this branch until there were $w$ input data series available, the other branch may overfill its buffers.
+\end{itemize}
+
+As a solution we suggest another algorithm. This algorithm will address the first problem by pulling new data on demand. The second problem will be solved by introduction of pull semantics which will cause a branch to process less than $w$ records if needed. We generate code similar to the following diagram for every component $i$.
+
+\graphn{crawler}
+
+\begin{description}
+ \item[partition 0] For simplicity we will assume that all input sources are placed in the partition 0. This is w.l.o.g since we may use a separate counter for every partition. 
+  \item[empty inputs] When we say empty input, we mean an input which is supposed to provide data. I.e., on split we do not jump into a branch which is not supposed to provide input.
+  \item[terminating variable] When we exhaust all input, we set this variable to zero to indicate that the first partition should process all its remaining data and terminate. Upon termination of any component this variable is incremented and process repeated with the next partition.
+  \item[remaining variable] We use this as a variable indicating count of data series which are yet to be retrieved from all data sources. 
+  \item[bold line] denotes implicit continuation, i.e., next operation in case condition does not hold. 
+  \item[solid line] denotes next operation in case condition holds.
+  \item[dotted line] denotes jumps to different partitions (in case condition holds).
+  \item[rectangle] A goto label.
+  \item[handle termination zero] \ \ \ 
+\begin{samepage}
+\begin{code}
+if( i == 0 && remaining < w )                            
+{                                                          
+  terminating = 0;                                     
+  if(remaining == 0)                                   
+  {                                                    
+    terminating = 1;                                   
+    goto PARTITION_1;                            
+  }                                                    
+  goto SINGULAR_BODY_0;
+}                                                      
+\end{code}
+\end{samepage}
+\item[handle termination nonzero] \ \ \ 
+\begin{samepage}
+\begin{code}
+if ( i == terminating )                                   
+{                                                          
+  if(an input of i is exhausted)                  
+  {                                                        
+    terminating++;                                         
+    goto PARTITION_i+1;                                
+  }                                                        
+  goto SINGULAR_PARTITION_i;
+}   
+\end{code}
+\end{samepage}
+  \item[i] An index of the current partition. These indices are topologically ordered.
+  \item[j] An index of any other partition depending on context. 
+\end{description}
+
+\begin{claim}
+We claim that the proposed solution works under the stated conditions if all buffers have positive capacity. That is:
+\begin{enumerate}
+  \item Algorithm produces correct results (if it terminates).
+  \item Algorithm does not enter an infinite loop during the pre-termination phase unless there is an infinite loop contained in the semantics of $G$.
+  \item Algorithm terminates correctly.
+\end{enumerate}
+\begin{proof}[1]
+  Our algorithm never retrieves data from an empty buffer and never pushes data into a full buffer. Also we required $G$ to be consistent with the semantics of control flow nodes, thus all results are correct. 
+\end{proof}
+\begin{proof}[2] So let there be a flow graph $G(V,E)$ and a sequence of data series such that the described algorithm enters an infinite loop which does not process any data. Let $C$ be this loop (subgraph of factor graph $H$ of $G$)\footnote{This is a directed acyclic graph, not a cycle!}. Let $t$ be topological ordering of $H$. Also let there be a description of content of buffers at the moment when algorithm iterates over an infinite loop.
+  \begin{itemize}
+    \item The asumption that $C \in H$ is correct since if there is an infinite cycle which uses an edge on layer 2 then the algorithm processes data and hence, behaves correctly.
+    \item Apparently the algorithm iterates only over singular code of partitions. This means that all partitions on $C$ have either entirely full output or entirely empty input. Also no partition is contained in $C$ more than once.
+    \item Let $M = \{v \in C \mid \neg (\exists u \in C)( u <_t v \wedge ((u,v) \in C \vee (v,u) \in C ))\}$ (informally all minimal vertices in $C$ with respect to topological order of components restricted to edges in $C$). Let $n$ be the largest index of a data serie such that serie $n$ was processed by all components.
+    \item Let $a \in C$ be any partition which the $n$th data serie is the last processed one. Then there is an output buffer of $a$ which contains data from the $n$th serie. Let $e \in C$ be an edge which corresponds to this buffer.  Let $b,c \in C$ such that there exists paths $P_{ab}, P_{cb} \in C \wedge e \in P_{ab} \wedge c \in M$. 
+    \item Partition $a,c$ have processed the $n$th serie since $a,c \in M$. Partition $b$ has not processed the $n$th serie since an element from the $n$th serie is stuck on the path $P_{ab}$. That means that there is an element from the $n$th serie on path $P_{cb}$. But that is a contradiction because one of the two paths has to be empty.
+  \end{itemize}
+  \graph{cycle}
+
+\end{proof}
+\begin{proof}[3]
+It suffices to check that the algorithm will process all data of a terminating component and increment the \emph{terminating} variable.
+\end{proof}
+\end{claim}
+
+
+
+
