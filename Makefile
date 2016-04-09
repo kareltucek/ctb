@@ -9,8 +9,7 @@ SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir10 testdir11 testdir12
-
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir10 testdir11 testdir12 testdir13
 fulltest : all testdir4
 
 test : test.cpp $(SOURCES)
@@ -55,6 +54,9 @@ testdir11 : ctb
 testdir12 : ctb
 	make -C test12_vectorized_cf_test
 
+testdir13 : ctb
+	make -C test13_vectorized_cf_sse_test
+
 ssedir : ctb
 	make -C sse_set
 
@@ -73,6 +75,7 @@ clean :
 	-make -C thesis clean
 	-make -C test11_simple_cf_test clean
 	-make -C test12_vectorized_cf_test clean
+	-make -C test13_vectorized_cf_sse_test clean
 	
 
 
