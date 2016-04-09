@@ -25,7 +25,7 @@ run : graph.out test
 	#diff graph_cf.out graph_cf.out.expected
 
 clean :
-	-rm  graph.out graph_cf.out *.png *output*cpp
+	-rm  graph.out graph_cf.out *.png *output*cpp output*.h
 
 
 

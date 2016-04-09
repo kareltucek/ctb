@@ -2,4 +2,4 @@ all :
 	./generate.sh
 
 clean :
-	rm -f *.tex
+	rm -rf *.tex *.pdf *.debug *.debug0 final
