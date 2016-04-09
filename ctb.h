@@ -119,7 +119,7 @@ namespace ctb
         void fill_commands();
 
         typedef tuple< function<void(istream&)>, function<void(istream&)>, function<void(ostream&)>, function<void(ostream&)>> loader_record;
-        typedef function<string(string)> aliasenv_record;
+        typedef function<string(string,stringlist)> aliasenv_record;
         typedef pair<function<void(stringlist&&)>,string> command_record;
         typedef function<void(stringlist&&)> transform_record;
         typedef function<void(string,string)> preprocessor_record;
@@ -138,7 +138,7 @@ namespace ctb
         template<template <typename ...> class L, typename...P> void        export_graph(P...params) ;
         template<template <typename ...> class L, typename...P> void        transform_graph(P...params) ;
         template<template <typename ...> class L, typename M, typename...P> string process(string name, P...params) ;
-        template<typename M>                                                string generate(string name) ;
+        template<typename M>                                                string generate(string name, stringlist args) ;
         template<typename M>                                                void preprocess(string from, string to) ;
 
         template<template <typename ... > class L> void register_loader() ;
@@ -205,7 +205,7 @@ namespace ctb
       if(M::get_name() == "")
         error( "unnamed aliasenv passed - (have you defined a 'string get_name(){return \"whatever nonempty\";}' method?");
       hash_preprocessor[M::get_name()] = preprocessor_record(bind(&ctb::preprocess<M>, this, placeholders::_1, placeholders::_2));
-      hash_aliasenv[M::get_name()] = aliasenv_record(bind(&ctb::generate<M>, this, placeholders::_1));
+      hash_aliasenv[M::get_name()] = aliasenv_record(bind(&ctb::generate<M>, this, placeholders::_1, placeholders::_2));
     }
 
   template <class T, class IT>
@@ -266,10 +266,10 @@ namespace ctb
 
   template <class T, class IT>
     template <typename M>
-    string ctb<T,IT>::generate(string name)
+    string ctb<T,IT>::generate(string name, stringlist args)
     {
       mygenerator.reset();
-      auto m = M::generate(mygenerator.get_broadest(), mygenerator, name);
+      auto m = M::generate(mygenerator.get_broadest(), mygenerator, name, args);
       return m.write_str();
     }
 
@@ -280,7 +280,7 @@ namespace ctb
       generator_t g(instab);
       L<T, generator_t, IT> l;
       l.load_graph(g, params...);
-      auto m = M::generate(g.get_broadest(), g, name);
+      auto m = M::generate(g.get_broadest(), g, name, stringlist());
       return m.write_str();
     }
 
@@ -580,11 +580,11 @@ start:;
   template <class T, class IT>
     void ctb<T,IT>::command_generate(stringlist&& args)
     {
-      if(args.size() != 3)
+      if(args.size() < 3)
         error( string("invalid number of arguments, expected ") + ::ctb::to_string(3) + ", got " + ::ctb::to_string(args.size()), false);
       if(hash_aliasenv.find(args[1]) == hash_aliasenv.end())
         error( string("aliasenv not found (did you register it in ctb.h?): ").append(args[1]));
-      writer_plain::to_file(args[2], hash_aliasenv[args[1]](get_inner_name(args[2])));
+      writer_plain::to_file(args[2], hash_aliasenv[args[1]](get_inner_name(args[2]), args));
     }
 
   template <class T, class IT>

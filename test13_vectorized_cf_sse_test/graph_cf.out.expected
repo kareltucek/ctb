@@ -66,18 +66,7 @@
 #split_split_ldtrue_2
 #split_split_st_2 -> split_split_ldtrue_2;
 digraph G {
-edge [style=dotted,arrowhead=odot];
-ldi1
-ldi2
-buff_buff_ld_1
-generic_cf_node_buff_ld_4
-ldb
-merge_merge_ld_3
-generic_cf_node_buff_ld_5
-merge_merge_proc_3
-split_split_ldfalse_2
-split_split_ldtrue_2
-edge [style=dotted,arrowhead=normal];
+edge [color = gray];
 ldi1
 ldi2
 buff_buff_ld_1
@@ -97,7 +86,7 @@ split_split_ldfalse_2
 split_split_st_2 -> split_split_ldfalse_2;
 split_split_ldtrue_2
 split_split_st_2 -> split_split_ldtrue_2;
-edge [style=solid];
+edge [color = black];
 ldi1
 ldi2
 ldi1 -> add1;
@@ -127,6 +116,7 @@ split_split_ldfalse_2
 split_split_ldfalse_2 -> merge_merge_stfalse_3;
 split_split_ldtrue_2
 split_split_ldtrue_2 -> merge_merge_sttrue_3;
+edge [color = red];
 0;
 0 -> 1
 0 -> 1

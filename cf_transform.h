@@ -260,10 +260,15 @@ namespace ctb
         {
           typename G::graph_t& g = generator.graph;
 
-          bool visual;
+          bool visual = false;
+          bool remove_cycles_flag = true;
           for(const auto& arg : args)
+          {
             if(arg == "show")
               visual = true;
+            if(arg == "expandonly")
+              remove_cycles_flag = false;
+          }
 
 
           typedef pair<node*,decltype(declval<node>().data.op->expansions.front())> p;
@@ -289,7 +294,10 @@ namespace ctb
             }
           }
 
-          remove_cycles(generator, visual);
+          if(remove_cycles_flag)
+            remove_cycles(generator, visual);
+          else
+            g.update_factor();
         }
     };
 };

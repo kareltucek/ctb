@@ -1,0 +1,66 @@
+#!/bin/bash
+if [ $# -lt 2 ]
+then
+  echo "This script will take sequenced data and format them as table."
+  echo "syntax: astable <lineseparator> <colseparator> <ignore> [column width]"
+  echo ""
+  echo "line separator pattern: When we encounter a line maching this regex, we output currently gathered data. "
+  echo "column separator pattern: At this pattern, we start a new column. This and following lines will be put into one column of a table."
+  echo "ignore pattern: This pattern causes line to be outputted straight away, without being processed as a part of table."
+  echo ""
+  echo "WARNING: Any output comes between 'line separator' and the first 'col separator' will be THROWN OUT unless it is matched by the ignore pattern!"
+  exit 1
+fi
+
+cl=$4
+[ "$cl" != "" ] || cl=20
+
+awk '
+BEGIN { column = 50; }
+/'"$3"'/ {print($0); next;}
+
+/'"$1"'/ { print($0); }
+/'"$1"'/ {  /*mark diffs*/
+  for(i = 0; i < column+1; i++) {
+    different = 0;
+    for(line = 0; line < j[i]; line++)
+      if(prev[i][line] != text[i][line])
+        different = 1;
+    if(different == 0)
+        printf("| %-'"$cl"'.'"$cl"'s", "");
+    else
+        printf("| %-'"$cl"'.'"$cl"'s", "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
+  }
+  printf("\n");
+}
+/'"$1"'/ { 
+  /*print previous table*/
+  lines = 0;
+  /*get line count*/
+  for(i = 0; i < column+1; i++)
+    if(j[i] >= lines)
+      lines = j[i];
+  /*print lines*/
+  for(line = 0; line < lines; line++)
+    { 
+      for(i = 0; i < column+1; i++)
+      {
+        prev[i][line] = text[i][line];
+        tt = text[i][line];
+        if(line > j[i])
+          tt = 0;
+        printf("| %-'"$cl"'.'"$cl"'s", text[i][line]);
+      }; 
+      printf("\n");
+    }
+    for(i = 0; i < column+1; i++)
+      j[i] = 0; 
+}
+/'"$1"'/ { 
+/*initiate new table*/
+column = -1; next; 
+}
+/'"$2"'/ { column++; }
+//       { text[column][j[column]] = $0; j[column]++; }
+'
+

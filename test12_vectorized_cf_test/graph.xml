@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<graph_list Name="list">
+   <graph Name="graph1">
+      <vertex opid="LDI" vid="ldi1" params="ioindex=2"></vertex>
+      <vertex opid="LDI" vid="ldi2" params="ioindex=1"></vertex>
+      <vertex opid="LDB" vid="ldb" params="ioindex=3"></vertex>
+      <vertex opid="ADDI" vid="add1"></vertex>
+      <vertex opid="MULI" vid="mul1"></vertex>
+      <vertex opid="ADDI" vid="add2"></vertex>
+      <vertex opid="MOD4" vid="mod"></vertex>
+      <vertex opid="ADDI" vid="add3" params="ioindex=0"></vertex>
+      <vertex opid="ADDI" vid="add4" params="ioindex=0"></vertex>
+      <vertex opid="STI" vid="h_st" params="ioindex=0"></vertex>
+      <vertex opid="SPLIT_INT" vid="split" params="ioindex=0"></vertex>
+      <vertex opid="MERGE_INT" vid="merge" params="ioindex=0"></vertex>
+      <vertex opid="BUFF_INT" vid="buff" params="ioindex=0"></vertex>
+      <edge to="add1" from="ldi1" to_pos="0"></edge>
+      <edge to="add3" from="add2" to_pos="1"></edge>
+      <edge to="h_st" from="add4" to_pos="0"></edge>
+      <edge to="add1" from="ldi2" to_pos="1"></edge>
+      <edge to="mul1" from="ldi1" to_pos="1"></edge>
+      <edge to="mul1" from="ldi2" to_pos="0"></edge>
+      <edge to="add2" from="mul1" to_pos="0"></edge>
+      <edge to="add2" from="add1" to_pos="1"></edge>
+      <edge to="add4" from="add2" to_pos="1"></edge>
+      <edge to="buff" from="add2" to_pos="0"></edge>
+      <edge to="add3" from="buff" to_pos="0"></edge>
+      <edge to="split" from="add3" to_pos="1"></edge>
+      <edge to="split" from="ldb" to_pos="0"></edge>
+      <edge to="merge" from="ldb" to_pos="0"></edge>
+      <edge to="mod" from="split" from_pos="0" to_pos="0"></edge>
+      <edge to="merge" from="mod" from_pos="0" to_pos="1"></edge>
+      <edge to="merge" from="split" to_pos="2" from_pos="1"></edge>
+      <edge to="add4" from="merge" to_pos="0" from_pos="0"></edge>
+   </graph>
+</graph_list>

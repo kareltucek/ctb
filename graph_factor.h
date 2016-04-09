@@ -161,13 +161,16 @@ namespace ctb
       //print actual graph
       prefix = "";
       o << "digraph G {" << endl;
-      level = 1;
-      o << "edge [color = gray];" << endl;
+      level = 2;
+      o << "edge [style=dotted,arrowhead=odot];" << endl;
       graph.crawl_topological(h);
-      o << "edge [color = black];" << endl;
+      level = 1;
+      o << "edge [style=dotted,arrowhead=normal];" << endl;
+      graph.crawl_topological(h);
+      o << "edge [style=solid];" << endl;
       level = 0;
       graph.crawl_topological(h);
-      o << "edge [color = red];" << endl;
+      //o << "edge [color = red];" << endl;
       graph.factor.crawl_topological(f);
 
       graph.crawl_topological(i);//colorize by callback

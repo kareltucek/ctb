@@ -20,7 +20,7 @@ namespace ctb
       typedef language_cpp language;
       static string alias(const string& a, bool* s = NULL);
       static string get_name();
-      template <class G> static writer<aliasenv_bobox> generate(int m,  G& generator, string name);
+      template <class G> static writer<aliasenv_bobox> generate(int m,  G& generator, string name, stringlist args);
   } ;
 
   map<string, string> aliasenv_bobox::aliases;
@@ -70,7 +70,7 @@ namespace ctb
 
 
   template <class G>
-    writer<aliasenv_bobox> aliasenv_bobox::generate(int granularity, G& generator, string name)
+    writer<aliasenv_bobox> aliasenv_bobox::generate(int granularity, G& generator, string name, stringlist args)
     {
       typedef multicontB<writer<aliasenv_bobox>> wrt;
       auto opts = generator.option_struct();

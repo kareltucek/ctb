@@ -1,0 +1,112 @@
+#note	type	output type	input types	op id	flags	width in	width out	code	tags	rating	code custom	
+	instruction	INT	INT,INT	ADDI		1	1	$$arg1 + $$arg2		0		
+	instruction	BOOL	INT	ZERO		1	1	$$arg1 == 0		0		
+	instruction	INT	INT,INT	MULI		1	1	$$arg1 * $$arg2		0		
+	instruction	INT	INT	INC		1	1	$$arg1++		0		
+	instruction	INT	INT	MOD4		1	1	$$arg1 % 4		0		
+	instruction	INT		LDI	input	1	1	i_$$ioindex++		0	global:  int i_$$ioindex = 0;	
+	instruction	INT	INT	STI	output	1	1	printf("OUTPUT %i\n", $$arg1)		0		
+	instruction	BOOL		LDB	input	1	1	(i_$ioindex++ % 3) == 0		0	global:  int i_$$ioindex = 0;	
+
+split st	instruction		BOOL,${type,dtype->INT,int}	SPLIT_ST_$type	output	1	1			0\
+	labels:  SPLIT_ST_$$ioindex: \
+	labelsr: REQ_SPLIT_ST_$$ioindex: \
+	gonextone: if($$$$$$$${BUFFER_FULL(L_$$ioindex)}) goto REQ_SPLIT_LDL_$$ioindex; if($$$$$$$${BUFFER_FULL(R_$$ioindex)}) goto REQ_SPLIT_LDR_$$ioindex;\
+	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR(L_$$ioindex)}) goto SPLIT_LDL_$$ioindex; if($$$$$$$${BUFFER_FULL_GRANULAR(R_$$ioindex)}) goto SPLIT_LDR_$$ioindex;\
+	default: if($$arg1){ $$$$$$$${BUFFER_PUSH_SIMPLE($$buffersize,1,L_$$ioindex,$$arg2)}; } else { $$$$$$$${BUFFER_PUSH_SIMPLE($$buffersize,1,R_$$ioindex,$$arg2)}; };
+
+split load	instruction	${type,dtype->INT,int}		SPLIT_LD${side->L,R}_$type	input	1	1			0	\
+	labels:  SPLIT_LD$side_$$ioindex: \
+	labelsr: REQ_SPLIT_LD$side_$$ioindex: \
+	global:  $$$$$$$${BUFFER_DECL($$buffersize,1,$$granularity,$$granularity,$side_$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP($$buffersize,$side_$$ioindex)};\
+	goprevone: if($$$$$$$${BUFFER_EMPTY($side_$$ioindex)}) goto REQ_SPLIT_ST_$$ioindex;\
+	goprev:    if($$$$$$$${BUFFER_EMPTY_GRANULAR($side_$$ioindex)}) goto REQ_SPLIT_ST_$$ioindex;\
+	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR($side_$$ioindex)} || \
+	emptyind:     $$$$$$$${BUFFER_EMPTY($side_$$ioindex)} || \
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,$side_$$ioindex,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($side_$$ioindex)};
+
+
+merge st	instruction		${type,dtype->INT,int}	MERGE_ST${side->L,R}_$type	output	1	1			0\
+	labels:  MERGE_ST$side_$$ioindex: \
+	labelsr: REQ_MERGE_ST$side_$$ioindex: \
+	global:  $$$$$$$${BUFFER_DECL($$buffersize,1,$$granularity,$$granularity,$side_$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP($$buffersize,$side_$$ioindex)};\
+	gonextone: if($$$$$$$${BUFFER_FULL($side_$$ioindex)}) goto REQ_MERGE_$$ioindex;\
+	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR($side_$$ioindex)}) goto MERGE_$$ioindex;\
+	fullgran:     $$$$$$$${BUFFER_FULL_GRANULAR($side_$$ioindex)} || \
+	default: $$$$$$$${BUFFER_PUSH_SIMPLE($$buffersize,1,$side_$$ioindex,$$arg1)};
+
+merge process	instruction	${type,dtype->INT,int}		MERGE_PROC_$type	input	1	1			0\
+	labels:  MERGE_$$ioindex: BUFF_LD_$$ioindex:\
+	labelsr: REQ_MERGE_$$ioindex: REQ_BUFF_LD_$$ioindex:\
+	global:  $$$$$$$${BUFFER_DECL($$buffersize,1,$$granularity,$$granularity,M_$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP($$buffersize,M_$$ioindex)};\
+	indic:   merge_part\
+	gonextone: if($$$$$$$${BUFFER_FULL(M_$$ioindex)}) goto REQ_MERGE_LD_$$ioindex;\
+	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR(M_$$ioindex)}) goto MERGE_LD_$$ioindex;\
+	fullgran:     $$$$$$$${BUFFER_FULL_GRANULAR(M_$$ioindex)} || \
+	goprevone: if($$$$$$$${BUFFER_EMPTY($$ioindex)}) goto REQ_BUFF_ST_$$ioindex;\
+	goprev:    if($$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)}) goto REQ_BUFF_ST_$$ioindex;\
+	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)} || \
+	emptyind:     $$$$$$$${BUFFER_EMPTY($$ioindex)} || \
+	defaultsingle: \
+bool tmp; $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,$$ioindex,tmp)}; \
+$$type myval;\
+if(tmp)\
+{\
+  if($$$$$$$${BUFFER_EMPTY(L_$$ioindex)})\
+    goto REQ_MERGE_STL_$$ioindex;\
+  $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,L_$$ioindex,myval)}; $$$$$$$${BUFFER_CONSUME_ONE(L_$$ioindex)};\
+}\
+else\
+{\
+  if($$$$$$$${BUFFER_EMPTY(R_$$ioindex)})\
+    goto REQ_MERGE_STR_$$ioindex;\
+  $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,R_$$ioindex,myval)}; $$$$$$$${BUFFER_CONSUME_ONE(R_$$ioindex)};\
+}\
+$$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};\
+$$$$$$$${BUFFER_PUSH_SIMPLE($$buffersize,1,M_$$ioindex,myval)};
+
+merge load	instruction	${type,dtype->INT,int}		MERGE_LD_$type	input	1	1			0	\
+	labels:  MERGE_LD_$$ioindex: \
+	labelsr: REQ_MERGE_LD_$$ioindex: \
+	goprev:  if($$$$$$$${BUFFER_EMPTY(M_$$ioindex)}) goto MERGE_$$ioindex;\
+	emptygran:  $$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)} || \
+	emptyind: $$$$$$$${BUFFER_EMPTY($$ioindex)} || \
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,M_$$ioindex,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE(M_$$ioindex)};
+
+
+buffer st	instruction		${type,dtype->INT,int,BOOL,bool}	BUFF_ST_$type	output	1	1			0	\
+	labels:  BUFF_ST_$$ioindex: \
+	labelsr: REQ_BUFF_ST_$$ioindex: \
+	global:  $$$$$$$${BUFFER_DECL($$buffersize,1,$$granularity,$$granularity,$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP($$buffersize,$$ioindex)};\
+	gonextone: if($$$$$$$${BUFFER_FULL($$ioindex)}) goto REQ_BUFF_LD_$$ioindex;\
+	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR($$ioindex)}) goto BUFF_LD_$$ioindex;\
+	fullgran:     $$$$$$$${BUFFER_FULL_GRANULAR($$ioindex)} || \
+	default: $$$$$$$${BUFFER_PUSH_SIMPLE($$buffersize,1,$$ioindex,$$arg1)};
+
+buffer ld	 instruction	${type,dtype->INT,int,BOOL,bool}		BUFF_LD_$type	input	1	1			0	\
+	labels:  BUFF_LD_$$ioindex:\
+	labelsr: REQ_BUFF_LD_$$ioindex:\
+	goprevone: if($$$$$$$${BUFFER_EMPTY($$ioindex)}) goto REQ_BUFF_ST_$$ioindex;\
+	goprev:    if($$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)}) goto REQ_BUFF_ST_$$ioindex;\
+	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)} || \
+	emptyind:   $$$$$$$${BUFFER_EMPTY($$ioindex)} ||\
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,$$ioindex,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};
+
+#note	type	output type	input types	op id	flags	name	transformer	args
+split	expansion	INT,INT	BOOL,INT	SPLIT_INT		split	cf	SPLIT_ST_INT,SPLIT_LDL_INT,SPLIT_LDR_INT
+split	expansion	INT	BOOL,INT,INT	MERGE_INT		merge	cf	MERGE_LD_INT,MERGE_PROC_INT,MERGE_STL_INT,MERGE_STR_INT,BUFF_ST_BOOL
+split	expansion	${type->INT,BOOL}	$type	BUFF_$type		buffer	cf	BUFF_ST_$type, BUFF_LD_$type
+
+#note	type	type id	bitwidth	width	code
+	type_version	FLOAT	32	1	float
+	type_version	INT	32	1	int
+	type_version	BOOL	8	1	bool
+#note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
+#j	type_conversion	FLOAT	32	2	4	_mm_movelh_ps($$arg1, $$arg2)					0
+#j	type_conversion	INT	32	2	4	_mm_unpacklo_epi32($$arg1,$$arg2)					0
+#j	type_conversion	INT	32	4	2	$$arg1	_mm_srli_si128($$arg1,4)				0
+

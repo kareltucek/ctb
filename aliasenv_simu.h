@@ -27,7 +27,7 @@ namespace ctb
       typedef language_cpp language;
       static string get_name();
       static string alias(const string& a, bool* s = NULL);
-      template <class G> static writer<aliasenv_simu> generate(int m,  G& generator, string name);
+      template <class G> static writer<aliasenv_simu> generate(int m,  G& generator, string name, stringlist args);
   } ;
 
   map<string, string> aliasenv_simu::aliases;
@@ -75,7 +75,7 @@ namespace ctb
   }
 
   template <class G>
-    writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, string name)
+    writer<aliasenv_simu> aliasenv_simu::generate(int granularity, G& generator, string name, stringlist args)
     {
 #ifdef TMPTEST
       if(granularity > 16)

@@ -47,7 +47,7 @@ namespace ctb
       typedef language_cpp language;
       static string alias(const string& a, bool* s = NULL, int n = -1);
       static string get_name();
-      template <class G> static writer<aliasenv_cfmacros> generate(int m,  G& graph, string name) ;
+      template <class G> static writer<aliasenv_cfmacros> generate(int m,  G& graph, string name, stringlist args) ;
       static void self_test();
   };
 
@@ -125,6 +125,17 @@ namespace ctb
       P("static const int gendecl_outgran_${id} = $outgranularity;"); 
       P("static const int gendecl_ingran_${id} = $ingranularity;"); 
       P("static const int gendecl_vsize_${id} = $vsize;"); 
+    }
+    decl("BUFFER_DUMP_VECTOR", "size, vsize, id")
+    {
+      P("printf(\"  BUFFER $id, of size %i\\n\", gendecl_contains_${id});"); 
+      for(int i = 0; i < TOINT("$[$size/$vsize]"); ++i)
+      {
+        P("DEBUG_SSE( gendecl_${id}_${i}, gendecl_${id}_${i});"); 
+        P("if($i == gendecl_readat_${id} / $vsize) printf(\" ->\");");
+        P("if($i == ((gendecl_readat_${id} + gendecl_contains_${id}) % gendecl_size_${id}) / $vsize) printf(\" <-\");");
+        P("printf(\"\\n\");");
+      }
     }
     decl("BUFFER_DUMP", "size, id")
     {
@@ -251,7 +262,7 @@ namespace ctb
   }
 
   template <class G>
-    writer<aliasenv_cfmacros> aliasenv_cfmacros::generate(int max_granularity, G& graph, string name)
+    writer<aliasenv_cfmacros> aliasenv_cfmacros::generate(int max_granularity, G& graph, string name, stringlist args)
     {
       error( "empty aliasenv generator used");
       return writer<aliasenv_cfmacros>();

@@ -1,11 +1,13 @@
 loadinstab csv instab.csv
 loadgraph xml graph.xml
-#visualize
 exportgraph csv graph.out
-#transform cf show
-transform cf show
 visualize
+transform cf expandonly
+exportgraph csv graph_intermediate_cf.out
+visualize
+transform cf 
 exportgraph csv graph_cf.out
-generate cf output.h   
+visualize
+generate cf output.h simpledbg
 
 
