@@ -52,7 +52,11 @@
 
 %moje pridavky
 \newcommand{\expr}[1]{$#1$}
-\newcommand{\graph}[1]{\begin{figure}[H]\centering\input{contents/graphs/#1}\end{figure}}
+\newcommand{\graph}[1]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\end{figure}}
+%\newcommand{\graph}[1]{\begin{figure}[H]\centering\resizebox{.9\linewidth}{!}{\input{contents/graphs/final/#1}}\end{figure}}
+  \newcommand{\graphn}[1]{\begin{sidewaysfigure}\resizebox{1\linewidth}{!}{\input{contents/graphs/final/#1}}\end{sidewaysfigure}}
+%k\newcommand{\graph}[1]{\input{contents/graphs/final/#1}\end{figure}}
+%k\resizebox{.9\linewidth}{!}{\input{plot.tex}}
 \newcommand{\parspace}{\vspace{1\baselineskip}}
 
 %%% An environment for proofs

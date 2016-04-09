@@ -1,9 +1,12 @@
-all: content thesis
+all: content thesis 
 
 content: 
 	make -C contents
 
 show : all
+	mupdf thesis.pdf
+
+showplain : thesis
 	mupdf thesis.pdf
 
 # LaTeX must be run multiple times to get references right

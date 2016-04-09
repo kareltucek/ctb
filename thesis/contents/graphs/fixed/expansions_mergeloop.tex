@@ -1,0 +1,30 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0,0,0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (54bp,30bp) -- (54bp,130bp) -- (271bp,130bp) -- (271bp,30bp) -- cycle;
+  \draw (162bp,110bp) node {merge};
+\end{scope}
+  \node (ml) at (217bp,70bp) [draw,rectangle] {merge ld};
+  \node (msr) at (108bp,70bp) [draw,rectangle] {merge st};
+  \node (outa) at (325bp,70bp) [draw,ellipse] {data};
+  \node (msl) at (108bp,90bp) [draw,rectangle] {merge st};
+  \node (mp) at (162bp,70bp) [draw,rectangle] {merge};
+  \node (msc) at (108bp,50bp) [draw,rectangle] {merge st};
+  \node (ina) at (0bp,90bp) [draw,ellipse] {data};
+  \node (inb) at (0bp,70bp) [draw,ellipse] {data};
+  \node (inc) at (0bp,50bp) [draw,ellipse] {condition};
+  \draw [->] (inc) -- (msc);
+  \draw [->] (ina) -- (msl);
+  \draw [->,dotted] (msc) -- (mp);
+  \draw [->,dotted] (mp) -- (ml);
+  \draw [->] (ml) -- (outa);
+  \draw [->,dotted] (msr) -- (mp);
+  \draw [->] (inb) -- (msr);
+  \draw [->,dotted] (msl) -- (mp);
+%
+\end{tikzpicture}
+

@@ -18,7 +18,7 @@ We will use the~term \emph{width} to denote the~number of independent data serie
 \begin{define}[flow graph]
 We will use the~term \emph{flow~graph} for any tuple $(G(V,E),O,from:E \arrow \N, to:E \arrow \N, op:V \arrow O)$ which satisfies the~following conditions:
 \begin{itemize}
-  \item $G(V,E)$ is a~directed acyclic multigraph with annotations defined by $from$, $to$ and $op$.
+  \item $G(V,E)$ is a~nonempty connected directed acyclic multigraph with annotations defined by $from$, $to$ and $op$.
   \item $O$ is a~set of operations.
   %\item $\forall(v) \in V |out(v)| \leq 1$ 
   \item Any directed edge is uniquely identified by its destination vertex and the~$to$~annotation. I.e.:
@@ -33,7 +33,7 @@ This definition of flow graph is almost identical to the definition of \emph{gat
   Let $G(V,E)$ be a~flow graph and ${In = \{v \in V \mid |in(v)| = 0\}}$. \emph{Realization~of~a~flow~graph} will be an~algorithm which provided some annotations of outgoing edges of vertices in $In$ produces annotations of all other edges of $G$ such that semantics assigned to $O$ are preserved. 
 \end{define}
 
-Flow graphs will represent pipeline computations. Edges will represent data queues. Vertices will represent data transformations. A~transformation on vertex~$v$ will pop exactly one element from every incoming queue of $v$ and push exactly one element into every outgoing queue of $v$. Element pushed into an~outgoing queue~$e$~of~$v$ will be determined from the~elements taken from the~incoming queues~of~$v$, their~$to$~annotations, the~annotation~$op(v)$ and the~annotation~$from(e)$. The~$to$~annotation identifies arguments for operations represented by members~of~$O$. The~$to$~annotation identifies outputs of operations which return more than one value.
+  Flow graphs will represent pipeline computations. Edges will represent data queues. Vertices will represent data transformations. A~transformation on a \emph{regular} vertex~$v$ will pop exactly one element from every incoming queue of $v$ and push exactly one element into every outgoing queue of $v$. Element pushed into an~outgoing queue~$e$~of~$v$ will be determined from the~elements taken from the~incoming queues~of~$v$, their~$to$~annotations, the~annotation~$op(v)$ and the~annotation~$from(e)$. The~$to$~annotation identifies arguments for operations represented by members~of~$O$. The~$to$~annotation identifies outputs of operations which return more than one value.
 
 \parspace
 

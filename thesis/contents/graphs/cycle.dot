@@ -1,0 +1,22 @@
+digraph G {
+#include
+
+  subgraph cluster_loopmerge {
+  label="the set M";
+  a;
+  c;
+  d[shape=circle,label="\\dots"];
+  };
+
+  b;
+
+  e[shape=circle,label="\\dots"];
+
+a -> b;
+c -> b;
+a -> e;
+c -> e;
+d -> e;
+
+
+}

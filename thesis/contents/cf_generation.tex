@@ -1,5 +1,15 @@
-At this point we would like to introduce control flow into our pipelines. We shall do so by introducing three new types of operations. These will not be required to fullfill the condition that an operation has to pop/push the same amount of data to/from every queue. 
+At this point we would like to introduce control flow into our pipelines. This may be done in two ways:
 
+\begin{itemize}
+  \item By performing both branches on all data series and then joining the data series using a \emph{select} operation. This approach is well described in \cite{secondpaper}. This approach may be easily employed in our framework by regular instructions. 
+  \item By reordering data vectors and performing every branch only on data that are supposed to be handled by the branch in question. This approach has large overhead on reordering, but may be worthwhile in case of nested branching.
+\end{itemize}
+
+We will investigate only the second approach since support for the first one is already present.
+
+\parspace
+
+First, we shall introduce three new types of operations. These will not be required to fullfill the condition that an operation has to pop/push the same amount of data to/from every queue. 
 
 \begin{define}[node types]
   We shall distinguish the following types of operations:
@@ -10,7 +20,8 @@ At this point we would like to introduce control flow into our pipelines. We sha
 
   %Some generation systems may decide against using the condition input and just take data in unspecified order.
   %The observations would not hold with this.
-  \item \emph{loop merge operation} will take two data inputs. If there is any data in the second input, this node takes the data from the second input and puts it into all outgoing queues. Otherwise it does the same thing with the first input. Moreover, we will allow the second input to be on cycles, i.e., we will not consider the second input edge when saying \emph{acyclic} or \emph{topological ordering}. By doing this we will not void semantical meaning of flow graphs since standard edges represent data dependencies unlike these edges.
+  \item \emph{loop merge operation} will take two data inputs. If there is any data in the second input \footnote{This is meant in respect to the definition of relization of a single data serie. In real implementation this means that we have to flush entire loop before checking this condition.}, this node takes the data from the second input and puts it into all outgoing queues. Otherwise it does the same thing with the first input. Moreover, we will allow the second input to be on cycles, i.e., we will not consider the second input edge when saying \emph{acyclic} or \emph{topological ordering}. By doing this we will not void semantical meaning of flow graphs since standard edges represent data dependencies unlike these edges.
+  \item \emph{explicit queue} is a queue which takes a single element from its only input and pushes it into all outputs. It will help us formalizing things later.
 \end{itemize}
 \end{define}
 

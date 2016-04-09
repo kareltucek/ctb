@@ -1,0 +1,31 @@
+
+digraph G{
+
+#vertical 20
+#include
+
+  rankdir = LR;
+
+  subgraph cluster_merge {
+  msl[label="merge st"];
+  msr[label="merge st"];
+  msc[label="merge st"];
+  mp[label="merge"];
+  ml[label="merge ld"];
+    label="merge";
+    msl -> mp #l1;
+    msr -> mp #l1;
+    msc -> mp #l1;
+    mp -> ml #l1;
+  };
+
+  ina[label="data",shape="ellipse"];
+  inb[label="data",shape="ellipse"];
+  inc[label="condition",shape="ellipse"];
+  outa[label="data",shape="ellipse"];
+  ina -> msl;
+  inb -> msr;
+  inc -> msc;
+  ml -> outa;
+
+}

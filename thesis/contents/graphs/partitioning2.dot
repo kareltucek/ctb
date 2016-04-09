@@ -1,0 +1,87 @@
+digraph G {
+#include
+edge [style = dotted];
+ldi1
+ldi2
+buff_ld_1
+buff_st_1 -> buff_ld_1;
+auto_buff_ld_4
+auto_buff_st_4 -> auto_buff_ld_4;
+ldb
+merge_ld_3
+merge_proc_3 -> merge_ld_3;
+auto_buff_ld_5
+auto_buff_st_5 -> auto_buff_ld_5;
+merge_proc_3
+merge_stbuff_3 -> merge_proc_3;
+merge_stl_3 -> merge_proc_3;
+merge_str_3 -> merge_proc_3;
+split_ldl_2
+split_st_2 -> split_ldl_2;
+split_ldr_2
+split_st_2 -> split_ldr_2;
+edge [style = solid];
+ldi1
+ldi2
+ldi1 -> add1;
+ldi2 -> add1;
+ldi1 -> mul1;
+ldi2 -> mul1;
+mul1 -> add2;
+add1 -> add2;
+add2 -> buff_st_1;
+add2 -> auto_buff_st_4;
+add2 -> auto_buff_st_5;
+buff_ld_1
+auto_buff_ld_4
+buff_ld_1 -> add3;
+auto_buff_ld_4 -> add3;
+ldb
+ldb -> split_st_2;
+add3 -> split_st_2;
+ldb -> merge_stbuff_3;
+merge_ld_3
+auto_buff_ld_5
+merge_ld_3 -> add4;
+auto_buff_ld_5 -> add4;
+add4 -> h_st;
+merge_proc_3
+split_ldr_2
+split_ldr_2 -> merge_str_3;
+split_ldl_2
+split_ldl_2 -> merge_stl_3;
+edge [color = black];
+0;
+0 -> 1
+0 -> 1
+1 -> 2
+1 -> 3
+1 -> 4
+2 -> 4
+3 -> 4
+4 -> 5
+0 -> 5
+ldi1 [color="black",label="ldi"];
+ldi2 [color="black",label="ldi"];
+add1 [color="black",label="add"];
+mul1 [color="black",label="mul"];
+add2 [color="black",label="add"];
+buff_st_1 [color="black",label="buff st"];
+auto_buff_st_4 [color="black",label="auto buff st"];
+auto_buff_st_5 [color="black",label="auto buff st"];
+buff_ld_1 [color="black",label="buff ld"];
+auto_buff_ld_4 [color="black",label="auto buff ld"];
+add3 [color="black",label="add"];
+ldb [color="black",label="ldb"];
+split_st_2 [color="black",label="split st"];
+merge_stbuff_3 [color="black",label="merge stbuff"];
+merge_ld_3 [color="black",label="merge ld"];
+auto_buff_ld_5 [color="black",label="auto buff ld"];
+add4 [color="black",label="add4"];
+h_st [color="black",label="st"];
+merge_proc_3 [color="black",label="merge proc"];
+split_ldr_2 [color="black",label="split ldr"];
+merge_stl_3 [color="black",label="merge stl"];
+split_ldl_2 [color="black",label="split ldl"];
+merge_str_3 [color="black",label="merge str"];
+}

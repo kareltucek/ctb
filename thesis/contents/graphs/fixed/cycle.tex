@@ -1,0 +1,23 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0,0,0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (0bp,70bp) -- (0bp,160bp) -- (304bp,160bp) -- (304bp,70bp) -- cycle;
+  \draw (152bp,130bp) node {the set M};
+\end{scope}
+  \node (a) at (152bp,100bp) [draw,rectangle] {a};
+  \node (c) at (76bp,100bp) [draw,rectangle] {c};
+  \node (b) at (76bp,40bp) [draw,rectangle] {b};
+  \node (e) at (152bp,40bp) [draw,circle] {\dots};
+  \node (d) at (228bp,100bp) [draw,circle] {\dots};
+  \draw [->] (a) -- (b);
+  \draw [->] (c) -- (b);
+  \draw [->] (c) -- (e);
+  \draw [->] (d) -- (e);
+  \draw [->] (a) -- (e);
+%
+\end{tikzpicture}
+

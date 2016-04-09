@@ -1,0 +1,46 @@
+digraph G {
+#include
+edge [style=dotted,arrowhead=odot];
+ldi1
+ldi2
+ldb
+edge [style=dotted,arrowhead=normal];
+ldi1
+ldi2
+ldb
+edge [style=solid];
+ldi1
+ldi2
+aux[style=invis];
+ldi1 -> add1;
+ldi2 -> add1;
+ldi1 -> mul1;
+ldi2 -> mul1;
+mul1 -> add2;
+add1 -> add2;
+add2 -> buff;
+add2 -> aux [dir=none];
+aux -> add3;
+buff -> add3;
+ldb
+add3 -> split;
+ldb -> split;
+ldb -> merge;
+split -> merge;
+split -> merge;
+add2 -> add4;
+merge -> add4;
+add4 -> h_st;
+ldi1 [color="black",label="ldi"];
+ldi2 [color="black",label="ldi"];
+add1 [color="black",label="add"];
+mul1 [color="black",label="mul"];
+add2 [color="black",label="add"];
+buff [color="black",label="buff"];
+add3 [color="black",label="add"];
+ldb [color="black",label="ldb"];
+split [color="black",label="split"];
+merge [color="black",label="merge"];
+add4 [color="black",label="add"];
+h_st [color="black",label="st"];
+}

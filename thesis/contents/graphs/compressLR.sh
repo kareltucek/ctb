@@ -1,5 +1,8 @@
 #!/bin/bash
-cat | sed 's/\.[0-9]*//g' > /tmp/mygraph124
+cat | sed 's/\.[0-9][0-9]*//g' > /tmp/mygraph124
+skip=$(cat $1 | grep '#nohorizontal')
+width=$(cat $1 | grep '#width' | grep '[0-9][0-9]*' -o)
+[ "$width" == "" ] && width=380
 command=$(cat /tmp/mygraph124 | grep -o '[0-9][0-9]*bp,' | sed 's/bp,//g' | sort -n -u | awk '
 BEGIN {i=0;}
 /[0-9]/ {y[i]=$1; avg[i]=$1; y2[i]=i; mm[i]=$1; mx[i]=$1; i++; next;}
@@ -43,7 +46,7 @@ while(ii > maxcols)
   ii--;
 }
 
-unit = 380/ii;
+unit = '"$width"'/ii;
 maxunit = 120;
 if(unit > maxunit)
   unit = maxunit;
@@ -53,6 +56,8 @@ for(j=0; j < i; j++)
 }
 }
 ')
+
+[ "$skip" != "" ] && command=""
 
 cat /tmp/mygraph124 |  sed 's/,/###,/g' | sed "$command" | sed 's/###,/,/g' 
 

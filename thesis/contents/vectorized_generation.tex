@@ -77,3 +77,12 @@ output_c[j++] = b_conversion_w1_0;
 output_c[j++] = b_conversion_w1_1;
 \end{code}
 
+\begin{rem}
+  The condition requiring all widths to be powers of two ensures two things:
+  \begin{itemize}
+    \item All data vectors are aligned.
+    \item We are able to process the same amount of data ($w$) at every instruction.
+  \end{itemize}
+  Without this condition we would want $w$ to be the least common multiple of the maximum widths of all operations in $G$. 
+\end{rem}
+

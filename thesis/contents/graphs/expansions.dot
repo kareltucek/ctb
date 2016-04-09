@@ -1,0 +1,27 @@
+digraph G{
+
+#vertical 20
+#include
+
+  rankdir = LR;
+
+  subgraph cluster_loopmerge {
+  lmsl[label="merge st"];
+  lmsr[label="merge st"];
+  lmp[label="merge"];
+  lml[label="merge ld"];
+    label="loop merge";
+    lmsl -> lmp #l1;
+    lmsr -> lmp #l2;
+    lmp -> lml #l1;
+  };
+
+  ink[label="data",shape="ellipse"];
+  inl[label="data",shape="ellipse"];
+  outk[label="data",shape="ellipse"];
+
+  ink -> lmsl;
+  inl -> lmsr;
+  lml -> outk;
+
+}

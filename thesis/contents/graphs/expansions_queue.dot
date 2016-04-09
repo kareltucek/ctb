@@ -1,0 +1,21 @@
+digraph G{
+
+#vertical 20
+#include
+
+  rankdir = LR;
+
+  subgraph cluster_loopmerge {
+  c[label="buffer st"];
+  d[label="buffer ld"];
+    label="explicit queue";
+    c -> d #l1;
+  };
+
+  in[label="data",shape="ellipse"];
+  out[label="data",shape="ellipse"];
+
+  in -> c;
+  d -> out;
+
+}

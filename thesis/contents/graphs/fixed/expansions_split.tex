@@ -1,0 +1,26 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0,0,0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (54bp,30bp) -- (54bp,130bp) -- (271bp,130bp) -- (271bp,30bp) -- cycle;
+  \draw (162bp,110bp) node {split};
+\end{scope}
+  \node (ss) at (108bp,70bp) [draw,rectangle] {split st};
+  \node (slr) at (217bp,50bp) [draw,rectangle] {split ld};
+  \node (sll) at (217bp,90bp) [draw,rectangle] {split ld};
+  \node (outd) at (325bp,90bp) [draw,ellipse] {data};
+  \node (oute) at (325bp,50bp) [draw,ellipse] {data};
+  \node (ind) at (0bp,90bp) [draw,ellipse] {data};
+  \node (inf) at (0bp,50bp) [draw,ellipse] {condition};
+  \draw [->,dotted] (ss) -- (slr);
+  \draw [->] (ind) -- (ss);
+  \draw [->] (inf) -- (ss);
+  \draw [->] (slr) -- (oute);
+  \draw [->] (sll) -- (outd);
+  \draw [->,dotted] (ss) -- (sll);
+%
+\end{tikzpicture}
+

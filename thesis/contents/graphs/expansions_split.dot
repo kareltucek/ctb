@@ -1,0 +1,27 @@
+
+digraph G{
+
+#vertical 20
+#include
+
+  rankdir = LR;
+
+  subgraph cluster_split {
+  sll[label="split ld"];
+  slr[label="split ld"];
+  ss[label="split st"];
+    label="split";
+    ss -> sll#l1;
+    ss -> slr#l1;
+  }
+
+  ind[label="data",shape="ellipse"];
+  inf[label="condition",shape="ellipse"];
+  outd[label="data",shape="ellipse"];
+  oute[label="data",shape="ellipse"];
+  ind -> ss;
+  inf -> ss;
+  sll -> outd;
+  slr -> oute;
+
+}

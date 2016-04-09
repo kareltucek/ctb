@@ -1,0 +1,20 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0,0,0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (54bp,30bp) -- (54bp,90bp) -- (271bp,90bp) -- (271bp,30bp) -- cycle;
+  \draw (162bp,70bp) node {explicit queue};
+\end{scope}
+  \node (c) at (108bp,50bp) [draw,rectangle] {buffer st};
+  \node (out) at (325bp,50bp) [draw,ellipse] {data};
+  \node (d) at (217bp,50bp) [draw,rectangle] {buffer ld};
+  \node (in) at (0bp,50bp) [draw,ellipse] {data};
+  \draw [->,dotted] (c) -- (d);
+  \draw [->] (d) -- (out);
+  \draw [->] (in) -- (c);
+%
+\end{tikzpicture}
+

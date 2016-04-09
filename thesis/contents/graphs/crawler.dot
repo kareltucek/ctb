@@ -1,0 +1,92 @@
+digraph G{
+
+#novertical
+#nohorizontal
+#include
+  
+  rankdir=TB;
+
+  subgraph cluster_ins{
+    sortv=0;
+    rank=source;
+    label="some partition j \\textless i";
+    inv[label="PARTITION\\_j",#label];
+    ins[label="SINGULAR\\_PARTITION\\_j",#label];
+  }
+
+  //subgraph cluster_aux {
+  //  style=invis;
+  //  sortv=1;
+
+  subgraph cluster_vec {
+    label="vectorized code of partition i"
+    rankdir = TB;
+    style=solid;
+    vlab [label="PARTITION\\_i",#label];
+    vterm0 [label="i == 0 ? handle\\_termination\\_zero", #text]
+    vterm [label="i != 0 \\&\\& i is terminating", #text]
+    vgoprev [label="not enough data#newlinein an input from j", #text]
+    vgonext [label="not enough space#newlinein an output to j", #text]
+    vbodylab [label="VECTOR\\_BODY\\_i",#label];
+    vbody [label="process body#newlineremaining -= vector size",#text];
+    vrepeat [label="repeat",#text];
+    vaux [style=invis];
+    vlab -> vterm0 -> vterm -> vgoprev -> vgonext -> vbodylab -> vbody -> vrepeat [style=bold];
+  vlab -> vaux[dir=back];
+  vaux -> vrepeat[dir=none];
+  };
+
+
+  subgraph cluster_simple {
+    label="singular code of partition i"
+    rankdir = TB;
+    style=solid;
+    slab [label="SINGULAR\\_PARTITION\\_i",#label];
+    sterm0 [label="i == 0",#text];
+    sterm [label="i != 0 ? handle\\_termination\\_nonzero",#text];
+    sgoprev [label="an empty input from j",#text];
+    sgonext [label="afull output to j",#text];
+    sgovectorized [label="not enough input or space#newlinefor vectorized body",#text];
+    sbodylab [label="SINGULAR\\_BODY\\_i",#label];
+    sgovector [label="process vectorized",#text];
+    sbody [label="process body#newlineremaining --",#text];
+    srepeat [label="repeat",#text];
+    aux [style=invis];
+    slab -> sterm0 -> sterm -> sgoprev -> sgovectorized -> sgovector [style=bold];
+    sbodylab -> sgonext -> sbody -> srepeat [style=bold] ;
+    sgovectorized -> sbodylab;
+  slab -> aux[dir=back];
+  aux -> srepeat[dir=none];
+  };
+  //};
+
+  subgraph cluster_outs{
+    rank=sink;
+    sortv=3;
+    label="some partition j \\textgreater i";
+    outv[label="PARTITION\\_j",#label];
+    outs[label="SINGULAR\\_PARTITION\\_j",#label];
+    }
+
+  //inv -> ins [style=invis];
+  //outv -> outs [style=invis];
+
+
+  edge [style=dotted, weight=0];
+  vterm0 -> outv;
+  ins -> vgoprev[dir=back];
+  vgonext -> outv;
+  sterm -> outv;
+  ins -> sgoprev[dir=back];
+  sgonext -> outs;
+
+
+  edge [style=solid];
+  vterm0 -> sbodylab;
+  vterm -> slab;
+
+  sterm0 -> vlab;
+  sterm -> sbodylab;
+  sgovector -> vbodylab;
+
+}
