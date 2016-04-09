@@ -15,6 +15,7 @@ do
   printf "\n\n\n" >> log
 done
 
+mkdir final
 rm final/*
 cp fixed/* final/
 for i in *.tex
