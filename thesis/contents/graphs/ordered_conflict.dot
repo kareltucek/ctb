@@ -1,0 +1,32 @@
+digraph G {
+#include
+  rankdir = LR;
+
+  a[style=circle,label="(a1,b1)#newline(a2,b2)"];
+
+  b[label="split"];
+  c[label="split"];
+
+  d[label="merge"];
+  e[label="merge"];
+
+  f[style=circle,label="(a1,b2)#newline(a2,b1)"];
+
+  body1[label="a1 (var)",shape=circle];
+  body2[label="a2 (var)",shape=circle];
+  body3[label="b1 (var)",shape=circle];
+  body4[label="b2 (var)",shape=circle];
+
+  a -> b;
+  a -> c;
+  b -> body1;
+  b -> body2;
+  c -> body3;
+  c -> body4;
+  body1 -> d;
+  body2 -> d;
+  body3 -> e;
+  body4 -> e;
+  d -> f;
+  e -> f;
+}

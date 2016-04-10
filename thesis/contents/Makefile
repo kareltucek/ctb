@@ -1,7 +1,7 @@
 all :
 	make -C graphs
 
-show : all
+show : 
 	make -C .. show
 
 clean :
