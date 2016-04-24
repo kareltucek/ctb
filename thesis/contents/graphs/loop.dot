@@ -1,0 +1,42 @@
+digraph G{
+#verticalLinear
+#height 150
+#nohorizontal
+#include
+
+  subgraph clusterloop{
+    m[label="MERGE"];
+    s[label="SPLIT"];
+    m -> s;
+  //  label="LOOP operation";
+  graph[style="invis"];
+  };
+
+  subgraph clusterbody {
+    c[label="LOOP CONDITION"];
+  lb[label="loop body",shape="circle"];
+  graph[style="invis"];
+  };
+
+  subgraph clusterhowilovedot {
+  d1[label="preamble",shape="ellipse"];
+  c1[label=" condition ",shape="ellipse"];
+  graph[style="invis"];
+  };
+
+
+subgraph clusterhowdotilove{
+  o1[label="epilogue",shape="ellipse"];
+  graph[style="invis"];
+  };
+
+    c -> m;
+    c -> s;
+  d1 -> m;
+  c1 -> c;
+  s -> o1;
+
+  c->lb[dir=back]#l2;
+  m->lb[dir=back]#l2;
+  s->lb;
+}

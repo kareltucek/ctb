@@ -1,0 +1,28 @@
+digraph G{
+#horizontalLinear
+#verticalLinear
+#height=200
+#include
+  source[label="source code"];
+  parallax[label="specialized software"];
+  ctb[label="our framework"];
+  g[label="graphs",shape="ellipse"];
+  g2[label="control graph",shape="ellipse"];
+  i[label="description of#newlineinstructions",shape="ellipse"];
+  a[label="C code of boxes",shape="ellipse"];
+  b[label="C code",shape="ellipse"];
+  e[label="executable files",shape="ellipse"];
+  p[label="distributed environment",shape="ellipse"];
+  compiler[label="C compiler"]
+
+  source -> parallax -> g -> ctb;
+  i -> ctb;
+  ctb -> a;
+  parallax -> b;
+  a -> compiler;
+  b -> compiler;
+  compiler -> e;
+  i -> g [style=invis];
+  e -> p;
+  parallax -> g2 -> p;
+}

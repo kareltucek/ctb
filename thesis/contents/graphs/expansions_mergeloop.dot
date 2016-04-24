@@ -19,8 +19,8 @@ digraph G{
     mp -> ml #l1;
   };
 
-  ina[label="data",shape="ellipse"];
-  inb[label="data",shape="ellipse"];
+  ina[label="data",shape="ellipse",taillabel="1"];
+  inb[label="data",shape="ellipse",taillabel="2"];
   inc[label="condition",shape="ellipse"];
   outa[label="data",shape="ellipse"];
   ina -> msl;

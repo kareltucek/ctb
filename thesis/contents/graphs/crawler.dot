@@ -1,7 +1,9 @@
 digraph G{
 
-#novertical
-#nohorizontal
+#width 1000
+#horizontalLinear
+#height 600
+#verticalLinear
 #include
   
   rankdir=TB;
@@ -23,7 +25,7 @@ digraph G{
     rankdir = TB;
     style=solid;
     vlab [label="PARTITION\\_i",#label];
-    vterm0 [label="i == 0 ? handle\\_termination\\_zero", #text]
+    vterm0 [label="i == 0 ? remaining < w", #text]
     vterm [label="i != 0 \\&\\& i is terminating", #text]
     vgoprev [label="not enough data#newlinein an input from j", #text]
     vgonext [label="not enough space#newlinein an output to j", #text]
@@ -42,8 +44,9 @@ digraph G{
     rankdir = TB;
     style=solid;
     slab [label="SINGULAR\\_PARTITION\\_i",#label];
-    sterm0 [label="i == 0",#text];
+    sterm0 [label="i == 0 ? handle\\_termination\\_zero",#text];
     sterm [label="i != 0 ? handle\\_termination\\_nonzero",#text];
+    sterm00 [label="/*is min or max#newlinetopologically*/",#text];
     sgoprev [label="an empty input from j",#text];
     sgonext [label="afull output to j",#text];
     sgovectorized [label="not enough input or space#newlinefor vectorized body",#text];
@@ -52,7 +55,7 @@ digraph G{
     sbody [label="process body#newlineremaining --",#text];
     srepeat [label="repeat",#text];
     aux [style=invis];
-    slab -> sterm0 -> sterm -> sgoprev -> sgovectorized -> sgovector [style=bold];
+    slab -> sterm0 -> sterm -> sterm00 -> sgoprev -> sgovectorized -> sgovector [style=bold];
     sbodylab -> sgonext -> sbody -> srepeat [style=bold] ;
     sgovectorized -> sbodylab;
   slab -> aux[dir=back];
@@ -68,12 +71,12 @@ digraph G{
     outs[label="SINGULAR\\_PARTITION\\_j",#label];
     }
 
-  //inv -> ins [style=invis];
-  //outv -> outs [style=invis];
+  inv -> ins [style=invis];
+  outv -> outs [style=invis];
 
 
   edge [style=dotted, weight=0];
-  vterm0 -> outv;
+  sterm0 -> outv;
   ins -> vgoprev[dir=back];
   vgonext -> outv;
   sterm -> outv;
@@ -82,10 +85,11 @@ digraph G{
 
 
   edge [style=solid];
-  vterm0 -> sbodylab;
+  sterm0 -> sbodylab;
+  vterm0 -> slab;
   vterm -> slab;
 
-  sterm0 -> vlab;
+  sterm00 -> vlab;
   sterm -> sbodylab;
   sgovector -> vbodylab;
 

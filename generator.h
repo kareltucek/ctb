@@ -61,7 +61,7 @@ namespace ctb
             id_t opid;
 
             data_t( node_t* me, const typename IT::operation_t* o, id_t opi, const map<string,string>& params = {});
-            template <class W> void generate(graph_t& parent, int granularity, multicontB<W>& w,  multicontB<output_options>& , bool c);
+            template <class W> void generate(graph_t& parent, int granularity, imp_contB<W>& w,  imp_contB<output_options>& , bool c);
             string get_param(const string&) const;
             vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
@@ -78,15 +78,15 @@ namespace ctb
         template <typename...L> typename graph_t::node_t* addvert(vid_t v, id_t op, L... p) ;
         void addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos) ;
 
-        template <class W> void generate(int granularity, multicontB<W>& w,  multicontB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
-        template <class W> void generate_partition(int partition, int granularity, multicontB<W>& w,  multicontB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
+        template <class W> void generate(int granularity, imp_contB<W>& w,  imp_contB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
+        template <class W> void generate_partition(int partition, int granularity, imp_contB<W>& w,  imp_contB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
         int get_broadest(int upperbound = 10000000) ;
 
         void set_compiletest(bool);
 
         template<template <typename ...> class L, typename...P> void transform(P...params) ;
 
-        multicontB<output_options> option_struct();
+        imp_contB<output_options> option_struct();
 
         void clear();
         void reset();
@@ -98,9 +98,9 @@ namespace ctb
   typedef generator<traits, instruction_table_default> generator_default;
 
   template <class T, class IT>
-    multicontB<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
+    imp_contB<typename generator<T,IT>::output_options> generator<T,IT>::option_struct()
     {
-      return multicontB<output_options>();
+      return imp_contB<output_options>();
     }
 
   template <class T, class IT>
@@ -196,7 +196,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate_partition(int partition, int packsize, multicontB<W>& w,  multicontB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
+    void generator<T,IT>::generate_partition(int partition, int packsize, imp_contB<W>& w,  imp_contB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
     {
       if(graph.out.empty())
         error( "graph is empty");
@@ -227,7 +227,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::generate(int packsize, multicontB<W>& w,  multicontB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
+    void generator<T,IT>::generate(int packsize, imp_contB<W>& w,  imp_contB<output_options>& opts, shared_ptr<taghandler_base> ts, shared_ptr<taghandler_base> tp, shared_ptr<taghandler_base> to)
     {
       data_t::newid(true); //resets ids
       for(int i = 0; i < partition_count(); ++i)
@@ -236,7 +236,7 @@ namespace ctb
 
   template <class T, class IT>
     template <class W>
-    void generator<T,IT>::data_t::generate(graph_t& parent, int granularity, multicontB<W>&w, multicontB<output_options>& opts, bool c)
+    void generator<T,IT>::data_t::generate(graph_t& parent, int granularity, imp_contB<W>&w, imp_contB<output_options>& opts, bool c)
     {
       aliasenv_generator::setparammap(&params);
       try

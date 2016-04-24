@@ -1,13 +1,20 @@
 #!/bin/bash
 cat | sed 's/\.[0-9][0-9]*//g' > /tmp/mygraph124
 skip=$(cat $1 | grep '#nohorizontal')
+linear=$(cat $1 | grep '#horizontalLinear')
 width=$(cat $1 | grep '#width' | grep '[0-9][0-9]*' -o)
 horizontal=$(cat $1 | grep '#horizontal' | grep '[0-9][0-9]*' -o)
+[ "$linear" == "" ] && linear="false"
+[ "$linear" == "false" ] || linear="true"
 [ "$width" == "" ] && width=380
 [ "$horizontal" == "" ] && horizontal=120
 command=$(cat /tmp/mygraph124 | grep -o '[0-9][0-9]*bp,' | sed 's/bp,//g' | sort -n -u | awk '
-BEGIN {i=0;}
-/[0-9]/ {y[i]=$1; avg[i]=$1; y2[i]=i; mm[i]=$1; mx[i]=$1; i++; next;}
+BEGIN {i=0;max = 0;}
+/[0-9]/ {
+y[i]=$1; avg[i]=$1; y2[i]=i; mm[i]=$1; mx[i]=$1; i++;
+if($1 > max) {max = $1;}
+  next;
+}
 END { 
 maxcols = 5;
 maxmove = 50;
@@ -48,13 +55,21 @@ while(ii > maxcols)
   ii--;
 }
 
-unit = '"$width"'/ii;
+width = '"$width"';
+unit = width/ii;
 maxunit = '"$horizontal"';
 if(unit > maxunit)
   unit = maxunit;
 for(j=0; j < i; j++)
 {
-  printf("s/(%ibp###,/(%ibp,/g;",y[j],y2[j]*unit);
+  if("'"$linear"'" == "true")
+  {
+    printf("s/(%ibp###,/(%ibp,/g;",y[j],y[j]*width/max);
+  }
+  else
+  {
+    printf("s/(%ibp###,/(%ibp,/g;",y[j],y2[j]*unit);
+  }
 }
 }
 ')

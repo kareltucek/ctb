@@ -1,0 +1,22 @@
+digraph G{
+#include
+#horizontalLinear
+#width 330
+
+c1[label="LDI, MOD2, SPLIT (if)",shape="ellipse"];
+c2[label="MUL7",shape="ellipse"];
+c3[label="LT100",shape="ellipse"];
+c4[label="CONDITION",shape="ellipse"];
+c5[label="MERGE, SPLIT (loop)",shape="ellipse"];
+c6[label="ADD3, LT100",shape="ellipse"];
+c7[label="MERGE (if),STI",shape="ellipse"];
+
+c1 -> c2 -> c7 ;
+c1 -> c5 ;
+c1 -> c3 -> c4 -> c5 -> c7 ;
+c5 -> c6 ;
+c5 -> c6 ;
+c6 -> c4 #l2;
+c6 -> c5 #l2;
+
+}

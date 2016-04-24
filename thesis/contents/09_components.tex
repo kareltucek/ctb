@@ -1,0 +1,105 @@
+Our generator, abbreviated as \emph{ctb}, is implemented as a header library consisting of multiple classes composed via templates. It may be used directly from a C++ code as well as a standalone executable. We understand the data processal to be some sequence of actions which are described by some sequence of commands. 
+
+\section{Brief introduction of components}
+First we wish to present all components of our framework on high level of abstraction.
+
+\subsection{Command environment}
+  The \emph{ctb} class acts as a frontend of our generator. It contains:
+  \begin{itemize}
+    \item Methods representing commands.
+    \item Interpretter of commands.
+    \item Tables containing various access methods of other templated components. These are specifically:
+    \begin{itemize}
+      \item Table of loaders.
+      \item Table of alias environments which act as separate text processors.
+      \item Table of alias environments which represent an output environment.
+      \item Table of commands.
+      \item Table of graph transformations.
+    \end{itemize}
+    \item Methods which allow registration of new commands and components. This allows custom classes to be used without actual changes to our code.
+    \item A single instance of a generator.
+    \item A single instance of an instruction table.
+  \end{itemize}
+
+\subsection{Instruction Table} 
+  Instruction table contains definitions of operations, instructions, data types and width conversions. Instruction table provides the code generator with all information it needs. We provide more detailed semantics at the end of this chapter. For the time being it is more than sufficient to mention that instructions, types and conversions are resolved into string patterns which are later used by the generator. (We will refer to these as to \emph{instruction patterns}.)
+
+\subsection{Graph}
+
+  We provide an implementation of a graph template with the following features present:
+
+  \begin{itemize}
+    \item Graph may act as both directed and undirected graph.
+    \item Vertices and edges are implemented as separate objects. Vertices contain an instance of a user-defined type. 
+    \item Support for distance calculation.
+    \item Crawling methods.
+    \item Cycle detection.
+    \item Data fields for all general annotations specified by our definition of a flow graph. This mainly includes semantics of edge layers and graph factorization.
+    \item Computation of a factor graph. The factor is then accessible as a member object.
+    \item Export of both graph and its factor graph into dot representation. TODO: add DOT reference
+  \end{itemize}
+
+\subsection{Generator}
+  Generator may be viewed as a special case of the Graph structure. It is parametrized by the type of an instruction table and by the type of a graph. An instance of the generator class generates some instruction code using a provided instruction table (where annotations of graph elements refer to structures contained in the instruction table). 
+
+\subsection{Loaders}
+  Loaders are classes which provide methods which import and export representations of graphs and instruction tables. These are requried to contain a string identifier and four methods which perform the mentioned operations. Every loader is supposed to be registered within the ctb class. The identifier is then used to specify which loader should be used in commands.
+
+\subsection{Preprocessing environment and the Writer class}
+
+As we have mentioned before, our generator uses a complicated text processing environment to generate code. The key class is the Writer class parametrized by a tree structure of alias environments. 
+
+\subsubsection{Writer}
+Objects of this class may be simply viewed as containers of generated code or as strings. Writer was designed to act as a data sink for the Generator class. Besides various io and formatting related functionality the Writer provides a variadic\footnote{Taking a variable number of arguments.} print method. This method takes a format string, which resembles the printf format but looks and acts more like the text preprocessor of bash. The print method takes its first argument and recursively performs series of expansions. These expansions may perform:
+\begin{itemize}
+  \item Simple substitution of arguments into the format string.
+  \item Evaluation of arithmetic expressions. 
+  \item Evaluation of \emph{aliases}. When a variable with textual name is encountered, it is passed to the root alias environment which is then responsible for resolving of the alias into some result.
+\end{itemize}
+
+\subsubsection{Alias environments}
+Alias environments are \emph{static} classes which resolve aliases for instances of the Writer class. They may simply look up the required alias in a map, but may also perform arbitrary computations. Alias classes are supposed to employ some sort of inheritance thus creating a tree-like structure for evaluation.
+
+
+The following alias environments are to be found in our project:
+\begin{itemize}
+  \item An empty environment.
+  \item A bind environment, which takes two other environments as parameters and \emph{combines} them into a single environment.
+  \item An aliasenv maker, which is a general environment whose content may be dynamicaly managed. This is used for purposes which do not have substantial semantics, e.g. various auxiliary usages. 
+  \item The control flow macro environment implements buffer macro expansions. This is an example of more involved usage.
+  \item The generator alias environment is used for resolving of generator-related aliases which are typically to be found in instruction patterns.
+  \item Environments specific for output environments.
+\end{itemize}
+
+\subsection{Alias environments as drivers of the generation}
+  Some alias environments also represent output environments. For instance, a specific language or a specific way how the basic blocks, generated by a generator, should be composed. These environments, registered in an instance of the ctb class, are the actual top-level drivers of the generation. When code generation is invoked, one of these environments is provided with an instance of the Generator class and is supposed to use the generator (or more accurately its output) to produce some useful code. 
+
+\subsection{Preprocessors}
+  A preprocessor is an alias environment which was registered within an isntance of the ctb class as a text preprocessor. A preprocessor may later be used for processing of arbitrary input, meaning that an input file is taken, printed using a writer parametrized by this preprocessor and outputted. This functionality makes sense since very specific data processing may be employed using alias environments.
+
+\subsection{Transformers}
+  A transformer class is a class which provides some graph transformation. This allows arbitrary graph transformations to take place during various phases of computation. Transformation classes may be registered and used in the same manner as loaders.
+
+\subsection{Other structures}
+
+\subsubsection{Cartesian multiplier}
+   Cartesian multiplier is a simple utility which helps to generate a cartesian products of containers. The cartesian multiplier is basically an iterator which dereferences to a list of iterators.
+
+\subsubsection{Parser}
+  The Parser class is a simple push down automaton which evaluates arithmetic expressions. TODO: fill in some reference here :-)
+
+\subsubsection{Languages}
+  One of the features of the Writer class is code formatting and indentation. Language classes contain sets of callbacks which are used to determine indentation and line-breaking. These are passed to an instance of the Writer class as member typedefs of alias environments.
+
+\subsubsection{Implicit containers}
+  There are two container templates which basically add one dimension to the template parameter. We used these at places where we needed to replace a single (always present) element by a list of optional elements without invalidation of already existing code. These also serve as a syntactic sugar, since we do not require any container semantics unless the user explicitly needs to use multiple instances of the object in question.
+
+\subsubsection{Tag handlers}
+  Among other characteristics, any instruction may have a list of tags specified. These tags are used to decide whether an instruction may be used or not. The tag handlers are objects which provided a list of tags decide whether it is feasible or not. 
+
+  
+  Our implementation of this structure provides a more involved features and serves for translation of user-provided flags into masks which are later used for determining whether an instruction may be used.
+
+\subsubsection{Proxies}
+  During the initial phases of development we used the Proxy class to make some class members read only for public. This seemed to be a conceptualy good idea until management of templated inheritence turned this concept into a nightmare. 
+

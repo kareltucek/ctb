@@ -3,10 +3,13 @@ all: content thesis
 content: 
 	make -C contents
 
-show : all
+finalize :
+	make -C contents finalize
+
+show : finalize thesis
 	mupdf thesis.pdf
 
-showplain : thesis
+showplain : finalize thesis
 	mupdf thesis.pdf
 
 # LaTeX must be run multiple times to get references right

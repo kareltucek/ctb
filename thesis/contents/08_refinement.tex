@@ -1,16 +1,15 @@
-The unordered solution seems to be superior to the ordered one in many aspects. An optimal situation would of course be if we could drop the condition. Unfortunately the receiver of the processed data may need the data ordered. We of course may add serie indices into the data series for identification, but that does not solve the problem entirely, since either we will have to store the results one by one or someone else will have to retrieve them one by one. Either version would increase the amount of data transfers between CPU and RAM significantly. 
+The unordered solution seems to be superior to the ordered one in many aspects. An optimal situation would of course be if we could drop the condition. Unfortunately, the data receiver may need the data ordered.  We, of course, may add row indices into the data rows for identification, but that does not solve the problem entirely, since either we will have to store the results one by one or someone else will have to retrieve them one by one. Either version would increase the amount of data transfers between CPU and RAM significantly. 
 
-\parspace
 
 Idealy we would like to reorder the data back using as few RAM stores and loads as possible. For this purpose we may use the information about performed shuffling of the data. We propose the following approach:
 \begin{enumerate}
-  \item Process all data and store results into the RAM. Also store a sequence of boolean values per every split or merge node. This sequence will contain a single value per every data serie which was processed by the node in question. This value will represent either left or right branch of the split or merge.
-  \item Construct a new pipeline, which will be an exact copy of the processing pipeline, will be built backwards and will not contain any data processing.
-  \item Then pipe the data from RAM into the new pipeline in inverse order. Also provide every split and merge node with the values stored by a corresponding merge or split as a control.
+  \item We process all the data and store the results into the RAM. Also, we store a sequence of boolean values per every split or merge node. This sequence will contain a single value per every data row which was processed by the node in question. This value will represent either left or right branch of the split or merge.
+  \item We construct a new pipeline which will be an exact copy of the processing pipeline but will be built backwards and will not contain any data processing.
+  \item Then we pipe the data from RAM into the new pipeline in inverse order. Also, we provide every split and merge node with the values stored by a corresponding merge or split as a control.
 \end{enumerate}
 
 \begin{rem}
-  Note that we cannot pipe the original pipeline directly to the one built backwards. Imagine that the first data serie to enter the processing pipeline is the last one to come out. If we piped the first pipeline directly into the sorting one, we would have to store \emph{all} data in CPU registers until the first data serie was processed and could be piped into the sorting pipeline.
+  Note that we cannot pipe the original pipeline directly to the one built backwards. Imagine that the first data row to enter the processing pipeline is the last one to come out. If we piped the first pipeline directly into the sorting one, we would have to store \emph{all} the data in CPU registers until the first data row was processed and could be piped into the sorting pipeline.
 \end{rem}
 
 This approach surely has its drawbacks, but for some pipelines may reduce the amount of RAM transfers needed for sorting of the data.

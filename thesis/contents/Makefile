@@ -1,5 +1,10 @@
-all :
+all : gengraphs
+
+gengraphs :
 	make -C graphs
+
+finalize :
+	make -C graphs finalize
 
 show : 
 	make -C .. show

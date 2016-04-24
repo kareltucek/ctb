@@ -77,7 +77,7 @@ namespace ctb
     writer<aliasenv_simple> aliasenv_simple::generate(int granularity, G& generator, string name, stringlist args)
     {
       init();
-      typedef multicontB<writer<aliasenv_simple>> wrt;
+      typedef imp_contB<writer<aliasenv_simple>> wrt;
       auto opts = generator.option_struct();
 
       wrt ilist;

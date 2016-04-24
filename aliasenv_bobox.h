@@ -72,7 +72,7 @@ namespace ctb
   template <class G>
     writer<aliasenv_bobox> aliasenv_bobox::generate(int granularity, G& generator, string name, stringlist args)
     {
-      typedef multicontB<writer<aliasenv_bobox>> wrt;
+      typedef imp_contB<writer<aliasenv_bobox>> wrt;
       auto opts = generator.option_struct();
 
       init();

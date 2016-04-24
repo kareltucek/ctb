@@ -1,0 +1,20 @@
+digraph{
+#verticalLinear
+#height 75
+#horizontalLinear
+#include
+  rankdir = LR;
+  fa[style=invis];
+  fb[style=invis];
+  fd[style=invis];
+  a[label="a LD"];
+  b[label="b LD"];
+  c[label="c ADD"];
+  d[label="d ST"];
+  a -> c [label="internal stream"];
+  b -> c;
+  c -> d;
+  fa -> a [style=dashed,label="external stream"];
+  fb -> b [style=dashed];
+  d -> fd [style=dashed];
+}

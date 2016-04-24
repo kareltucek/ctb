@@ -1,0 +1,26 @@
+digraph{
+#verticalLinear
+#height 150
+#horizontalLinear
+#include
+
+  rankdir = LR;
+
+  subgraph cluster_inputs {
+  label="inputs";
+  a[label="a op=LD"]
+  b[label="b op=LD"]
+  };
+
+  subgraph cluster_outputs {
+  label="outputs";
+  d[label="d op=ST"]
+  };
+
+  c[label="c op=DIV"]
+
+  a -> c [headlabel="from=1", taillabel="to=1"];
+  b -> c [headlabel="from=1", taillabel="to=2"];
+  c -> d [headlabel="from=1", taillabel="to=1"];
+  label="O=\\{LD,ST,DIV\\}";
+}

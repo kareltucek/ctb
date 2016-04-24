@@ -1,12 +1,15 @@
+\chapter{Introduction}
+  \input{contents/00_introduction}
 \chapter{Theoretical analysis and solution}
 
-    \section{Motivation, the bobox environment}
+    \label{ch:analysis}
+    %\section{Motivation, the bobox environment}
 
     %define a box
+    \section{Formal introduction, definitions, notation} \input{contents/01_definitions}
 
-    \section{Code generation}
+    \section{Code generation} 
 
-        \subsection{Initial definitions} \input{contents/01_definitions}
 
         \subsection{Simple code generation} \input{contents/02_simple_generation} %describe the dollar notation
 
@@ -24,35 +27,16 @@
 
 \chapter{General implementation}
 
-    \section{Brief introduction of components}
+    \label{ch:implementation}
 
-        \subsection{Command environment}
+ \input{contents/09_components}
 
-        \subsection{Instruction Table} 
-
-        \subsection{Graph}
-
-        \subsection{Generator}
-
-        \subsection{Loaders}
-
-        \subsection{Preprocessing environment and the Writer class}
-
-            \subsubsection{Writer}
-
-            \subsubsection{Alias environments}
-
-        \subsection{Alias environments as drivers of the generation}
-
-    \section{Flow example}
-
-    \section{Graph algorithms}
-
-    \section{Instruction representation and actual implementation of the generator}
+    \input{contents/10_implementation}
 
         %%....
 
 \chapter{Implementation of the SSE instruction set}
+    \label{ch:sse}
 
     \section{Data types and conversions}
 
@@ -67,6 +51,7 @@
         %%....
 
 \chapter{User guides}
+    \label{ch:faq}
 
     \section{Commands available}
 
@@ -85,14 +70,14 @@
 
         \subsection{How do I add support for a new language?}
 
-\begin{code}
-for i in abc
-do
-done
-\end{code}
-
-\graph{simple}
-\graph{simple2}
-\graph{cf}
-
+%\begin{code}
+%for i in abc
+%do
+%done
+%\end{code}
+%
+%\graph{simple}
+%\graph{simple2}
+%\graph{cf}
+%
 

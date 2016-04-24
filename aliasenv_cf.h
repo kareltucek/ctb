@@ -85,7 +85,7 @@ namespace ctb
   template <class G>
     writer<aliasenv_cf> aliasenv_cf::generate_vector_dbg(int granularity, G& generator, string name, stringlist args, bool log)
     {
-      typedef multicontB<writer<aliasenv_cf>> wrt;
+      typedef imp_contB<writer<aliasenv_cf>> wrt;
       auto opts = generator.option_struct();
 
       aliases["granularity"] = ctb::to_string(granularity);
@@ -148,8 +148,6 @@ namespace ctb
               +    CODE_OF_gonext
               + "  VEC_PROC_PARTITION_$1:                                     " 
               +    LOG("printf(\"#  AT VECTOR PROC OF COMPONENT %i\\n\", $1); ")
-              +    LOG(" $$1 ")
-              +    LOG("printf(\"sep\\n\"); ")
               +    CODE_OF_bodyvec
               +    CODE_OF_bodyvecsingle
               + "  if( 0 == $1 )                                              " 
@@ -194,8 +192,6 @@ namespace ctb
               + "  SIN_PROC_PARTITION_$1:                                     " 
               +    LOG("printf(\"#  AT SINGLE PROC OF COMPONENT %i\\n\", $1); ")
               +    CODE_OF_gonextone
-              +    LOG(" $$1 ")
-              +    LOG("printf(\"sep\\n\"); ")
               +    CODE_OF_bodyone
               +    CODE_OF_bodyonesingle
               + "  if( 0 == $1 )                                              " 
@@ -240,7 +236,7 @@ namespace ctb
   template <class G>
     writer<aliasenv_cf> aliasenv_cf::generate_simple_dbg(int granularity, G& generator, string name, stringlist args, bool log)
     {
-      typedef multicontB<writer<aliasenv_cf>> wrt;
+      typedef imp_contB<writer<aliasenv_cf>> wrt;
       auto opts = generator.option_struct();
 
       opts["default"].once = false;
@@ -270,8 +266,6 @@ namespace ctb
               + "if(remains_0 == 0) goto PARTITION_$1_PROC;"
               + " $5 " //go up
               + "PARTITION_$1_PROC: "
-              + LOG(" $$1 ")
-              + LOG("printf(\"sep\\n\"); ")
               + " $6 " //perform body
               + "remains_$1--;"
               + LOG(" $$1 ")

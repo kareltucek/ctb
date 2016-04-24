@@ -1,0 +1,44 @@
+digraph G{
+#verticalLinear
+#height 250
+#nohorizontal
+#include
+
+ldi[label="LDI"]
+mod2[label="MOD2"];
+bs[label="SPLIT (if)"];
+bm[label="MERGE (if)"];
+mul7[label="MUL7"];
+ls[label="SPLIT (while)"];
+lm[label="MERGE (while)"];
+sti[label="STI"];
+lt1[label="LT 100"];
+lt2[label="LT 100"];
+c[label="CONDITION"];
+add3[label="ADD3"];
+
+ldi->mod2;
+mod2->bs;
+ldi->bs;
+bs->mul7;
+mul7->bm;
+bs->lt1;
+lt1->c;
+bs->lm;
+lm->ls;
+lm->ls[style=invis];
+lm->ls[style=invis];
+lm->ls[style=invis];
+lm->ls[style=invis];
+ls->bm;
+bs->bm[style=invis];
+bs->bm[style=invis];
+bm->sti;
+add3->ls[dir=back];
+lt2->add3[dir=back];
+c->lt2[dir=back];
+lm->add3[dir=back];
+c->lm;
+c->ls;
+
+}

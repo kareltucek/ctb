@@ -1,13 +1,13 @@
 digraph G{
 #vertical 40
 #include
-  a[label=" preamble ",shape="circle"]
-  ac[label=" condition ",shape="circle"]
-  d[label=" epilogue ",shape="circle"]
-  b[label="if#newlinebranch",shape="circle"]
-  c[label="else#newlinebranch",shape="circle"]
-  s[label="SPLIT"]
-  m[label="MERGE"]
+  a[label=" preamble ",shape="ellipse"];
+  ac[label=" condition ",shape="ellipse"];
+  d[label=" epilogue ",shape="ellipse"];
+  b[label="if#newlinebranch",shape="circle"];
+  c[label="else#newlinebranch",shape="circle"];
+  s[label="SPLIT"];
+  m[label="MERGE"];
   a -> s;
   ac -> s;
   s -> b;
@@ -25,10 +25,31 @@ digraph G{
   ss -> cc;
   cc -> mm;
   ss -> dd;
-  aa[label="preamble",shape="circle"]
-  dd[label="epilogue",shape="circle"]
-  cc[label="loop body",shape="circle"]
-  bb[label="construct#newlinecondition",shape="circle"]
-  ss[label="SPLIT"]
-  mm[label="LOOP MERGE"]
+  aa[label="preamble",shape="circle"];
+  dd[label="epilogue",shape="circle"];
+  cc[label="loop body",shape="circle"];
+  bb[label="construct#newlinecondition",shape="circle"];
+  ss[label="SPLIT"];
+  mm[label="LOOP MERGE"];
+
+//  aa[label="preamble",shape="ellipse"];
+//  dd[label="epilogue",shape="ellipse"];
+//
+//  lm[label="MERGE"];
+//  ls[label="SPLIT"];
+//  lc[label="LOOP CONDITION"];
+//  lb[label="loop body",shape="circle"];
+//
+//  aa->lm;
+//  aa->lc;
+//  lm->ls;
+//  ls->lb;
+//  lm->lb[dir=back];
+//  lc->lb[dir=back];
+//  ls->dd;
+//  lc->lm;
+//  lc->ls;
+
+
+
 }

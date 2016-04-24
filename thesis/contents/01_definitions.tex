@@ -1,4 +1,87 @@
-Reader should be familiar with the~basic terminology of the~graph~theory. For now we will assume knowledge of the~following terms: \emph{directed~graph}, \emph{multigraph}, \emph{topological~ordering}, \emph{path}, \emph{cycle}, \emph{connected component}, \emph{depth first search (DFS)}. Definitions of these may be found in \cite{kapitoly}. Reader should also be familiar with some basic abbreviation of instruction names and should understand basics of the machine code and the C language. We will assume knowledge at least of the following abbreviations: \emph{LD (load)}, \emph{ST (store)}, \emph{ADD(+)}, \emph{SIMD (single instruction processing multiple data)}. We will also provide some definitions of our own.
+%Reader should be familiar with the~basic terminology of the~graph~theory. We will assume knowledge of the~following terms: \emph{directed~graph}, \emph{multigraph}, \emph{topological~ordering}, \emph{path}, \emph{cycle}, \emph{connected component}, \emph{depth first search (DFS)}. Definitions of these may be found in \cite{kapitoly}. 
+
+
+We provide significant number of definitions of our own. We construct these formalisms since this problem has not yet been described in this exact form (as far as we know).  We provide these formalisms mainly for the sake of clarity. (TODO: Can I afford the following one sentence disclaimer?) We do not aim for full formalization of all introduced theory, since such formalization would require possibly hundreds of pages and would be of no use for us. Since introduction of all used formalisms at once does not seem wise, we choose to build our formalisms incrementally. We will provide some forward references and some limited amount of forward context to keep flow of information as consistent as possible, but our main goal will be providing information at places where they are actually used.
+
+
+In this section the reader should get some intuitive understanding of flow graph meaning, of what flow graphs represent and should note the difference between instructions and operations. Reader should feel free to skip formal details.
+
+\subsubsection{Introduction of flow graphs}
+
+\begin{define}[edge incidence]
+  Let $G(V,E)$ be a multigraph. We define the relation $\sim$ by the following rules:
+  \begin{itemize}
+  \item $\sim \ \subseteq E \times (V \times V)$ 
+  \item $ (\forall e \in E)(\forall a,b \in V)( e \sim (a,b) $ if and only if edge $e$ leads from vertex $a$ to vertex $b$ $)$
+  \end{itemize}
+\end{define}
+
+
+\begin{define}[powerset] We will use the symbol $\powerset(V)$ to denote a \emph{power set} of a set $V$. Power set of the set $V$ is defined as a set of all subsets of the set $V$.
+\end{define}
+
+
+\begin{define}[data queue]
+  We will use the term \emph{data queue} or simply a \emph{queue} for a first-in first-out container with the following operations:
+  \begin{description}
+  \item[push] adds an element to the container.
+  \item[pop] returns the oldest element present in the container and removes it from the container.
+  \end{description}
+  We will use this term in its conceptual meaning. In real implementation we use constant-size buffers or simple memory fields for objects which we theoretically describe as queues.
+\end{define}
+
+
+\begin{define}[flow graph]
+  We will use the~term \emph{flow~graph} for any tuple $(G(V,E),O,from:E \arrow \N, to:E \arrow \N, op:V \arrow O, inputs: \arrow \powerset(V), outputs: \arrow \powerset(V) )$ which satisfies the~following conditions:
+\begin{itemize}
+  \item $G(V,E)$ is a~nonempty connected directed multigraph with annotations defined by $from$, $to$ and $op$.  
+  \item Let $G$ be acyclic except for edges which are explicitly allowed to be on cycles by semantics of $O$ and by node clasification provided later. \footnote{This requirement may be ignored for the time being since there are no general restrictions on semantics of $O$. We include this requirement since implicit acyclicality will greatly simplify enumerations of asumptions.}
+  \item $O$ is a~set of operations.
+  \item Vertices in $inputs$ have no incoming edges and vertices in $outputs$ have no outgoing edges. Also we require that the $op$ annotations of these vertices have semantics of input or output nodes as described later in definition \ref{def:node_types0}.
+  %\item $\forall(v) \in V |out(v)| \leq 1$ 
+  \item Any directed edge is uniquely identified by its destination vertex and the~$to$~annotation. I.e.:
+    $$ (\forall{e,f \in E(G)})(\exists a,b,c,d)(e \sim (a,b) \land f \sim (c,d) \land b = d \land to(e) = to(f) \Rightarrow e = f )$$
+\end {itemize}
+    We will write $G(V,E)$ (with $O$) for brevity.
+\end{define}
+
+  This definition of flow graphs is nearly identical to the definition of \emph{gate networks} given in \cite{ads}, although our use of flow graphs will resemble more the~use of \emph{kahn networks} (\cite{asdfe}). 
+
+  Flow graphs represent pipeline computations. Edges represent data flow, which may be simply represented by data queues. Vertices will represent data transformations. The~$to$~annotation identifies arguments for operations represented by members~of~$O$. The~$to$~annotation identifies outputs of operations which return more than one value. The nullary functions $input$ and $output$ will denote sets of nodes which are meant as data inputs or outputs.
+
+\graph{flowgraph}
+
+  We provide an example of a simple flow graph with all annotations explicitly shown. Later, we will omit the $from$ and $to$ annotations entirely and we will show the $op$ annotations without explicit labels. Some semantical meaning of this graph may be:
+
+  \begin{description}
+  \item[a,b] - First, the two load (LD) operations produce two values from somewhere, typically from some two (distinct) containers stored in RAM, and store these values into the corresponding outgoing queues of $a$ and $b$ (which will be typically implemented as some register-allocated variables). 
+  \item[c] - The DIV operation gathers the two values from the incoming queues, performs division, and pushes the result into its outgoing edge. Note that the $to$ annotation provides the information that the input from $a$ should be divided by the output from $b$ and not vice versa.
+  \item[d] - The store operation retrieves the result from its incoming queue and stores them somewhere. Again this operation may represent almost any effect.
+  \end{description}
+
+\begin{rem}
+  The reader may be asking why is G required to be (implicitly) acyclic, especially when we intend to introduce some representation of loops. The reason is that unrestricted loops may introduce unsolveable dependencies. Later, we define special node types which are allowed to void acyclicality in exchange for a guarantee of not introducing cyclical dependencies. This way, there still exists a topological ordering in its \emph{semantical} sense (although not in the definitorical one). 
+  %We alter the definition of a flow graph in section \ref{sec:node_types}. 
+\end{rem}
+
+\subsubsection{Relation between flow graphs and computations}
+
+  This subsection formalizes how flow graphs generally describe algorithms, which roughly corresponds to the information informally introduced by semantics of our example.
+
+
+\begin{define}[pipeline of a flow graph]
+  Let $G(V,E)$ with $O$ be a flow graph. We will use the term \emph{pipeline} (of flow graph $G$) for a tuple $P(G(V,E), O, Q, queues)$ which adds a \emph{data queue} to every edge of $G$. I.e., we add a set $Q$ of queues and a bijection $queue: E \arrow Q$. 
+\end{define}
+
+This definition adds operational semantics to flow graphs. While flow graphs describe input computation, pipelines will let us reason about actual evaluation.
+
+
+\begin{define}[data row]
+  Since input data for realizations of flow graphs may be undersood as some tables consisting of mutually independent rows of data, we will use the term \emph{data row} for a single set of input values for a flow graph $G$. I.e. we will use the term \emph{data row} for a function $inputs_G \arrow D$ for an arbitrary set $D$ consistent with semantics of operations of $G$.
+
+  We will also (informally) say that all values computed from a data row belong to this data row. This will be always clear from context.
+\end{define}
+
 
 \begin{define}[operation and instruction]
 We will use the~term \emph{operation} for general identification of an~operation which is to be performed on some data. The~term \emph{instruction} will be used for a~specific way of performing an~operation. This way, multiple instructions may be associated with a~single operation.
@@ -11,35 +94,93 @@ E.g., multiplication by a constant power of two is a~unary operation. Associated
   \item a~vectorized version of multiplication
 \end{itemize}
 
-\begin{define}[width of an instruction]
-We will use the~term \emph{width} to denote the~number of independent data series a~single instruction operates~on.
+\begin{define}[semantics of an operation]
+  When talking about semantics of an operation (or of a set of operations), we mean:
+  \begin{itemize}
+    \item Structural requirements on any flow graph which contains vertices representing the operation, such as:
+    \begin{itemize}
+      \item Requirements on existence and counts of incoming and outgoing edges and their $from$ and $to$ annotations.
+      \item Data type semantics of $O$.
+      \item Any other semantic restrictions of $O$ relating to the graph structure. 
+    \end{itemize}
+    \item Description of a computation which transforms input data into output data.
+  \end{itemize}
 \end{define}
 
-\begin{define}[flow graph]
-We will use the~term \emph{flow~graph} for any tuple $(G(V,E),O,from:E \arrow \N, to:E \arrow \N, op:V \arrow O)$ which satisfies the~following conditions:
-\begin{itemize}
-  \item $G(V,E)$ is a~nonempty connected directed acyclic multigraph with annotations defined by $from$, $to$ and $op$.
-  \item $O$ is a~set of operations.
-  %\item $\forall(v) \in V |out(v)| \leq 1$ 
-  \item Any directed edge is uniquely identified by its destination vertex and the~$to$~annotation. I.e.:
-    $$ \forall{e=:(a,b),f=:(c,d)} \in {E(G)}: b = d \wedge to(b) = to(d) \Rightarrow e = f $$
-\end {itemize}
-    We will write $G(V,E)$ for brievity.
+  We do not consider consistency of runtime semantics (such as semantics of division by zero) of operations in this text. We assume that either all problematic semantics is solved as part of the semantics defined above or that all data are valid with respect to the structure of the flow graph which is supposed to process them.
+
+
+\begin{define}[data transformation on vertex]
+  Let $P$ be a pipeline of a flow graph $G(V,E)$. \emph{Data transformation} on a vertex~$v$ will pop some elements from some incoming queues of $v$ and push some elements into outgoing queue of $v$. Element pushed into an~outgoing queue~$e$~of~$v$ will be determined by the~elements taken from the~incoming queues~of~$v$, their~$to$~annotations, the~annotation~$from(e)$ according to the semantics of $op(v)$. The transformation is allowed to perform at most one operation on every input or output queue of $v$.
 \end{define}
 
-  This definition of flow graph is almost identical to the definition of \emph{gate networks} given in \cite{ads}, although our use of flow graphs will resemble more the~use of \emph{kahn networks} (\cite{asdfe}).
+
+\begin{define}[greedy transformation algorithm]
+  Let $P$ be a pipeline of a flow graph $G(V,E)$ with $O$ with possibly nonempty queues. We shall call the following algorithm \emph{greedy realization algorithm} (GRA).
+\end{define}
+  \begin{code}
+fun GRA(P as defined above)
+{
+  while P contains a vertex v s.t. 
+    - incoming queues of v contain amount of data 
+               required by semantics of op(v) 
+    - v does not belong to inputs or outputs of G
+  {
+    perform transformation denoted by op(v) on P;
+  }
+  return P;  
+}
+  \end{code}
+
+
+\begin{define}[realization of a flow graph on a single data row]
+  Let $G(V,E)$ be a~flow graph. \emph{Realization~of~a~flow~graph} $G$ will be an~algorithm which provided with a single data row $d$ produces content of incoming queues of vertices in $outputs_G$ such that: 
+  \begin{itemize}
+    \item $G$ is consistent with semantics assigned to O.
+    \item Input consists of exactly one value per every outgoing queue of a vertex in $inputs_G$.
+    \item Output consists of exactly one value per every incoming queue of a vertex in $outputs_G$.
+    \item Output is equivalent to the output obtained by the following procedure and is unique\footnote{This is an implicit requirement on semantics of O. This requirement causes that realization does not exist if the semantics are not unambiguous.}:
+    \begin{enumerate}
+      \item Let P be a pipeline of G with queues initialized so that:
+      \begin{itemize}
+        \item A queue $q \in inputs_G$ is initialized to a single value, defined by the data row $d$.
+        \item An empty queue otherwise.
+      \end{itemize}
+      \item Run GRA on P.
+    \end{enumerate}
+    \item The GRA is required to consume data from all queues except the output queues, i.e., the incoming queues of $outputs_G$.
+  \end{itemize}
+\end{define}
+
 
 \begin{define}[realization of a flow graph]
-  Let $G(V,E)$ be a~flow graph and ${In = \{v \in V \mid |in(v)| = 0\}}$. \emph{Realization~of~a~flow~graph} will be an~algorithm which provided some annotations of outgoing edges of vertices in $In$ produces annotations of all other edges of $G$ such that semantics assigned to $O$ are preserved. 
+  \emph{Realization of a flow graph} will be an algorithm which provided a flow graph $G$ and multiple data rows produces results equivalent to results obtained by separate application of a \emph{realization of a flow graph on a single data row} on every data row.
 \end{define}
 
-  Flow graphs will represent pipeline computations. Edges will represent data queues. Vertices will represent data transformations. A~transformation on a \emph{regular} vertex~$v$ will pop exactly one element from every incoming queue of $v$ and push exactly one element into every outgoing queue of $v$. Element pushed into an~outgoing queue~$e$~of~$v$ will be determined from the~elements taken from the~incoming queues~of~$v$, their~$to$~annotations, the~annotation~$op(v)$ and the~annotation~$from(e)$. The~$to$~annotation identifies arguments for operations represented by members~of~$O$. The~$to$~annotation identifies outputs of operations which return more than one value.
 
-\parspace
+Note that our definition does not perform any input or output operations. Reason for this is that we do not wish to deal with effects in theoretical analysis of the problem, since we would have to provide some exact definition of these effects.
 
-Note that this scheme describes semantics of every single data serie separately. 
 
-\parspace
+Also, note that our definition~of~flow~graph does neither~require nor~ensure semantics~of~$O$ to be consistent in G. Also, the definition of a relization requires but does not ensure, that GRA produces exactly one value per every output vertex. Thus, some flow~graphs may have no realization. We will implicitly assume our flow~graphs to~be consistent with some~semantics assigned~to~$O$. This semantics will always be~clear from their context.
 
-Also, note that our definition~of~flow~graph does neither~require nor~ensure semantics~of~$O$ to be consistent. Thus, some flow~graphs may have no realization. We will implicitly assume our flow~graphs to~be consistent with some~semantics assigned~to~$O$. This semantics will always be~clear from their context.
+
+\begin{define}[consistency of a flow graph]
+  We shall say that a flow graph $G(V,E)$ with a set of operations $O$ is \emph{consistent} if and only if there exists some realization of this flow graph (on a single data serie). 
+\end{define}
+
+
+To summarize the definitions provided so far, we have defined what a flow graph is and how it describes some class of algorithms. We have also described many formal details which may be seen as implementation details but which were crucial for formal correctness of the formalisms provided.
+
+\begin{define}[node types]
+  \label{sec:node_types0}
+  \label{def:node_types0}
+  We shall distinguish the following types of operations (this type of operation is to be considered a part of semantics of operation):
+\begin{description}
+  \item [regular node] will be a node with an operation whose semantics is taking one element from every incoming queue of a vertex and pushing one element into every outgoing queue of this vertex. Data to be pushed into an outgoing queue may depend only on the input data and the \emph{from} annotation of the outgoing queue.
+\item [input or output operation] will be nodes which represent either consumption or production of exactly one value per data row.  These will be exactly the nodes contained in $inputs_G$ or $outputs_G$. These will not participate in the GRA algorithm due to reasons described above.
+\item [contro flow node] will be any other node. We will classify these in section \ref{sec:node_types} with control flow since exact semantics of these nodes is implementation-dependent. 
+\end{description}
+\end{define}
+  
+  Some SIMD related definitions are postponed into section \ref{sec:vectorized}.
 

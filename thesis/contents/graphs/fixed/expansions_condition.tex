@@ -1,0 +1,32 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0,0,0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (54bp,30bp) -- (54bp,130bp) -- (261bp,130bp) -- (261bp,30bp) -- cycle;
+  \draw (162bp,110bp) node {loop condition};
+  \draw (60bp, 60bp) node {2};
+  \draw (60bp, 100bp) node {1};
+\end{scope}
+  \node (inl) at (0bp,50bp) [draw,ellipse] {condition 1};
+  \node (lmsr) at (98bp,50bp) [draw,rectangle] {cond. st};
+  \node (lmsl) at (98bp,90bp) [draw,rectangle] {con. st};
+  \node (lml) at (227bp,50bp) [draw,rectangle] {cond. ld};
+  \node (lmk) at (227bp,90bp) [draw,rectangle] {cond. ld};
+  \node (lmp) at (160bp,70bp) [draw,rectangle] {cond. proc};
+  \node (ink) at (0bp,90bp) [draw,ellipse] {condition 2};
+  \node (outk) at (315bp,50bp) [draw,ellipse] {merge cond.};
+  \node (outj) at (315bp,90bp) [draw,ellipse] {split cond.};
+  \draw [->] (ink) -- (lmsl);
+  \draw [->,dotted] (lmsl) -- (lmp);
+  \draw [->,dotted] (lmp) -- (lml);
+  \draw [->,dotted] (lmp) -- (lmk);
+  \draw [->] (inl) -- (lmsr);
+  \draw [-o,dotted] (lmsr) -- (lmp);
+  \draw [->] (lmk) -- (outj);
+  \draw [->] (lml) -- (outk);
+%
+\end{tikzpicture}
+

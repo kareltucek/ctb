@@ -109,7 +109,7 @@ namespace ctb
   template <class G>
     writer<aliasenv_simu> aliasenv_simu::generate_body(int granularity, G& generator, string name)
     {
-      typedef multicontB<writer<aliasenv_simu>> wrt;
+      typedef imp_contB<writer<aliasenv_simu>> wrt;
       auto opts = generator.option_struct();
 
       wrt ilist;

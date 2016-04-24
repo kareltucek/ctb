@@ -5,14 +5,16 @@
   \pgfsetstrokecolor{black}
   \definecolor{strokecol}{rgb}{0,0,0};
   \pgfsetstrokecolor{strokecol}
-  \draw (54bp,30bp) -- (54bp,130bp) -- (271bp,130bp) -- (271bp,30bp) -- cycle;
+  \draw (54bp,30bp) -- (54bp,130bp) -- (300bp,130bp) -- (300bp,30bp) -- cycle;
   \draw (162bp,110bp) node {loop merge};
+  \draw (70bp, 60bp) node {2};
+  \draw (70bp, 100bp) node {1};
 \end{scope}
   \node (inl) at (0bp,50bp) [draw,ellipse] {data};
-  \node (lmp) at (162bp,70bp) [draw,rectangle] {merge};
+  \node (lmp) at (182bp,70bp) [draw,rectangle] {merge proc};
   \node (lmsr) at (108bp,50bp) [draw,rectangle] {merge st};
   \node (lmsl) at (108bp,90bp) [draw,rectangle] {merge st};
-  \node (lml) at (217bp,70bp) [draw,rectangle] {merge ld};
+  \node (lml) at (260bp,70bp) [draw,rectangle] {merge ld};
   \node (ink) at (0bp,90bp) [draw,ellipse] {data};
   \node (outk) at (325bp,70bp) [draw,ellipse] {data};
   \draw [->] (ink) -- (lmsl);

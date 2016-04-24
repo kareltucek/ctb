@@ -1,0 +1,26 @@
+digraph{
+#include
+  rankdir = LR;
+  sa[label="SPLIT by a"]
+  sb[label="SPLIT by b"]
+  sc[label="SPLIT by c"]
+  mb[label="MERGE by e"]
+  mc[label="MERGE by f"]
+  ma[label="MERGE by g"]
+  //a[label="1",shape="ellipse"]
+  //b[label="2",shape="ellipse"]
+  //c[label="3",shape="ellipse"]
+  //d[label="4",shape="ellipse"]
+  p[label="preamble",shape="ellipse"]
+
+  p->sa;
+  sa->sb;
+  sa->sc;
+  sb->mb;
+  sb->mc;
+  sc->mb;
+  sc->mc;
+  mb->ma;
+  mc->ma;
+
+}

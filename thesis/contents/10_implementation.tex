@@ -1,0 +1,33 @@
+
+\section{Flow example}
+
+As an example of workflow of ctb, we provide the program of the 13th test:
+\begin{code}
+loadinstab csv instab.csv
+loadgraph xml graph.xml
+transform cf
+generate cf output.cpp vectordbg
+preprocess cfmacros output.cpp output.preprocessed0.cpp
+preprocess cfmacros output.preprocessed0.cpp output.preprocessed.cpp
+\end{code}
+
+First an instance of the ctb class is invoked and passed the program shown. Then ctb reads the program line by line, looking up commands and performing them. Namely:
+\begin{itemize}
+  \item Csv loader is passed the instab.csv file and a reference to the instruction table stored in ctb. The loader fills the table and returns.
+  \item Graph of the generator is filled in the same manner.
+  \item The 'cf' transformer is used to expand control flow nodes and partition the graph.
+  \item The 'cf' alias environment is provided with the generator and asked to generate output:
+  \begin{itemize}
+    \item The alias environment uses the generator to generate code for every partition. This is done by constructing a writer parametrized by an environment created by composition of the 'cf' alias environment and of the generator environment:
+    \begin{itemize}
+      \item TODO:...
+    \end{itemize}
+    \item The alias environment composes all the pieces into a consistent C file.
+  \end{itemize}
+  \item The output file now contains some nonexpanded macros since we intentionally wrote the instruction table in that way. The last two calls expand these macros twice by simply writting the contents of the files into a writer parametrized by the cfmacros environment and outputting the results.
+\end{itemize}
+
+
+\section{Graph algorithms}
+
+\section{Instruction representation and actual implementation of the generator}

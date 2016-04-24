@@ -5,61 +5,63 @@
   \pgfsetstrokecolor{black}
   \definecolor{strokecol}{rgb}{0,0,0};
   \pgfsetstrokecolor{strokecol}
-  \draw (480bp,443bp) -- (480bp,518bp) -- (798bp,518bp) -- (798bp,443bp) -- cycle;
-  \draw (639bp,506bp) node {some partition j \textless i};
+  \draw (460bp,356bp) -- (460bp,476bp) -- (608bp,476bp) -- (608bp,356bp) -- cycle;
+  \draw (534bp,462bp) node {some partition j \textless i};
 \end{scope}
 \begin{scope}
   \pgfsetstrokecolor{black}
   \definecolor{strokecol}{rgb}{0,0,0};
   \pgfsetstrokecolor{strokecol}
-  \draw [solid] (806bp,80bp) -- (806bp,665bp) -- (1196bp,665bp) -- (1196bp,80bp) -- cycle;
-  \draw (1001bp,653bp) node {vectorized code of partition i};
+  \draw [solid] (635bp,64bp) -- (635bp,538bp) -- (1000bp,538bp) -- (1000bp,64bp) -- cycle;
+  \draw (817bp,523bp) node {vectorized code of partition i};
 \end{scope}
 \begin{scope}
   \pgfsetstrokecolor{black}
   \definecolor{strokecol}{rgb}{0,0,0};
   \pgfsetstrokecolor{strokecol}
-  \draw [solid] (8bp,8bp) -- (8bp,665bp) -- (472bp,665bp) -- (472bp,8bp) -- cycle;
-  \draw (240bp,653bp) node {singular code of partition i};
+  \draw [solid] (5bp,6bp) -- (5bp,600bp) -- (454bp,600bp) -- (454bp,6bp) -- cycle;
+  \draw (230bp,585bp) node {singular code of partition i};
 \end{scope}
 \begin{scope}
   \pgfsetstrokecolor{black}
   \definecolor{strokecol}{rgb}{0,0,0};
   \pgfsetstrokecolor{strokecol}
-  \draw (480bp,80bp) -- (480bp,155bp) -- (798bp,155bp) -- (798bp,80bp) -- cycle;
-  \draw (639bp,143bp) node {some partition j \textgreater i};
+  \draw (465bp,64bp) -- (465bp,183bp) -- (623bp,183bp) -- (623bp,64bp) -- cycle;
+  \draw (545bp,169bp) node {some partition j \textgreater i};
 \end{scope}
-  \node (sbodylab) at (170bp,253bp) [draw,rectangle] {SINGULAR\_BODY\_i};
-  \node (sbody) at (170bp,106bp) [draw,ellipse] {$\begin{matrix} \text{process body} \\ \text{remaining --} \end{matrix}$ };
-  \node (vbody) at (991bp,181bp) [draw,ellipse] {$\begin{matrix} \text{process body} \\ \text{remaining -= vector size} \end{matrix}$ };
-  \node (inv) at (739bp,469bp) [draw,rectangle] {PARTITION\_j};
-  \node (ins) at (579bp,469bp) [draw,rectangle] {SINGULAR\_PARTITION\_j};
-  \node (sterm) at (253bp,469bp) [draw,ellipse] {i != 0 ? handle\_termination\_nonzero};
-  \node (vrepeat) at (1073bp,106bp) [draw,ellipse] {repeat};
-  \node (sgoprev) at (256bp,397bp) [draw,ellipse] {an empty input from j};
-  \node (slab) at (170bp,616bp) [draw,rectangle] {SINGULAR\_PARTITION\_i};
-  \node (outs) at (579bp,106bp) [draw,rectangle] {SINGULAR\_PARTITION\_j};
-  \node (srepeat) at (109bp,34bp) [draw,ellipse] {repeat};
-  \node (outv) at (739bp,106bp) [draw,rectangle] {PARTITION\_j};
-  \node (vbodylab) at (991bp,253bp) [draw,rectangle] {VECTOR\_BODY\_i};
-  \coordinate (aux) at (56bp,469bp);
-  \node (sterm0) at (202bp,544bp) [draw,ellipse] {i == 0};
-  \node (vlab) at (1067bp,616bp) [draw,rectangle] {PARTITION\_i};
-  \coordinate (vaux) at (1160bp,469bp);
-  \node (vgonext) at (991bp,325bp) [draw,ellipse] {$\begin{matrix} \text{not enough space} \\ \text{in an output to j} \end{matrix}$ };
-  \node (sgovector) at (338bp,253bp) [draw,ellipse] {process vectorized};
-  \node (vgoprev) at (992bp,397bp) [draw,ellipse] {$\begin{matrix} \text{not enough data} \\ \text{in an input from j} \end{matrix}$ };
-  \node (sgonext) at (170bp,181bp) [draw,ellipse] {afull output to j};
-  \node (vterm0) at (994bp,544bp) [draw,ellipse] {i == 0 ? handle\_termination\_zero};
-  \node (sgovectorized) at (260bp,325bp) [draw,ellipse] {$\begin{matrix} \text{not enough input or space} \\ \text{for vectorized body} \end{matrix}$ };
-  \node (vterm) at (992bp,469bp) [draw,ellipse] {i != 0 \&\& i is terminating};
-  \draw [->,very thick] (sterm) -- (sgoprev);
+  \node (sbodylab) at (152bp,204bp) [draw,rectangle] {SINGULAR\_BODY\_i};
+  \node (sbody) at (152bp,85bp) [draw,ellipse] {$\begin{matrix} \text{process body} \\ \text{remaining --} \end{matrix}$ };
+  \node (vbody) at (810bp,142bp) [draw,ellipse] {$\begin{matrix} \text{process body} \\ \text{remaining -= vector size} \end{matrix}$ };
+  \node (inv) at (534bp,435bp) [draw,rectangle] {PARTITION\_j};
+  \node (ins) at (534bp,377bp) [draw,rectangle] {SINGULAR\_PARTITION\_j};
+  \node (sterm) at (246bp,435bp) [draw,ellipse] {i != 0 ? handle\_termination\_nonzero};
+  \node (vrepeat) at (887bp,85bp) [draw,ellipse] {repeat};
+  \node (sgoprev) at (250bp,320bp) [draw,ellipse] {an empty input from j};
+  \node (slab) at (126bp,559bp) [draw,rectangle] {SINGULAR\_PARTITION\_i};
+  \node (outs) at (544bp,85bp) [draw,rectangle] {SINGULAR\_PARTITION\_j};
+  \node (srepeat) at (96bp,27bp) [draw,ellipse] {repeat};
+  \node (outv) at (544bp,142bp) [draw,rectangle] {PARTITION\_j};
+  \node (vbodylab) at (811bp,204bp) [draw,rectangle] {VECTOR\_BODY\_i};
+  \coordinate (aux) at (47bp,435bp);
+  \node (sterm00) at (248bp,377bp) [draw,ellipse] {$\begin{matrix} \text{/*is min or max} \\ \text{topologically*/} \end{matrix}$ };
+  \node (sterm0) at (222bp,497bp) [draw,ellipse] {i == 0 ? handle\_termination\_zero};
+  \node (vlab) at (702bp,497bp) [draw,rectangle] {PARTITION\_i};
+  \coordinate (vaux) at (695bp,377bp);
+  \node (vgonext) at (812bp,262bp) [draw,ellipse] {$\begin{matrix} \text{not enough space} \\ \text{in an output to j} \end{matrix}$ };
+  \node (sgovector) at (292bp,204bp) [draw,ellipse] {process vectorized};
+  \node (vgoprev) at (815bp,320bp) [draw,ellipse] {$\begin{matrix} \text{not enough data} \\ \text{in an input from j} \end{matrix}$ };
+  \node (sgonext) at (152bp,142bp) [draw,ellipse] {afull output to j};
+  \node (vterm0) at (818bp,435bp) [draw,ellipse] {i == 0 ? remaining < w};
+  \node (sgovectorized) at (251bp,262bp) [draw,ellipse] {$\begin{matrix} \text{not enough input or space} \\ \text{for vectorized body} \end{matrix}$ };
+  \node (vterm) at (826bp,377bp) [draw,ellipse] {i != 0 \&\& i is terminating};
   \draw [->,very thick] (sgovectorized) -- (sgovector);
   \draw [->,dotted] (vgonext) -- (outv);
   \draw [->,dotted] (sterm) -- (outv);
   \draw [->,very thick] (vterm) -- (vgoprev);
   \draw [->,very thick] (sgonext) -- (sbody);
   \draw [<-,dotted] (ins) -- (vgoprev);
+  \draw [->,dotted] (sterm0) -- (outv);
+  \draw [->,solid] (sterm00) -- (vlab);
   \draw [->,very thick] (vbody) -- (vrepeat);
   \draw [->,very thick] (vterm0) -- (vterm);
   \draw [->,solid] (sterm) -- (sbodylab);
@@ -70,20 +72,21 @@
   \draw [->] (sgovectorized) -- (sbodylab);
   \draw [<-,dotted] (ins) -- (sgoprev);
   \draw [] (aux) -- (srepeat);
+  \draw [->,very thick] (sterm) -- (sterm00);
   \draw [->,dotted] (sgonext) -- (outs);
   \draw [->,very thick] (vgonext) -- (vbodylab);
   \draw [<-] (slab) -- (aux);
   \draw [->,very thick] (slab) -- (sterm0);
   \draw [->,solid] (vterm) -- (slab);
   \draw [] (vaux) -- (vrepeat);
-  \draw [->,solid] (vterm0) -- (sbodylab);
   \draw [<-] (vlab) -- (vaux);
-  \draw [->,solid] (sterm0) -- (vlab);
   \draw [->,very thick] (sgoprev) -- (sgovectorized);
+  \draw [->,solid] (vterm0) -- (slab);
   \draw [->,very thick] (vlab) -- (vterm0);
+  \draw [->,solid] (sterm0) -- (sbodylab);
   \draw [->,very thick] (vgoprev) -- (vgonext);
+  \draw [->,very thick] (sterm00) -- (sgoprev);
   \draw [->,very thick] (sbodylab) -- (sgonext);
-  \draw [->,dotted] (vterm0) -- (outv);
 %
 \end{tikzpicture}
 

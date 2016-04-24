@@ -1,18 +1,18 @@
-#ifndef MULTICONT_GUARD
-#define MULTICONT_GUARD
+#ifndef imp_cont_GUARD
+#define imp_cont_GUARD
 
 #include "defines.h"
 #include <vector>
 #include <assert.h>
 #include "errorhandling.h"
 
-/* Multicont is a class which mimics its template parameter, but provides an additional method which allows access to a vector of 'nondefault' instances of the template parameter. 
+/* imp_cont is a class which mimics its template parameter, but provides an additional method which allows access to a vector of 'nondefault' instances of the template parameter. 
  *
  * E.g. this allows as to add multiple classes of edges between graph vertices without having to change anything except one container type.
  * */
 
 template <class T>
-class multicont : public T
+class imp_cont : public T
 {
   private:
     mutable vector<T> vec;
@@ -44,7 +44,7 @@ class multicont : public T
     static void self_test()
     {
       cout << "testing multi container" << endl;
-      multicont<vector<int>> a;
+      imp_cont<vector<int>> a;
       a.push_back(0);
       a.push_back(1);
       a.getlevel(1).push_back(2);
@@ -55,10 +55,10 @@ class multicont : public T
 };
 
 template <class T>
-class multicontA : public multicont<T>
+class imp_contA : public imp_cont<T>
 {
   public:
-    using multicont<T>::multicont;
+    using imp_cont<T>::imp_cont;
 
     T& operator[](int i)
     {
@@ -67,7 +67,7 @@ class multicontA : public multicont<T>
 };
 
 template <class T>
-class multicontB : public T
+class imp_contB : public T
 {
   private:
     mutable map<string, T> vec;
@@ -97,6 +97,6 @@ class multicontB : public T
     };
 };
 
-typedef multicont<vector<int>> multicont_default;
+typedef imp_cont<vector<int>> imp_cont_default;
 
 #endif

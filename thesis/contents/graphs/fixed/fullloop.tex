@@ -1,0 +1,52 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \definecolor{fillcol}{rgb}{1,1,1};
+  \pgfsetfillcolor{fillcol}
+\end{scope}
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \definecolor{fillcol}{rgb}{1,1,1};
+  \pgfsetfillcolor{fillcol}
+\end{scope}
+\begin{scope}
+  \pgfsetstrokecolor{black}
+  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+  \pgfsetstrokecolor{strokecol}
+  \definecolor{fillcol}{rgb}{1,1,1};
+  \pgfsetfillcolor{fillcol}
+\end{scope}
+  \node (pre) at (0bp,130bp) [draw,ellipse] {preamble};
+  \node (a) at (162bp,190bp) [draw,ellipse] {branch body};
+  \node (c) at (162bp,250bp) [draw,ellipse] {branch body};
+  \node (b) at (162bp,160bp) [draw,ellipse] {branch body};
+  \coordinate (e) at (247bp,190bp);
+  \coordinate (f) at (78bp,190bp);
+  \coordinate (k) at (247bp,160bp);
+  \coordinate (l) at (78bp,160bp);
+  \node (d) at (162bp,220bp) [draw,ellipse] {branch body};
+  \node (controls) at (162bp,130bp) [draw,ellipse] {loop controls};
+  \node (epi) at (325bp,130bp) [draw,ellipse] {epilogue};
+  \draw [<-] (controls) -- (k);
+  \draw [] (k) -- (e);
+  \draw [->] (f) -- (b);
+  \draw [] (d) -- (e);
+  \draw [->] (f) -- (a);
+  \draw [->] (pre) -- (controls);
+  \draw [] (f) -- (l);
+  \draw [] (controls) -- (l);
+  \draw [->] (f) -- (d);
+  \draw [] (a) -- (e);
+  \draw [->] (controls) -- (epi);
+  \draw [] (b) -- (e);
+  \draw [] (c) -- (e);
+  \draw [->] (f) -- (c);
+%
+\end{tikzpicture}
+

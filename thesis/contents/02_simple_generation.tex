@@ -1,27 +1,30 @@
 Consider the~following problem.
 
 \begin{problem}[simple code generation]
-Let $G(V,E)$ be a~flow~graph consisting of regular operations. Let $O$ denote some subset of arithmetic operations of~the~C~language. Also, let $G$ be~consistent with the~semantics of these operations. We wish to~generate a~C~code which will~ realize the~graph~$G$.
+Let $G(V,E)$ be an acyclic flow~graph consisting of regular operations. Let $O$ denote some subset of arithmetic operations of~the~C~language. Also, let $G$ be~consistent with the~semantics of these operations. We wish to~generate a~C~code which realizes the~graph~$G$.
 \end{problem}
 
-\FloatBarrier
-
-Solution to this~problem is straightforward. First, we order vertices~of~$G$ topologically. Then we take vertices in this order and process them one~by~one. For every vertex~$v$ we use its~annotation to transform its~input~data into its~output~data. Then we save the~output~data under some unique identifier for~later~use.
-
-\parspace
-
-We provide graph representation and resulting code of an~adder~box, which simply loads two values, adds them and stores the~result.
+In other words, we wish to generate code for a simple basic block without any control flow, such as the one shown below:
 
 \graph{adder}
+
+We wish to generate one operation per every vertex so that every vertex receives data from its predecesors.
+
+Solution to this~problem is straightforward. First, we order vertices~of~$G$ topologically. Then we take vertices in this order and process them one~by~one. For every vertex~$v$ we use its~annotation to transform its~input~data into its~output~data. Then we save the~output~data as a new variable under some unique identifier for~later~use.
+
+
+We provide graph representation and resulting code of an~adder~box, which simply loads two values, adds them and stores the~result.
 
 \begin{code}
 int var_a = input_0[i];
 int var_b = input_1[i];
-int var_c = a + b;
-output_0[i] = c;
+int var_c = var_a + var_b;
+output_0[i] = var_c;
 \end{code}
 
-\FloatBarrier
+\begin{rem}
+  We shall explicitly note that the input and output arrays as well as the $i$ variable are some environment-dependent effectfull expressions. These make sense for some loop processal, but are by no means part of a generalized algorithm. Other variable names are chosen arbitrarily by the algorithm. The plus operator is an instruction assigned to the addition operation. Types are part of semantics of operations that produced the results.
+\end{rem}
 
 We may have noticed that vertices are basically of three types, each of some typical form. 
 
@@ -41,7 +44,6 @@ This allows us to construct simple patterns which may be~used for actual~code~ge
 
 Where $\$input$ and $\$output$ evaluate to environment-dependent expressions, $\$name$ evaluates to a~new~identifier and $\$operation$ evaluates to a~pattern identified~by the~$op$~annotation. The operation pattern may~contain $\$arg1$, $\$arg2$, $\$arg3$... expressions. These evaluate to the~saved~names from incoming vertices.
 
-\parspace
 
-This scheme~of~generation is actually used --- our generator will~be driven by a~quite complex text-processing system, which will be~based on~recursive evaluation of~shell-like variables in~broader contexts provided~by various extensions.
+This scheme~of~generation is actually used --- our generator is driven by a~quite complex text-processing system which is based on~recursive evaluation of~shell-like variables in~broader contexts provided~by various extensions.
 

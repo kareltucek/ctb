@@ -9,7 +9,7 @@
 #include <string>
 #include <limits>
 #include <assert.h>
-#include "multicont.h"
+#include "imp_cont.h"
 #include <set>
 #include "ptrglue.h"
 #include <utility>
@@ -73,8 +73,8 @@ namespace ctb
             T data; /**vertex user data*/
             I id;
             int classid;
-            multicont<vector<edge*>> out;
-            multicont<vector<edge*>> in;
+            imp_cont<vector<edge*>> out;
+            imp_cont<vector<edge*>> in;
             edge* in_at(int i, bool check_uniqueness = true);
             template <bool recurse = false, bool inverse = false> void crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> levels = {0}, queue<node*>* q = NULL, bool root = true); /** see the documentation written in the actual code, for example see implementation of the calculate_distances() function */
             template <bool Inverted = false> void crawl_topological(function<void(node*)> f, std::vector<int> levels = {0}); /** this is an overload of crawl for topological search*/

@@ -1,0 +1,45 @@
+digraph{
+#include
+  rankdir = LR;
+
+  subgraph A{
+  pre[label="epilogue",shape="circle"]
+  k[style=invis];
+  }
+
+  subgraph C{
+  epi[label="preamble",shape="circle"]
+  l[style=invis];
+  }
+
+  subgraph B {
+  controls[label="loop controls",shape="circle"]
+  a[label="branch body"];
+  b[label="branch body"];
+  c[label="branch body"];
+  d[label="branch body"];
+  e[style=invis];
+  f[style=invis];
+
+  f -> a;
+  f -> b;
+  f -> c;
+  f -> d;
+  a -> e[dir=none];
+  b -> e[dir=none];
+  c -> e[dir=none];
+  d -> e[dir=none];
+  }
+
+
+  pre -> controls -> epi;
+
+  k -> controls [dir=none];
+  k -> f[dir=none];
+  controls -> l [dir=back];
+  e -> l [dir=none];
+  pre -> k[style=invis];
+  l -> epi[style=invis];
+
+
+}
