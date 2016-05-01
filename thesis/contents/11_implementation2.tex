@@ -1,0 +1,77 @@
+\section{Actual implementation of the generator}
+
+The generator is implemented according to the scheme described by algorithm \ref{alg:vectorgenerator}. Besides that, the generator provides the writer with a consistent context retrieved from the input graph and the instruction table as described in section \ref{sec:instab}. All other functionality lays either directly or indirectly in alias environments and instruction patterns. (Or is an implementation detail)
+
+We should explain two more things. The first is related to the api of the generator. The generator is directly parametrized by a multilayer writer (created by means of one of the previously described implicit containers) and also by a configuration which specifies how the layers should behave. There are options which allow some layers to receive input only from the first instance of an instruction or receive only the first string written. This allows the generator to output an arbitrary number of code fragments per every single basic block. The former option may be used for simple accumulation of conditions related to control flow semantics of control flow nodes. The latter may be used for indication of presence of specific instructions of for indication of conditions whose value is not operation-specific.
+
+The second thing which is yet to be discussed is the problem of indirect width conversions. We have avoided this broblem by assuming that direct width conversions always exist in the \emph{vectorized generator} problem (\ref{pro:vectorproblem}).  Although this problem does not seem difficult, we have not been able to find an optimal solution which would work in feasible complexity. 
+
+Our implementation deals with the problem by generating all conversions which lay on the shortest (or cheapest) path between the data provider and the data consumer. This approach may produce suboptimal results if there are multiple consumers. This algorithm may be further improved if we recalculate distances after production of every single path (considering vertices of the generated path to have distance 0). Unfortunately, this improvement still does not ensure optimal results, as is shown by the following counterexample.
+
+\graph{pathcounter}{Example showing that iterated shortest path algorithm is not optimal for trees.}
+
+\begin{description}
+  \item[Producer, consumers] are standard instructions (representants of operations).
+  \item[Other nodes] represent width conversions and are annotated by some cost. These may be replaced by simple paths if we wish to have a counterexample without costs.
+  \item[Edges] represent possible data flow, i.e., edges connect nodes whose outputs are of the same width as the input of the other node.
+  \end{description}
+
+The improved shortest/cheapest path algorithm may first choose the path $ a \arrow 2 + d \arrow b $ and then the path $ a \arrow 4 \arrow c $, yielding path of cost $6+d$. The cheapest path is apparently $5+d$. The variable $d$ shows that strategies like \emph{cheapest path first} or \emph{most expensive path first} do not solve the problem.
+
+This problem may be formulated as an integer linear programme\footnote{Linear programming formulates problems as systems of linear equations. More information may be found in \cite{TODO}}. However, this does not imply existence of polynomial solution since integer programming is NP-hard. 
+
+\mybeginalg{ilp}{ILP of minimal distribution tree}
+Let $P$ be the set of a single producer, $C$ be the set of all consumers and $W$ the set of all possible widths. Let $G(V,E)$ be a graph such that:
+\begin{itemize}
+  \item $V = P \cup C \cup W$
+  \item $E = \{ (u,v) | u,v \in V \land \text{there exists a width conversion from } u \text{ to } v \}$
+\end{itemize}
+Define variables and constants as follows:
+\begin{itemize}
+\item $m = \max_{v \in V}deg(v)$
+\item $(\forall e \in E)$: let there be a variable $f_e \in \N_0$.
+\item $(\forall e \in E)$: let there be a variable $i_e \in {0,1}$.
+\end{itemize}
+Define restrictions as follows (we construct flow in network):
+\begin{itemize}
+\item $(\forall v \in W)$: $\sum_{e \in in(v)} f_e - \sum_{e\in out(v)} f_e = 0$ (Kirchhoff's law)
+\item $(\forall v \in P)$: $\sum_{e \in in(v)} f_e - \sum_{e\in out(v)} f_e = - | C |$ (source)
+\item $(\forall v \in C)$: $\sum_{e \in in(v)} f_e - \sum_{e\in out(v)} f_e = 1$ (sinks)
+\item $(\forall e \in E)$: $f_e - m*i_e \leq 0$ (indicator for minimisation)
+\end{itemize}
+minimise $\sum_{e \in E} i_e$
+
+\begin{proof}[Proof of correctness of a feasible solution]
+  Suppose for a contradiction that a feasible solution exists but there is no nonzero flow from $p \in P$ to a vertex $c \in C$. Let $A = \{v \in V | $ path from $p \in P$ to $v$ exists over edges with $ f_e \gt 0\}$. We shall count the sum $S = \sum_{v \in A}(\sum_{e \in in(v)} f_e - \sum_{e \in out(v)} f_e)$ in two ways:
+  \begin{itemize}
+    \item By sum of the restrictions $S = | C \cap A | - | C |$. This is a negative number since $| A | \lt | C |$.
+    \item By contribution of edges:
+      \begin{itemize}
+        \item Edges in $A$ contribute by $0$.
+        \item There are no edges with $f_e \gt 0$ going from $A$ due to the definition of $A$. Thus, all outgoing edges contribute by $0$.
+        \item All edges going to $A$ contribute by a non negative number.
+      \end{itemize}
+      This implies that $S \geq 0$. But that is a contradicts the previous result.
+    \end{itemize}
+  Thus, if a feasible solution exists, there exists a path from $p \in P$ to any $c \in C$ with nonzero indicators $i_e$. Thus, the solution is correct.
+\end{proof}
+\begin{proof}[Proof of existence of a feasible solution]
+  For every $p \in P$ and $c \in C$ construct a flow of size 1 from $p$ to $c$ . Let $f_e$ be the sum of all these flows. Furtermore, if $f_e \gt 0$ let $i_e$ be $1$. Let $i_e = 0$ otherwise. This evaluation apparently fulfils all restrictions and therefore if a solution of the original problem exists, there exists a feasible solution of the presented ILP.
+\end{proof}
+\myendalg
+
+
+
+\section{Summary}
+
+We have already described all significant functionality of our framework. The next chapters describe only implementation details. The reader should now think over all introduced concepts and the architecture of our framework. Indeed, we have designed a framework which can perform all needed steps to output results equivalent to the algorithm \ref{alg:crawler}:
+\begin{itemize}
+  \item Our framework can generate vectorized basic blocks as proposed by algorithm \ref{alg:vectorgenerator}.
+  \item The framework can parititon the graph as described in section \ref{sec:partitioning}:
+  \begin{itemize}
+    \item Node expansion may be performed by use of a graph transformer whose input is described by expansions.
+    \item Cycle removal is implemented according to algorithm \ref{alg:cycleremalg} by means of a graph transformer.
+  \end{itemize}
+  \item Code of a partition, as described by algorithm \ref{alg:crawler}, may be generated by a custom alias environment. This environment would contain a static template of this partition with placeholders in place of all conditional jumps specified by the algorithm. As proposed, the control flow nodes may accumulate their control-flow related conditions into named layers of the writer. Substituting these accumulated values into the template is then a simple procedure consisting of a single call to a new writer.
+  \item Other generic procedures, such as buffers may be implemented either externally in the C preprocessor or by means of alias environments. Either implementation is the interfaced via records in an instruction table. We employ the latter way due to stubborn recursion-rejectiveness of the C preprocessor\footnote{Recursion may actually be achieved by means of various workarounds. Unforunately, the implemented algorithms tend to fail due to obscure reasons.}. Specifically, we implement an in-register SSE buffer in the the `cf\_macros' environment.
+\end{itemize}

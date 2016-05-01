@@ -1,30 +1,61 @@
-Consider the~following problem.
+Consider the following problem.
 
-\begin{problem}[simple code generation]
-Let $G(V,E)$ be an acyclic flow~graph consisting of regular operations. Let $O$ denote some subset of arithmetic operations of~the~C~language. Also, let $G$ be~consistent with the~semantics of these operations. We wish to~generate a~C~code which realizes the~graph~$G$.
-\end{problem}
+\mybeginprob{simpleproblem}{Simple code generation}
+Let $G(V,E)$ be an acyclic flow graph consisting of regular operations. Let $O$ denote some subset of arithmetic operations of the C language. Also, let $G$ be consistent with the semantics of these operations. We wish to generate a C code which realises the graph $G$.
+\myendprob
 
 In other words, we wish to generate code for a simple basic block without any control flow, such as the one shown below:
 
-\graph{adder}
+\graph{adder}{Adder computation}
 
-We wish to generate one operation per every vertex so that every vertex receives data from its predecesors.
+We wish to generate one instruction per every vertex so that every vertex receives data from its predecesors. The resulting fragment of code may look like this:
 
-Solution to this~problem is straightforward. First, we order vertices~of~$G$ topologically. Then we take vertices in this order and process them one~by~one. For every vertex~$v$ we use its~annotation to transform its~input~data into its~output~data. Then we save the~output~data as a new variable under some unique identifier for~later~use.
-
-
-We provide graph representation and resulting code of an~adder~box, which simply loads two values, adds them and stores the~result.
-
+\mybeginfig
 \begin{code}
 int var_a = input_0[i];
 int var_b = input_1[i];
 int var_c = var_a + var_b;
 output_0[i] = var_c;
 \end{code}
+\myendfig{simplecode}{Code fragment realising the adder computation from figure \ref{fig:adder}}
 
 \begin{rem}
-  We shall explicitly note that the input and output arrays as well as the $i$ variable are some environment-dependent effectfull expressions. These make sense for some loop processal, but are by no means part of a generalized algorithm. Other variable names are chosen arbitrarily by the algorithm. The plus operator is an instruction assigned to the addition operation. Types are part of semantics of operations that produced the results.
+  We shall explicitly note that the input and output arrays, as well as the $i$ variable, are some environment-dependent effectfull expressions. These make sense for some loop processal, but are by no means part of a generalised algorithm. Other variable names are chosen arbitrarily by the algorithm. The plus operator is an instruction assigned to the addition operation. Types are part of semantics of operations that produced the results.
 \end{rem}
+
+Solution to this problem is straightforward. First, we order vertices of $G$ topologically. Then we take vertices in this order and process them one by one. For every vertex $v$ we use its annotation to transform its input data into its output data. Then we save the output data as a new variable under some unique identifier for later use. 
+
+\begin{samepage}
+\mybeginalg{simplegenerator}{Simple code generator}\ 
+%\begin{defstyle}
+%  Let $G$ and $O$ be defined as in the problem \ref{pro:simpleproblem}. 
+%\end{defstyle}
+\begin{code}
+fun enc(operation o)
+  { return any instruction assotiated with o}
+fun gen_instruction(instruction, result_name, arg1, arg2, ...) 
+  { generate actual text representation from arguments; }
+fun vertex::result 
+  { return the name used for storage of the result } 
+fun vertex::in(index) 
+  { return u such that there exists e == (u, v) and to(e) == index; } 
+
+fun generator(graph G)
+{
+  for( v vertex in V in topological order)
+  {
+    arguments;
+    result_name = "var_$v";
+    gen_instruction(enc(op(v), result_name, 
+      v.in(1).result(), v.in(2).result(), ...);
+    v.result() = result_name;
+  }
+}
+\end{code}
+\myendalg
+\end{samepage}
+
+\subsubsection{Form of patterns}
 
 We may have noticed that vertices are basically of three types, each of some typical form. 
 
@@ -34,7 +65,7 @@ We may have noticed that vertices are basically of three types, each of some typ
   \item Operation -- \emph{``\textless type\textgreater  \textless variable name\textgreater  = \textless operation\textgreater (\textless argument 1\textgreater , \textless argument 2\textgreater );''}
 \end{itemize}
 
-This allows us to construct simple patterns which may be~used for actual~code~generation. These may~be the~following:
+This allows us to construct simple patterns which may be used for actual code generation (e.g., by the \emph{gen\_instruction} function shown in algorithm \ref{alg:simplegenerator}). These may be the following:
 
 \begin{itemize}
   \item Input -- \emph{``\$type \$name = \$input;''}
@@ -42,8 +73,8 @@ This allows us to construct simple patterns which may be~used for actual~code~ge
   \item Output -- \emph{``\$output;''}
 \end{itemize}
 
-Where $\$input$ and $\$output$ evaluate to environment-dependent expressions, $\$name$ evaluates to a~new~identifier and $\$operation$ evaluates to a~pattern identified~by the~$op$~annotation. The operation pattern may~contain $\$arg1$, $\$arg2$, $\$arg3$... expressions. These evaluate to the~saved~names from incoming vertices.
+Where $\$input$ and $\$output$ evaluate to environment-dependent expressions, $\$name$ evaluates to a new identifier and $\$operation$ evaluates to a pattern identified by the $op$ annotation. The operation pattern may contain $\$arg1$, $\$arg2$, $\$arg3$... expressions. These evaluate to the saved names from incoming vertices.
 
+This scheme of generation is actually used --- our generator is driven by a quite complex text-processing system which is based on recursive evaluation of shell-like variables in broader contexts provided by various extensions.
 
-This scheme~of~generation is actually used --- our generator is driven by a~quite complex text-processing system which is based on~recursive evaluation of~shell-like variables in~broader contexts provided~by various extensions.
 

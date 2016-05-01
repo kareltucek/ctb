@@ -1,0 +1,153 @@
+This section explains how the writer (also \emph{the preprocessor}) works. This may be of interest since all text is handled using the writer class. Also the instruction tables specified in csv are preprocessed by the writer.
+
+As we have already indicated, the writer class is basically a string container which allows appending of expressions via a printf like function. Unlike printf, the print method uses shell-like dollar expressions. This allows reuse of arguments and does not restrict the order of arguments. A very simple example follows.
+
+\mybeginfig
+\begin{code}
+writer w;
+w.print("There were $1 $2", 7, "dogs");
+w.write_str()
+\end{code}
+yields
+\begin{code}
+"There were 7 dogs"
+\end{code}
+\myendfig{printhello}{A simple example of usage of writer's print method}
+
+There is a number of expansions which take place, most of them recursively when the string is being writen into a writer object.
+
+\section*{Expansions}
+
+The order of expansions is the following:
+\begin{enumerate}
+\item Cartesian expansion. This expansion is performed only once.
+\item All other types of expansions. The \texttt{\$\string{\string}} and \texttt{\$[]} expansions are carried out by a new writer with the same alias environment.
+\end{enumerate}
+
+\subsubsection{Argument expansion}
+
+\texttt{\$<n>} (e.g., \texttt{"\$2"}) is resolved to the $n$th argument. This argument is converted to a string and printed using a recursive call which again performs all expansions except for the cartesian expansion.
+
+\mybeginfig
+\begin{code}
+writer().print("a[$1] = a[$1] $ $2", i, j).write_str()
+\end{code}
+yields
+\begin{code}
+"a[i] = a[i] $ j"
+\end{code}
+\myendfig{printhello}{Another simple example of usage of writer's print method}
+
+\subsubsection{Alias expansion}
+
+Patterns resolved by the alias expansions take the form \texttt{\$<[a-zA-Z]+>}. The identifier is resolved using an alias environment. We should remind the reader that environments are static classes, which are passed to the writer by means of a template parameter.
+
+%aliasenv to resolve the supplemented name - e.g. print("\$animal is an animal") -> "dog is an animal" if the supplemented aliasenv (M) contains alias animal resolved to dog
+
+\subsubsection{Cartesian expansion}
+Cartesian expansion takes place only once at the beginning of evaluation of the print call. First, the format string is scanned for all expressions in the form of \\ \centerline{\texttt{\$\string{ <identifier> -> <value1>, <value2> ...\string}} or} \\ \centerline{\texttt{\$\string{ <identifier1>, <identifier2> ... -> <value1>, <value2> ...\string}}} \\ This expression is not allowed to contain nested curly braces. Every such expression is transformed into a list of tuples and replaced by \texttt{\$<identifier1>}.  Then, a cartesian multiplier is constructed from all these lists. Finally, the writer iterates over the product. Per every iteration a new auxiliary environment (which inherits the original environment) is constructed, filled by the currently observed result of the cartesian product and used to print the entire format pattern.
+
+This means that per every line of input, multiple lines of output are emitted, featuring all combinations of variables specified in the lists.
+
+The left side of the expression, i.e., the identifiers, declares a $tuple$ of aliases (constant variables). The first $|tuple|$ values from the right side are then assigned to this tuple and printed. This is repeated while there are any values remaining on the right side.
+
+\mybeginfig
+\begin{code}
+writer().print(
+  "${ color -> red, blue } $animal; nice ${ animal -> dog,cat };"
+).write_str()
+\end{code}
+yields
+\begin{code}
+"red dog; nice dog\n"
+"red cat; nice cat\n"
+"blue dog; nice dog\n"
+"blue cat; nice cat\n"
+\end{code}
+\myendfig{cartprint0}{Example of the cartesian expansion}
+
+\mybeginfig
+\begin{code}
+writer().print(
+  "${ color,animal ->blue,dog,red,cat}ish $animal"
+).write_str()
+\end{code}
+yields
+\begin{code}
+"blueish dog\n"
+"redish cat\n"
+\end{code}
+\myendfig{cartprint0}{Example of tuples in the cartesian expansion}
+
+ %Note that here we do NOT allow nested {}s
+
+\subsubsection{Recursive expansion}
+Expressions of the form form \texttt{"\$\string{ whatever that does not contain `->' \string}"} are evaluated in two steps:
+\begin{enumerate}
+  \item The content of braces is expanded.
+  \item The result is evaluated as a standard alias. That means that the result is evaluated by some alias environment and then printed into the current writer. Of course, the final print is again performed with all expansions.
+\end{enumerate}
+
+This expansion allows correctly paired nested curly braces.
+
+\subsubsection{Arithmetic expression expansion}
+
+Expressions of the form \texttt{\$[ <expression expression> ]} denote arithmetic expressions. First the content is evaluated by a new writer object. Then, the resulting arithmetic expression is evaluated by the Parser class.
+
+Supported operators are: $(, ), -, +, *, /, \%$
+
+
+\subsection*{Import and export modes}
+
+\begin{rem}
+  This subsection describes more advanced features of the preprocessing environment. Knowledge of these is not required for basic use of ctb.
+\end{rem}
+
+If the writer is used to import or export expressions which are to be later processed by another writer object, careful handling of dollar expressions is crucial. For this purpose, we introduce four import/export modes. The writer takes two modes as template parameters. The first mode specifies how the writer should behave when writing data into its private storage. The second mode describes how it should behave when writing them out.
+
+The lifecycle of an expression is the following:
+\begin{enumerate}
+  \item Print is called.
+  \item Cartesian expansion is performed, resulting in a sequence of calls into an internal print method.
+  \item Expression is recursively evaluated - single dollar expressions may get expanded or not, depending on the first import/export parameter. During this step, double (and more) dollar expressions are handled according to the first import/export parameter. 
+  \item Expression is appended to the internal data container. Also, the expression is broken into lines using the member language type of the root alias environment.
+  \item Expression remains in the internal storage until data output is requested.
+  \item Content of the writer is outputted. During this phase, all lines are indented and dollar expressions are \emph{again} processed in order to either double, ignore or reduce the multiplicity of dollar signs. This time, the second mode argument is used.
+\end{enumerate}
+
+We show the semantics of import/export modes in the following table:
+
+\mybeginfig
+\begin{center}
+\begin{tabular}{c|c|c|c|c}
+                  & Ignore & Eat          & Let          & Expand    \\
+  \hline
+  \$ expression   & \$     & is expanded  & is expanded  & \$\$      \\
+  \hline
+  \$\$ expression & \$\$   & \$           & \$\$         & \$\$\$\$  \\
+\end{tabular}
+\end{center}
+\myendfig{dollarexpansions}{Semantics of import/export modes of the writer class.}
+
+  Hence, typical combination will be \emph{Let+Eat} for import operations and \emph{Let+Expand} or \emph{Ignore+Expand} for export. 
+
+\subsection*{Formatting and language}
+
+Formatting is driven by some specialisation of the language structure which was already mentioned. Language structure is supposed to provide the following two methods. These methods are called on every character of the printed string.
+\begin{itemize}
+  \item \texttt{void shouldindent(\\  string line, int\& outindent, \\  int\& indent, int\& nobreak\\)}\footnote{The ampersand denotes references. In this context, it means that ampersanded arguments act as return values. Besides that, in the actual implementation, we, of course, use constant references to pass the potentially long strings.}
+	\begin{description}
+	  \item[line] is the line to be indented. 
+	  \item[outindent] is the actual indentation of the line.
+	  \item[indent] is a persistent indent context.
+	  \item[nobreak] allows suppressing of the next \emph{nobreak} line breaks.
+	\end{description}
+  \item \texttt{void shouldbreak(\\  int pos, string line, \\  bool\& break\_before, bool\& break\_after\\)}
+	\begin{description}
+	  \item[pos and line] provide an exact position and its context.
+	  \item[break\_before and break\_after] are returns which indicate whether the string should be broken before of after the position identified by the \emph{pos} argument in \emph{line}.
+	\end{description}
+\end{itemize}
+
+
+

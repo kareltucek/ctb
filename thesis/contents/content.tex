@@ -15,25 +15,47 @@
 
         \subsection{Vectorized code generation} \input{contents/03_vectorized_generation}
 
-    \section{Handling control flow} \input{contents/04_cf_generation.tex}
+    \section{Handling control flow} \input{contents/04_cf_generation}
 
-        \subsection{Partitioning the graph} \input{contents/05_partitioning.tex}
+        \subsection{Partitioning the graph} \input{contents/05_partitioning}
 
-        \subsection{First proposal - ordered tree crawler} \input{contents/06_crawler.tex}
+        \subsection{First proposal - ordered tree crawler} \input{contents/06_crawler}
 
-        \subsection{Second proposal - unordered solution} \input{contents/07_unordered.tex}
+        \subsection{Second proposal - unordered solution} \input{contents/07_unordered}
 
-        \subsection{Refinement of the second proposal} \input{contents/08_refinement.tex}
+        \subsection{Refinement of the second proposal} \input{contents/08_refinement}
 
 \chapter{General implementation}
 
     \label{ch:implementation}
 
- \input{contents/09_components}
+   \input{contents/09_components}
 
     \input{contents/10_implementation}
 
+    \input{contents/11_implementation2}
+
         %%....
+
+
+\chapter{Technical details and API description}
+    \label{ch:faq}
+
+    \section{Usage} \input{contents/12_usage}
+
+    \section{Commands available} \input{contents/13_commands}
+
+    \section{Text preprocessor} \input{contents/14_preprocessor}
+
+    \section{Format specifications}
+
+      \input{contents/15_formats}
+
+    \section{API description} \input{contents/16_apis}
+
+    \section{Tests} \input{contents/17_tests}
+
+    \subsection{Implementation of new environments} \input{contents/18_environments}
 
 \chapter{Implementation of the SSE instruction set}
     \label{ch:sse}
@@ -49,26 +71,6 @@
     \section{Control-flow related objects} 
 
         %%....
-
-\chapter{User guides}
-    \label{ch:faq}
-
-    \section{Commands available}
-
-    \section{Understanding the preprocessor}
-
-    \section{Format specifications}
-
-        \subsection{csv}
-
-        \subsection{xml}
-
-    \section{Detailed field semantics}
-
-    \section{FAQ}
-        \subsection{How do I extend or use existing tables/models}
-
-        \subsection{How do I add support for a new language?}
 
 %\begin{code}
 %for i in abc

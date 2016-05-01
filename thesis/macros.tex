@@ -39,20 +39,60 @@
 \newtheorem{lemma}[thm]{Lemma}
 \newtheorem{claim}[thm]{Claim}
 
-\newtheorem*{observation}{Observation}
+\newtheorem{observation}{Observation}
 \newtheorem{problem}{Problem}
-
-\theoremstyle{plain}
 \newtheorem{define}{Definition}
+\newtheorem{alg}{Algorithm}
+\newtheorem*{defstyle}{}
 
 \theoremstyle{remark}
-\newtheorem*{cor}{Corollary}
 \newtheorem*{rem}{Remark}
+\newtheorem*{cor}{Corollary}
 \newtheorem*{example}{Example}
 
+\newcommand{\mybeginfig}{\begin{figure}[H]}
+\newcommand{\myendfig}[2]{\caption{#2}\label{fig:#1}\end{figure}}
+
+\newcommand{\mybegindef}[2]{\begin{define}[#2]\label{def:#1}}
+\newcommand{\myenddef}{\end{define}}
+
+\newcommand{\mybeginalg}[2]{\begin{alg}[#2]\label{alg:#1}}
+\newcommand{\myendalg}{\end{alg}}
+
+\newcommand{\mybeginprob}[2]{\begin{problem}[#2]\label{pro:#1}}
+\newcommand{\myendprob}{\end{problem}}
+
+\newcommand{\mybeginobs}[2]{\begin{observation}[#2]\label{pro:#1}}
+\newcommand{\myendobs}{\end{observation}}
+
+\newcommand{\mybeginclaim}[2]{\begin{claim}[#2]\label{cla:#1}}
+\newcommand{\myendclaim}{\end{claim}}
+
+%\newcommand{\myexpr}[1]{ $\begin{gathered}[t]\begin{aligned} #1 \end{aligned}\end{gathered}$ }
+
+\newcommand{\algref}[1]{\begin{alg}[#1]\end{alg}}
+
+\newcommand{\myexpr}[1]{ $ #1 $ }
+
+\newcommand{\allowpg}[1]{ \end{code}\ \begin{code} }
+
+\newcommand{\gt}{ > }
+\newcommand{\lt}{ < }
+
+%tree items
+%\usetikzlibrary{shadows}
+%\newcommand{\treelist}{\tikz[overlay]\draw(-.2,-.2)--(-.2,.5) (-.2,.15)--(.1,.15);}
+%\newcommand{\treeitem}{\item[\treelist]}
+%\newcommand{\treeendlist}{\tikz[overlay]\draw(-.2,-.2)--(-.2,.15) --(.1,.15);}
+%\newcommand{\treeend}{\item[\treeendlist]}
+
+%\newcommand{\begincodefig}[2]{\begin{figure}[H]\caption{#2}\label{fig:#1}\begin{code}}
+%\newcommand{\endcodefig}{\end{code}\end{figure}}
+
+
 %moje pridavky
-\newcommand{\expr}[1]{$#1$}
-\newcommand{\graph}[1]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\end{figure}}
+\newcommand{\graphplain}[1]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\end{figure}}
+\newcommand{\graph}[2]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\caption{#2}\label{fig:#1}\end{figure}}
 %\newcommand{\graph}[1]{\begin{figure}[H]\centering\resizebox{.9\linewidth}{!}{\input{contents/graphs/final/#1}}\end{figure}}
   \newcommand{\graphn}[1]{\begin{sidewaysfigure}\resizebox{1\linewidth}{!}{\input{contents/graphs/final/#1}}\end{sidewaysfigure}}
 %k\newcommand{\graph}[1]{\input{contents/graphs/final/#1}\end{figure}}
@@ -72,7 +112,11 @@
 %%% An environment for typesetting of program code and input/output
 %%% of programs. (Requires the fancyvrb package -- fancy verbatim.)
 
-\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small, frame=single}
+
+\DefineVerbatimEnvironment{loosecode}{Verbatim}{fontsize=\small, frame=leftline, fontshape=n, samepage=false} 
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small, frame=leftline, fontshape=n, samepage=true} 
+
+\newcommand{\incode}[1]{ \\ \centerline{\texttt{#1}} \\ }
 
 %%% The field of all real and natural numbers
 \newcommand{\R}{\mathbb{R}}

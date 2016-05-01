@@ -1,0 +1,56 @@
+Our framework was developed under Linux and therefore it assumes standard Unix tools for development.The source files themselves are supposed to be platform-independent. 
+
+\begin{itemize}
+  \item C++11 compliant compiler. Tested compilers are GCC (4.9.3) and CLang (3.7.1).
+  \item TinyXML2 library 
+  \item Make (optional - for compilation of executables, testing, development)
+  \item Dot, gpicview (optional - for graph visualisation)
+  \item Standard shell tools (optional - for test scenarios and development) 
+  \item Functional bobox environment with aligned memory allocator (optional - for scenario 6)
+  \item CPU implementing SSE 4.2  (optional - for test scenarios which generate SSE instructions)
+\end{itemize}
+
+The project may be compiled by make:
+\begin{code}
+> make
+\end{code}
+
+By default, make compiles the ctb executable and unit tests and runs basic test scenarios. The following make targets are available:
+
+\begin{description}
+  \item[basictest] compiles and runs basic regress tests.
+  \item[fulltest] runs full check of the sse instruction table and a test of bobox environment.
+  \item[ctb] compiles the ctb executable.
+  \item[all] defaults to `ctb' and `basictest'
+\end{description}
+
+
+This library may be used in three ways:
+\begin{itemize}
+  \item As a separate executable controlled by text commands.
+  \item As a header C++11 library. In this case, the \texttt{"ctb.h"} file has to be included in the project. The \texttt{ctb::ctb} class serves as the library frontend. This frontend may be used in two ways, either of them requiring creation of a single object of the ctb instance:
+  \begin{itemize}
+    \item using text commands
+    \item using raw templated calls to commands
+  \end{itemize}
+\end{itemize}
+
+Basic usage reference of the provided executable may be obtained by:
+\begin{code}
+> ctb -h
+\end{code}
+
+
+The text command controls of this library may be very easily interfaced by raw C commands, which should allow direct language-independent integration.
+
+The simplest way to invoke ctb is by:
+\begin{code}
+> ctb -f programme
+\end{code}
+
+Here \texttt{programme} is a text file containing a sequence of commands.
+
+
+
+
+

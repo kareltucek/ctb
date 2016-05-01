@@ -1,0 +1,29 @@
+
+The input programme has to conform to the following rules:
+
+\begin{itemize}
+  \item Every line represents exactly one whole command unless this line is empty or commented.
+  \item Any line can be commented by insertion of \texttt{\#} at its beginning.
+  \item Command consists of non-empty space-separated strings. Every sequence of one or more spaces is considered as one delimiter.
+  \item The first string in the list identifies the command to be run. The rest of the list is passed as arguments to the command.
+\end{itemize}
+
+The available commands are:
+
+\begin{itemize}
+  \item \texttt{help} shows a standard unix-like help.
+  \item \texttt{source <input file>} -- interprets contents of the file as its argument.
+  \item Import and export commands. These take identifier of a loader class as the first argument and a filename as the second argument. The structures are loaded to/exported from the same object of a graph or of an instruction table. The structure is always cleared before load. Note that not all loaders have to implement all import end export functions. 
+  \begin{itemize}
+    \item \texttt{exportgraph  <loader> <output file>} -- available for the `dot' loader
+    \item \texttt{exportinstab <loader> <output file>} -- available for the `csv' loader
+    \item \texttt{loadgraph    <loader> <input file>} -- available for the `xml' loader
+    \item \texttt{loadinstab   <loader> <input file>} -- available for the `xml' and `csv' loaders
+  \end{itemize}
+  \item \texttt{generate <output aliasenv> <output file>} -- the \texttt{aliasenv} is invoked with the loaded generator and instruction table. The produced string is written into the \texttt{output file}.
+  \item \texttt{testgraph} -- testgraph is a custom command which acts as a special version of loadgraph. This loader function constructs a graph from the loaded instructions, trying to utilise all available operations. 
+  \item \texttt{adddebug  [depth=1 [<list of vertex ids>]]} -- This command hooks a debug node\footnote{These are special output nodes which are supposed to output values directly. These are not subject to width conversions.} to every vertex specified in the space separated list and to all its predeccesors up to \texttt{depth}. Debug nodes are automatically selected from operations of type \emph{debug}. If the list is empty, debug nodes are hooked to all vertices.
+  \item \texttt{transform  <transformer>} -- the graph transformed identified by the first argument is invoked. This transformer is free to edit the loaded graph as it pleases.
+  \item \texttt{visualise} -- writes the currently loaded graph into a temporary file and invokes the dot (graphviz) with gpicview to show the graph to the user. We use this mechanics for error reporting as well.
+  \item \texttt{preprocess <aliasenv> <filein> <fileout> } -- processes the \texttt{filein} by the aliasenv identified by \texttt{aliasenv} and writes the results to \texttt{fileout}.
+\end{itemize}

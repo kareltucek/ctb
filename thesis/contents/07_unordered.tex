@@ -1,13 +1,13 @@
-Since the cause of ineffectivness of the previous proposal is the requirement stating that data should be processed in order, we will investigate the same problem without this condition. 
+Since the cause of ineffectiveness of the previous proposal is the requirement stating that data should be processed in order, we will investigate the same problem without this condition. 
 
 
 If we simply dropped the condition, i.e., by letting merges merge in any order, there would arise a problem that data may get reordered differently in different branches. E.g., like in the following diagram.
 
-\graph{ordered_conflict}
+\graph{ordered_conflict}{Computation which mixes data of different data rows together.}
 
 This problem may be addressed by ensuring that data rows are always handled as one unit, meaning that every split will be performed on all data except data that are not used any further.
 
-\begin{define}[sequential form of control flow]
+\mybegindef{seqform}{Sequential form of control flow}
 We will say that a control flow of a flow graph $G(V,E)$ with control-flow nodes expanded and cycles removed is in \emph{sequential form} if the following conditions hold.
 \begin{itemize}
   \item All inputs of $G$ are in the same component.
@@ -25,39 +25,39 @@ We will say that a control flow of a flow graph $G(V,E)$ with control-flow nodes
       \item All outputs of $C$ are explicit queues leading into another component $D$ of $G$.
     \end{itemize}
 \end{itemize}
-\end{define}
+\myenddef
 
-\begin{define}[unordered merge] \ \ \ 
+\mybegindef{nodetypes2}{Unordered merge}
 \begin{description}
-  \item \emph{unordered merge operation} will have the same semantic meaning as the standard merge or loop merge operation except it will not take any condition input. This operation may merge streams in an arbitrary but deterministic manner.
+  \item [unordered merge operation] will have the same semantic meaning as the standard merge or loop merge operation except it will not take any condition input. This operation may merge streams in an arbitrary but deterministic manner.
 \end{description}
-\end{define}
+\myenddef
 
 It is not clear whether every consistent flow graph can be transformed into a flow graph with control flow in sequential form. What is clear is that there exists a nontrivial class of flow graphs which are in this form.
 
-\begin{observation}[schemas with control flow in sequential form] \ \ \ 
+\mybeginobs{seqschemes}{Consistency of schemes with control flow in sequential form}
   Let $G(V,E)$ be a flow graph s.t. the following conditions hold.
   \begin{itemize}
-    \item $G$ is consistent according to \emph{consistency of schemas} (section \ref{sec:cf_constructs}).
+    \item $G$ is consistent according to \emph{consistency of schemes} (definition \ref{def:schemeconsistency}).
     \item $G$ uses only unordered versions of merge nodes in place of standard merge or loop merge nodes.
-    \item All input nodes of $G$ are in preamble.
+    \item All input nodes of $G$ are in the preamble.
   \end {itemize} 
-  Then $G$ may be transformed into a consistent flow graph with control flow in sequential form. This may be achieved by copying the schema in question onto every path between \emph{preamble} and \emph{epilogue} and joining all newly created branch or loop bodies in the means of the \emph{schema sequencing} observation. We may join these by adding any regular operation which does not alter the semantics of $G$.
+  Then $G$ may be transformed into a consistent flow graph with control flow in sequential form. This may be achieved by copying the scheme in question onto every path between \emph{preamble} and \emph{epilogue} and joining all newly created branch or loop bodies by means of the \emph{scheme sequencing} observation. We may join these by adding any regular operation which does not alter the semantics of $G$.
   \begin{proof} 
   Sequentiality of the resulting control flow follows directly from definitions.
   \end{proof}
-\end{observation}
+\myendobs
 
-\begin{observation}
-  Both \emph{schema nesting} and \emph{schema sequencing} will produce graphs with control flow in sequential form as long as:
+\mybeginobs{seqschemenestingsequencing}{Unordered scheme nesting and sequencing}
+  Both \emph{scheme nesting} and \emph{scheme sequencing} will produce graphs with control flow in sequential form as long as:
   \begin{itemize}
     \item All input graphs have control flow in sequential form and all paths from \emph{preambles} to \emph{epilogues} are transformed in the means of the previous observation.
     \item The condition requiring all inputs to be in the same component (w.r.t. regularity and connectedness) is not voided.
   \end {itemize} 
   \begin{proof} 
-  The key observation is that the previous transformation necessarily splits \emph{preamble} from \emph{epilogue} (with respect to regularity of nodes). Thus, nesting of a new schema into a component will never create two paralel schemas except for schemas which comply with the \emph{schema sequencing}.
+  The key observation is that the previous transformation necessarily splits \emph{preamble} from \emph{epilogue} (with respect to regularity of nodes). Thus, nesting of a new scheme into a component will never create two parallel schemes except for schemes which comply with the \emph{scheme sequencing}.
   \end{proof}
-\end{observation}
+\myendobs
 
 %\begin{claim}
 %Let $G(V,E)$ with $I$ and $O$ be a consistent flow graph with control flow in sequenced form. 
@@ -65,71 +65,118 @@ It is not clear whether every consistent flow graph can be transformed into a fl
 
 Consider the following problem:
 
-\begin{problem}[unordered realization of control flow]
-  Let $G(V,E)$ be a consistent flow~graph with $O$ and $I$ defined as in the \emph{vectorized code generation}. Let $G$ use only the following types of nodes: regular nodes (including input and outptu nodes), split, unordered merge and loop condition. Let all loops conditions be used by means of schema \ref{TODO} and let the control flow of $G$ be in sequential form. Let all inputs of $G$ be in one component. Also, let control flow nodes of $G$ be expanded and let the factor graph of $G$ be acyclic. We wish to generate code which will realize graph $G$ on an arbitrary number of data rows, utilizing SIMD instructions whenever possible. 
-\end{problem}
+  \mybeginprob{unorderedproblem}{Unordered realisation of control flow}
+      Let $G(V,E)$ be a consistent flow graph with $O$ and $I$ defined as in the \emph{vectorized code generation}. Let $G$ use only the following types of nodes: regular nodes (including input and output nodes), split, unordered merge and loop condition. Let all loops conditions be used by means of the \emph{loop condition} scheme defined by \ref{def:cfconstructs} and let the control flow of $G$ be in sequential form. Let all inputs of $G$ be in one component. Also, let control flow nodes of $G$ be expanded and let the factor graph of $G$ be acyclic. We wish to generate code which will realise graph $G$ on an arbitrary number of data rows, utilising SIMD instructions whenever possible. 
+\myendprob
 
-  We are almost ready to show that flow graphs with control flow in sequential form may be realized very easily without any need of pull semantics. The only problem we need to address is the problem of buffer sizes. Apparently, buffer size $2*w-1$ suffices to accept one (full) vector of data rows in a situation in which there are not enough data for vectorized processal of the next component. One problem lays in loops. 
+  We are almost ready to show that flow graphs with control flow in sequential form may be realised very easily without any need of pull semantics. The only problem we need to address is the problem of buffer sizes. Apparently, buffer size $2*w-1$ suffices to accept one (full) vector of data rows in a situation in which there are not enough data for vectorized processal of the next component. One problem lays in loops.  Consider a loop with nested branching:
 
-  Consider a loop with nested branching:
+  \graph{fullloop}{Illustration of a loop which may cause a problem if buffer capacities were not chosen cautiously.}
 
-  \graph{fullloop}
+  It may easily happen that all branching bodies\footnote{More precisely their input and output buffers.} get filled at some point. The problem comes when we process the data from these branching bodies because data from all bodies may be directed into the same branch next time they enter the body of the loop. Thus, some path (or more precisely entire cycle) may get emph{entirelly} filled. This problem may be solved by limiting the amount of data present in the loop to the capacity of the shortest cycle of the loop. We have already presented this functionality in the definition of the loop condition (definition \ref{nodetypes1}). 
 
-  It may easily happen that all branching bodies\footnote{More precisely their input buffers.} get filled at some point. The problem comes when we process the data from these branching bodies, because data from all bodies may be directed into the same branch next time they enter the loop body. Thus, some path (or more precisely entire cycle) may get emph{entirelly} filled. This problem may be solved by limiting amount of data present in the loop to the capacity of the shortest cycle of the loop. We have already presented this functionality in the definition of the loop condition (definition \ref{TODO}). 
+  Since we now limit the amount of data in loops, there may arise another problem. The problem is that all the data rows may get distributed in such way that no buffer contains $w$ data rows. This could be solved by employment of the pull semantics and by enabling the third input of merge nodes again. This third input would then be used solely for the purpose of /emph{finding} data. Another way is ensuring that sufficient amount of data fits into the loop. This may be achieved by increasing the size of some buffer which is shared by all paths.
 
-  Since we now limit the amount of data in loops, there may arise another problem. The problem is that all the data rows may get distributed in such way that no buffer contains $w$ data rows. This could be solved by employment of the pull semantics and by enabling the third input of merge nodes again. This third input would then be used solely for the purpose of /emph{finding} data. Another way is ensuring that sufficient amount data fits into the loop. This may be achieved by increasing size of a buffer shared by all paths.
-
-\begin{define}[buffer graph]
+  \mybegindef{buffergraph}{Buffer size allocation graph}
   Let $G$ be a flow graph. Let $G'$ be a flow graph created from $G$ by mapping of all its layer 2 edges to layer 1.
-  Whe will use the term $buffer graph$ of $G$ for a factor graph of $G'$.
-\end{define}
+  We will use the term $buffer size allocation graph$ of $G$ for a factor graph of $G'$.
+\myenddef
 
 
-\begin{define}[construction of capacities]
-  Let $H(V,E)$ be a buffer graph of a flow graph $G(V',E')$ defined as in the \emph{unordered realization of control flow} problem, let $w \in \N$ be a number representing vector size. We shall define the following functions:
+  \mybegindef{capacities}{Construction of capacities}
+  Let $H(V,E)$ be a buffer size allocation graph of a flow graph $G(V',E')$ defined as in the \emph{unordered realisation of control flow} problem, let $w \in \N$ be a number representing vector size. We shall define the following functions:
   \begin{itemize}
-    \item $multiPath: V x V \arrow \powerset (H)$ as $multiPath(u,v) = \bigcup_{\substack{P \subseteq H \\ \text{path from u to v}}} P$\footnote{Since we understand a path to be a connected subgraph with degrees less or equal two, we implicitly required that this path does not enter a single vertex twice.}.
+    \item $multiPath: V x V \arrow \powerset (H)$ as $multiPath(u,v) = \bigcup_{\substack{P \subseteq H \\ \text{path from u to v}}} P$\footnote{Since we understand a path to be a connected subgraph with degrees less or equal two, we have just implicitly required that this path does not enter a single vertex twice.}.
     \item $bufferCapacity: E \arrow \N$ as a function denoting actual capacity assigned to all buffers between components connected by an edge of $E$ 
     \item $apparentCapacity: E \arrow \N$ as a function denoting apparent capacity assigned to all buffers between components connected by an edge of $E$.
     \item $safeCapacity: E \arrow \N$ as a function denoting number of data rows a buffer is guaranteed to accept.
     \item $safeCapacity: V \times V \arrow \N$ as a function denoting number of data rows $S = multiPath(u,v)$ can accept. More precisely, the number of data rows the component $u$ can push into $S$ without overfilling any buffers and without the component $v$ having to process data.
     %\item $capacity: V \times V \arrow \N$ as a function denoting the actual capacity of a $multiPath(u,v)$.
     \item $capacity: \powerset(H) \arrow \N$ as a function denoting the actual capacity of a subgraph of $H$.
-    \item $limit: V' arrow \N$ as a partial function denoting the number of data rows allowed into a loop managed by a loop condition, as defined in \ref{TODO}.
+    \item $limit: V' \arrow \N$ as a partial function denoting the number of data rows allowed into a loop managed by a loop condition, as defined in \ref{def:nodetypes1}.
   \end{itemize}
 
 
   Let the values be assigned according to the following rules:
   \begin{itemize}
-    \item Let $e \in E$ be an edge which does not connect components managed by the same loop condition.
+    \item Let $e \in E$ be an edge which does not connect components managed by the same loop condition. We shall refer to $e$ as to $loop balancing buffer$ later.
     \begin{itemize}
-      \item $bufferCapacity(e) := 2*w$ 
-      \item $apparentCapacity(e) := bufferCapacity(e)$ 
-      \item $safeCapacity(e) := bufferCapacity(e) - w + 1$ 
+      \item \myexpr{bufferCapacity(e) := 2*w}
+      \item \myexpr{apparentCapacity(e) := bufferCapacity(e)}
+      \item \myexpr{safeCapacity(e) := bufferCapacity(e) - w + 1}
         
-        This is due to the fact that vectorized version of the algorithm \ref{TODO} requires at least $w$ empty slots in its data sinks.
+        This is due to the fact that vectorized version of the algorithm \ref{alg:crawler} requires at least $w$ empty slots in its data sinks.
+
     \end{itemize}
-    \item $safeCapacity(u, v) := \min_{\substack{P \subseteq H\\ \text{a path from u to v}}} \sum_{\substack{e \in E(P)}} safeCapacity(e) $ 
-    \item $capacity(S) := \sum_{e \in S} apparentCapacity(e) $ 
+    \item \myexpr{ safeCapacity(u, v) := \min_{\substack{P \subseteq H\\ \text{a path from u to v}}} \sum_{\substack{e \in E(P)}} safeCapacity(e) }
+    \item \myexpr{ capacity(S) := \sum_{e \in S} apparentCapacity(e) } 
     \item Let $s$ be a loop condition managing a merge partition $u$ and a split partition $v$. Let $e \sim (u,v)$.
     \begin{itemize}
-      \item $limit(s) := capacity(multipath(v,u)) - \min_{\substack{P \subseteq H\\ \text{a path from v to u}}} capacity(P) + (\mid P \mid + 1) * (w-1) + 1$. 
+      \item \myexpr{ limit(s) := capacity(multipath(v,u))  - capacity(P)  + (| P | + 1) * (w-1) + 1 } 
 
-        Assume that the loop defined by node $s$ contains $limit(s)$ data rows. Then even the shortest cycle on the loop contains a buffer which contains at least $w$ elements. The multipath corresponds to the 'loop body'. The first difference of capacities `fills` all buffers except for buffers on the path with least capacity. The $\mid P +1 \mid * (w-1)$  allows every buffer contain $w-1$ data rows. The first $+1$ is for the buffer between v and u. The last $+1$ is to make at least one buffer contain $w$ data rows.
+      Where $P$ is a path from $u$ to $v$ such that $capacity(P)$ is minimal.
 
-      \item $bufferCapacity(e) := limit(s) - safeCapacity(v,u) + (w-1) + w$ This ensures that safeCapacity of the entire loop is at least $limit(s) + w$. 
-      \item $apparentCapacity(e) := limit(s)$ This stands for the capacity of the entire loop since the edge e is the one which will be counted
-      \item $safeCapacity(e) := limit(s) - w + 1$
+        Assume that the loop defined by node $s$ contains $limit(s)$ data rows. Then even the shortest cycle on the loop contains a buffer which contains at least $w$ elements. The multipath corresponds to the 'loop body'. 
+        
+        The first difference of capacities `fills' all buffers except for buffers on the path with least capacity. 
+        
+        The $| P +1 | * (w-1)$ `fills' every buffer by $w-1$ data rows. 
+        
+        The first $+1$ in |P + 1| is for the buffer between v and u. 
+        
+        The last $+1$ is to make at least one buffer contain $w$ data rows.
+
+      \item \myexpr{ bufferCapacity(e) :=  \ \ limit(s)  - safeCapacity(v,u)  + (w-1) + w }
+        
+        This ensures that safeCapacity of the entire loop is at least $limit(s) + w$. 
+      \item \myexpr{ apparentCapacity(e) := limit(s) }
+        
+        This stands for the capacity of the entire loop since the edge e is the one which will be counted
+      \item \myexpr{ safeCapacity(e) := limit(s) - w + 1 }
     \end{itemize}
   \end{itemize}
-\end{define}
+\myenddef
 
-\begin{claim}
-The definition of the $bufferCapacity$ function is consistent, i.e., is defined for buffer in $G$ and the value is determined unambiguously.
+\mybeginclaim{buffercapacity}{Consistency of buffer capacities}
+We claim that $bufferCapacity$ function is well defined, i.e., is defined for every buffer in $G$ and the value is determined unambiguously.
   \begin{proof}
-    Apparently assignment of capacity of the edges from the loop schema depends on assignment of capacities of all buffers in body of the loop. Loop nesting may be represented by an oriented tree. Every oriented tree has a topological ordering. 
+    Apparently, assignment of capacity of the edges from the loop scheme depends on assignment of capacities of all buffers in the body of the loop. Loop nesting may be represented by an oriented tree. Every oriented tree has a topological ordering, which may be used to assign these functions.
   \end{proof}
-\end{claim}
+\myendclaim
+
+  Although we have (approximately) doubled the actual capacity of buffers of every loop, the apparent capacities have remained in $O(n)$ with respect to sizes of bodies of the loops. This means that the memory consumption should still remain reasonable. If we assume that the size of bodies decreases with quotient $q$ with respect to nesting, then the resulting memory consumption is $n*(1+\sum_{i=0}^{\infty}q^i)$. With $q=1/2$, which is a reasonable expectation, this means that memory consumption trebles. Unfortunately, the new worst-case memory bound is $O(n^2)$.
+
+\mybeginclaim{capacityproof}{Complexity of buffer size allocation}
+  Let $G$, $H$ and $bufferCapacity$ be defined as in definition \ref{def:capacities}. Let $n=| V(G) |$. We claim that capacity required by $G$ is in $O(n^2)$. 
+  \begin{proof}\ 
+    \begin{itemize}
+      \item Capacity of the balancing buffer of every loop is at most the capacity of the loop body. This holds since the limit is at most capacity of the body.
+      \item Capacity of the balancing buffer does not affect any other buffers since the apparent capacity of the loop remains the same.
+      \item Thus, every loop contained in $G$ may allocate at most $O(n)$ memory for its balancing buffer.
+    \end{itemize}
+  \end{proof}
+\myendclaim
+
+This upper bound seems to be tight. Consider $O(n/2)$\footnote{Wich is equivalent to $O(n)$ except for semantical information it carries.} loop schemes nested alternatingly with the branching scheme in such manner that always only one branch contains a loop. Let the innermost body be of size $n/2$. This is shown in figure \ref{fig:buffercounter}. This setup will cause all loops to allocate an amount of space corresponding to the capacity of the innermost body.
+
+\graph{buffercounter}{Worst-case memory-consumption scenario}
+
+Note that a simple nesting of loops would not suffice, since the only path through the loop body would lead through the next loop body and therefore would get subtracted in the computation of $limit$. The fact that we cannot subtract the $limit$ in the scenario with branching is caused exactly by the two points discussed earlier:
+\begin{itemize}
+  \item The crawler does not know where data are located.
+  \item There has to be sufficient capacity in case that the inner loop produces data which will be directed to the second branch in next iteration. 
+\end{itemize}
+
+It is possible that this upper-bound may be reduced by introduction of mechanism which would purposefully plan the path of the crawler. We do not have any proposal at the moment.
+  
+  %till in $O(n)$ with respect to the size of our input. \footnote{To be more precise the function resembles sum of a geometric serie with quotient smaller than one. Quotient 0.5 (quite realistic one) would mean treble memory consumption.}
+  %Although we have (approximately) doubled the actual capacity of buffers of every loop, the apparent capacities have remained in $O(n)$ with respect to sizes of bodies of the loops. This means that the memory consumption is still in $O(n)$ with respect to the size of our input. \footnote{To be more precise the function resembles sum of a geometric serie with quotient smaller than one. Quotient 0.5 (quite realistic one) would mean treble memory consumption.}
+
+
+\begin{rem}
+  Note that the buffer capacities may be easily computed by an inverse topological pass of a factor graph of G. 
+\end{rem}
+
 
 %  \begin{itemize}
 %    \item \emph{ capacity of a subgraph} $S \subseteq H$, i.e., $subgraphCapacity: \powerset(H) \arrow \N $, by the following formula:
@@ -150,7 +197,7 @@ The definition of the $bufferCapacity$ function is consistent, i.e., is defined 
 %  \end{itemize}
 %\end{define}
 %
-%  Specifically we propose setting sizes of all buffers to $2*w$ except for the buffers leading from merge nodes to splits nodes in the loop condition schema (definition \ref{TODO}). We need to fullfill the following conditions:
+%  Specifically we propose setting sizes of all buffers to $2*w$ except for the buffers leading from merge nodes to splits nodes in the loop condition scheme (definition \ref{TODO}). We need to fulfill the following conditions:
 %  \begin{itemize}
 %    \item Every loop (defined by $c \in V'$ (from the previous definition)) contains at most $safeLoopCapacity(w,c)$ data rows at every moment. 
 %    \item For every cycle of every loop there exists a buffer which contains at least $w$ data rows, unless the number of data rows present in the cycle in question is lower than its limit.
@@ -168,13 +215,13 @@ The definition of the $bufferCapacity$ function is consistent, i.e., is defined 
 %\end{define}
 
 
-\begin{claim}
-We claim that the \emph{ordered crawler} (section \ref{ordered_crawler}) algorithm solves this problem as well if we make the following adjustments. In addition we claim that this algorithm will always use vectorized version of body until the termination phase is entered.
+\mybeginclaim{unorderedproof}{Unordered solution}
+We claim that the \emph{ordered crawler} (section \ref{ordered_crawler}) algorithm solves this problem if we make the following adjustments. In addition, we claim that this algorithm will always use the vectorized version of loop body until the termination phase is entered.
  \begin{itemize}
    \item All jumps lead to vectorized labels except for jumps in termination handlers.
    \item If $a$ and $b$ are processing bodies of merge nodes and $C$ is a component such that both $a$ and $b$ outputs data into $C$ then $a$ and $b$ get generated into the same (algorithm) partition.
-   \item All buffers have capacity assigned to $bufferCapacity$ as defined by \ref{TODO}.
-   \item Limits of all loop condition nodes are set according to $limit$ as defined by \ref{TODO}.
+   \item All buffers have capacity assigned to $bufferCapacity$ as defined by the definition \ref{def:capacities}.
+   \item Limits of all loop condition nodes are set according to $limit$ as defined by the definition \ref{def:capacities}.
    \item Each time a partition receives data input, the terminating variable is set to $min(terminating,i)$ with i equal to the index of the partition which received data.
  \end{itemize}
 We will again show the following points:
@@ -187,15 +234,18 @@ We will again show the following points:
   All data rows are handled as consistent packs, so every data row is handled correctly.
 \end{proof}
 \begin{proof}[Proof of 2] So let there be a flow graph $G(V,E)$ and a sequence of data rows such that the described algorithm enters an infinite loop which does not process any data. Let $C$ be this loop. Let $t$ be topological ordering of a factor graph of $G$. 
-  \item Again let $M = \{v \in C \mid \neg (\exists u \in C)( u <_t v \land (u,v) \in C)\}$. $M$ is empty, since every component has either all inputs sufficiently populated or none. This means that the crawler is either only descending or only ascending in the graph structure which means that it traces a loop. Thus, either all buffers on $C$ contain insufficient amount of data or no buffer on $C$ has sufficient amount of space. But we have assigned buffer capacities in such manner that this cannot happen.
+  \item Again let $M = \{v \in C | \neg (\exists u \in C)( u <_t v \land (u,v) \in C)\}$. $M$ is empty, since every component has either all inputs sufficiently populated or none. 
+    
+    This means that the algorithm is either only descending or only ascending in the graph structure, which implies that it traces a loop. Thus, either all buffers on $C$ contain an insufficient amount of data or no buffer on $C$ has sufficient amount of space. But we have assigned buffer capacities in such manner that this cannot happen.
 \end{proof}
 \begin{proof}[Proof of 3]
   This is again a simple procedure of checking that every partition processes its data and increments the termination counter.
 \end{proof}
-\end{claim}
+\myendclaim
 
 \begin{rem} 
-  The partitioning algorithm may be easily adjusted for conversion of some flow graphs into their sequential equivalents. The simplest version will handle graphs which contain simple edges which bypass some control flow schemas. This algorithm may also be further refined to handle situations like parallel branching. The point of the adustment is in choosing a 'native' outgoing control flow node which will then be pasted on any bypassing edges or before any other control flow which do not match the 'native' control flow node. One question is how to solve some implementation details in order to prevent entering of infinite loops. Another question is how to optimize the resulting graphs, since a naive implementation may produce highly inefficient results. 
+  The partitioning algorithm may be easily adjusted for conversion of some flow graphs into their sequential equivalents. The simplest version will handle graphs which contain simple edges which bypass some control flow schemes. This algorithm may also be further refined to handle situations like parallel branching. The point of the adjustment lays in choosing a 'native' outgoing control flow node which will then be pasted on any bypassing edges or before any other control flow which does not match the 'native' control flow node. One question is how to solve some implementation details in order to prevent entering of infinite loops. Another question is how to optimise the resulting graphs since a naive implementation may produce highly inefficient results. 
 \end{rem}
+
 
 

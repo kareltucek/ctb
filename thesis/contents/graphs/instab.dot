@@ -1,0 +1,19 @@
+digraph{
+#horizontalLinear
+#include
+  rankdir = TB;
+  instab[label="instruction table"];
+  op[label="operation"];
+  ins[label="instruction"];
+  conv[label="width conversion"];
+  exp[label="expansion"];
+  type[label="type"];
+  tv[label="type version"];
+  instab->op;
+  instab->type;
+  instab->exp;
+  op->ins;
+  type->tv;
+  type->conv;
+  op->exp;
+}

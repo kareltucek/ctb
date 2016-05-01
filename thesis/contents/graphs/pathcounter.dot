@@ -1,0 +1,19 @@
+digraph{
+#horizontalLinear
+#include
+  rankdir = TB;
+  a[label="a producer"];
+  b[label="b consumer"];
+  c[label="c consumer"];
+  cv1[label="cost 1 + d"];
+  cv2[label="cost 2 + d"];
+  cv3[label="cost 4"];
+
+  a->cv2;
+  a->cv3;
+  cv3->cv1;
+  cv3->c;
+  cv1->b;
+  cv2->b;
+  cv1->c[style=invis];
+}

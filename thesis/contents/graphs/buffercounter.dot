@@ -1,0 +1,37 @@
+digraph{
+#include
+  rankdir = TB;
+
+  pre[label="preamble",shape="circle"]
+  epi[label="epilogue",shape="circle"]
+  pre -> controls -> epi;
+
+
+  controls[label="loop controls",shape="circle"]
+  a[style=invis];
+  b[label="loop controls"];
+  e[label="merge"];
+  f[label="split"];
+  f -> a[dir=none];
+  f -> b;
+  a -> e;
+  b -> e;
+ f -> controls[dir=back];
+ controls -> e[dir=back];
+  //b -> c;
+  //d -> b;
+
+  b[label="loop controls",shape="circle"]
+  ca[style=invis];
+  cb[label="\\...",shape="circle"];
+  ce[label="merge"];
+  cf[label="split"];
+  cf -> ca[dir=none];
+  cf -> cb;
+  ca -> ce;
+  cb -> ce;
+ cf -> b[dir=back];
+ b -> ce[dir=back];
+
+
+}
