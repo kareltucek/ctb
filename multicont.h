@@ -24,19 +24,19 @@ class imp_cont : public T
   public:
     using T::T;
 
-    T& getlevel(int i = 0)
+    T& get_layer(int i = 0)
     { 
       fillin(i);
       return i == 0 ? *this : vec[i-1];
     };
 
-    const T& getlevel(int i = 0) const 
+    const T& get_layer(int i = 0) const 
     { 
       fillin(i);
       return ((i == 0) ? (*((T*)this)) : (vec[i-1]));
     };
 
-    int getlevelcount()
+    int get_layercount()
     {
       return vec.size()+1;
     };
@@ -47,10 +47,10 @@ class imp_cont : public T
       imp_cont<vector<int>> a;
       a.push_back(0);
       a.push_back(1);
-      a.getlevel(1).push_back(2);
+      a.get_layer(1).push_back(2);
       assert(a[0] == 0);
       assert(a[1] == 1);
-      assert(a.getlevel(1)[0] == 2);
+      assert(a.get_layer(1)[0] == 2);
     }
 };
 
@@ -62,7 +62,7 @@ class imp_contA : public imp_cont<T>
 
     T& operator[](int i)
     {
-      return this->getlevel(i);
+      return this->get_layer(i);
     };
 };
 

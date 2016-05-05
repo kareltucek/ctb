@@ -13,24 +13,24 @@
 #partition 0:
 #ldi1
 #ldi2
-#ldi1 -> add1;
-#ldi2 -> add1;
 #ldi1 -> mul1;
 #ldi2 -> mul1;
+#ldi1 -> add1;
+#ldi2 -> add1;
 #mul1 -> add2;
 #add1 -> add2;
 #add2 -> buff_buff_st_1;
 #add2 -> generic_cf_node_buff_st_4;
 #add2 -> generic_cf_node_buff_st_5;
 #partition 1:
-#ldb
-#ldb -> merge_merge_stbuff_3;
 #buff_buff_ld_1
 #generic_cf_node_buff_ld_4
 #buff_buff_ld_1 -> add3;
 #generic_cf_node_buff_ld_4 -> add3;
+#ldb
 #ldb -> split_split_st_2;
 #add3 -> split_split_st_2;
+#ldb -> merge_merge_stbuff_3;
 #partition 2:
 #split_split_ldtrue_2
 #split_split_ldtrue_2 -> merge_merge_sttrue_3;

@@ -10,7 +10,7 @@ buffer_test_preprocess :
 	gcc -E fbuffer_test.h ${INCLUDE} | sed 's/case/\n&/g' | grep -v '^#' > fbuffer_test_preprocessed.h
 
 macrotest : main.cpp buffer_test_preprocess
-	g++ -ggdb main.cpp -o macrotest ${INCLUDE}
+	${CXX} -ggdb main.cpp -o macrotest ${INCLUDE}
 
 clean :
 	-rm macrotest buffer_test_preprocessed.h

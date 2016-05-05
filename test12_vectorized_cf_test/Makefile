@@ -1,7 +1,5 @@
 FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++14  -g -gdwarf-2 -O0 -Wno-deprecated-increment-bool
 
-CXX=g++
-
 all : make_anyway output.preprocessed.cpp graph.out graph_cf.out graph.out.png graph_cf.out.png run
 
 make_anyway :

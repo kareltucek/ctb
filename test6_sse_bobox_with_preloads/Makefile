@@ -1,7 +1,5 @@
 FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++14  -g -gdwarf-2 -O0 -Wno-deprecated-increment-bool
 
-CXX=g++
-
 all : output.h test run
 
 output.h : ../ctb ../sse_set/C_table.csv graph.xml

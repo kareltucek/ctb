@@ -96,10 +96,10 @@ buffer ld	 instruction	${type,dtype->INT,int,BOOL,bool}		BUFF_LD_$type	input	1	1
 	emptyind:   $$$$$$$${BUFFER_EMPTY($$ioindex)} ||\
 	default: $$type $$name; $$$$$$$${BUFFER_PEEK_SIMPLE($$buffersize,1,$$ioindex,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};
 
-#note	type	output type	input types	op id	flags	name	transformer	args
-split	expansion	INT,INT	BOOL,INT	SPLIT_INT		split	cf	SPLIT_ST_INT,SPLIT_LDL_INT,SPLIT_LDR_INT
-split	expansion	INT	BOOL,INT,INT	MERGE_INT		merge	cf	MERGE_LD_INT,MERGE_PROC_INT,MERGE_STL_INT,MERGE_STR_INT,BUFF_ST_BOOL
-split	expansion	${type->INT,BOOL}	$type	BUFF_$type		buffer	cf	BUFF_ST_$type, BUFF_LD_$type
+#note	type	output type	input types	op id	name	transformer	args
+split	expansion	INT,INT	BOOL,INT	SPLIT_INT	split	cf	SPLIT_ST_INT,SPLIT_LDL_INT,SPLIT_LDR_INT
+split	expansion	INT	BOOL,INT,INT	MERGE_INT	merge	cf	MERGE_LD_INT,MERGE_PROC_INT,MERGE_STL_INT,MERGE_STR_INT,BUFF_ST_BOOL
+split	expansion	${type->INT,BOOL}	$type	BUFF_$type	buffer	cf	BUFF_ST_$type, BUFF_LD_$type
 
 #note	type	type id	bitwidth	width	code
 	type_version	FLOAT	32	1	float

@@ -82,7 +82,7 @@ namespace ctb
     return res;
   }
 
-  map<string,string> splitparams(string str, char d = ',', char d2 = '=', bool trim_ = true)
+  map<string,string> split_params(string str, char d = ',', char d2 = '=', bool trim_ = true)
   {
     map<string, string> res;
     vector<string> pairs = split(str, d, true);

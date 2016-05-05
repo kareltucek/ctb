@@ -127,10 +127,10 @@ ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,
 		BUFF_LD_$type	input	$width	$width			0\
 	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$buffersize,$width,$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR($$ioindex)};
 
-#note	type	output type	input types	op id	flags	name	transformer	args
-split	expansion	int32_t,int32_t	bool,int32_t	SPLIT_int32_t		split	cf	SPLIT_ST_int32_t,SPLIT_LDL_int32_t,SPLIT_LDR_int32_t
-split	expansion	int32_t	bool,int32_t,int32_t	MERGE_int32_t		merge	cf	MERGE_LD_int32_t,MERGE_PROC_int32_t,MERGE_STL_int32_t,MERGE_STR_int32_t,BUFF_ST_bool
-split	expansion	${type->int32_t,bool}	$type	BUFF_$type		buffer	cf	BUFF_ST_$type, BUFF_LD_$type
+#note	type	output type	input types	op id	name	transformer	args
+split	expansion	int32_t,int32_t	bool,int32_t	SPLIT_int32_t	split	cf	SPLIT_ST_int32_t,SPLIT_LDL_int32_t,SPLIT_LDR_int32_t
+split	expansion	int32_t	bool,int32_t,int32_t	MERGE_int32_t	merge	cf	MERGE_LD_int32_t,MERGE_PROC_int32_t,MERGE_STL_int32_t,MERGE_STR_int32_t,BUFF_ST_bool
+split	expansion	${type->int32_t,bool}	$type	BUFF_$type	buffer	cf	BUFF_ST_$type, BUFF_LD_$type
 
 #note	type	type id	bitwidth	width	code
 	type_version	FLOAT	32	1	float

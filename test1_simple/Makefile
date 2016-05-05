@@ -1,7 +1,5 @@
 FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O1
 
-CXX=g++
-
 
 all : test run
 

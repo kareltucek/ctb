@@ -1,11 +1,11 @@
 loadinstab csv instab.csv
 loadgraph xml graph.xml
 #visualize
-exportgraph csv graph.out
+exportgraph dot graph.out
 #transform cf show
 transform cf show
 visualize
-exportgraph csv graph_cf.out
+exportgraph dot graph_cf.out
 generate cf output.h vectordbg
 
 

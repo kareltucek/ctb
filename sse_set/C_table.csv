@@ -86,7 +86,7 @@ sse_arithetic_std	instruction	${t,c,tag->int,epi,sse}${w,n->32,2,16,2,8,2}_t	$t$
 sse_arithetic_std	instruction	${t,c,tag->int,epi,sse}${w,n->16,4}_t	$t$w_t,$t$w_t	${name,op->MUL,mullo}_$t$w_t		$n	$n	_mm_$op_$c$w($$arg1,$$arg2)	$tag	5		
 sse_arithetic_std	instruction	${t,c,n->float,ps,4,float,ps,2,double,pd,2}	$t,$t	${name,op->ADD,add,SUB,sub,MUL,mul,DIV,div}_$t		$n	$n	_mm_$op_$c($$arg1,$$arg2)	sse,universal	10		
 sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	${name,op->AND,and,OR,or,XOR,xor}_$t$w_t		$n	$n	_mm_$op_si128($$arg1,$$arg2)	sse,universal	5		
-sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t,$t$w_t	NOT_$t$w_t		$n	$n	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)	sse,universal	5		
+sse_arithmetic_bin	instruction	${t,c->int,epi,uint,epi}${w,n->64,2,32,4,32,2,16,8,16,4,16,2,8,16,8,8,8,4,8,2}_t	$t$w_t	NOT_$t$w_t		$n	$n	_mm_xor_si128(_mm_set1_epi32(0xFFFFFFFF),$$arg1)	sse,universal	5		
 sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->float,ps}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)	sse,universal	10		
 sse_conversions	instruction	${t,c->float,ps}	${u,d->uint32_t,epi32,int32_t,epi32}	CVRT_$u_$t		${w->2,4}	$w	_mm_cvt$d_$c($$arg1)	sse,universal	10		
 sse_conversions	instruction	${t,c->int32_t,epi32,uint32_t,epi32}	${u,d->double,pd}	CVRT_$u_$t		2	2	_mm_shuffle_epi32(_mm_cvt$d_$c($$arg1),0x58)	sse,universal	10		

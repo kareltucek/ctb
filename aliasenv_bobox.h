@@ -52,8 +52,8 @@ namespace ctb
 
     aliasenv_generator::init();
 
-    ADD("input", "data_in_$ioindex[pos_in_$ioindex+j]");
-    ADD("output", "data_out_$ioindex[pos_out_$ioindex+j]");
+    ADD("input", "data_in_$ioindex[pos_in_$ioindex+j+$iindex]");
+    ADD("output", "data_out_$ioindex[pos_out_$ioindex+j+$iindex]");
 
     ADD("fdeclin",  writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/bobox_decl_in.h")));
     ADD("fdeclout", writer<aliasenv_generator>::from_file(string().append(exec_path).append("templates/bobox_decl_out.h")));

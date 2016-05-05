@@ -16,7 +16,7 @@ namespace ctb
    *
    * First thing an aliasenv generally provides is an alias mechanism, which serves as a plugin to the writer class (which takes care of composing all strings together). 
    *
-   * Second thing defined in an aliasenv is a generation method. This one is supposed to direct the topmost level of code generation, which is taking care of composition of code templates. It is provided an instance of a generator for generation of the actual code realization.
+   * Second thing defined in an aliasenv is a generation method. This one is supposed to direct the topmost layer of code generation, which is taking care of composition of code templates. It is provided an instance of a generator for generation of the actual code realization.
    *
    * More generally aliasenv defines only some preprocessor-like nevironment which may be used for import and export actions. See usages of aliasenv_maker.
    * 
@@ -84,10 +84,10 @@ namespace ctb
           return itr2->second;
         }
       }
-      //if(check_pos_alias("arg", a, 7))
-      //  return alias(a,s,n);
-      //if(check_pos_alias("name", a, 8))
-      //  return alias(a,s,n);
+      if(check_pos_alias("arg", a, 8)) //join case of custom code
+        return alias(a,s,n);
+      if(check_pos_alias("name", a, 9)) //split case of custom_code conversion
+        return alias(a,s,n);
 
       if(s != NULL)
         *s = false;

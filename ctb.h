@@ -15,6 +15,7 @@
 #include "aliasenv_simu.h"
 #include "aliasenv_cf.h"
 #include "cf_transform.h"
+#include "loader_dot.h"
 
 namespace ctb
 {
@@ -95,7 +96,7 @@ namespace ctb
   template <class T, class IT>
     class ctb
     {
-      private:
+      protected:
         typedef generator<T,IT> generator_t;
         IT instab;
         generator_t mygenerator;
@@ -176,6 +177,7 @@ namespace ctb
       register_aliasenv<aliasenv_cf>();
       register_loader<csv_loader>();
       register_loader<xml_loader>();
+      register_loader<dot_loader>();
       register_transform<cf_transform>();
     }
 
@@ -651,7 +653,7 @@ start:;
       if(args.size() != 3)
         error( string("invalid number of arguments, expected ") + ::ctb::to_string(3) + ", got " + ::ctb::to_string(args.size()), false);
       if(hash_loader.find(args[1]) == hash_loader.end())
-        error( string("loader not found (did you register it in ctb.h?): ", false).append(args[1]));
+        error( string("loader not found (did you register it in ctb.h?): ") + string(args[1]));
       F file;
       openstream(file, args[2], input);
       get<I>(hash_loader[args[1]])(file);

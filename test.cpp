@@ -12,7 +12,7 @@ int main(int c, char** cc)
 
   try
   {
-    multicont_default::self_test();
+    imp_cont_default::self_test();
     cartesian_multiplier_default::self_test(); 
     graph_basic_default::self_test();
     graph_factor_default::self_test();

@@ -9,8 +9,8 @@ SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir6 testdir7 testdir10 testdir11 testdir12 testdir13
-fulltest : all testdir4
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir7 testdir10 testdir11 testdir12 testdir13
+fulltest : all testdir6 testdir4
 
 test : test.cpp $(SOURCES)
 	${CXX} ${FLAGS} test.cpp -l tinyxml2 -o test

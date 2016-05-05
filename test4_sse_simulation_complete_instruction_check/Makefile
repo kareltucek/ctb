@@ -2,8 +2,6 @@ FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wn
 #FLAGS= -DTESTOVANI -O0 
 
 
-CXX=clang++
-
 all : ../ctb sse test run
 
 

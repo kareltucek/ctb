@@ -19,20 +19,20 @@
       </operation>
    </instruction_list>
    <type_list Name="type_list">
-      <type typeid="INT">
+      <type type_id="INT">
          <type_version width="1" code="int"></type_version>
          <type_version width="2" code="__m128i"></type_version>
          <type_version width="4" code="__m128i"></type_version>
          <type_conversion width_out="4" code1="_mm_unpacklo_epi32($arg1,$arg2)" width_in="2"></type_conversion>
          <type_conversion width_out="2" code1="$arg1" width_in="4" code2="_mm_srli_si128($arg1,4)"></type_conversion>
       </type>
-      <type typeid="FLOAT">
+      <type type_id="FLOAT">
          <type_version width="1" code="float"></type_version>
          <type_version width="4" code="__m128"></type_version>
          <type_conversion width_out="4" code1="_mm_movelh_ps($arg1, $arg2)" width_in="2"></type_conversion>
          <type_version width="2" code="__m128"></type_version>
       </type>
-      <type typeid="VOID"></type>
+      <type type_id="VOID"></type>
    </type_list>
    <disabled_list Name="type_list">
       <type_conversion width_out="2" width_in="4" code_custom="$type $name1 = (__m128i)_mm_movelh_ps((__m128)$arg1, (__m128)$arg1); $type $name2 = $arg1;"></type_conversion>

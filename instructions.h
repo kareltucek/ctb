@@ -83,7 +83,7 @@ namespace ctb
    * Selection of instructions is driven by a serie of tag handlers* organized into layers. Curently there are two layers:
    * - 'select' layer - defines whether an instruction version can be selected in the run
    * - 'print' layer - defines whether code for an instruction should be printed or not
-   * These allow higher level layer of a program to generate only a part of a graph depending on tags of instructions. 
+   * These allow higher layer layer of a program to generate only a part of a graph depending on tags of instructions. 
    *
    * Every layer can contain an arbitrary tag handlers. These are intersected separately for each layer and the result is cached into the instruction version data structure. (this happens in the update_tags() call). 
    *
@@ -142,8 +142,8 @@ namespace ctb
            /*EAPI*/vector<conversion> conversions;
            /*EAPI*/tid_t tid;
            /*EAPI*/int bitwidth;
-           /*IAPI*/void addcode_type(int w, const string& c,const string&) ;
-           /*IAPI*/void addcode_conversion(int from, int to, const string& c1, const string& c2,const string& cc,const string& cg, const string& n, const string& t,int r);
+           /*IAPI*/void add_code_type(int w, const string& c,const string&) ;
+           /*IAPI*/void add_code_conversion(int from, int to, const string& c1, const string& c2,const string& cc,const string& cg, const string& n, const string& t,int r);
            mutable graph_distance_t distances; //technically taken just a cache
        }
        ;
@@ -154,6 +154,7 @@ namespace ctb
          const vector<opid_t> arguments;
          const string note;
          const vector<tid_t> in_types; //for possible type inference
+         const vector<tid_t> out_types; //for possible type inference
        };
        MAKE(expansion);
        class operation //holds general operation traits
@@ -195,8 +196,8 @@ namespace ctb
            /*EAPI*/vector<typename T::tid_t> in_types;
            /*EAPI*/typename T::flag_t flags; 
            /*EAPI*/typename T::opid_t opid;
-           /*IAPI*/void addcode(int wi, int wo, const string& c, const stringlist& cc, const string&,const string&, int r);
-           /*IAPI*/void addexpansion(const string&, const string&, const vector<typename T::opid_t>& args, const string&, vector<typename T::tid_t>);
+           /*IAPI*/void add_code(int wi, int wo, const string& c, const stringlist& cc, const string&,const string&, int r);
+           /*IAPI*/void add_expansion(const string&, const string&, const vector<typename T::opid_t>& args, const string&, vector<typename T::tid_t>, vector<typename T::tid_t>);
            /*API*/bool is(typename T::flag_t f) const ;
            /*API*/int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;
            /*API*//*DEPRECATED*///void imbue_width(int w)const;
@@ -235,7 +236,8 @@ namespace ctb
        /*API*/ void update_tags() const;
        /*API*/ const operation_t& dec(typename T::opid_t type) const ;
        /*API*/ const type_t& dectype(typename T::tid_t type) const ;
-       /*IAPI*/ operation_t& addoperation(typename T::opid_t op, typename T::tid_t t, const vector<typename T::tid_t>&it, typename T::flag_t f) ;
+       /*IAPI*/ operation_t& add_operation(typename T::opid_t op, typename T::tid_t t, const vector<typename T::tid_t>&it, typename T::flag_t f) ;
+       /*IAPI*/ void add_expansion(typename T::opid_t id, const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types, vector<tid_t> types_out);
        /*IAPI*/ type_t& addtype(typename T::tid_t t, int bitwidth = 0) ;
        void clear(bool tags = false) ;
        bool empty();
@@ -280,19 +282,19 @@ namespace ctb
 
 
    template <class T>
-     void instruction_table<T>::type::addcode_type(int w, const string& c,const string& n)
+     void instruction_table<T>::type::add_code_type(int w, const string& c,const string& n)
      {
        versions.push_back(make_type_version({w, c,n}));
-       distances.addvert(w, false, false);
+       distances.add_vert(w, false, false);
      }
 
    template <class T>
-     void instruction_table<T>::type::addcode_conversion(int in, int out, const string& c1,const string& c2,const string& cc,const string& cg, const string& n,const string& t,int r)
+     void instruction_table<T>::type::add_code_conversion(int in, int out, const string& c1,const string& c2,const string& cc,const string& cg, const string& n,const string& t,int r)
      {
        bool s = parent->is_tag_satisfactory(t);
        conversions.push_back(make_conversion({in, out, c1, c2,cc,cg,n,t,r, s}));
-       distances.addvert(in, false, false);
-       distances.addvert(out, false, false);
+       distances.add_vert(in, false, false);
+       distances.add_vert(out, false, false);
        if(s)
          distances.addedge(in,out);
      }
@@ -311,14 +313,21 @@ namespace ctb
      }
 
    template <class T>
-     void instruction_table<T>::operation::addexpansion(const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types)
+     void instruction_table<T>::add_expansion(typename T::opid_t id, const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types, vector<tid_t> types_out)
      {
-       expansions.push_back(make_expansion({n,t,a,m,types}));
-       parent->exptab[t][n].push_back(make_expansion({n,t,a,m,types}));
+       auto& op = add_operation(id, "", types, fEXPANSION);
+       op.add_expansion(n, t, a, m, types, types_out);
      }
 
    template <class T>
-     void instruction_table<T>::operation::addcode(int wi, int wo, const string& c, const stringlist& cc, const string& n,const string& t,int r)
+     void instruction_table<T>::operation::add_expansion(const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types, vector<tid_t> types_out)
+     {
+       expansions.push_back(make_expansion({n,t,a,m,types_out}));
+       parent->exptab[t][n].push_back(make_expansion({n,t,a,m,types,types_out}));
+     }
+
+   template <class T>
+     void instruction_table<T>::operation::add_code(int wi, int wo, const string& c, const stringlist& cc, const string& n,const string& t,int r)
      {
        ccode_cont_t ccode_split;
        for(const string& code: cc)
@@ -449,10 +458,19 @@ namespace ctb
      }
 
    template <class T>
-     typename instruction_table<T>::operation_t& instruction_table<T>::addoperation(typename T::opid_t op, typename T::tid_t t, const vector<typename T::tid_t>& it, typename T::flag_t f)
+     typename instruction_table<T>::operation_t& instruction_table<T>::add_operation(typename T::opid_t op, typename T::tid_t t, const vector<typename T::tid_t>& it, typename T::flag_t f)
      {
        if(instab.find(op) != instab.end())
-         return *instab.find(op)->second;
+       {
+         auto& myop = *instab.find(op)->second;
+         if(myop.flags != f) 
+           error(string("operation '") + op + "' already present with different characteristics! flags " + ctb::to_string(f) + " (new) != " + ctb::to_string(myop.flags) + " (present)" );
+         if(!myop.is(fEXPANSION) && myop.out_type != t)
+           error(string("operation '") + op + "' already present with different characteristics! out type does not match " + ctb::to_string(t) + " (new) != " + ctb::to_string(myop.out_type) + " (present)");
+         if(!myop.is(fEXPANSION) && myop.in_types != it)
+           error(string("operation '") + op + "' already present with different characteristics! in type does not match " + ctb::l_to_string(it) + " (new) != " + ctb::l_to_string(myop.in_types) + " (present)");
+         return myop;
+       }
        auto itr = typetab.find(t);
        if(itr == typetab.end())
          error(string("type '").append(t).append("' not found; at: '").append(op).append("' while constructing graph"));

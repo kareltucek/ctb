@@ -50,7 +50,7 @@ namespace ctb
 
   enum flags 
   {
-    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4
+    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4, fEXPANSION = 8
   } ;
 
   template <typename ... T> void pass(T...)
@@ -114,10 +114,28 @@ namespace ctb
     return std::string(c);
   }
 
+  template <typename L>
+  string l_to_string(const L& cont)
+  {
+    string buff;
+    for(const auto& s : cont)
+    {
+      if(!buff.empty())
+        buff = buff+",";
+      buff = buff+ctb::to_string(s);
+    }
+
+    return buff;
+  }
+
   int stoi(string str)
   {
     //may want some evaluation here later...
     int result = 0;
+    if(str == "true" || str == "True" || str == "TRUE")
+      return 1;
+    if(str == "false" || str == "False" || str == "FALSE")
+      return 0;
     try
     {
       result = std::stoi(str);

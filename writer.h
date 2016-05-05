@@ -43,7 +43,7 @@ namespace ctb
    *   - dExpand - will take all $ and transform them into $$
    *   - dIgnore - will ignore all $ and $$
    *
-   *   Thus typical combination will be dLet+dEat for import operations and dLet+dExpand or dIgnore+dExpand for export (import and export of text which contains 'deeper' level expansions - e.g. for preprocessing of csv files which already contain dollar records).
+   *   Thus typical combination will be dLet+dEat for import operations and dLet+dExpand or dIgnore+dExpand for export (import and export of text which contains 'deeper' layer expansions - e.g. for preprocessing of csv files which already contain dollar records).
    *
    * the C parameter
    * ---------------
@@ -130,8 +130,8 @@ namespace ctb
        template <dollar_mode dollars, typename ... Types> void preprocessline(string format, Types ... args);
        template <dollar_mode dollars, typename J, typename ... Types> void shake(J itr, J itre, const string& line, Types ... args);
        void trim() ;
-       template  void add(string&& str, bool terminal) ;
-       template  void process(int& pos, const string& format) ;
+       void add(string&& str, bool terminal) ;
+       void process(int& pos, const string& format) ;
        void printnth(int i);
        //printnth is deprecated
        template <typename ... Types> void printnth(int i, const string& str, const Types&... params) ;
@@ -695,13 +695,13 @@ namespace ctb
      template<dollar_mode dollars, typename ... Types> writer<M,I,O,C>& writer<M,I,O,C>::print_cartesian(const string& format, const Types&... params)  
      {
 #ifdef TESTOVANI
-       char* err = format.c_str();
+       const char*  err = format.c_str();
 #endif
        try
        {
          if(C)
          {
-           if(aliasenv_cart::depth() > 10)
+           if(aliasenv_cart::depth() > 100)
              warning(string("writer has ")+ ctb::to_string(aliasenv_cart::depth())+" nested instances, run with -w to break and see the stack of printer");
            aliasenv_cart::push();
            preprocessline<dollars>(format, params...);

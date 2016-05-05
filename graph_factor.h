@@ -95,11 +95,12 @@ namespace ctb
   template <class T, class I, bool directed>
     void graph_factor<T,I,directed>::dump (ostream& o, function<string(node_t*)> colour_callback, function<string(node_t*)> label)
     {
+      std::cout << "dumping graph!" << endl;
       bool printlabels = false;
       auto& graph = *this;
 
       string prefix = "#";
-      int level = 1;
+      int layer = 1;
       bool showempty = true;
 
       //output edges of factor graph
@@ -116,11 +117,11 @@ namespace ctb
       { 
         if(n->in.empty() && showempty)
           o << prefix <<  n->id << endl;
-        for( auto e : n->in.getlevel(level) ) 
+        for( auto e : n->in.get_layer(layer) ) 
         {
           o << prefix << e->from->id << " -> " << e->to->id;
           if(printlabels)
-            o << " [label=\"" << e->order << "\",taillabel=\""+ ctb::to_string( e->frompos ) +"\",headlabel=\""+ ctb::to_string( e->topos ) +"\"];" << endl;
+            o << " [label=\"" << e->order << "\",taillabel=\""+ ctb::to_string( e->from_pos ) +"\",headlabel=\""+ ctb::to_string( e->to_pos ) +"\"];" << endl;
           else
             o << ";" << endl;
         }
@@ -144,7 +145,7 @@ namespace ctb
         o << n->id << " [color=\"" << colour_callback(n) << "\",label=\"" + (ctb::to_string(n->id) + " " +label(n)) + "\"];" << endl;
       };
 
-      level = 0;
+      layer = 0;
       showempty = true;
 
       //print comments
@@ -154,21 +155,21 @@ namespace ctb
       o << prefix << "partitions are:" << endl;
       graph.factor.crawl_topological(g); 
 
-      level = 1;
+      layer = 1;
       o << prefix << "factor invisible edges are" << endl;
       graph.crawl_topological(h);
 
       //print actual graph
       prefix = "";
       o << "digraph G {" << endl;
-      level = 2;
+      layer = 2;
       o << "edge [style=dotted,arrowhead=odot];" << endl;
       graph.crawl_topological(h);
-      level = 1;
+      layer = 1;
       o << "edge [style=dotted,arrowhead=normal];" << endl;
       graph.crawl_topological(h);
       o << "edge [style=solid];" << endl;
-      level = 0;
+      layer = 0;
       graph.crawl_topological(h);
       //o << "edge [color = red];" << endl;
       graph.factor.crawl_topological(f);
@@ -184,10 +185,10 @@ namespace ctb
       cout << "testing factor graph" << endl;
       typedef graph_factor_default g_t;
       g_t g;
-      g.addvert(1, true, false);
-      g.addvert(2, false, false);
-      g.addvert(3, false, true);
-      g.addvert(4, false, true);
+      g.add_vert(1, true, false);
+      g.add_vert(2, false, false);
+      g.add_vert(3, false, true);
+      g.add_vert(4, false, true);
       g.addedge(1,2);
       g.addedge(3,4);
       g.factorize();
@@ -212,9 +213,9 @@ namespace ctb
       factor.clear();
       graph_basic<T,I,directed>::update_factor(); //will assign class ids in the simple graph
       for(int i = 0; i < this->classcount; ++i)
-        factor.addvert(i, false, false);
+        factor.add_vert(i, false, false);
       this->crawl_topological([&](node_t* n){ this->factor.verts.find(n->classid)->second->data.vertices.insert(n);  });
-      this->crawl_topological([&](node_t* n){ for(auto i : n->in.getlevel(1)) { this->add_factor_edge(i->from,n,i->order); } });
+      this->crawl_topological([&](node_t* n){ for(auto i : n->in.get_layer(1)) { this->add_factor_edge(i->from,n,i->order); } });
       set<int> ins;
       set<int> outs;
 

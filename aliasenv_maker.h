@@ -19,7 +19,7 @@ namespace ctb
    *
    * - T = tag (needed for distinguishing *static* alias tables)
    * - L = language
-   * - R = report when not found (when handling strings on meta level we may want misses
+   * - R = report when not found (when handling strings on meta layer we may want misses
    * */
 
   template < typename T, typename L, bool R = true, typename F = aliasenv_empty>

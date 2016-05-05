@@ -36,7 +36,7 @@ namespace ctb
    *        output (flag boolean) - -||-
    *        debug (flag boolean) - debug operations have special semantics, see instructions.h doc
    *        opid (identifier of logical operation (such as 'integer addition' - e.g. ADDI)
-   *        out_type (typeid of returned type)
+   *        out_type (type_id of returned type)
    *        in_types (list of parameter types; note that this serves mainly for generation of test cases - generation itself is weakly typed)
    *        instruction
    *          width_in (width of vector this instruction accepts (e.g. 4 integers))
@@ -49,7 +49,7 @@ namespace ctb
    *          rating (if more than one instruction fits, the one with higher rating isused)
    *    type_list
    *      type
-   *        typeid (-||-)
+   *        type_id (-||-)
    *        type_version
    *          width (width of vector this type represents - e.g. for int[4] this is 4)
    *          bitwidth (hardware bitwidth - will allo limitting the vector width based on bitwidth (otherwise a 128bit vector of bools would iniciate creation of 64 double registers in single instruction)
@@ -175,7 +175,7 @@ namespace ctb
       XMLNode * graphnode = xmlDoc.FirstChildElement("graph_list")->FirstChildElement("graph");
       for(XMLElement * itr = graphnode->FirstChildElement("vertex"); itr != NULL; itr = itr->NextSiblingElement("vertex"))
       {
-        graph.addvert( getstr(itr, "vid"), getstr(itr, "opid"), splitparams(getanystr(itr, "params")));
+        graph.add_vert( getstr(itr, "vid"), getstr(itr, "opid"), split_params(getanystr(itr, "params")));
       }
       for(XMLElement * itr = graphnode->FirstChildElement("edge"); itr != NULL; itr = itr->NextSiblingElement("edge"))
       {
@@ -193,33 +193,57 @@ namespace ctb
       XMLCheckResult(xmlDoc.Parse(xml.c_str()));
       XMLNode * root = xmlDoc.FirstChildElement("root");
       XMLNode * inslist = root->FirstChildElement("instruction_list");
+      XMLNode * explist = root->FirstChildElement("expansion_list");
       XMLNode * typelist = root->FirstChildElement("type_list");
-      for(XMLElement * itr = typelist->FirstChildElement("type"); itr != NULL; itr = itr->NextSiblingElement("type"))
+      //TYPES
+      if(typelist != NULL)
       {
-        typename IT::type_t& t = instab.addtype( getstr(itr, "typeid"), getanyint(itr,"bitwidth",32));
-        for(XMLElement * itr2 = itr->FirstChildElement("type_version"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_version"))
-          t.addcode_type(getint(itr2, "width"), getstr(itr2, "code"),getanystr(itr2,"note"));
-        for(XMLElement * itr2 = itr->FirstChildElement("type_conversion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_conversion"))
-          t.addcode_conversion(getint(itr2, "width_in"), getint(itr2, "width_out"), getanystr(itr2, "code1"), getanystr(itr2, "code2"),getanystr(itr2,"code_custom"),getanystr(itr2,"code_generic"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
-      }
-      for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
-      {
-        typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
-        auto in_types = splitlist(getanystr(itr,"in_types"));
-        typename IT::operation_t& t = instab.addoperation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
-
-        for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
+        for(XMLElement * itr = typelist->FirstChildElement("type"); itr != NULL; itr = itr->NextSiblingElement("type"))
         {
-          stringlist ccode;
-          if(hasval(itr2, "code_custom"))
-            ccode.push_back(getstr(itr2, "code_custom"));
-          for(XMLElement * itr3 = itr->FirstChildElement("code_custom"); itr3 != NULL; itr3 = itr3->NextSiblingElement("code_custom"))
-            ccode.push_back(itr3->GetText());
-          t.addcode(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),ccode,getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+          typename IT::type_t& t = instab.addtype( getstr(itr, "type_id"), getanyint(itr,"bitwidth",32));
+          for(XMLElement * itr2 = itr->FirstChildElement("type_version"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_version"))
+            t.add_code_type(getint(itr2, "width"), getstr(itr2, "code"),getanystr(itr2,"note"));
+          for(XMLElement * itr2 = itr->FirstChildElement("type_conversion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_conversion"))
+            t.add_code_conversion(getint(itr2, "width_in"), getint(itr2, "width_out"), getanystr(itr2, "code1"), getanystr(itr2, "code2"),getanystr(itr2,"code_custom"),getanystr(itr2,"code_generic"),getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
         }
+      }
+      else
+        warn("no type list present!");
 
-        for(XMLElement * itr2 = itr->FirstChildElement("expansion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("expansion"))
-          t.addexpansion(getstr(itr2, "name"),getstr(itr2, "transformer_name"), splitlist(getstr(itr2, "arguments")), getanystr(itr2,"note"), in_types);
+      //OPERATIONS
+      if(inslist != NULL)
+      {
+        for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
+        {
+          typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
+          auto in_types = splitlist(getanystr(itr,"in_types"));
+          typename IT::operation_t& t = instab.add_operation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
+
+          for(XMLElement * itr2 = itr->FirstChildElement("instruction"); itr2 != NULL; itr2 = itr2->NextSiblingElement("instruction"))
+          {
+            stringlist ccode;
+            if(hasval(itr2, "code_custom"))
+              ccode.push_back(getstr(itr2, "code_custom"));
+            for(XMLElement * itr3 = itr->FirstChildElement("code_custom"); itr3 != NULL; itr3 = itr3->NextSiblingElement("code_custom"))
+              ccode.push_back(itr3->GetText());
+            t.add_code(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),ccode,getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+          }
+        }
+      }
+      else
+        warn("no type list present!");
+
+      //EXPANSIONS
+      if(explist != NULL)
+      {
+        for(XMLElement * itr = explist->FirstChildElement("expansion"); itr != NULL; itr = itr->NextSiblingElement("expansion"))
+        {
+          typename T::flag_t f =  fEXPANSION;
+          auto in_types = splitlist(getanystr(itr,"in_types"));
+          auto out_types = splitlist(getanystr(itr,"out_types"));
+          typename IT::operation_t& t = instab.add_operation( getstr(itr, "opid"), "", in_types, f);
+          t.add_expansion(getstr(itr, "name"),getstr(itr, "transformer_name"), splitlist(getstr(itr, "arguments")), getanystr(itr,"note"), in_types, out_types);
+        }
       }
     }
 

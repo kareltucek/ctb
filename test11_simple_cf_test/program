@@ -1,10 +1,10 @@
 loadinstab csv instab.csv
 loadgraph xml graph.xml
-exportgraph csv graph.out
+exportgraph dot graph.out
 transform cf expandonly
-exportgraph csv graph_intermediate_cf.out
+exportgraph dot graph_intermediate_cf.out
 transform cf
-exportgraph csv graph_cf.out
+exportgraph dot graph_cf.out
 generate cf output.cpp  simpledbg
 preprocess cfmacros output.cpp output.preprocessed0.cpp
 preprocess cfmacros output.preprocessed0.cpp output.preprocessed.cpp

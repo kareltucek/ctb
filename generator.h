@@ -7,6 +7,7 @@
 #include "instructions.h"
 #include "aliasenv_maker.h"
 #include "aliasenv_generator.h"
+#include <functional>
 
 namespace ctb
 {
@@ -30,6 +31,7 @@ namespace ctb
       public:
         typedef graph_general<data_t, typename T::vid_t, true> graph_t;
         typedef typename graph_t::node_t node_t;
+        typedef typename graph_t::edge_t edge_t;
         typedef typename T::opid_t opid_t;
         typedef typename T::opid_t id_t;
         typedef typename T::vid_t vid_t;
@@ -63,6 +65,7 @@ namespace ctb
             data_t( node_t* me, const typename IT::operation_t* o, id_t opi, const map<string,string>& params = {});
             template <class W> void generate(graph_t& parent, int granularity, imp_contB<W>& w,  imp_contB<output_options>& , bool c);
             string get_param(const string&) const;
+            void set_param(const string&, const string&);
             vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
 
@@ -75,25 +78,72 @@ namespace ctb
         generator( IT& i);
         void set_instab( IT& i);
 
-        template <typename...L> typename graph_t::node_t* addvert(vid_t v, id_t op, L... p) ;
-        void addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos) ;
+        //graph API
+        template <typename...L> typename graph_t::node_t* add_vert(vid_t v, id_t op, L... p) ;
+        template <typename J> void rm_vert(J v);
+        template <typename J, typename K> void addedge(J aid, K bid, int b_argpos, int a_argpos) ;
+        template <typename J, typename K> void connect_as(J v, K as, bool inputs = true, bool outputs = true);
+        template <typename J> node_t* get_vert(J v)  ;
+        void rmedge(edge_t* e);
+        template <bool Inverted = false> void foreach(function<void(node_t*)> f); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
 
+
+        //generator related API
         template <class W> void generate(int granularity, imp_contB<W>& w,  imp_contB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
         template <class W> void generate_partition(int partition, int granularity, imp_contB<W>& w,  imp_contB<output_options>& wd, shared_ptr<taghandler_base> p = NULL, shared_ptr<taghandler_base> q = NULL, shared_ptr<taghandler_base> s = NULL) ; /**TODO document this!!!*/
         int get_broadest(int upperbound = 10000000) ;
+        imp_contB<output_options> option_struct();
+        int partition_count();
 
+        //ctb related API
         void set_compiletest(bool);
-
         template<template <typename ...> class L, typename...P> void transform(P...params) ;
 
-        imp_contB<output_options> option_struct();
 
+        //others
         void clear();
         void reset();
         void update(); /** In case instruction table is reloaded the operation pointers are no longer valid. This function updates them.*/
 
-        int partition_count();
     };
+
+  template <class T, class IT>
+    template <bool Inverted>
+    void generator<T,IT>::foreach(function<void(node_t*)> f)  
+    {
+      graph.crawl_topological<Inverted>(f);
+    }
+
+
+  template <class T, class IT>
+    template <typename J>
+    typename generator<T,IT>::node_t* generator<T,IT>::get_vert(J v)  
+    {
+      return graph.get_vert(v);
+    }
+
+
+  template <class T, class IT>
+    template <typename J, typename K>
+    void generator<T,IT>::connect_as(J v, K as, bool inputs, bool outputs)  
+    {
+      graph.connect_as(v, as, inputs, outputs);
+    }
+
+  template <class T, class IT>
+    template <typename J>
+    void generator<T,IT>::rm_vert(J vert)  
+    {
+      graph.rm_vert(vert);
+    }
+
+
+  template <class T, class IT>
+    template <typename J, typename K>
+    void generator<T,IT>::addedge(J aid, K bid, int b_argpos, int a_argpos)  
+    {
+      graph.addedge(aid, bid, b_argpos, a_argpos);
+    }
 
   typedef generator<traits, instruction_table_default> generator_default;
 
@@ -154,7 +204,7 @@ namespace ctb
     }
 
   template <class T, class IT>
-    template <typename...L> typename generator<T,IT>::graph_t::node_t* generator<T,IT>::addvert(vid_t v, id_t op, L... p)  
+    template <typename...L> typename generator<T,IT>::graph_t::node_t* generator<T,IT>::add_vert(vid_t v, id_t op, L... p)  
     {
       const op_t* ptr;
       try
@@ -162,7 +212,7 @@ namespace ctb
         ptr = &instab.dec(op);
       }
       RETHROW(string("while adding vertex '") + ctb::to_string(v) +"' of type '" + ctb::to_string(op) + "'");
-      return graph.addvert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
+      return graph.add_vert(v, ptr->is(fINPUT), ptr->is(fOUTPUT), ptr, op, p...);
     }
 
   template <class T, class IT>
@@ -174,12 +224,6 @@ namespace ctb
     void generator<T,IT>::set_instab( IT& i)
     {
       instab = i; 
-    }
-
-  template <class T, class IT>
-    void generator<T,IT>::addedge(vid_t aid, vid_t bid, int b_argpos, int a_argpos)  
-    {
-      graph.addedge(aid, bid, b_argpos, a_argpos);
     }
 
   template <class T, class IT>
@@ -261,10 +305,10 @@ namespace ctb
         for(int i = 0; i < me->in.size(); ++i)
         {
           auto e = me->in[i];
-          if(e->from->data.op->out_type != op->in_types[e->topos])
+          if(e->from->data.op->out_type != op->in_types[e->to_pos])
           {
             parent.template dump_visual_label<true>([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
-            error( string("argument ") + to_string(e->topos) + " does not match defined input type: got '" + e->from->data.op->out_type + "' wanted '" + op->in_types[e->topos] + "'");
+            error( string("argument ") + to_string(e->to_pos) + " does not match defined input type: got '" + e->from->data.op->out_type + "' wanted '" + op->in_types[e->to_pos] + "'");
           }
         }
         //op->imbue_width(mygran);
@@ -279,6 +323,8 @@ namespace ctb
         if(!op->is(fOUTPUT))
           op->get_type_string(mygran, type_string);
         bool found = op->get_op_string(mygran, op_c, op_cc, printability);
+        if(op->is(fEXPANSION))
+          error( string("Found expansion during generation. All expansions have to be removed prior to generation by means of some (probably custom) graph transformation."));
         if(found && op_c.empty() && op_cc.empty())
           warn(string("instruction code and custom code are both empty for ").append(opid));
         /*even for unprintable code we want to consume ids -> cannot skip most of this function*/
@@ -458,6 +504,17 @@ namespace ctb
         return get_acces(width, granularity, w, c);
       }
     };
+
+  template <class T, class IT>
+    void generator<T,IT>::data_t::set_param(const string& name, const string& value)
+    {
+      auto itr = params.find(name);
+      if(itr == params.end())
+      {
+        error(string("vertex parameter not found: ")+name);
+      }
+      params[name] = value;
+    }
 
   template <class T, class IT>
     string generator<T,IT>::data_t::get_param(const string& name) const
