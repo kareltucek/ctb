@@ -1,4 +1,4 @@
-Our framework was developed under Linux and therefore it assumes standard Unix tools for development.The source files themselves are supposed to be platform-independent. 
+Our framework was developed under Linux and therefore it assumes standard Unix tools for development. The source files themselves are supposed to be platform-independent. 
 
 \begin{itemize}
   \item C++11 compliant compiler. Tested compilers are GCC (4.9.3) and CLang (3.7.1).
@@ -28,7 +28,7 @@ By default, make compiles the ctb executable and unit tests and runs basic test 
 This library may be used in three ways:
 \begin{itemize}
   \item As a separate executable controlled by text commands.
-  \item As a header C++11 library. In this case, the \texttt{"ctb.h"} file has to be included in the project. The \texttt{ctb::ctb} class serves as the library frontend. This frontend may be used in two ways, either of them requiring creation of a single object of the ctb instance:
+  \item As a header C++11 library. In this case, the \ttt{"ctb.h"} file has to be included in the project. The \ttt{ctb::ctb} class serves as the library frontend. This frontend may be used in two ways, either of them requiring creation of a single object of the ctb instance:
   \begin{itemize}
     \item using text commands
     \item using raw templated calls to commands
@@ -48,7 +48,7 @@ The simplest way to invoke ctb is by:
 > ctb -f programme
 \end{code}
 
-Here \texttt{programme} is a text file containing a sequence of commands.
+Here \ttt{programme} is a text file containing a sequence of commands.
 
 
 

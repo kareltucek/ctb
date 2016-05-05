@@ -1,18 +1,18 @@
 \subsection*{Framework testing}
 
 \subsubsection{Unit testing}
-Every unit of ctb contains a static \texttt{self\_test} method. This method contains some scenarios which are supposed to ensure that everything works properly. All these methods are included by the \texttt{test.cpp} file and compiled as a separate executable.
+Every unit of ctb contains a static \ttt{self\_test} method. This method contains some scenarios which are supposed to ensure that everything works properly. All these methods are included by the \ttt{test.cpp} file and compiled as a separate executable.
 
 \subsubsection{Test scenarios}
 We also provide a number of scenarios which should ensure that the composed whole works as expected. Some of these scenarios test graph transformations, some test alias environments, some test implementation of macros, some test instruction tables...
 
-These tests are usually specified by means of a \texttt{program} file. Results are usually checked agains remembered outputs which were verified by a human being. Since order of some iteration methods of the C++ language is not stable across different compilers, some outputs may differ.
+These tests are usually specified by means of a \ttt{program} file. Results are usually checked agains remembered outputs which were verified by a human being. Since order of some iteration methods of the C++ language is not stable across different compilers, some outputs may differ.
 
 The test directories also serve as examples of usage of ctb.
 
 \subsection*{Instruction table testing}
 
-For the purpose of testing of instruction tables, we provide the \texttt{testgraph} command, which generates a new graph such that:
+For the purpose of testing of instruction tables, we provide the \ttt{testgraph} command, which generates a new graph such that:
 \begin{itemize}
   \item Multiple instances of every input operation are generated.
   \item An instance of every data-processing\footnote{Non-input-non-output operation.} operation is created. Inputs are connected to these operations so that different arguments always receive input from different inputs.
@@ -25,7 +25,7 @@ When writing a new instruction table, we usually wish to ensure two things:
   \item Semantical correctness of regular instructions.
 \end{itemize}
 
-Syntactical correctness may be ensured by means of compilation of code generated from the testing graph. However, experience shows that these graphs are of enormous size, and therefore their compilation may take very long time. As a solution, we provide a special option \texttt{-c}, which makes the compiler output \emph{only} the first instruction per every vertex. For all other instructions, only a dummy variable is declared.
+Syntactical correctness may be ensured by means of compilation of code generated from the testing graph. However, experience shows that these graphs are of enormous size, and therefore their compilation may take very long time. As a solution, we provide a special option \ttt{-c}, which makes the compiler output \emph{only} the first instruction per every vertex. For all other instructions, only a dummy variable is declared.
 
 For testing of semantical correctness of instruction tables, we have implemented the `simu' environment. This environment outputs a fragment of code which constructs an input using a pseudorandom generator. When the resulting c file is compiled and run, it repeatedly calls functions realizing the graph by different widths and checks that all results are equal to the width 1 results. If a collision is encountered, the problematic fragment is invoked again with a break-point-like indicator set. This causes that detailed log is generated during the iteration which observed wrong behaviour. This log contains contents of sse registers generated via \emph{debug} nodes.
 
@@ -39,16 +39,16 @@ Test directories of our framework are numbered. The following scenarios may be f
 \begin{enumerate}
   \item[1] consists of the unit tests and some simple hard-coded generation. The input for this generation is based on sse but is not meant to provide functional output. This results are produced by the `simple' environment.
   \item[2,3] test that loads end exports of tables work properly.
-  \item[4,5] are `simu' environment tests. The 4 is a full test of the provided SSE table. The 5 shows the same functionality on a simple graph and unlike the 4th test is part of basic test chain.
-  \item[6] provides output in form of bobox boxes. This environment shows full implementation of preloads with respect to bobox semantics of envelope usage.
-  \item[7, 8] test cycle removal and node expansion.
+  \item[4,5] are `simu' environment tests. The 4 is a full test of the provided SSE table. The 5 shows the same functionality on a simple graph and unlike the 4th test is a part of the basic test chain.
+  \item[6] provides an output in the form of bobox boxes. This environment shows full implementation of preloads with respect to bobox semantics of envelope usage.
+  \item[7, 8] test the cycle removal algorithm and node expansion.
   \item[10] tests functionality of provided SSE buffer macros.
   \item[11] shows functionality of non-vectorized control flow on a simple C table with hard-coded input-output operations. This scenario uses the buffer macros with simple, nonvectorized variables.
-  \item[12] shows the same functionality with fully vectorized bodies.
+  \item[12] shows the same functionality with fully vectorized bodies but without full employment of sse related capabilities of the buffer.
   \item[13] shows the same functionality, but uses fully vectorized buffers.
 \end{enumerate}
 
-The test 9 was meant to test the C preprocessor implementation of a SSE buffer which may be found in the \texttt{sse\_cf\_macros} directory. If the reader is interested in advanced usage of C preprocessor, he is welcomed to look around. Yet first, we would like to give him one advice:
-\\ \\ \centerline{\sl{``Abandon all hope, ye who enter here.''}\cite{TODO}}
+The test 9 was meant to test the C preprocessor implementation of a SSE buffer which may be found in the \ttt{sse\_cf\_macros} directory. If the reader is interested in advanced usage of C preprocessor, he is welcomed to look around. Yet first, our advice is:
+\myquote{Abandon all hope, ye who enter here.}{TODO}
 
 

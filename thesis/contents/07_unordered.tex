@@ -69,28 +69,28 @@ Consider the following problem:
       Let $G(V,E)$ be a consistent flow graph with $O$ and $I$ defined as in the \emph{vectorized code generation}. Let $G$ use only the following types of nodes: regular nodes (including input and output nodes), split, unordered merge and loop condition. Let all loops conditions be used by means of the \emph{loop condition} scheme defined by \ref{def:cfconstructs} and let the control flow of $G$ be in sequential form. Let all inputs of $G$ be in one component. Also, let control flow nodes of $G$ be expanded and let the factor graph of $G$ be acyclic. We wish to generate code which will realise graph $G$ on an arbitrary number of data rows, utilising SIMD instructions whenever possible. 
 \myendprob
 
-  We are almost ready to show that flow graphs with control flow in sequential form may be realised very easily without any need of pull semantics. The only problem we need to address is the problem of buffer sizes. Apparently, buffer size $2*w-1$ suffices to accept one (full) vector of data rows in a situation in which there are not enough data for vectorized processal of the next component. One problem lays in loops.  Consider a loop with nested branching:
+  We are almost ready to show that flow graphs with control flow in sequential form may be realised very easily without any need of pull semantics. The only problem we need to address is the problem of buffer sizes. Apparently, buffer size $2*w-1$ suffices to accept one (full) vector of data rows in a situation in which there is not enough data for vectorized processal of the next component. One problem lays in loops.  Consider a loop with nested branching. For instance:
 
   \graph{fullloop}{Illustration of a loop which may cause a problem if buffer capacities were not chosen cautiously.}
 
-  It may easily happen that all branching bodies\footnote{More precisely their input and output buffers.} get filled at some point. The problem comes when we process the data from these branching bodies because data from all bodies may be directed into the same branch next time they enter the body of the loop. Thus, some path (or more precisely entire cycle) may get emph{entirelly} filled. This problem may be solved by limiting the amount of data present in the loop to the capacity of the shortest cycle of the loop. We have already presented this functionality in the definition of the loop condition (definition \ref{nodetypes1}). 
+  It may easily happen that all branching bodies\footnote{More precisely their input and output buffers.} get filled at some point. The problem comes when we process the data from these branching bodies because data from all bodies may be directed into the same branch next time they enter the body of the loop. Thus, some path (or more precisely entire cycle) may get \emph{entirely} filled. This problem may be solved by limiting the amount of data present in the loop to the capacity of the shortest cycle of the loop. We have already presented this functionality in the definition of the loop condition (definition \ref{def:nodetypes1}). 
 
-  Since we now limit the amount of data in loops, there may arise another problem. The problem is that all the data rows may get distributed in such way that no buffer contains $w$ data rows. This could be solved by employment of the pull semantics and by enabling the third input of merge nodes again. This third input would then be used solely for the purpose of /emph{finding} data. Another way is ensuring that sufficient amount of data fits into the loop. This may be achieved by increasing the size of some buffer which is shared by all paths.
+  Since we now limit the amount of data in loops, there may arise another problem. The problem is that all data rows may get distributed in such way that no buffer contains at least $w$ data rows. This could be solved by employment of the pull semantics and by enabling the third input of merge nodes again. This third input would then be used solely for the purpose of \emph{finding} data. Another way is ensuring that sufficient amount of data fits into the loop. This may be achieved by increasing the size of some buffer which is shared by all paths.
 
-  \mybegindef{buffergraph}{Buffer size allocation graph}
+  \mybegindef{buffergraph}{Buffer size-allocation graph}
   Let $G$ be a flow graph. Let $G'$ be a flow graph created from $G$ by mapping of all its layer 2 edges to layer 1.
-  We will use the term $buffer size allocation graph$ of $G$ for a factor graph of $G'$.
+      We will use the term \emph{buffer size-allocation graph} of $G$ for a factor graph of $G'$.
 \myenddef
 
 
   \mybegindef{capacities}{Construction of capacities}
-  Let $H(V,E)$ be a buffer size allocation graph of a flow graph $G(V',E')$ defined as in the \emph{unordered realisation of control flow} problem, let $w \in \N$ be a number representing vector size. We shall define the following functions:
+      Let $H(V,E)$ be a \emph{buffer size-allocation graph} of a flow graph $G(V',E')$ defined as in the \emph{unordered realisation of control flow} problem, let $w \in \N$ be a number representing vector size. We shall define the following functions:
   \begin{itemize}
-    \item $multiPath: V x V \arrow \powerset (H)$ as $multiPath(u,v) = \bigcup_{\substack{P \subseteq H \\ \text{path from u to v}}} P$\footnote{Since we understand a path to be a connected subgraph with degrees less or equal two, we have just implicitly required that this path does not enter a single vertex twice.}.
-    \item $bufferCapacity: E \arrow \N$ as a function denoting actual capacity assigned to all buffers between components connected by an edge of $E$ 
-    \item $apparentCapacity: E \arrow \N$ as a function denoting apparent capacity assigned to all buffers between components connected by an edge of $E$.
-    \item $safeCapacity: E \arrow \N$ as a function denoting number of data rows a buffer is guaranteed to accept.
-    \item $safeCapacity: V \times V \arrow \N$ as a function denoting number of data rows $S = multiPath(u,v)$ can accept. More precisely, the number of data rows the component $u$ can push into $S$ without overfilling any buffers and without the component $v$ having to process data.
+    \item $multiPath: V x V \arrow \powerset (H)$ as $multiPath(u,v) = \bigcup_{\substack{P \subseteq H \\ \text{path from u to v}}} P$\footnote{We understand a path to be a connected subgraph with degrees less or equal two, therefore, we have just implicitly required that this path does not enter a single vertex twice.}.
+    \item $bufferCapacity: E \arrow \N$ as a function denoting the actual capacity assigned to all buffers between components connected by an edge of $E$ 
+    \item $apparentCapacity: E \arrow \N$ as a function denoting the apparent capacity assigned to all buffers between components connected by an edge of $E$.
+    \item $safeCapacity: E \arrow \N$ as a function denoting the number of data rows a buffer is guaranteed to accept.
+    \item $safeCapacity: V \times V \arrow \N$ as a function denoting the number of data rows $S = multiPath(u,v)$ guarantees to accept. More precisely, the number of data rows the component $u$ can push into $S$ in vectorized manner without overfilling any buffers and without the component $v$ having to process data. 
     %\item $capacity: V \times V \arrow \N$ as a function denoting the actual capacity of a $multiPath(u,v)$.
     \item $capacity: \powerset(H) \arrow \N$ as a function denoting the actual capacity of a subgraph of $H$.
     \item $limit: V' \arrow \N$ as a partial function denoting the number of data rows allowed into a loop managed by a loop condition, as defined in \ref{def:nodetypes1}.
@@ -110,7 +110,7 @@ Consider the following problem:
     \end{itemize}
     \item \myexpr{ safeCapacity(u, v) := \min_{\substack{P \subseteq H\\ \text{a path from u to v}}} \sum_{\substack{e \in E(P)}} safeCapacity(e) }
     \item \myexpr{ capacity(S) := \sum_{e \in S} apparentCapacity(e) } 
-    \item Let $s$ be a loop condition managing a merge partition $u$ and a split partition $v$. Let $e \sim (u,v)$.
+    \item Let $s$ be a loop condition managing partitions $u$ and $v$ such that $u$ consists of merge nodes and $v$ consists of split nodes. Let $e \sim (u,v)$.
     \begin{itemize}
       \item \myexpr{ limit(s) := capacity(multipath(v,u))  - capacity(P)  + (| P | + 1) * (w-1) + 1 } 
 

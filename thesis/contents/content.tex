@@ -15,6 +15,8 @@
 
         \subsection{Vectorized code generation} \input{contents/03_vectorized_generation}
 
+        \subsection{Indirect width conversions} \input{contents/03_2_paths}
+
     \section{Handling control flow} \input{contents/04_cf_generation}
 
         \subsection{Partitioning the graph} \input{contents/05_partitioning}
@@ -35,9 +37,6 @@
 
     \input{contents/11_implementation2}
 
-        %%....
-
-
 \chapter{Technical details and API description}
     \label{ch:faq}
 
@@ -53,24 +52,21 @@
 
     \section{API description} \input{contents/16_apis}
 
-    \section{Tests} \input{contents/17_tests}
+    \section{Testing} \input{contents/17_tests}
 
-    \subsection{Implementation of new environments} \input{contents/18_environments}
+    \section{Available environments} \input{contents/18_2_environments}
+
+    \section{Implementation of new environments} \input{contents/18_environments}
 
 \chapter{Implementation of the SSE instruction set}
     \label{ch:sse}
 
-    \section{Data types and conversions}
+    \input{contents/19_sse_types}
 
-    \section{Considering load and store problems} 
+    \section{Considering load and store problems}  \input{contents/20_sse_preloads}
 
-    \section{Actual alias environments} 
+    \section{Buffer marcos} \input{contents/21_buffers}
       
-        %%....
-
-    \section{Control-flow related objects} 
-
-        %%....
 
 %\begin{code}
 %for i in abc

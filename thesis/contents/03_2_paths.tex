@@ -1,0 +1,56 @@
+
+One thing which should be adressed at this point is the problem of indirect width conversions. We have avoided this broblem by assuming that direct width conversions always exist in the \emph{vectorized generator} problem (\ref{pro:vectorproblem}).  Although this problem does not seem difficult, we have not been able to find an optimal solution which would work in feasible complexity. 
+
+Our actual implementation deals with the problem by generating all conversions which lay on the shortest (or cheapest) path between the data provider and the data consumer. This approach may produce suboptimal results if there are multiple consumers. This algorithm may be further improved if we recalculate distances after production of every single path (considering vertices of the generated path to have distance 0). Unfortunately, this improvement still does not ensure optimal results, as is shown by the following counterexample.
+
+\graph{pathcounter}{Example showing that iterated shortest path algorithm is not optimal for trees.}
+
+\begin{description}
+  \item[Producer, consumers] are standard instructions (representants of operations).
+  \item[Other nodes] represent width conversions and are annotated by some cost. These may be replaced by simple paths if we wish to have a counterexample without costs.
+  \item[Edges] represent possible data flow, i.e., edges connect nodes whose outputs are of the same width as the input of the other node.
+  \end{description}
+
+The improved shortest/cheapest path algorithm may first choose the path $ a \arrow 2 + d \arrow b $ and then the path $ a \arrow 4 \arrow c $, yielding path of cost $6+d$. The cheapest path is apparently $5+d$. The variable $d$ shows that strategies like \emph{cheapest path first} or \emph{most expensive path first} do not solve the problem.
+
+This problem may be formulated as an integer linear programme\footnote{Linear programming formulates problems as systems of linear equations. More information may be found in \cite{TODO}}. However, this does not imply existence of polynomial solution since integer programming is NP-hard. 
+
+\mybeginalg{ilp}{ILP of minimal distribution tree}
+Let $P$ be the set of a single producer, $C$ be the set of all consumers and $W$ the set of all possible widths. Let $G(V,E)$ be a graph such that:
+\begin{itemize}
+  \item $V = P \cup C \cup W$
+  \item $E = \{ (u,v) | u,v \in V \land \text{there exists a width conversion from } u \text{ to } v \}$
+\end{itemize}
+Define variables and constants as follows:
+\begin{itemize}
+\item $m = \max_{v \in V}deg(v)$
+\item $(\forall e \in E)$: let there be a variable $f_e \in \N_0$.
+\item $(\forall e \in E)$: let there be a variable $i_e \in {0,1}$.
+\end{itemize}
+Define restrictions as follows (we construct flow in network):
+\begin{itemize}
+\item $(\forall v \in W)$: $\sum_{e \in in(v)} f_e - \sum_{e\in out(v)} f_e = 0$ (Kirchhoff's law)
+\item $(\forall v \in P)$: $\sum_{e \in in(v)} f_e - \sum_{e\in out(v)} f_e = - | C |$ (source)
+\item $(\forall v \in C)$: $\sum_{e \in in(v)} f_e - \sum_{e\in out(v)} f_e = 1$ (sinks)
+\item $(\forall e \in E)$: $f_e - m*i_e \leq 0$ (indicator for minimisation)
+\end{itemize}
+minimise $\sum_{e \in E} i_e$
+
+\begin{proof}[Proof of correctness of a feasible solution]
+  Suppose for a contradiction that a feasible solution exists but there is no nonzero flow from $p \in P$ to a vertex $c \in C$. Let $A = \{v \in V | $ path from $p \in P$ to $v$ exists over edges with $ f_e \gt 0\}$. We shall count the sum $S = \sum_{v \in A}(\sum_{e \in in(v)} f_e - \sum_{e \in out(v)} f_e)$ in two ways:
+  \begin{itemize}
+    \item By sum of the restrictions $S = | C \cap A | - | C |$. This is a negative number since $| A | \lt | C |$.
+    \item By contribution of edges:
+      \begin{itemize}
+        \item Edges in $A$ contribute by $0$.
+        \item There are no edges with $f_e \gt 0$ going from $A$ due to the definition of $A$. Thus, all outgoing edges contribute by $0$.
+        \item All edges going to $A$ contribute by a non negative number.
+      \end{itemize}
+      This implies that $S \geq 0$. But that is a contradicts the previous result.
+    \end{itemize}
+  Thus, if a feasible solution exists, there exists a path from $p \in P$ to any $c \in C$ with nonzero indicators $i_e$. Thus, the solution is correct.
+\end{proof}
+\begin{proof}[Proof of existence of a feasible solution]
+  For every $p \in P$ and $c \in C$ construct a flow of size 1 from $p$ to $c$ . Let $f_e$ be the sum of all these flows. Furtermore, if $f_e \gt 0$ let $i_e$ be $1$. Let $i_e = 0$ otherwise. This evaluation apparently fulfils all restrictions and therefore if a solution of the original problem exists, there exists a feasible solution of the presented ILP.
+\end{proof}
+\myendalg

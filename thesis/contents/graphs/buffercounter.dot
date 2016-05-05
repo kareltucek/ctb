@@ -2,12 +2,12 @@ digraph{
 #include
   rankdir = TB;
 
-  pre[label="preamble",shape="circle"]
-  epi[label="epilogue",shape="circle"]
+  pre[label="preamble",shape="ellipse"]
+  epi[label="epilogue",shape="ellipse"]
   pre -> controls -> epi;
 
 
-  controls[label="loop controls",shape="circle"]
+  controls[label="loop controls",shape="ellipse"]
   a[style=invis];
   b[label="loop controls"];
   e[label="merge"];
@@ -21,9 +21,9 @@ digraph{
   //b -> c;
   //d -> b;
 
-  b[label="loop controls",shape="circle"]
+  b[label="loop controls",shape="ellipse"]
   ca[style=invis];
-  cb[label="\\...",shape="circle"];
+  cb[label="\\ \\ \\ \\ \\dots\\ \\ \\ \\ ",shape="circle"];
   ce[label="merge"];
   cf[label="split"];
   cf -> ca[dir=none];

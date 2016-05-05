@@ -1,10 +1,10 @@
 Implementation of an entirely new environment, e.g., providing support for an entirely new language, a SSE extension and a target distributed environment, may require the following steps:
 
 \begin{enumerate}
-  \item Implementation of a new instruction table.
+  \item Writing a new instruction table.
   \item Implementation of a new alias environment. 
-  \item Implementation of a new language formatter, unless you are fine with non-formatted output files. In that case feel free to use the \texttt{language\_empty} structure.
-  \item If a new control flow strategy or new types of control flow nodes are to be introduced, a new graph transformer may also be neccessary.
+  \item Implementation of a new language formatter, unless you are fine with non-formatted output files. In that case feel free to use the \ttt{language\_empty} structure.
+  \item If a new control flow strategy or a new type of control flow node is to be introduced, a new graph transformer may be also neccessary.
 \end{enumerate}
 
 The first two things which the user should think about are:

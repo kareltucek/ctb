@@ -50,6 +50,7 @@
 \newtheorem*{cor}{Corollary}
 \newtheorem*{example}{Example}
 
+\newcommand{\mybeginfigloose}{\begin{figure}[h]}
 \newcommand{\mybeginfig}{\begin{figure}[H]}
 \newcommand{\myendfig}[2]{\caption{#2}\label{fig:#1}\end{figure}}
 
@@ -62,13 +63,16 @@
 \newcommand{\mybeginprob}[2]{\begin{problem}[#2]\label{pro:#1}}
 \newcommand{\myendprob}{\end{problem}}
 
-\newcommand{\mybeginobs}[2]{\begin{observation}[#2]\label{pro:#1}}
+\newcommand{\mybeginobs}[2]{\begin{observation}[#2]\label{obs:#1}}
 \newcommand{\myendobs}{\end{observation}}
 
 \newcommand{\mybeginclaim}[2]{\begin{claim}[#2]\label{cla:#1}}
 \newcommand{\myendclaim}{\end{claim}}
 
 %\newcommand{\myexpr}[1]{ $\begin{gathered}[t]\begin{aligned} #1 \end{aligned}\end{gathered}$ }
+
+\newcommand{\myquote}[2]{\\ \\ \centerline{\sl{``#1''}\cite{#2}}}
+\newcommand{\myloosequote}[2]{{\sl{``#1''}\cite{#2}}}
 
 \newcommand{\algref}[1]{\begin{alg}[#1]\end{alg}}
 
@@ -78,6 +82,7 @@
 
 \newcommand{\gt}{ > }
 \newcommand{\lt}{ < }
+
 
 %tree items
 %\usetikzlibrary{shadows}
@@ -115,6 +120,7 @@
 
 \DefineVerbatimEnvironment{loosecode}{Verbatim}{fontsize=\small, frame=leftline, fontshape=n, samepage=false} 
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small, frame=leftline, fontshape=n, samepage=true} 
+\newcommand{\maybreak}[1]{\allowbreak}
 
 \newcommand{\incode}[1]{ \\ \centerline{\texttt{#1}} \\ }
 

@@ -12,6 +12,8 @@ show : finalize thesis
 showplain : finalize thesis
 	mupdf thesis.pdf
 
+plain : finalize thesis
+
 # LaTeX must be run multiple times to get references right
 thesis: thesis.tex $(wildcard *.tex) bibliography.bib
 	pdflatex $<

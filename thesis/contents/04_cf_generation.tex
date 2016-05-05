@@ -1,16 +1,18 @@
-At this point, we would like to introduce control flow into our pipelines (That is branching and loops). Branching may be done in two ways:
+\label{sec:analysis}
+
+At this point, we would like to introduce control flow into our pipelines (i.e., branching and loops). Branching may be done in two ways:
 
 \label{sec:branching}
 \begin{itemize}
   \item By performing both branches on all data rows and then joining the data rows using a \emph{select} operation. This approach is well described in \cite{secondpaper}. This approach may be easily employed in our framework by regular instructions. 
-  \item By reordering data vectors and performing every branch only on data that are supposed to be handled by the branch in question. This approach has large overhead on reordering, but may be worthwhile in case of nested branching.
+  \item By reordering data vectors and performing every branch only on data that are supposed to be handled by the branch in question. This approach has significant overhead on reordering, but may be worthwhile in case of nested branching.
 \end{itemize}
 
-We will investigate only the second approach since the first approach may be easily employed by use of regular operations provided that the input is in form using these operations and provided that there is an implementation of the \emph{select} operation available. The second approach also allows processal of loops. \footnote{The conventional approach for loops would be expanding the loop body multiple times and then optimising this result, possibly pipelining operations of one loop iteration over multiple resulting iterations and possibly employing SIMD instructions on any nondeterministicaly discovered pairing of instructions\cite{compilers}. Also, some more advanced approaches such as polyhedral analysis of loops may be employed\cite{polyhedral}. The conventional methods have the benefit of low overhead and lower independence requirements. }
+We will investigate only the second approach since the first approach may be easily employed by use of regular operations provided that the input is in a form using these operations and provided that there is an implementation of the \emph{select} operation available. The second approach also allows processal of loops. \footnote{The conventional approach for loops would be expanding the loop body multiple times and then optimising this result, possibly pipelining operations of one loop iteration over multiple resulting iterations and possibly employing SIMD instructions on any nondeterministicaly discovered pairing of instructions \cite{compilers}. Also, some more advanced approaches such as polyhedral analysis of loops may be employed\cite{polyhedral}. The conventional methods have the benefit of low overhead and lower independence requirements. }
 
 \label{sec:node_types}
 
-First, we shall introduce some new types of nonregular nodes. These will not be required to fulfill the condition that an operation has to pop/push the same amount of data to/from every queue (defined by regularity in define \ref{def:node_types0}). Note that this definition addresses semantics in context of single data row.\footnote{Semantics in vectorized case are defined to be equal to multiple instances of single context.}
+First, we shall introduce some new types of non-regular nodes. These will not be required to fulfill the condition that an operation has to pop/push the same amount of data to/from every queue (defined by regularity in define \ref{def:nodetypes0}). Note that this definition addresses semantics in context of a single data row.\footnote{Semantics in vectorized case are defined to be equal to multiple instances of single context.}
 
 \mybegindef{nodetypes1}{Node types}
   We shall distinguish the following types of operations:
@@ -20,7 +22,7 @@ First, we shall introduce some new types of nonregular nodes. These will not be 
   \item [split operation] will take one data input and one condition input (Boolean value typically). Depending on the condition input it will decide upon exactly one of its outgoing $from$ annotations and push data into all outgoing queues with this annotation. All other outgoing queues will remain unchanged. The data input and the condition input will be consumed.
   \item [merge operation] will take two data inputs and one condition input. Depending on the condition input it will take data from one of the inputs and push them to all output queues. Data in the chosen input and in the condition input will be consumed. All other incoming queues will remain unchanged.
 
-  \item [loop merge operation] will take two data inputs. If there is any data in the second input \footnote{This is meant with respect to the definition of realisation of a single data row. In real implementation this means that we have to flush entire loop \emph{somehow} before checking this condition.}, this node takes the data from the second input and puts it into all outgoing queues. Otherwise, it does the same thing with the first input. Moreover, we will allow the second input to be on cycles, i.e., we will not consider the second input edge when saying \emph{acyclic} or \emph{topological ordering}. By doing this we will not void the semantical meaning of flow graphs since standard edges represent data dependencies, unlike these edges. 
+  \item [loop merge operation] will take two data inputs. If there is any data in the second input \footnote{This is meant with respect to the definition of realisation of a single data row. In real implementation this means that we have to flush entire loop \emph{somehow} before checking this condition.}, this node takes the data from the second input and puts it into all outgoing queues. Otherwise, it does the same thing with the first input. Moreover, we will allow the second input to be on cycles
 
   %Some generation systems may decide against using the condition input and just take data in unspecified order.
   %The observations would not hold with this.
@@ -50,7 +52,7 @@ First, we shall introduce some new types of nonregular nodes. These will not be 
 \end{description}
 \myenddef
 
-Using the standard \emph{split} and \emph{merge} nodes we will be able to perform standard branching, i.e., to realise the \texttt{ if \string{\string} else \string{\string} } construct. The \emph{loop} node construct will allow us to realise the \texttt{ while(condition) \string{\string} } construct. We show this in a picture.
+Using the standard \emph{split} and \emph{merge} nodes we will be able to perform standard branching, i.e., to realise the \ttt{ if \string{\string} else \string{\string} } construct. The \emph{loop} node construct will allow us to realise the \ttt{ while(condition) \string{\string} } construct. We show this in a picture.
 
 \begin{rem}
   Until now, we have used only rectangular nodes in our graphs. From now on we will also use circular/elliptical nodes which will denote connected parts of graphs.
@@ -71,9 +73,7 @@ We shall define the following three schemes of node usage by the following diagr
   Note that although we have specified some possible use of these nodes, we do not (yet) restrict flow graphs to these schemes.
 \end{rem}
 
-Until now, we have performed all data transformations \emph{regularly}. Thanks to that we did not need to check consistency of flow graphs (defined in \ref{def:consistency} by properties of realisation of a flow graph on a single data row). Now we do.
-
-Apparently, not all graphs satisfy the conditions. Here is one such graph. The ADD operation will never process anything since it never gets both operands due to the merge operation. Or we may understand this graph in such way that elements of two different data rows meet if we try to process multiple data rows at the same time.
+Until now, we have performed all data transformations \emph{regularly}. Thanks to that we did not need to check consistency of flow graphs (defined in \ref{def:consistency} by properties of realisation of a flow graph on a single data row).  Apparently, not all graphs satisfy the conditions defined by the definition of consistency. Figure \ref{fig:inconsistent} shows one such graph. The ADD operation will never process anything since it never gets both operands due to the merge operation. Or we may understand this graph in such way that elements of two different data rows meet if we try to process multiple data rows at the same time.
 
 \graph{inconsistent}{An example of a graph which is inconsistent due to improper use of the \emph{split} node}
 
@@ -97,7 +97,7 @@ We will not present any way of consistency testing of general flow graphs. We wi
 
         Assume that there remains a node with some input empty and some input nonempty. 
         \begin{itemize}
-          \item All partitions depicted as circular/elliptical nodes consist of regular operations only, hence are acyclic. It holds that either all inputs of such partition receive exactly one input or all receive none. Furthermore, it holds, that there exists a path from an input (either input queue of partition in question or an input now) into any queue of any node in such partition. It follows that every operation in such partition is invoked exactly once per every data row, having always exactly one value in all its input, consuming these and producing exactly one value per every output. Thus, all values (except for ones in queues of output operations) are consumed, so the assumed situation cannot take place inside of a single partition.  
+          \item All partitions depicted as circular/elliptical nodes consist of regular operations only, hence are acyclic. It holds that either all inputs of such partition receive exactly one input or all receive none. Furthermore, it holds, that there exists a path from an input (either input queue of partition in question or an input now) into any queue of any node in such partition. It follows that every operation in such partition is invoked exactly once per every data row, having always exactly one value in all its input, consuming these and producing exactly one value per every output. Thus, all values (except for the ones in queues of output operations) are consumed, so the assumed situation cannot take place inside of a single partition.  
           \item We have banned any direct contact between any two partitions which may cause this except for the pair of preamble and epilogue.
           \item Flow of data from every split leads to a merge which merges according to the same condition, which means that the two data flows are merged in such manner that quantity of the data rows is preserved (and their order too if there were multiple data rows present in the graph). Thus, the branching scheme is correct.
           \item Apparently, epilogue in the loop merge scheme receives exactly one value unless there is an infinite loop in semantics of $O$, which is a situation which we do not assume in this text.
@@ -109,10 +109,10 @@ We will not present any way of consistency testing of general flow graphs. We wi
 \myendobs
 
 \mybeginobs{schemenesting}{Scheme nesting}
-  Let $G(V,E)$ with $O$ be a consistent flow graph generated by finite repetition of steps described in observations \ref{obs:schemeconsistency} to \ref{obs:schemesequencing}. Let $C$ a connected subgraph of $G$ composed only of regular nodes, i.e., of vertices annotated by regular operations. Now we create a new graph by nesting a graph $H$ corresponding to either of the provided example schemes into $C$. We do so by connecting vertices of $C$ and $H$ by edges and by changing some regular operations into other regular operations. Then the new graph is consistent if the following conditions are satisfied:
+  Let $G(V,E)$ with $O$ be a consistent flow graph generated by finite repetition of steps described in observations \ref{obs:schemeconsistency} to \ref{obs:schemesequencing}. Let $C$ be a connected subgraph of $G$ composed only of regular nodes, i.e., of vertices annotated by regular operations. Now we create a new graph by nesting a graph $H$ corresponding to either of the provided example schemes into $C$. We do so by connecting vertices of $C$ and $H$ by edges and by changing some regular operations into other regular operations. Then the new graph is consistent if the following conditions are satisfied:
   \begin{itemize}
     \item The nested scheme satisfies the conditions from previous observation.
-    \item The nested scheme is connected to C only by the preamble and epilogue.
+    \item The nested scheme is connected to C only by its preamble and epilogue.
     \item The nested scheme does not contain any input operations. 
     \item We have not introduced any new cycle except for cycles containing second input of any loop node.
     \item Semantics of $O$ are preserved.
@@ -130,14 +130,14 @@ We will not present any way of consistency testing of general flow graphs. We wi
 \myendobs
 
 
-The provided schemes apparently suffice for realisation of the standard \texttt{ if \string{\string} else \string{\string} } and \texttt{ while(condition) \string{\string} } constructs. However, we will still try to provide solutions for general (consistent) flow graphs. The following example shows a consistent flow graph which cannot be generated by means of the observations. What is of our interest is the fact that consistent input streams for the merge operations can be constructed using \emph{(pure)} regular operations. It suffices to compute the merge condition before we apply any split to it.
+The provided schemes apparently suffice for realisation of the standard \ttt{ if \string{\string} else \string{\string} } and \ttt{ while(condition) \string{\string} } constructs. However, we will still try to provide solutions for general (consistent) flow graphs. The following example shows a consistent flow graph which cannot be generated by means of the observations. What is of our interest is the fact that consistent input streams for the merge operations can be constructed using \emph{(pure)} regular operations. It suffices to compute the merge condition before we apply any split to it.
 
 \graph{diamond}{Control flow example which is consistent despite its inconsistent look }
 
 \begin{description}
-  \item[a,b,c] are booleans known in preamble.
-  \item[e and f] are streams of the predicate \texttt{(a)} split by the predicate \texttt{((a\&\&c)||(!a\&\&b))}.
-  \item[g] is a stream of the predicate \texttt{((a\&\&c)||(!a\&\&b))}.
+  \item[a, b, c] are booleans known in preamble.
+  \item[e, f] are streams of the predicate \ttt{(a)} split by the predicate \ttt{((a\&\&c)||(!a\&\&b))}.
+  \item[g] is a stream of the predicate \ttt{((a\&\&c)||(!a\&\&b))}.
 \end{description}
 
 

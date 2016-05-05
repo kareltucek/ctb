@@ -1,15 +1,17 @@
+\label{sec:vecgensec}
+
 \mybegindef{width}{Instruction width}
 We will use the term \emph{width} to denote the number of independent data rows a single instruction operates on when we get to utilisation of SIMD instructions.
 \myenddef
 
 \mybegindef{widthconversion}{Width conversion}
-  We will use the term \emph{width conversion} for an instruction which takes data from another instruction of some width and transforms them to data suitable for an instruction of a different width. 
+  We will use the term \emph{width conversion} for an instruction which takes data from an instruction of some width and transforms them to data suitable for another instruction which is of a different width. 
 \myenddef
 
 Consider the following problem.
 
 \mybeginprob{vectorproblem}{Vectorized code generation}
-  Let $G(V,E)$ and $O$ be an acyclic flow graph defined as in the g\emph{simple code generation} problem. Furthermore, let there be a set $I$ (of SIMD instructions) and a partial function $enc (operation, width)$ \footnote{We are merely saying that we wish to have some vectorized instructions available and that every operation should be defined at least in its nonvectorized version.} $: O \times \N \arrow I$. Let $enc$ be defined at least on $O \times \{1\}$. Also, let there be a set of width conversions sufficient for direct conversion between any two widths present in $I$. Finally, let all widths be powers of 2. We wish to generate C code which will realise the graph G using instructions of highest possible widths. I.e., every vertex will be performed by the broadest instruction its operation is associated with. 
+  Let $G(V,E)$ and $O$ be an acyclic flow graph defined as in the \emph{simple code generation} problem. Furthermore, let there be a set $I$ (of SIMD instructions) and a partial function $enc (operation, width)$ \footnote{We are merely saying that we wish to have some vectorized instructions available and that every operation should be defined at least in its nonvectorized version.} $: O \times \N \arrow I$. Let $enc$ be defined at least on $O \times \{1\}$. Also, let there be a set of width conversions sufficient for direct conversion between any two widths present in $I$. Finally, let all widths be powers of 2. We wish to generate C code which will realise the graph G using instructions of highest possible widths. I.e., every vertex will be performed by the broadest instruction its operation is associated with. 
 \myendprob
 
 If highest instruction widths of all operations present in g$G$ were the same ones, we could use the \emph{simple generator}. We would simply replace all types by the corresponding vector versions and use vectorized counterparts of all instructions. Typically, the width will vary with the bit length of the data type in question and therefore we cannot use this approach with more than one data type present in $G$.
@@ -57,9 +59,16 @@ c (ST) & 1 & 2 & 3 & 4\\
 \end{center}
 \myendfig{modfusion}{Table visualising operations joined across different data rows}
 
+\begin{rem}
+  The condition requiring all widths to be powers of two ensures two things:
+  \begin{itemize}
+    \item All data vectors are aligned in the meaning that the difference between indices of the first values of any two instances of instructions is a multiple of GCD of their widths. But GCD of two powers of two is always the smaller of the two numbers. This means that the first index of the wider of two instructions is always aligned with the first index of some instance of the smaller one.\footnote{If the meaning of this claim is unclear, the reader may like to try looking at the table in figure \ref{fig:modfusion} for a few seconds. We have merely said that the left boundary of the 3-4 cell in the MOD4 row is aligned with the left boundary of the cells with index 3 at rows of the ST and LD operations.}
+    \item We are able to process the same amount of data ($w$) at every instruction.
+  \end{itemize}
+  Without this condition, we would need $w$ to be the least common multiple of the maximum widths of all operations in $G$. 
+\end{rem}
 
-
-Thus, pseudo code generating this result may be:
+Thus, pseudo code generating the result from figure \ref{fig:vectorizedfragment} may be:
 
 \begin{code}
 for(v in V) in topological order
@@ -69,21 +78,11 @@ for(v in V) in topological order
 }
 \end{code}
 
-\begin{rem}
-  The condition requiring all widths to be powers of two ensures two things:
-  \begin{itemize}
-    \item All data vectors are aligned in the meaning that the difference between indices of the first values of any two instances of instructions is a multiple of GCD of their widths. But GCD of two powers of two is always the smaller of the two numbers. This means that the first index of the wider of two instructions is always aligned with the first index of some instance of the smaller one.\footnote{If the meaning of this claim is unclear, the reader may like to try looking at the table in figure \ref{fig:modfusion} for a few seconds. We have merely said that left boundary of the 3-4 cell in the MOD4 row is aligned with the left boundary of the cells with index 3 at rows of ST and LD operations.}
-    \item We are able to process the same amount of data ($w$) at every instruction.
-  \end{itemize}
-  Without this condition, we would need $w$ to be the least common multiple of the maximum widths of all operations in $G$. 
-\end{rem}
-
-The same algorithm in more detail --- first, we find maximum width g$w$ of an instruction which may be used in $G$ (we do not consider operations which are not in $G$ at all). Then we generate code processing $w$ data rows in one iteration. Again, we take vertices of $G$ in topological order and process them one by one. For a vertex whose broadest instructions is of width $n$ we generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from incoming vertices, only now we work with a set of names (of variables holding  results of the vertex in question) per every width that was generated. I.e., when generating a code of a vertex we look whether there is a set of names (variables) for width $n$. If there is, then we use it. If there is no such set, we use some width conversion to obtain data for width $n$ (i.e. generating a new set of variables for width $n$). 
+The same algorithm in more detail --- first, we find maximum width g$w$ of an instruction which may be used in $G$ (we do not consider operations which are not in $G$ at all). Then we generate code processing $w$ data rows in one iteration. Again, we take vertices of $G$ in topological order and process them one by one. For a vertex whose broadest instructions is of width $n$ we generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from incoming vertices, only now we work with a set of names (of variables holding  results of the vertex in question) per every width that was generated. I.e., when generating a code of a vertex we look whether there is a set of names (variables) for width $n$. If there is, then we use it. If there is no such set, we use some width conversion to obtain data for width $n$ (i.e. generating a new set of variables for width $n$). We show code of this algorithm in algorithm \ref{alg:vectorgenerator}.
 
 \emph{Exactly} the same algorithm, just with some implementation details filled in:
 
 \mybeginalg{vectorgenerator}{Vectorized code generator}\ \ \ 
-\begin{samepage}
 \begin{code}
 fun gen_instruction(instruction, result_name, arg_1, arg_2, ...) 
   { generate actual text representation from arguments; }
@@ -108,7 +107,8 @@ fun gen_conversion(v, to_width)
     v.results(n).push(result_name);
   }
 }
-
+\end{code}
+\begin{code}
 fun gen_vertex(v)
 {
   for(vertex u : incoming to v)
@@ -129,6 +129,5 @@ fun generator(graph G)
     gen_vertex(v);
 }
 \end{code}
-\end{samepage}
 \myendalg
 

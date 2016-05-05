@@ -96,7 +96,7 @@ The following alias environments are to be found in our project:
 \subsubsection{Implicit containers}
   There are two container templates which basically add one dimension to the template parameter. We use these at places where we needed to replace a single (always present) element by a list of optional elements without invalidation of already existing code. These also serve as a syntactic sugar, since we do not require any container semantics unless the user explicitly needs to use multiple instances of the object in question.
 
-  Neglecting the fact that \texttt{int} may not be used in place of a class, implicit container of integers could work as follows:
+  Neglecting the fact that \ttt{int} may not be used in place of a class, implicit container of integers could work as follows:
 \mybeginfig
 \begin{code}
 impl_contA<int> a = 3;

@@ -1,41 +1,4 @@
 
-\section{Flow example}
-
-As an example of workflow of ctb, we provide the programme of the 13th test:
-
-\mybeginfig
-\begin{code}
-loadinstab csv instab.csv
-loadgraph xml graph.xml
-transform cf
-generate cf output.cpp vectordbg
-preprocess cfmacros output.cpp output.preprocessed0.cpp
-preprocess cfmacros output.preprocessed0.cpp output.preprocessed.cpp
-\end{code}
-\myendfig{flowexample}{Ctb programme of the 13th test.}
-
-First an instance of the ctb class is invoked and passed the programme shown. Then ctb reads the programme line by line, looking up commands and performing them. Namely:
-\begin{itemize}
-  \item Csv loader is passed the instab.csv file and a reference to the instruction table stored in ctb. The loader fills the table and returns.
-  \item Graph of the generator is filled in the same manner.
-  \item The `cf' transformer is used to expand control flow nodes and partition the graph.
-  \item The `cf' alias environment is provided with the generator and asked to generate output:
-  \begin{itemize}
-    \item The alias environment uses the generator to generate code for every partition. This is done by invocation of the generator. This generator object is provided with an instance of writer which is provided with an environment created by composition of the `cf' alias environment and of the generator environment. The generator then iterates through the graph. Every vertex is processed as follows::
-    \begin{itemize}
-      \item Corresponding instruction patterns are retrieved from the instruction table of the ctb object.
-      \item These patterns are printed into the supplemented writer. Hence, the writer receives a simple pattern and a list of various objects (strings, names, numbers, indices, offsets...). The writer processes them as follows:
-        \begin{itemize}
-          \item Pattern is evaluated using various text expansions, potentially utilising new auxiliary alias environments. Every time the writer encounters a dollar subexpression which cannot be (directly) substitued by some argument, it calls the root alias environment:
-          \item The environment either resolves the request or forwards its childs. The childs repeat this process until an environment which can expand the subexpression is found. This alias environment processes this subexpression and returns some result back to the writer. This expression is then \emph{again} evaluated by the writer, possibly invoking the root alias environment again.
-        \end{itemize}
-    \end{itemize}
-    \item The alias environment composes all the pieces into a consistent C file.
-  \end{itemize}
-  \item The output file now contains some nonexpanded macros since we intentionally wrote the instruction table in that way. The last two calls expand these macros twice by simply writing the contents of the files into a writer parametrized by the cfmacros environment and outputting the results.
-\end{itemize}
-
-
 \section{Graph algorithms}
 
 Here we introduce employed graph-related algorithms. 
@@ -43,8 +6,9 @@ Here we introduce employed graph-related algorithms.
 \algref{Graph crawler}
 We implement most of our algorithms using a simple crawling template. Its api corresponds to the following function.
 
+%\mybeginfig
 \begin{code}
-fun crawler<recurse, inverse>(node n, function f, function g, list l = {0})
+fun crawler<recurse, inverse>(node n, fun f, fun g, list l = {0})
 {
   if(!g(n))
     return
@@ -64,23 +28,23 @@ fun crawler<recurse, inverse>(node n, function f, function g, list l = {0})
   \item [Inverse] switches direction of this algorithm.
   \item [Recurse] turns on and off the search of parents.
 \end{description}
+%\myendfig{crawlerapi}{Our callback-driven crawling template.}
 
-We implement the second recursive call using a queue to prevent infinite loops on call stack. The actual implementation also handles crawling on a defined subset of graph layers passed by the \texttt{l} argument.
+We implement the second recursive call using a queue to prevent infinite loops on call stack. The actual implementation also handles crawling on a defined subset of graph layers passed by the \ttt{l} argument.
 
 \algref{Topological search}
-We implement topological search of connected partitions using the following snippet. This function is very useful since it stands for \texttt{foreach(v in topological order) f(v); }. If there is no topological ordering for the component in question, then this code is equivalent to an unordered \texttt{foreach}.
+We implement topological search of connected partitions using the following snippet. This function is very useful since it stands for \ttt{foreach(v in topological order) f(v); }. If there is no topological ordering for the component in question, then this code is equivalent to an unordered \ttt{foreach}.
 
+%\mybeginfig
 \begin{code}
-fun crawl_partition_topological<inverted>(node* n, function f)
+fun crawl_partition_topological(node* n, fun f)
 {
   crawl<true, inverted>( n
     , (node* n){ f(n); n->lastpass = passid; return true;}
     , (node* n){ return n->lastpass != passid;}
   );
 }
-\end{code}
-\begin{code}
-fun crawl_topological(function f)
+fun crawl_topological(fun f)
 {
   passid++;
   foreach(vertex v)
@@ -88,12 +52,13 @@ fun crawl_topological(function f)
       crawl_partition_topological(v, f);
 }
 \end{code}
+%\myendfig{crawlertopo}{Topological search algorithm.}
 
 There are only three things to note:
 \begin{itemize}
-  \item The lastpass variable is used in combination with the passid variable as an auxiliary mark which denotes whether a node was visited. The passid ensures that a new mark which was not yet used is used.
+  \item The \ttt{lastpass} variable is used in combination with the \ttt{passid} variable as an auxiliary mark which denotes whether a node was visited. The \ttt{passid} ensures that a new mark which was not yet used is used.
   \item This function is not reentrant as shown. In real implementation we use a bit more complex call which uses a set per every such call.
-  \item We could write this in even simpler manner, using only the g callback. Unfortunately, such solution would enter an infine loop if there was a cycle in the presumably acyclic graph. This solution does not enter an infinite loop, which is the preferred behaviour. 
+  \item We could write this in an even simpler manner, using only the \ttt{g} callback. Unfortunately, such solution would enter an infine loop if there was a cycle in the presumably acyclic graph. This solution does not enter an infinite loop, which is the preferred behaviour. 
 \end{itemize}
 
 \algref{Cycle detection}
@@ -105,6 +70,7 @@ We detect cycles in two steps:
 
 Both these steps may be done by simple calls to the topological search algorithm.
 
+%\mybeginfig
 \begin{code}
 fun find_cycle()
 {
@@ -119,6 +85,7 @@ fun find_cycle()
   return node_on_cycle;
 }
 \end{code}
+%\myendfig{findcycleapi}{Cycle detection algorithm.}
 
 \algref{Shortest path search}
 For the purpose of shortest-path routeing, we maintain a map of size $| G |$ in every vertex. This map contains one record per every vertex of $G$. This record contains:
@@ -131,6 +98,7 @@ For the purpose of shortest-path routeing, we maintain a map of size $| G |$ in 
 This solution, despite being quite minimalistic, requires $O(n^2)$ memory, which may be a problem for big graphs. Since we use minimal path search only for the purpose of finding shortest width-conversion path, this limitation does not concern us much. An alternative would be running Dijkstra's algorithm on every request \cite{TODO}.
 
 We fill these routeing structures using the well known Bellman-Ford algorithm \cite{TODO} implemented using our callback machinery. Equivalent pseudo code may be:
+%%\mybeginfig
 \begin{code}
 foreach(vertex v)
 {
@@ -140,13 +108,27 @@ foreach(vertex v)
   ); 
 }
 \end{code}
+%\myendfig{bellmanfordapi}{Pseudo code of the Bellman-Ford algorithm.}
 
 \algref{Factor graph construction}
 Construction of a factor graph is again a simple process. The only interesting part is the second step in which we try to sort the components (pseudo) topologically even if no topological ordering exists.
 
 We should remind the reader that we use two instances of the standard graph to to represent the graph and its factor graph. The actual implementation just uses inheritance to allow the factor graph to be a member of the graph. For now, we will simply use the names $G$ and $factorgraph$.
 \begin{enumerate}
-  \item The crawling algorithm is used to assign component ids\footnote{We use the term \emph{class id} in actual implementation. This is in accordance with standard algebraic terminology.} to all vertices. 
+  \item The crawling algorithm is used to assign component ids\footnote{We use the term \emph{class id} in actual implementation. This is in accordance with standard algebraic terminology.} to all vertices. We show this in figure \ref{fig:factoralgclasses}.
+  \item Then we try to remap component ids so that the components are in an order resembling our subjective feeling of a correct (pseudo) topological ordering. 
+    \begin{itemize}
+      \item This task is simple if topological ordering exists - a single pass by the topological search in the factor graph yields a map which is then used to reassign the ids. We show this in figure \ref{fig:factoralgorder1}
+      \item If no topological ordering of components exists, we still try to return nicely-looking results. This makes sense since the underlying graph will usually have a topological ordering. 
+        
+        First, we assign some ordering to \emph{edges} on levels 0 and 1. We do this by the topological search, so we assume to get the edges ordered (mostly) topologically\footnote{Note that our use case is exactly that of graphs which are acyclic on levels 0 and 1}. Our observation is that some feasible ordering of components is an ordering induced by the order of input edges. Specifically, we pick the  maximum input edge which is less than every output edge of a component. We show this in figure \ref{fig:factoralgorder2}.
+  \end{itemize}
+  \item Finally, the vertices are gathered into components represented by vertices in the new graph structure (as shown in fig \ref{fig:factoralgtranslate}).
+\end{enumerate}
+
+\FloatBarrier
+
+\mybeginfigloose
 \begin{code}
 crawl_topological((node* n){n->classid = -1;});
 int classcount = 0;
@@ -157,10 +139,9 @@ foreach(node n in G)
     classcount++;
   }
 \end{code}
-  \item Then we try to remap component ids so that the components are in an order resembling our subjective feeling of a correct (pseudo) topological ordering. 
-    \begin{itemize}
+\myendfig{factoralgclasses}{Factorisation -- class assignment.}
 
-      \item This task is simple if topological ordering exists - a single pass by the topological search in the factor graph yields a map which is then used to reassign the ids. 
+\mybeginfigloose
 \begin{code}
 map<int, int> translation;
 int i = 0;
@@ -170,12 +151,9 @@ factorgraph->crawl_topological((node* n){
 foreach(node n in G)
   n->classid = translation[n->classid];
 \end{code}
+\myendfig{factoralgorder1}{Factorisation -- construction of translation map for acyclic graphs.}
 
-
-      \item If no topological ordering of components exists, we still try to return nicely-looking results. This makes sense since the underlying graph will usually have a topological ordering. 
-        
-        First, we assign some ordering to \emph{edges} on levels 0 and 1. We do this by the topological search, so we assume to get the edges ordered (mostly) topologically\footnote{Note that our use case is exactly that of graphs which are acyclic on levels 0 and 1}. Our observation is that some feasible ordering of components is an ordering induced by the order of input edges. Specifically, we pick the  maximum input edge which is less than every output edge of a component.
-
+\mybeginfigloose
 \begin{code}
 int order = 0;
 factorgraph->crawl_topological(
@@ -192,8 +170,6 @@ for(i in 0 .. classcount-1)
   minouts[i] = MAXINT - classcount + i;
   maxins[i]= -1;
 } 
-\end{code} 
-\begin{code}
 factorgraph->crawl_topological(
   (node* n){
     foreach(e is output edge of n)
@@ -208,18 +184,18 @@ vector<int> translation = keys of maxins sorted by value;
 foreach(node n in G)
   n->classid = translation[n->classid];
 \end{code}
-\end{itemize}
+\myendfig{factoralgorder2}{Factorisation -- construction of translation map for acyclic graphs.}
 
-
-  \item Finally, the vertices are gathered into components represented by vertices in the new graph structure.
+\mybeginfigloose
 \begin{code}
 for( i in 0 .. classcount-1)
   create component i in factograph (i.e. a standard vertex)
 foreach(node n in G)
   assign n to component n->classid of factorgraph;
 \end{code}
-\end{enumerate}
+\myendfig{factoralgtranslate}{Factorisation -- translation of ids.}
 
+\FloatBarrier
 
 \algref{Cycle removal}
 
@@ -229,7 +205,7 @@ We implement this algorithm as described by algorithm \ref{alg:cycleremalg}. We 
 
 \label{sec:instab}
 
-We would like to shed some light on structure of the instruction table to make the internal workings of the generator clearer. We shall postpone exact field semantics into the chapter \ref{TODO}, which is dedicated to api description. The architecture may be visualised by the following diagram:
+We would like to shed some light on structure of the instruction table to make the internal workings of the generator clearer. We shall postpone exact field semantics into chapter \ref{sec:formats}, which is dedicated to api description. The architecture may be visualised by the following diagram:
 
 \graph{instab}{Class diagram of the instruction table}
 
@@ -308,7 +284,7 @@ We would like to shed some light on structure of the instruction table to make t
 
 Consider again the figure \ref{fig:vectorizedfragment}. Lines 1,2,4 and 7 were generated from an instruction patterns of \emph{instructions}. The lines 3,5 and 6 were generated from instruction patterns of two \emph{width conversions} (the lines 5 and 6 are two patterns defined by a common width conversion). All type specifiers present in the figure were resolved from input and output widths and types of instructions and of width conversions. The patterns of instructions and types were composed together by internal mechanics of the writer. (However, the form of this composition was defined by the form of the pattern. The writer itself is an independent text processor which has \emph{no} information about internal needs of the generator.)
 
-The following example shows how a single line of the resulting code may be composed from various patterns. We show a single call to the writer as may be issued by the generator. The real situation is more complicated since this example does not consider vectorization. Consider the target environment to be represented by a \texttt{clang} alias environment (aliasenv).
+The following example shows how a single line of the resulting code may be composed from various patterns. We show a single call to the writer as may be issued by the generator. The real situation is more complicated since this example does not consider vectorization. Consider the target environment to be represented by a \ttt{clang} alias environment (aliasenv).
 
 \mybeginfig
 \begin{loosecode}
@@ -342,6 +318,7 @@ w.print("$opexpr", type_code, ins_code, width, arg1, arg2, name);
 "int var_c = var_a + var_b;"               //the final result
 \end{loosecode}
 \myendfig{expeval}{Example of instruction pattern evaluation.}
+
 
 
 

@@ -5,22 +5,22 @@ Note that in this section, we will ommit all insignificant information such as c
 Loaders are required to implement the following five methods:
 
 \begin{code}
-void load_graph(G& graph, istream&) ;
-void load_instab(IT& instab, istream&) ;
-void export_graph(G& instab, ostream&) ;
-void export_instab(IT& instab, ostream&) ;
+void load_graph(G& graph, istream&);
+void load_instab(IT& instab, istream&);
+void export_graph(G& instab, ostream&);
+void export_instab(IT& instab, ostream&);
 static string get_name();
 \end{code}
 
 \begin{description}
-\item \texttt{G, IT} are templated instruction table and generator types.
-\item \texttt{istream, ostream} are C++ implementation of input and output streams. This way, direct interfacing with another programme is possible.
-\item \texttt{get\_name} is required to return a sensible name not colliding with names of other loaders.
+\item \ttt{G, IT} are templated instruction table and generator types.
+\item \ttt{istream, ostream} are C++ implementation of input and output streams. This way, direct interfacing with another programme is possible.
+\item \ttt{get\_name} is required to return a sensible name not colliding with names of other loaders.
 \end{description}
 
 We believe that provided the description above, the api is self describing.
 
-When a new loader is implemented, it is supposed to be registered within the ctb object by its templated \texttt{register\_loader} method. This call may be inserted into the \texttt{fill} method of ctb. Or may be inserted into a new instance of the \texttt{main.cpp} file. Registration is not neccessary if the user does not wish to use the text command controls.
+When a new loader is implemented, it is supposed to be registered within the ctb object by its templated \ttt{register\_loader} method. This call may be inserted into the \ttt{fill} method of ctb. Or may be inserted into a new instance of the \ttt{main.cpp} file. Registration is not neccessary if the user does not wish to use the text command controls.
 
 \subsection{Aliasenv API}
 
@@ -35,21 +35,21 @@ static writer generate(int packsize,  G& generator,
 \end{code}
 
 \begin{description}
-\item \texttt{language} is a language structure which is to be used by any writer parametrized by this environment.
-\item \texttt{alias} is a method which tries to evaluate the string a. If the second parameter is not null, it is also supposed to report whether the attempt was successfull.
-\item \texttt{get\_name} is again any sensible string identifier.
-\item \texttt{generate}
+\item \ttt{language} is a language structure which is to be used by any writer parametrized by this environment.
+\item \ttt{alias} is a method which tries to evaluate the string a. If the second parameter is not null, it is also supposed to report whether the attempt was successfull.
+\item \ttt{get\_name} is again any sensible string identifier.
+\item \ttt{generate}
   \begin{description}
-    \item \texttt{packsize} is the size of the pack for which the body is supposed to be generated, i.e., the $w$ from chapters dedicated to theoretical analysis. The environment is allowed to ignore this parameter and decide its own suitable size.
-    \item \texttt{generator} is again a templated generator type. This variable provides direct access to the underlying graph as a simple member variable.
-    \item \texttt{name} is a simple identifier meant for identification of the generated code fragment. E.g., the alias environment may output its results as member methods of a class whose name contains this identifier.
-    \item \texttt{args} is a list which may contain other arguments.
+    \item \ttt{packsize} is the size of the pack for which the body is supposed to be generated, i.e., the $w$ from chapters dedicated to theoretical analysis. The environment is allowed to ignore this parameter and decide its own suitable size.
+    \item \ttt{generator} is again a templated generator type. This variable provides direct access to the underlying graph as a simple member variable.
+    \item \ttt{name} is a simple identifier meant for identification of the generated code fragment. E.g., the alias environment may output its results as member methods of a class whose name contains this identifier.
+    \item \ttt{args} is a list which may contain other arguments.
   \end{description}
 \end{description}
 
-If an environment is constructed to act just as an alias processor, only the \texttt{alias} method and the \texttt{language} type are obligatory. If an environment is not supposed to be used as the top-level parameter of writer, the \texttt{language} field may be omitted as well.
+If an environment is constructed to act just as an alias processor, only the \ttt{alias} method and the \ttt{language} type are obligatory. If an environment is not supposed to be used as the top-level parameter of writer, the \ttt{language} field may be omitted as well.
 
-As other structures, enviroments which provide the \texttt{generator} method are supposed to be registered within ctb by the \texttt{register\_aliasenv} method.
+As other structures, enviroments which provide the \ttt{generator} method are supposed to be registered within ctb by the \ttt{register\_aliasenv} method.
 
 \subsection{Generator API}
 
@@ -65,7 +65,7 @@ int partition_count();
 \end{code}
 
 \begin{description}
-\item \texttt{w} is the writer which is supposed to receive the output. This type may be constructed as follows:
+\item \ttt{w} is the writer which is supposed to receive the output. This type may be constructed as follows:
 \begin{code}
 impl_contB<writer<example_aliasenv>> w;
 \end{code}
@@ -73,23 +73,23 @@ impl_contB<writer<example_aliasenv>> w;
 \begin{code}
 w["empty_output_indicators"].write_str();
 \end{code}
-\item \texttt{options} specify special behaviour for specific layers. Instance of this structure may be either manually constructed or obtained by the \texttt{option\_struct} method. Setting options works exactly as in case of the writer. For instance:
+\item \ttt{options} specify special behaviour for specific layers. Instance of this structure may be either manually constructed or obtained by the \ttt{option\_struct} method. Setting options works exactly as in case of the writer. For instance:
 \begin{code}
 auto o = generator.option_struct();
 o["empty_output_indicators"].unique = true;
 \end{code}
 Currently available options are:
 \begin{description}
-\item \texttt{once} causes generator to write an instruction into such layer only once per vertex.
-\item \texttt{global\_once} causes generator to write the value into such layer only if the corresponding layer of writer does not contain anything yet.
+\item \ttt{once} causes generator to write an instruction into such layer only once per vertex.
+\item \ttt{global\_once} causes generator to write the value into such layer only if the corresponding layer of writer does not contain anything yet.
 \end{description}
 \end{description}
 
-For the purpose of graph transforms, the generator provides the following methods. These methods interface the corresponding methods of the graph member, sometimes handling generation-related data specially. Advanced functionality, such as custom graph crawling is provided by the graph itself.
+For the purpose of graph transforms, the generator provides the following methods. These methods interface the corresponding methods of the member graph object while handling generation-related data specially. Advanced functionality, such as custom graph crawling is provided by the graph itself.
 \begin{code}
 node* get_vert(J id);
-node* add_vert(v_id v, op_id op, map<string,string> params) ;
-void add_edge(v_id from, v_id to, int to_pos, int from_pos) ;
+node* add_vert(v_id v, op_id op, map<string,string> params);
+void add_edge(v_id from, v_id to, int to_pos, int from_pos);
 void rm_vert(J v);
 void rm_edge(edge* e);
 void connect_as(J v, K as, bool inputs = true, bool outputs = true);
@@ -97,11 +97,11 @@ void foreach(function<void(node*)> f);
 \end{code}
 
 \begin{description}
-  \item \texttt{J, K} are automatically resolved types identifying vertices. These may be pointers or references to the actual vertex structure or just vertex ids.
-  \item \texttt{v\_id, to\_pos, from\_pos, params} correspond to the described field semantics.
-  \item \texttt{get\_vert, add\_vert, rm\_vert, add\_edge, rm\_edge} apparently allow altering of the graph structure.
-  \item \texttt{connect\_as} adds new edges to the vertex \texttt{v} imitating the way the \texttt{as} node is connected.
-  \item \texttt{foreach} calls the function \texttt{f} once per every vertex in topological order. This function may be nested.
+  \item \ttt{J, K} are automatically resolved types identifying vertices. These may be pointers or references to the actual vertex structure or just vertex ids.
+  \item \ttt{v\_id, to\_pos, from\_pos, params} correspond to the described field semantics.
+  \item \ttt{get\_vert, add\_vert, rm\_vert, add\_edge, rm\_edge} apparently allow altering of the graph structure.
+  \item \ttt{connect\_as} adds new edges to the vertex \ttt{v} imitating the way the \ttt{as} node is connected.
+  \item \ttt{foreach} calls the function \ttt{f} once per every vertex in topological order. This function may be nested.
 \end{description}
 
 The retrieved nodes then provide the following api:
@@ -113,12 +113,12 @@ edge* in_at,out_at(int i, bool check_uniqueness = true);
 \end{code}
 
 \begin{description}
-  \item \texttt{id} contains vertex id.
-  \item \texttt{classid} is id of the component of connectedness if the factor graph is up-to-date. Make sure you have called the \texttt{graph.update\_factor()} method. This is not done automatically since factor graph and this id is apparently not stable with respect to factorisation.
-  \item \texttt{colourmark} is and auxiliart identifier which may be used by the user for marking of vertices during graph algorithms.
-  \item \texttt{data} contain the data type specified by the \texttt{T} template parameter. The generator's data type contains a pointer to the corresponding operation (\texttt{op}), an operation id (\texttt{opid}) and parameter access methods (\texttt{get\_param(string)} and \texttt{set\_param(string,string)}). 
-  \item \texttt{in, out} are containers containing pointers to incoming and outgoing edges. Layer 0 may be iterated by simple \texttt{for(e : in)}, other layers by \texttt{for(e : in.get\_layer(1))}.
-  \item \texttt{in\_at, out\_at} provide direct access to the \texttt{i}th edge.
+  \item \ttt{id} contains vertex id.
+  \item \ttt{classid} is id of the component of connectedness if the factor graph is up-to-date. Make sure you have called the \ttt{graph.update\_factor()} method. This is not done automatically since factor graph and this id is apparently not stable with respect to factorisation.
+  \item \ttt{colourmark} is and auxiliart identifier which may be used by the user for marking of vertices during graph algorithms.
+  \item \ttt{data} contain the data type specified by the \ttt{T} template parameter. The generator's data type contains a pointer to the corresponding operation (\ttt{op}), an operation id (\ttt{opid}) and parameter access methods (\ttt{get\_param(string)} and \ttt{set\_param(string,string)}). 
+  \item \ttt{in, out} are containers containing pointers to incoming and outgoing edges. Layer 0 may be iterated by simple \ttt{for(e : in)}, other layers by \ttt{for(e : in.get\_layer(1))}.
+  \item \ttt{in\_at, out\_at} provide direct access to the \ttt{i}th edge.
 \end{description}
 
 \subsection{Instruction table import API}
@@ -127,11 +127,11 @@ Instruction tables may be constructed via the following api:
 
 \begin{code}
 operation& add_operation(opid_t op_id, tid_t out_type, 
-  vector<tid_t>& in_types, flag_t flags) ;
+  vector<tid_t>& in_types, flag_t flags);
 void operation::add_code(int width_in, int width_out, string code, 
   stringlist code_custom, string note, string tags, int rating);
 
-type& add_type(typename T::tid_t t, int bitwidth = 0) ;
+type& add_type(typename T::tid_t t, int bitwidth = 0);
 void type::add_code_type(int width, string code, string note);
 void type::add_code_conversion(int width_in, int width_out, 
   string code1, string code2, string code_custom, 
@@ -143,7 +143,7 @@ void add_expansion(opid_t op_id, string name, string transformer,
 \end{code}
 
 \begin{description}
-  \item \texttt{add\_operation, add\_type} look up the requested operation or type. If the object does not exist, it is created. Finally reference to this object is returned, allowing insertion of child elements.
+  \item \ttt{add\_operation, add\_type} look up the requested operation or type. If the object does not exist, it is created. Finally reference to this object is returned, allowing insertion of child elements.
   \item other fields are exactly the fields described by field semantics.
 \end{description}
 
@@ -155,7 +155,7 @@ Api required from custom transformers is the following:
  void transform(G& generator, stringlist args);
 \end{code}
 
-Semantics of these fields are again the same. There are no restrictions on content of \texttt{args} and no restrictions on what the transformer is allowed to do with the generator or with its graph.
+Semantics of these fields are again the same. There are no restrictions on content of \ttt{args} and no restrictions on what the transformer is allowed to do with the generator or with its graph.
 
 
 \subsection{Custom commands}
@@ -167,9 +167,9 @@ void register_command( string cmd, function<void(stringlist&&)> f,
 \end{code}
 
 \begin{description}
-\item \texttt{cmd} -- the command string.
-\item \texttt{f} -- function performing the command.
-\item \texttt{description} -- short reference which will by shown in the '-h' option.
+\item \ttt{cmd} -- the command string.
+\item \ttt{f} -- function performing the command.
+\item \ttt{description} -- short reference which will by shown in the '-h' option.
 \end{description}
 
   

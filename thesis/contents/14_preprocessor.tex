@@ -21,12 +21,12 @@ There is a number of expansions which take place, most of them recursively when 
 The order of expansions is the following:
 \begin{enumerate}
 \item Cartesian expansion. This expansion is performed only once.
-\item All other types of expansions. The \texttt{\$\string{\string}} and \texttt{\$[]} expansions are carried out by a new writer with the same alias environment.
+\item All other types of expansions. The \ttt{\$\string{\string}} and \ttt{\$[]} expansions are carried out by a new writer with the same alias environment.
 \end{enumerate}
 
 \subsubsection{Argument expansion}
 
-\texttt{\$<n>} (e.g., \texttt{"\$2"}) is resolved to the $n$th argument. This argument is converted to a string and printed using a recursive call which again performs all expansions except for the cartesian expansion.
+\ttt{\$<n>} (e.g., \ttt{"\$2"}) is resolved to the $n$th argument. This argument is converted to a string and printed using a recursive call which again performs all expansions except for the cartesian expansion.
 
 \mybeginfig
 \begin{code}
@@ -40,12 +40,12 @@ yields
 
 \subsubsection{Alias expansion}
 
-Patterns resolved by the alias expansions take the form \texttt{\$<[a-zA-Z]+>}. The identifier is resolved using an alias environment. We should remind the reader that environments are static classes, which are passed to the writer by means of a template parameter.
+Patterns resolved by the alias expansions take the form \ttt{\$<[a-zA-Z]+>}. The identifier is resolved using an alias environment. We should remind the reader that environments are static classes, which are passed to the writer by means of a template parameter.
 
 %aliasenv to resolve the supplemented name - e.g. print("\$animal is an animal") -> "dog is an animal" if the supplemented aliasenv (M) contains alias animal resolved to dog
 
 \subsubsection{Cartesian expansion}
-Cartesian expansion takes place only once at the beginning of evaluation of the print call. First, the format string is scanned for all expressions in the form of \\ \centerline{\texttt{\$\string{ <identifier> -> <value1>, <value2> ...\string}} or} \\ \centerline{\texttt{\$\string{ <identifier1>, <identifier2> ... -> <value1>, <value2> ...\string}}} \\ This expression is not allowed to contain nested curly braces. Every such expression is transformed into a list of tuples and replaced by \texttt{\$<identifier1>}.  Then, a cartesian multiplier is constructed from all these lists. Finally, the writer iterates over the product. Per every iteration a new auxiliary environment (which inherits the original environment) is constructed, filled by the currently observed result of the cartesian product and used to print the entire format pattern.
+Cartesian expansion takes place only once at the beginning of evaluation of the print call. First, the format string is scanned for all expressions in the form of \\ \centerline{\ttt{\$\string{ <identifier> -> <value1>, <value2> ...\string}} or} \\ \centerline{\ttt{\$\string{ <identifier1>, <identifier2> ... -> <value1>, <value2> ...\string}}} \\ This expression is not allowed to contain nested curly braces. Every such expression is transformed into a list of tuples and replaced by \ttt{\$<identifier1>}.  Then, a cartesian multiplier is constructed from all these lists. Finally, the writer iterates over the product. Per every iteration a new auxiliary environment (which inherits the original environment) is constructed, filled by the currently observed result of the cartesian product and used to print the entire format pattern.
 
 This means that per every line of input, multiple lines of output are emitted, featuring all combinations of variables specified in the lists.
 
@@ -59,10 +59,10 @@ writer().print(
 \end{code}
 yields
 \begin{code}
-"red dog; nice dog\n"
-"red cat; nice cat\n"
-"blue dog; nice dog\n"
-"blue cat; nice cat\n"
+"red dog; nice dog"
+"red cat; nice cat"
+"blue dog; nice dog"
+"blue cat; nice cat"
 \end{code}
 \myendfig{cartprint0}{Example of the cartesian expansion}
 
@@ -74,15 +74,15 @@ writer().print(
 \end{code}
 yields
 \begin{code}
-"blueish dog\n"
-"redish cat\n"
+"blueish dog"
+"redish cat"
 \end{code}
 \myendfig{cartprint0}{Example of tuples in the cartesian expansion}
 
  %Note that here we do NOT allow nested {}s
 
 \subsubsection{Recursive expansion}
-Expressions of the form form \texttt{"\$\string{ whatever that does not contain `->' \string}"} are evaluated in two steps:
+Expressions of the form form \ttt{"\$\string{ whatever that does not contain `->' \string}"} are evaluated in two steps:
 \begin{enumerate}
   \item The content of braces is expanded.
   \item The result is evaluated as a standard alias. That means that the result is evaluated by some alias environment and then printed into the current writer. Of course, the final print is again performed with all expansions.
@@ -92,7 +92,7 @@ This expansion allows correctly paired nested curly braces.
 
 \subsubsection{Arithmetic expression expansion}
 
-Expressions of the form \texttt{\$[ <expression expression> ]} denote arithmetic expressions. First the content is evaluated by a new writer object. Then, the resulting arithmetic expression is evaluated by the Parser class.
+Expressions of the form \ttt{\$[ <expression expression> ]} denote arithmetic expressions. First the content is evaluated by a new writer object. Then, the resulting arithmetic expression is evaluated by the Parser class.
 
 Supported operators are: $(, ), -, +, *, /, \%$
 
@@ -135,14 +135,14 @@ We show the semantics of import/export modes in the following table:
 
 Formatting is driven by some specialisation of the language structure which was already mentioned. Language structure is supposed to provide the following two methods. These methods are called on every character of the printed string.
 \begin{itemize}
-  \item \texttt{void shouldindent(\\  string line, int\& outindent, \\  int\& indent, int\& nobreak\\)}\footnote{The ampersand denotes references. In this context, it means that ampersanded arguments act as return values. Besides that, in the actual implementation, we, of course, use constant references to pass the potentially long strings.}
+  \item \ttt{void shouldindent(\\  string line, int\& outindent, \\  int\& indent, int\& nobreak\\)}\footnote{The ampersand denotes references. In this context, it means that ampersanded arguments act as return values. Besides that, in the actual implementation, we, of course, use constant references to pass the potentially long strings.}
 	\begin{description}
 	  \item[line] is the line to be indented. 
 	  \item[outindent] is the actual indentation of the line.
 	  \item[indent] is a persistent indent context.
 	  \item[nobreak] allows suppressing of the next \emph{nobreak} line breaks.
 	\end{description}
-  \item \texttt{void shouldbreak(\\  int pos, string line, \\  bool\& break\_before, bool\& break\_after\\)}
+  \item \ttt{void shouldbreak(\\  int pos, string line, \\  bool\& break\_before, bool\& break\_after\\)}
 	\begin{description}
 	  \item[pos and line] provide an exact position and its context.
 	  \item[break\_before and break\_after] are returns which indicate whether the string should be broken before of after the position identified by the \emph{pos} argument in \emph{line}.

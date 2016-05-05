@@ -1,3 +1,5 @@
+\label{sec:simplegensec}
+
 Consider the following problem.
 
 \mybeginprob{simpleproblem}{Simple code generation}
@@ -68,9 +70,9 @@ We may have noticed that vertices are basically of three types, each of some typ
 This allows us to construct simple patterns which may be used for actual code generation (e.g., by the \emph{gen\_instruction} function shown in algorithm \ref{alg:simplegenerator}). These may be the following:
 
 \begin{itemize}
-  \item Input -- \emph{``\$type \$name = \$input;''}
-  \item Operation -- \emph{``\$type \$name = \$operation;''}
-  \item Output -- \emph{``\$output;''}
+  \item Input -- \ttt{"\$type \$name = \$input;"}
+  \item Operation -- \ttt{"\$type \$name = \$operation;"}
+  \item Output -- \ttt{"\$output;"}
 \end{itemize}
 
 Where $\$input$ and $\$output$ evaluate to environment-dependent expressions, $\$name$ evaluates to a new identifier and $\$operation$ evaluates to a pattern identified by the $op$ annotation. The operation pattern may contain $\$arg1$, $\$arg2$, $\$arg3$... expressions. These evaluate to the saved names from incoming vertices.

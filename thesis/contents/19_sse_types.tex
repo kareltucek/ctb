@@ -1,0 +1,115 @@
+We will skip any broader introduction of the SSE extension, since deeper knowledge of the actual instruction set is not neccessary for the purpose of this text. Brief, informal introduction to the SSE extension may be found at \cite{TODO}. More detailed text on SSE usage may be found at \cite{TODO}. Documentation may be found at \cite{TODO} and \cite{TODO}. Papers which discuss more advanced aspects of efficient use of this (and similar) extensions are \cite{TODO} and \cite{TODO}. We provide only the neccessary conceptual minimum of the SSE type system.
+
+We will omit the \ttt{\_mm\_} prefixes and other non-substantial information contained in function names.
+
+\section{Data types and conversions} 
+
+\subsubsection{SSE type system}
+
+SSE provides a number of 128 bit registers, which may be directly used by means of the \ttt{\_m128} type. Such register can contain $128/length$ values of signed or unsigned integers of lengths from 8 to 64, single-precision floating point numbers and double-precision floating point numbers. Booleans are supposed to be represented by masks whose bits are either all 1 or 0.
+
+The content of these registers is to be interpretted as a right-to-left list of values. Note that semantics of shifting operations make this point important. The reader may ask why is it to be this way, and rightly so --- the reason is the clash of our customs of writing lists left-to-right while writing numbers right-to-left. Consistent, increasing order of elements is often desired for the purpose of width conversions and casts.
+
+\subsubsection{Our type system}
+
+As we have already mentioned, we provide the following data types:
+\begin{itemize}
+\item Signed and unsigned integers if widths 8, 16, 32, 64.
+\item Single-precision and double-precision floating point numbers.
+\item Byte booleans, which are suitable for use with control flow.
+\item Bit boolean vectors, which are suitable for high throughput computations without control flow.
+\end{itemize}
+
+We use the simples and most obvious way of arangement of data in SSE registers when a register is to be filled entirely. However, when two vectors of different widths of the stored data types are to be processed by one operation, we need to select only some data from the vector of the narrower data type width. Broadly speaking, we always use positions in their intuitive order which are multiples of $128/n$ where $n$ stands for the number of data elements we want to store into a single register. 
+
+Consider the following example of a 16 bit integer width conversion from width 8 to 4 (numbers represent order of elements).
+
+
+\mybeginfig
+%\begin{center}
+\begin{longtable}{ c c c }
+  {
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 \tabularnewline
+\hline
+\end{tabular}
+}
+&
+$\arrow$
+&
+  {
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\ \ & 8 & \ \ & 7 & \ \ & 6 & \ \ & 5 \tabularnewline
+\hline
+\ \ & 4 & \ \ & 3 & \ \ & 2 & \ \ & 1 \tabularnewline
+\hline
+\end{tabular}
+}
+\end{longtable}
+%\end{center}
+\myendfig{sse_conversion}{Width conversion realised on SSE registers}
+
+This way, elements stay always aligned with other elements from the same data row. Such vector may enter a computation with another vector consisting of four 16-bit integers. But it may as well enter a computation with a vector of four 32-bit integers. This property is especially handy with booleans if we edit boolean splits to copy the value into both fields. Visually this means performing the previous split as follows:
+
+\mybeginfig
+%\begin{center}
+\begin{longtable}{ c c c }
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 \tabularnewline
+\hline
+\end{tabular}
+&
+$\arrow$
+&
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+8 & 8 & 7 & 7 & 6 & 6 & 5 & 5 \tabularnewline
+\hline
+4  & 4 & 3 & 3 & 2 & 2 & 1 & 1 \tabularnewline
+\hline
+\end{tabular}
+\end{longtable}
+%\end{center}
+\myendfig{sse_boolean_conversion}{Width conversion suitable for booleans.}
+
+Notice that to perform this split, a nontrivial data reordering was neccessary. A simpler approach would simply select every second element by an \emph{and} mask and then then shift the second vector. Showing this by a pseudo-vector C operation, we would do:
+
+\mybeginfig
+\begin{code}
+int result1 = (input & 0x00FF00FF);
+int result2 = (input & 0xFF00FF00) >> 8; 
+\end{code}
+%\begin{center}
+\begin{longtable}{ c c c }
+\begin{tabular}{|c|c|c|c|}
+\hline
+ 4 & 3 & 2 & 1 \tabularnewline
+\hline
+\end{tabular}
+&
+$\arrow$
+&
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+ \ \ & 4 & \ \ & 2 \tabularnewline
+\hline
+ \ \ & 3 & \ \ & 1 \tabularnewline
+\hline
+\end{tabular}
+\end{longtable}
+%\end{center}
+\myendfig{sse_bad_conversion}{Example of a possibly malfunctioning width conversion.}
+
+The results are still aligned. The problem with this operation comes when two vectors of different base width come into contact. If we wanted to sum the vectors from figure \ref{fig:sse_bad_conversion} with a vector of 16-bit integers, we would get an element-wise sum of the vector $((4,2),(3,1))$ with the vector $((4,3),(2,1))$. Of course, this problem may be further addressed by proper setting of a fixed ordering per every data width. The technical difficulty is that all load, store, split and merge operations would have to shuffle data in a rather nontrivial fashion. 
+
+%https://software.intel.com/sites/default/files/a6/22/18072-347603.pdf
+
+Width conversions (as described above) may be implemented by means of a set of \ttt{shuffle} operations. We provide an excerpt dedicated to shuffle macros from the SSE documentation \cite{TODO} to portray its semantics: 
+
+\myloosequote{ The Streaming SIMD Extensions (SSE) provide a macro function to help create constants that describe shuffle operations. The macro takes four small integers (in the range of 0 to 3) and combines them into an 8-bit immediate value used by the SHUFPS instruction. You can view the four integers as selectors for choosing which two words from the first input operand and which two words from the second are to be put into the result word. }{TODO}
+
+
+
