@@ -250,7 +250,7 @@ We would like to shed some light on structure of the instruction table to make t
       \item \emph{Type signature}, which is used to choose specific expansion from the set of expansions identified by the same identifier.\footnote{This mechanics allows very simple introduction of type inference. This would be implemented as a graph transformation and its full control would still remain under control of the user.}
       \item List of \emph{instruction identifiers} which specify some target instructions for the expansion.
     \end{itemize}
-    For instance, consider explicit buffers, defined in definition \ref{def:nodetypes1}. Buffers may be represented by single nodes in the input graph, whose identifier is an identifier of an expansion. This identifier may have two expansions defined. When the `cf' transformer is run, it should choose one of the expansions depending on types of neighbouring nodes and expand it to two new nodes.
+    For instance, consider explicit buffers, defined in definition \ref{def:nodetypes1}. Buffers may be represented by single nodes in the input graph. This identifier may have two expansions defined. When the `cf' transformer is run, it should choose one of the expansions depending on types of neighbouring nodes and expand it to two new nodes.
     \mybeginfig
     \begin{center}
       \begin{tabular}{c|c|c|c|c|p{4cm}}

@@ -1,3 +1,8 @@
+\subsection*{Error hadling}
+All abnormalities that are encountered are reported either as errors or as warnings. Errors are thrown in form of a pair of a string specifying what happened and a bool specifying whether it was critical. These errors are caught in multiple \ttt{try/catch} handlers and rethrown with more detailed context until the ctb class catches the error and writes it out. This way, a stack-like trace of ctb actions is printed with relevant context.  Warnings are printed directly into the standard error stream. If more detailed information about such warning is needed, ctb provides the \ttt{-w} option which makes ctb to process all warnings as errors. 
+
+Graph visualisation is supposed to be used for debug. All generator related errors are accompanied by visualisation of the graph in question unless the \ttt{-g} switch is used. Visualisation may also be invoked by the \ttt{visualise} command. The visualisation shows vertex names, operation identifiers, \ttt{to_pos} and \ttt{from_pos} annotations, order of edges (if assigned) and inferred types of edges.
+
 \subsection*{Framework testing}
 
 \subsubsection{Unit testing}
@@ -41,7 +46,7 @@ Test directories of our framework are numbered. The following scenarios may be f
   \item[2,3] test that loads end exports of tables work properly.
   \item[4,5] are `simu' environment tests. The 4 is a full test of the provided SSE table. The 5 shows the same functionality on a simple graph and unlike the 4th test is a part of the basic test chain.
   \item[6] provides an output in the form of bobox boxes. This environment shows full implementation of preloads with respect to bobox semantics of envelope usage.
-  \item[7, 8] test the cycle removal algorithm and node expansion.
+  \item[7, 8, 11] test the cycle removal algorithm, node expansion and type inference. These tests provide a 'visual' target, which shows what is going on (\ttt{\>make visual}).
   \item[10] tests functionality of provided SSE buffer macros.
   \item[11] shows functionality of non-vectorized control flow on a simple C table with hard-coded input-output operations. This scenario uses the buffer macros with simple, nonvectorized variables.
   \item[12] shows the same functionality with fully vectorized bodies but without full employment of sse related capabilities of the buffer.

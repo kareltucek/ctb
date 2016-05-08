@@ -62,6 +62,8 @@ void generate_partition(int partition, int packsize,
     imp_contB<W>& w, imp_contB<output_options>& options);
 imp_contB<output_options> option_struct();
 int partition_count();
+bool partition_is_topo_max(int partition);
+bool partition_is_topo_min(int partition);
 \end{code}
 
 \begin{description}
@@ -89,7 +91,7 @@ For the purpose of graph transforms, the generator provides the following method
 \begin{code}
 node* get_vert(J id);
 node* add_vert(v_id v, op_id op, map<string,string> params);
-void add_edge(v_id from, v_id to, int to_pos, int from_pos);
+void add_edge(v_id from, v_id to, int to_pos, int from_pos, int layer = 0);
 void rm_vert(J v);
 void rm_edge(edge* e);
 void connect_as(J v, K as, bool inputs = true, bool outputs = true);

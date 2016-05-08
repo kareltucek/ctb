@@ -6,7 +6,7 @@ The following environments with generation capabilities are present:
 
   \item[bobox] environment provides functionality similar to the simple environment but features interface of the bobox environment and is tailored to utilize the capabilities of aligned load and store operations. Besides the generator-related functionality, this environment also generates code which manages the envelope system of the bobox environment. However, these higher-level capabilities should have been abstracted outside of our framework and it has been a huge mistake that we have allowed pollution of our output environment by API which could have been abstracted into an unrelated unit.
 
-  \item[cf] environment implements the algorithm \ref{alg:crawler}. This environment already abstracts its API. This environment provides three functions enclosed into a class with a templated context type (this is shown in figure \ref{fig:fragmentapi}). These three functions take a number of rows to be processed and a context structure which provides arrays of data, indices and offsets. The required context structure API is shown in figure \ref{fig:contextapi}. The \ttt{\$input} and \ttt{\$output} patterns of this environment are set to \ttt{"ctx.data[\$ioindex]+ctx.index[\$ioindex]*ctx.size"}. 
+  \item[cf] environment implements algorithm \ref{alg:crawler}. This environment already abstracts its API. This environment provides three functions enclosed into a class with a templated context type (this is shown in figure \ref{fig:fragmentapi}). These three functions take a number of rows to be processed and a context structure which provides arrays of data, indices and offsets. The required context structure API is shown in figure \ref{fig:contextapi}. The \ttt{\$input} and \ttt{\$output} patterns of this environment are set to \ttt{"ctx.data[\$ioindex]+ctx.index[\$ioindex]*ctx.size"}. 
 \end{description}
 
 \mybeginfig
@@ -26,11 +26,9 @@ class box_/*name*/
 \begin{code}
 struct context
 {
-  void** data;   //data[id][index]
-  int* offsets; //offsets[id]
-  int* index;   //index[id]
-  int* size;    //size[id]
+  /???
 }
 \end{code}
 \myendfig{contextapi}{API of the context for the `cf' environment.}
+TODO: fix these apis according to the actual implementation 
 

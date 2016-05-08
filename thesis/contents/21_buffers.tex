@@ -13,7 +13,8 @@ Of course, this scheme requires quite large numbers of SSE registers even for sm
 API of these buffers follows:
 
 \begin{code}
-BUFFER_DECL(size, vsize, inpacksize, outpacksize, id, type)
+BUFFER_DECL(capacity, vsize, inpacksize, outpacksize, id, type)
+BUFFER_SIZE(id)
 
 BUFFER_FULL(id)
 BUFFER_FULL_GRANULAR(id)
@@ -21,24 +22,25 @@ BUFFER_FULL_GRANULAR(id)
 BUFFER_EMPTY_GRANULAR(id)
 BUFFER_EMPTY(id)
 
-BUFFER_PUSH_SIMPLE(size, vsize, id, val)
-BUFFER_PUSH_ONE(size, vsize, id, typeabbrev, val)
+BUFFER_PUSH_SIMPLE(capacity, vsize, id, val)
+BUFFER_PUSH_ONE(capacity, vsize, id, typeabbrev, val)
 
 BUFFER_CONSUME_ONE(id)
 BUFFER_CONSUME_VECTOR(id)
 
-BUFFER_PEEK_SIMPLE(size, vsize, id, to)
-BUFFER_PEEK_ONE(size, vsize, id, typeabbrev, to)
-BUFFER_PEEK_VECTOR(size, vsize, id, typeabbrev, to)
+BUFFER_PEEK_SIMPLE(capacity, vsize, id, to)
+BUFFER_PEEK_ONE(capacity, vsize, id, typeabbrev, to)
+BUFFER_PEEK_VECTOR(capacity, vsize, id, typeabbrev, to)
 \end{code}
 
 \begin{description}
   \item \ttt{id} is an identifier of the buffer.
-  \item \ttt{size} is the total capacity of the buffer.
+  \item \ttt{capacity} is the total capacity of the buffer.
   \item \ttt{vsize} (vector size) is the number of elements which can be stored into a single SSE register.
   \item \ttt{typeabbrev} is the SSE type suffix.
   \item \ttt{inpacksize and outpacksize} are the sizes of data packs which are processed by a single invocation of the partitions (again the $w$ value of the two partitions the buffer connects). Current implementations assign this number uniformly.
   \item \ttt{DECL} produces declarations of all variables realising the buffer. These are to be accumulated into a layer of a writer which goes into global scope (w.r.t. the code of partitions).
+  \item \ttt{SIZE} returns the number of elements actually stored in this container.
   \item \ttt{FULL, EMPTY} resolve to expression which determine whether the buffer is full or empty. The \ttt{GRANULAR} versions take the \ttt{inpacksize} and \ttt{outpacksize} into account, meaning whether an entire vector of values produced by a vectorized partition code can fit into the buffer.
   \item \ttt{PUSH} adds a value into the container.
   \item \ttt{CONSUME} increases the \ttt{readat} counter and decreases the \ttt{contains} counter, effectively removing the head element from the buffer.

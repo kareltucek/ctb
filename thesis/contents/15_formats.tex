@@ -83,26 +83,32 @@ We show the structure by the following tree. In this tree, every path between th
 
 \subsubsection{Common}
 \begin{description}
-  \item\ttt{note} is an arbitrary user-defined string. This is not used by the framework at all, but is preserved for potential debug purposes or for export.
-  \item\ttt{tags} is a comma separated list of user-defined strings. These serve for restriction of the instruction set. These flags may be restricted through the command line interface or directly from an alias environment.
-  \item\ttt{rating} is an integer which allows definition of precedence. Always the instruction with highest rating is used if there are more feasible instructions for the required width.
+  \item Identifiers - identifiers are supposed to be strings consisting of alphanumeric characters and underscores. This is not a restriction, just recommendation. Note that identifiers starting by an underscore are reserved for internal use.
+  \item \ttt{note} is an arbitrary user-defined string. This is not used by the framework at all, but is preserved for potential debug purposes or for export.
+  \item \ttt{tags} is a comma separated list of user-defined strings. These serve for restriction of the instruction set. These flags may be restricted through the command line interface or directly from an alias environment.
+  \item \ttt{rating} is an integer which allows definition of precedence. Always the instruction with highest rating is used if there are more feasible instructions for the required width.
 \end{description}
 
 \subsubsection{Operations and instructions}
   \begin{description}
-  \item \ttt{flags} (csv field) -- comma separeted list consisting of flags from the following list. These identify special types of operations. These nodes may be treated specially by graph transformations and also affect how the default \ttt{code} field is used.
+  \item \ttt{flags} (csv field) -- a comma separeted list consisting of flags from the following list. These identify special types of operations. These nodes may be treated specially by graph transformations and also affect how the default \ttt{code} field is used.
   \begin{description}
-	\item \ttt{input} -- operation which acts as a data source. 
-	\item \ttt{output} -- operation which acts as a data sink.
-	\item \ttt{debug} -- operation which acts as a special data sink for the \ttt{adddebug} command.
+    \item \ttt{input} -- an operation which acts as a data source. Control flow operations, e.g., operations which carry data via effects over layer 1 or 2 edges are not supposed to be marked as \ttt{input} or \ttt{output}, but as \ttt{effectinput} or \ttt{effectinput}. Type inference is not applied over layer 1 or 2 edges.
+    \item \ttt{output} -- an operation which acts as a data sink. Analogical to \ttt{input}.
+      TOD: cfinput, cfoutput
+    \item \ttt{effectoutput} -- an operation which is similar to output but does serve for outputting values. In other words this operation does not produce any direct result but most likely serves for storing values into a temporary place. This indicates that output edges should not be type checked (these edges are created by graph transformations, so no check should be necessary). This property also allows you to note types of effect-carried edges. (For instance, you may mark the buffer store operation as an \ttt{int} to \ttt{int} operation for your convenience.)  Both \ttt{effectoutput} and \ttt{effectinput} are handled as \ttt{input} and \ttt{output} operations during code generation. Neither \ttt{effectinput} nor \ttt{effectoutput} operations are marked as inputs and outputs for the purpose of graph transformations, i.e., these edges are not present in the lists containing inputs and outputs.
+    \item \ttt{effectinput} -- an operation analogical to \ttt{input}. The order of operation types as they are assumed to work is \ttt{regular ---> effectoutput -\ -> effectinput ---> regular}.
+    \item \ttt{debug} -- an operation which acts as a special data sink for the \ttt{adddebug} command. These nodes have to be specified for all types and all widths. Their type is chosen automatically if they are added via the \ttt{adddebug} command.
+    \item \ttt{noop} -- a special operation which stands for no operation. Such operation is completely ignored. No type checks, no generation, no structure checks. The only requirement is that these nodes have no output edges. This mechanics may be used to bind multiple nodes into the same component. There is one operation of this type automatically generated - its identifier is \ttt{\#noop}. The user should never need to use this flag.
+    \item \ttt{expansion} -- an internal operation type which denotes operation which stand for expansions. The user should never need to use this flag.
   \end{description}
   \item \ttt{input, output, debug} (xml boolean flags) -- correspond to the previous field of csv.
-  \item\ttt{opid} -- identifier operation.
-  \item\ttt{out\_type} -- \ttt{type\_id} of the output type. The types of operations are strictly checked.
-  \item\ttt{in\_types} -- list of \ttt{type\_id}s. The types of operations are strictly checked.
+  \item\ttt{opid} -- operation identifier.
+  \item\ttt{out\_type} -- \ttt{type\_id} of the output type. The types of operations are strictly checked upon generation with respect to 0 layer edges. Only the first type is considered during generation. Output edges of operations with \ttt{output} flag are checked to be empty regardless of this value. Output types are also not checked for nodes flagged by \ttt{effectoutput}.
+  \item\ttt{in\_types} -- list of \ttt{type\_id}s. Type checking conditions are analogical to \ttt{out\_type}. Input types are not checked for nodes flagged by \ttt{effectinput}.
 \item\ttt{width\_in} -- input width of an instruction (i.e. number of independent data rows its instruction operates on).
   \item\ttt{width\_out} -- output width of an instruction. Operations are not currently allowed to perform implicit width conversions, so this field is always equal to \ttt{width\_in}.
-  \item\ttt{code} -- an instruction pattern for the instruction. This field is used with respect to the type of node, which means that it is substitued into one of three predefined patterns. For instance \ttt{code} may be \ttt{"\$arg1 + \$arg2"}. Note that dollar signs must be doubled in case of the csv format since the csv loader expands single-dollar expressions.
+  \item\ttt{code} -- an instruction pattern for the instruction. This field is used with respect to the type of node, which means that it is substitued into one of three predefined patterns. For instance \ttt{code} may be \ttt{"\$arg1 + \$arg2"}. Note that dollar signs must be doubled in case of the csv format since the csv loader expands single-dollar expressions. Also note that argument expressions are indexed from 1 while edge positions are indexed from 0.
   \item\ttt{code\_custom} -- taking the format of \ttt{"\textless identifier\textgreater:} \ttt{\textless instruction pattern \textgreater"}. The pattern will be printed into a layer of writer which is identified by \ttt{<identifier>} --- for this reason it may be present multiple times. Custom code does not use a predefined code template, so full code must be present. For example \ttt{"\$type \$name = \$arg1 + \$arg2;"}.
 \end{description}
 
@@ -156,7 +162,7 @@ code_generic="$name[$vindex] = $arg;"
 \item\ttt{opid} -- operation identifier.
 \item\ttt{from} -- vertex id of an edge.
 \item\ttt{to} -- vertex id of an edge.
-\item\ttt{to\_pos} -- the $to$ annotation identifying arguments of operations.
+\item\ttt{to\_pos} -- the $to$ annotation identifying arguments of operations. This is indexed from zero.
 \item\ttt{from\_pos} -- the $from$ annotation.
 \end{description}
 

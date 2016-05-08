@@ -1,6 +1,12 @@
 \section{Actual implementation of the generator}
 
-The generator is implemented according to the scheme described by algorithm \ref{alg:vectorgenerator}.  Besides that, the generator provides the writer with a consistent context retrieved from the input graph and the instruction table as described in section \ref{sec:instab}. The problem of indirect width conversions is solved by generation of shortest paths. All other functionality lays either directly or indirectly in alias environments and instruction patterns. (Or is an implementation detail)
+\begin{itemize}
+  \item The generator is implemented according to the scheme described by algorithm \ref{alg:vectorgenerator}.  
+  \item The generator provides the writer with a consistent context retrieved from the input graph and the instruction table as described in section \ref{sec:instab}. 
+  \item The problem of indirect width conversions is solved by generation of shortest paths. 
+  \item Types of operations are strictly checked. Types of expansions are also checked, but the exact expansion is determined by types of incoming edges. The implicit type inference is not required to know all types to decide upon exact expansion due to possible problems with looped dependencies. In such case, unique matching expansion is found and used. If there is an ambiguity found, a warning is thrown and arbitrary expansion chosen. The type inference works by assigning types to edges in one topological pass upon graph load and is recalculated upon every transformation. This way transformations have full information about types (otherwise, multiple executions of transformations would be required). 
+  \item All other functionality lays either directly or indirectly in alias environments and instruction patterns. (Or is an implementation detail)
+\end{itemize}
 
 We should explain one more thing, related to the api of the generator. The generator is actually parametrized by a multilayer writer (created by means of one of the previously described implicit containers) and also by a configuration which specifies how the layers should behave. There are options which allow some layers to receive input only from the first instance of an instruction or receive only the first string written. This allows the generator to output an arbitrary number of code fragments per every single basic block. The former option may be used for simple accumulation of conditions related to control flow semantics of control flow nodes. The latter may be used for indication of presence of specific instructions of for indication of conditions whose value is not operation-specific.
 
