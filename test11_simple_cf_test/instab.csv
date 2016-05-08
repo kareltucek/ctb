@@ -8,13 +8,13 @@
 	instruction	BOOL		LDB	input	1	1	(i_$ioindex++ % 3) == 0		0	global:  int i_$$ioindex = 0;	
 
 
-split st	instruction		BOOL,${type,dtype->INT,int}	SPLIT_ST_$type	output	1	1			0\
+split st	instruction		BOOL,${type,dtype->INT,int}	SPLIT_ST_$type	effectoutput	1	1			0\
 	labels: SPLIT_ST_$$ioindex: \
 	labels: REQ_SPLIT_ST_$$ioindex: \
 	gonext: if($$$$$$$${BUFFER_FULL(L_$$ioindex)}) goto SPLIT_LDL_$$ioindex; if($$$$$$$${BUFFER_FULL(R_$$ioindex)}) goto SPLIT_LDR_$$ioindex;\
 	default:if($$arg1){ $$$$$$$${BUFFER_PUSH_SIMPLE(3,1,L_$$ioindex,$$arg2)}; } else { $$$$$$$${BUFFER_PUSH_SIMPLE(3,1,R_$$ioindex,$$arg2)}; };
 
-split load	instruction	${type,dtype->INT,int}		SPLIT_LD${side->L,R}_$type	input	1	1			0	\
+split load	instruction	${type,dtype->INT,int}		SPLIT_LD${side->L,R}_$type	effectinput	1	1			0	\
 	labels: SPLIT_LD$side_$$ioindex: \
 	labels: REQ_SPLIT_LD$side_$$ioindex: \
 	global: $$$$$$$${BUFFER_DECL(3,1,1,1,$side_$$ioindex,$dtype)};\
@@ -23,7 +23,7 @@ split load	instruction	${type,dtype->INT,int}		SPLIT_LD${side->L,R}_$type	input	
 	default:$$type $$name; $$$$$$$${BUFFER_PEEK_SIMPLE(3,1,$side_$$ioindex,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($side_$$ioindex)};
 
 
-merge st	instruction		${type,dtype->INT,int}	MERGE_ST${side->L,R}_$type	output	1	1			0\
+merge st	instruction		${type,dtype->INT,int}	MERGE_ST${side->L,R}_$type	effectoutput	1	1			0\
 	labels: MERGE_ST$side_$$ioindex: \
 	labels: REQ_MERGE_ST$side_$$ioindex: \
 	global: $$$$$$$${BUFFER_DECL(3,1,1,1,$side_$$ioindex,$dtype)};\
@@ -31,7 +31,7 @@ merge st	instruction		${type,dtype->INT,int}	MERGE_ST${side->L,R}_$type	output	1
 	gonext: if($$$$$$$${BUFFER_FULL($side_$$ioindex)}) goto MERGE_$$ioindex;\
 	default:$$$$$$$${BUFFER_PUSH_SIMPLE(3,1,$side_$$ioindex,$$arg1)};
 
-merge process	instruction	${type,dtype->INT,int}		MERGE_PROC_$type	input	1	1			0\
+merge process	instruction	${type,dtype->INT,int}		MERGE_PROC_$type	effectoutput,effectinput	1	1			0\
 	labels: MERGE_$$ioindex: BUFF_LD_$$ioindex:\
 	labels: REQ_MERGE_$$ioindex: REQ_BUFF_LD_$$ioindex:\
 	global: $$$$$$$${BUFFER_DECL(3,1,1,1,M_$$ioindex,$dtype)};\
@@ -41,7 +41,7 @@ merge process	instruction	${type,dtype->INT,int}		MERGE_PROC_$type	input	1	1			0
 	goprev: if($$$$$$$${BUFFER_EMPTY($$ioindex)}) goto BUFF_ST_$$ioindex;\
 	default:\
 bool tmp; $$$$$$$${BUFFER_PEEK_SIMPLE(3,1,$$ioindex,tmp)}; \
-$$type myval;\
+$dtype myval;\
 if(tmp)\
 {\
   if($$$$$$$${BUFFER_EMPTY(L_$$ioindex)})\
@@ -57,14 +57,14 @@ else\
 $$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};\
 $$$$$$$${BUFFER_PUSH_SIMPLE(3,1,M_$$ioindex,myval)};
 
-merge load	instruction	${type,dtype->INT,int}		MERGE_LD_$type	input	1	1			0	\
+merge load	instruction	${type,dtype->INT,int}		MERGE_LD_$type	effectinput	1	1			0	\
 	labels: MERGE_LD_$$ioindex: \
 	labels: REQ_MERGE_LD_$$ioindex: \
 	goprev: if($$$$$$$${BUFFER_EMPTY(M_$$ioindex)}) goto MERGE_$$ioindex;\
 	default:$$type $$name; $$$$$$$${BUFFER_PEEK_SIMPLE(3,1,M_$$ioindex,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE(M_$$ioindex)};
 
 
-buffer st	instruction		${type,dtype->INT,int,BOOL,bool}	BUFF_ST_$type	output	1	1			0	\
+buffer st	instruction		${type,dtype->INT,int,BOOL,bool}	BUFF_ST_$type	effectoutput	1	1			0	\
 	labels: BUFF_ST_$$ioindex: \
 	labels: REQ_BUFF_ST_$$ioindex: \
 	global: $$$$$$$${BUFFER_DECL(3,1,1,1,$$ioindex,$dtype)};\
@@ -72,7 +72,7 @@ buffer st	instruction		${type,dtype->INT,int,BOOL,bool}	BUFF_ST_$type	output	1	1
 	gonext: if($$$$$$$${BUFFER_FULL($$ioindex)}) goto BUFF_LD_$$ioindex;\
 	default:$$$$$$$${BUFFER_PUSH_SIMPLE(3,1,$$ioindex,$$arg1)};
 
-buffer ld	instruction	${type,dtype->INT,int,BOOL,bool}		BUFF_LD_$type	input	1	1			0	\
+buffer ld	instruction	${type,dtype->INT,int,BOOL,bool}		BUFF_LD_$type	effectinput	1	1			0	\
 	labels: BUFF_LD_$$ioindex:\
 	labels: REQ_BUFF_LD_$$ioindex:\
 	goprev: if($$$$$$$${BUFFER_EMPTY($$ioindex)}) goto BUFF_ST_$$ioindex;\

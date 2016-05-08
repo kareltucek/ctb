@@ -179,7 +179,7 @@ namespace ctb
       }
       for(XMLElement * itr = graphnode->FirstChildElement("edge"); itr != NULL; itr = itr->NextSiblingElement("edge"))
       {
-        graph.addedge( getstr(itr, "from"), getstr(itr, "to"), getint(itr, "to_pos"), getanyint(itr, "from_pos", 0));
+        graph.add_edge( getstr(itr, "from"), getstr(itr, "to"), getint(itr, "to_pos"), getanyint(itr, "from_pos", 0));
       }
     }
 
@@ -200,7 +200,7 @@ namespace ctb
       {
         for(XMLElement * itr = typelist->FirstChildElement("type"); itr != NULL; itr = itr->NextSiblingElement("type"))
         {
-          typename IT::type_t& t = instab.addtype( getstr(itr, "type_id"), getanyint(itr,"bitwidth",32));
+          typename IT::type_t& t = instab.add_type( getstr(itr, "type_id"), getanyint(itr,"bitwidth",32));
           for(XMLElement * itr2 = itr->FirstChildElement("type_version"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_version"))
             t.add_code_type(getint(itr2, "width"), getstr(itr2, "code"),getanystr(itr2,"note"));
           for(XMLElement * itr2 = itr->FirstChildElement("type_conversion"); itr2 != NULL; itr2 = itr2->NextSiblingElement("type_conversion"))
@@ -215,7 +215,12 @@ namespace ctb
       {
         for(XMLElement * itr = inslist->FirstChildElement("operation"); itr != NULL; itr = itr->NextSiblingElement("operation"))
         {
-          typename T::flag_t f =  ((getanyint(itr, "debug")) * fDEBUG) | ((getint(itr, "input")) * fINPUT) |((getint(itr, "output")) * fOUTPUT);
+
+          typename T::flag_t f1 = string_to_flags<typename T::flag_t>(getanystr(itr, "flags"));
+          typename T::flag_t f2 =  ((getanyint(itr, "debug")) * fDEBUG) | ((getanyint(itr, "input")) * fINPUT) |((getanyint(itr, "output")) * fOUTPUT);
+          typename T::flag_t f = f1 | f2;
+          if(hasval(itr, "debug"), hasval(itr, "input"), hasval(itr, "output"))
+            warn("fields 'debug','input' and 'output' are deprecated");
           auto in_types = splitlist(getanystr(itr,"in_types"));
           typename IT::operation_t& t = instab.add_operation( getstr(itr, "opid"), getstr(itr, "out_type"), in_types, f);
 

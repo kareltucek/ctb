@@ -28,8 +28,9 @@ namespace ctb
     {
       private:
         class data_t;
+        class datae_t;
       public:
-        typedef graph_general<data_t, typename T::vid_t, true> graph_t;
+        typedef graph_general<data_t, datae_t, typename T::vid_t, true> graph_t;
         typedef typename graph_t::node_t node_t;
         typedef typename graph_t::edge_t edge_t;
         typedef typename T::opid_t opid_t;
@@ -58,6 +59,10 @@ namespace ctb
             static int newid(bool reset);
             string newname(string tag) ;
             template <class W> writer<aliasenv_generator> get_acces(int width, int gran, W& w, bool c);
+            void check_structure(const vector<tid_t>& intypes, const vector<tid_t>& outtypes, bool checkin, bool checkout);
+            void set_types(const vector<tid_t>& intypes, const vector<tid_t>& outtypes);
+            void infer_type(const IT& it)  ;
+            void clear_type();
           public:
             const op_t* op;
             id_t opid;
@@ -69,7 +74,20 @@ namespace ctb
             vector<tid_t> get_typespec() const; /** returns type specification infered from graph structure (i.e. otuput types of nodes connected to the inputs)*/
         };
 
+        class datae_t
+        {
+          protected:
+          public:
+            edge_t* me;
+            tid_t type;
+            string dbglab;
+
+            datae_t(edge_t* m): me(m), type() {};
+        };
+
+        static node_t* lastnode; //for error throws
         bool compiletest; /*abbreviated as plain 'c'*/
+        static void dump(graph_t& g);
       public:
 
         IT& instab;
@@ -81,10 +99,10 @@ namespace ctb
         //graph API
         template <typename...L> typename graph_t::node_t* add_vert(vid_t v, id_t op, L... p) ;
         template <typename J> void rm_vert(J v);
-        template <typename J, typename K> void addedge(J aid, K bid, int b_argpos, int a_argpos) ;
+        template <typename J, typename K> void add_edge(J aid, K bid, int b_argpos, int a_argpos, int layer = 0, string dbglab = "") ;
         template <typename J, typename K> void connect_as(J v, K as, bool inputs = true, bool outputs = true);
         template <typename J> node_t* get_vert(J v)  ;
-        void rmedge(edge_t* e);
+        void rm_edge(edge_t* e);
         template <bool Inverted = false> void foreach(function<void(node_t*)> f); /** this is an overload of crawl for topological search, may be also abbreviated as 'do f for each vertex'*/
 
 
@@ -94,6 +112,8 @@ namespace ctb
         int get_broadest(int upperbound = 10000000) ;
         imp_contB<output_options> option_struct();
         int partition_count();
+        bool partition_is_topo_max(int p);
+        bool partition_is_topo_min(int p);
 
         //ctb related API
         void set_compiletest(bool);
@@ -101,19 +121,174 @@ namespace ctb
 
 
         //others
+        void dump_visual();
         void clear();
         void reset();
+        void update_types(); /** This updates infered data types and checks the graph structure */
         void update(); /** In case instruction table is reloaded the operation pointers are no longer valid. This function updates them.*/
 
     };
 
   template <class T, class IT>
+    typename generator<T,IT>::node_t* generator<T,IT>::lastnode = NULL;
+
+  template <class T, class IT>
+    bool generator<T,IT>::partition_is_topo_min(int p)  
+    {
+      return !graph.factor.get_vert(p)->in.empty();
+    }
+
+  template <class T, class IT>
+    bool generator<T,IT>::partition_is_topo_max(int p)  
+    {
+      return !graph.factor.get_vert(p)->out.empty();
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::update_types()  
+    {
+      try
+      {
+        //cout << "UPDATING TYPES" << endl;
+        foreach([&](node_t* n){n->data.clear_type();});
+        foreach([&](node_t* n){n->data.infer_type(instab);});
+        generator::lastnode = NULL;
+      }
+      catch (error_struct& err)
+      {
+        string nodename;
+        if(generator::lastnode != NULL)
+        {
+          nodename = generator::lastnode->id + ":" + generator::lastnode->data.opid;
+        }
+        string my = string("while processing node ") + nodename + "\n    " + err.first;
+
+        if(allow_graphs)
+        {
+          cerr << my << endl;
+          cerr << "showing corresponding node:" << endl;
+          dump(graph);
+        }
+
+        generator::lastnode = NULL;
+
+        if(err.second || allow_graphs)
+          error(my, true);
+        else
+          warn(my);
+      }
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::data_t::clear_type()  
+    {
+      for(auto* e : me->out)
+        e->data.type = "";
+      for(auto* e : me->in)
+        e->data.type = "";
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::data_t::set_types(const vector<tid_t>& intypes, const vector<tid_t>& outtypes)  
+    {
+      for(int l = 0; l < me->in.get_layercount(); l++)
+        for(auto* e : me->in.get_layer(l))
+          if(e->to_pos < intypes.size())
+            if(e->data.type == "")
+              e->data.type = intypes[e->to_pos];
+      for(int l = 0; l < me->out.get_layercount(); l++)
+        for(auto* e : me->out.get_layer(l))
+          if(e->from_pos < outtypes.size())
+            if(e->data.type == "")
+              e->data.type = outtypes[e->from_pos];
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::data_t::check_structure(const vector<tid_t>& intypes, const vector<tid_t>& outtypes, bool checkin, bool checkout)  
+    {
+      string ctx = string("at node ") + me->id + ":" + opid + " of expected type signature '" + ctb::l_to_string(intypes) + "'(in), '" + ctb::l_to_string(outtypes) + "'(out)\n    ";
+
+      if(checkin)
+      {
+        for(int l = 0; l < me->in.get_layercount(); l++)
+        {
+          for(auto* e : me->in.get_layer(l))
+          {
+            //cout << "====processing edge >> " << e->from->id << " - " << e->layer << " -> " << e->to->id << endl;
+            if(e->to_pos >= intypes.size())
+            {
+              warn(ctx + "Incoming edge at " + ctb::to_string(e->to_pos) + " from " + e->from->id + " not expected by type signature encountered at node " + me->id);
+              continue;
+            }
+            if(e->data.type != intypes[e->to_pos])
+              warn(ctx + "Types do not match infered types at input edge '" + e->from->id + " -> " + e->to->id + "'; got '" + e->data.type + "'");
+          }
+        }
+        for(int i = 0; i < intypes.size(); i++)
+          if(me->in_at(i, false, true) == NULL)
+            warn(ctx + "Incoming edge which was expected by type signature not found at position " + ctb::to_string(i) + " of node " + me->id);
+      }
+      if(checkout)
+      {
+        for(int l = 0; l < me->out.get_layercount(); l++)
+        {
+          for(auto* e : me->out.get_layer(l))
+          {
+            //cout << "====processing edge << " << e->from->id << " - " << e->layer << " -> " << e->to->id << endl;
+            if(e->from_pos >= outtypes.size())
+            {
+              warn(ctx + "Outgoing edge at " + ctb::to_string(e->from_pos) + " to " + e->to->id + " not expected by type signature encountered at node " + me->id);
+              continue;
+            }
+            if(e->data.type != outtypes[e->from_pos])
+              warn(ctx + "Types do not match infered types at output edge '" + e->from->id + " -> " + e->to->id + "'; got " + e->data.type + "'");
+          }
+        }
+        for(int i = 0; i < outtypes.size(); i++)
+          if(me->out_at(i, false, true) == NULL)
+            warn(ctx + "Outgoing edge which was expected by type signature not found at position " + ctb::to_string(i) + " at node " + me->id);
+      }
+    }
+
+  template <class T, class IT>
+    void generator<T,IT>::data_t::infer_type(const IT& it)  
+    {
+      generator::lastnode = this->me;
+      if(op->is(fNOOP))
+        return;
+      if(!op->is(fEXPANSION))
+      {
+        vector<vid_t> outtypes;
+        if(!op->is(fOUTPUT | fEFOUTPUT | fDEBUG))
+          outtypes.push_back(op->out_type);
+        set_types(op->in_types, outtypes);
+        check_structure(op->in_types, outtypes, !op->is(fEFINPUT), !op->is(fEFOUTPUT));
+      }
+      else
+      {
+        auto typesig = this->get_typespec();
+        bool ambig = false;
+        const auto& exp = it.find_expansion(op->expansions, typesig, &ambig);
+        if(ambig)
+          warn(string("Type inference provided ambiguous results at node ") + me->id);
+        set_types(exp.in_types, exp.out_types);
+        check_structure(exp.in_types, exp.out_types, true, true);
+      }
+    }
+
+
+  template <class T, class IT>
     template <bool Inverted>
     void generator<T,IT>::foreach(function<void(node_t*)> f)  
     {
-      graph.crawl_topological<Inverted>(f);
+      graph.template crawl_topological<Inverted>([&](node_t* n){f(n);});
     }
 
+  template <class T, class IT>
+    void generator<T,IT>::rm_edge(edge_t* e)  
+    {
+      graph.rm_edge(e);
+    }
 
   template <class T, class IT>
     template <typename J>
@@ -140,9 +315,10 @@ namespace ctb
 
   template <class T, class IT>
     template <typename J, typename K>
-    void generator<T,IT>::addedge(J aid, K bid, int b_argpos, int a_argpos)  
+    void generator<T,IT>::add_edge(J aid, K bid, int b_argpos, int a_argpos, int layer, string dbglab)  
     {
-      graph.addedge(aid, bid, b_argpos, a_argpos);
+      auto* e = graph.add_edge(aid, bid, b_argpos, a_argpos, layer);
+      e->data.dbglab = dbglab;
     }
 
   typedef generator<traits, instruction_table_default> generator_default;
@@ -159,6 +335,7 @@ namespace ctb
     {
       L<generator<T,IT>> l;
       l.transform(*this ,params...);
+      update_types();
     }
 
   template <class T, class IT>
@@ -201,6 +378,7 @@ namespace ctb
     void generator<T,IT>::clear()  
     {
       graph.clear();
+      generator::lastnode = NULL;
     }
 
   template <class T, class IT>
@@ -259,7 +437,11 @@ namespace ctb
         some_vert = *graph.factor.verts[partition]->data.vertices.begin();
       }
       RETHROW(string("Could not access any vertex of required partition ") + ctb::to_string(partition) + " note that partition count is " + ctb::to_string(partition_count()) );
+
+      verbose(string() + "generating partition " + ctb::to_string(partition) + " for packsize " + ctb::to_string(packsize));
       some_vert->crawl_topological([&](node_t* n) {n->data.generate(graph, packsize, w, opts, compiletest); });
+      verbose(string() + "    partition generated");
+      generator::lastnode = NULL;
 
       if(to!=NULL)
         instab.rm_tags(to,gONCE);
@@ -282,7 +464,10 @@ namespace ctb
     template <class W>
     void generator<T,IT>::data_t::generate(graph_t& parent, int granularity, imp_contB<W>&w, imp_contB<output_options>& opts, bool c)
     {
+      generator<T,IT>::lastnode = me;
       aliasenv_generator::setparammap(&params);
+      if(op->is(fNOOP))
+        return;
       try
       {
         W empty;
@@ -298,8 +483,7 @@ namespace ctb
           error( string("asymetric instructions not supported"));
         if(me->in.size() != op->in_types.size())
         {
-          cout << op->in_types[0] << endl;
-          parent.template dump_visual_label<true>([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
+          //cout << op->in_types[0] << endl;
           error( string("count of input nodes does not match operation specification, insize is ") + ctb::to_string(me->in.size()) +", expected is " + ctb::to_string(op->in_types.size()));
         }
         for(int i = 0; i < me->in.size(); ++i)
@@ -307,7 +491,6 @@ namespace ctb
           auto e = me->in[i];
           if(e->from->data.op->out_type != op->in_types[e->to_pos])
           {
-            parent.template dump_visual_label<true>([=](node_t* n)->string{ return n->data.opid; },[=](node_t* n)->string{ return n == me ? "red" : "black"; }  );
             error( string("argument ") + to_string(e->to_pos) + " does not match defined input type: got '" + e->from->data.op->out_type + "' wanted '" + op->in_types[e->to_pos] + "'");
           }
         }
@@ -320,7 +503,12 @@ namespace ctb
         string op_c;
         typename IT::operation_t::ccode_cont_t  op_cc;
         size_t printability; 
-        if(!op->is(fOUTPUT))
+        if(op->is(fOUTPUT | fEFOUTPUT))
+        {
+          try { op->get_type_string(mygran, type_string); }
+          catch(...) {};
+        }
+        else
           op->get_type_string(mygran, type_string);
         bool found = op->get_op_string(mygran, op_c, op_cc, printability);
         if(op->is(fEXPANSION))
@@ -340,9 +528,9 @@ namespace ctb
           {
             if(!op_c.empty()) //neccessary!
             {
-              if(op->is(fINPUT)) 
+              if(op->is(fINPUT | fEFINPUT)) 
                 w["default"].print("$inputcode" , type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
-              else if(op->is(fOUTPUT))
+              else if(op->is(fOUTPUT | fEFOUTPUT))
                 w["default"].print("$outputcode", type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
               else if(op->is(fDEBUG)) //same as output
                 w["default"].print("$outputcode", type_string, name, basename, op_c, myin*i, myin*i, 0, classid,ARG(1), ARG(2), ARG(3));
@@ -372,14 +560,39 @@ namespace ctb
       catch (error_struct& err)
       {
         stringstream s;
-        s << "while processing node " << me->id << " with opcode " << opid << "\n    " << err.first;
-        if(err.second)
-          error(s.str(), true);
+        string my = string("while processing node ") + me->id + " with opcode " + opid + "\n    " + err.first;
+
+        if(allow_graphs)
+        {
+          cerr << my << endl;
+          cerr << "showing malfunctioning node:" << endl;
+          dump(parent);
+        }
+
+        if(err.second || allow_graphs)
+          error(my, true);
         else
-          cerr << s.str() << endl;
+          warn(my);
       }
       aliasenv_generator::setparammap(NULL);
     }
+
+  template <class T, class IT>
+    void generator<T,IT>::dump_visual()
+    {
+      dump(this->graph);
+    }
+
+
+  template <class T, class IT>
+    void generator<T,IT>::dump(graph_t& parent)
+    {
+        auto vertlab = [=](node_t* n)->string{ return n->data.opid; };
+        auto vertcol = [=](node_t* n)->string{ return lastnode == n ? "red" : "black"; };
+        auto edgelab = [=](edge_t* n)->string{ return ctb::to_string(n->data.type) + ":" + n->data.dbglab; };
+        parent.template dump_visual_label<false>(vertlab,  vertcol, edgelab);
+    }
+
 
   template <class T, class IT>
     template <class W>
@@ -508,11 +721,6 @@ namespace ctb
   template <class T, class IT>
     void generator<T,IT>::data_t::set_param(const string& name, const string& value)
     {
-      auto itr = params.find(name);
-      if(itr == params.end())
-      {
-        error(string("vertex parameter not found: ")+name);
-      }
       params[name] = value;
     }
 
@@ -537,7 +745,7 @@ namespace ctb
         AUTO(edge)* src = me->in_at(i, false);
         if(src == NULL)
           break;
-        typespec.push_back(src->from->data.op->out_type);
+        typespec.push_back(src->data.type);
       }
       return typespec;
     }

@@ -1,6 +1,6 @@
 FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++14  -g -gdwarf-2 -O0 -Wno-deprecated-increment-bool
 
-all : make_anyway output.preprocessed.cpp graph.out graph_cf.out graph.out.png graph_cf.out.png run
+all : make_anyway output.preprocessed.cpp graph.out graph_cf.out   run
 
 make_anyway :
 	make -C .. ctb
@@ -9,14 +9,10 @@ test : output.preprocessed.cpp
 	${CXX} -ggdb output.preprocessed.cpp -o test
 
 visual : make_anyway
-	../ctb -f program_visual
+	../ctb -f program_visual ${CTB_ARGS}
 
 graph.out graph_cf.out output.preprocessed.cpp : graph.xml instab.csv
-	../ctb -f program
-
-graph.out.png graph_cf.out.png : graph.out graph_cf.out
-	cat graph.out | dot -Tpng > graph.out.png
-	cat graph_cf.out | dot -Tpng > graph_cf.out.png
+	../ctb -f program ${CTB_ARGS}
 
 run : graph.out test
 	./check_output.sh 

@@ -50,18 +50,41 @@ namespace ctb
 
   enum flags 
   {
-    fINPUT = 1, fOUTPUT = 2, fDEBUG = 4, fEXPANSION = 8
+    fINPUT = 1
+      , fOUTPUT = 2
+      , fDEBUG = 4
+      , fEXPANSION = 8
+      , fEFINPUT = 16
+      , fEFOUTPUT = 32
+      , fNOOUTPUT = 64
+      , fNOOP = 128
+
   } ;
 
   template <typename ... T> void pass(T...)
   {
   }
 
+  template<typename F>
+  map<string, F> flaghash()
+  {
+     map<string, F> hash = {
+      {"output",fOUTPUT}
+      ,{"input",fINPUT}
+      ,{"debug",fDEBUG}
+      ,{"expansion",fEXPANSION}
+      ,{"effectinput",fEFINPUT}
+      ,{"effectoutput",fEFOUTPUT}
+      //,{"nooutput",fNOOUTPUT}
+      ,{"noop",fNOOP}
+    };
+     return hash;
+  }
 
   template<typename F>
     F string_to_flags(string str)
     {
-      static map<string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
+      auto hash = flaghash<F>();
       F f = 0;
       stringlist words = splitlist(str);
       for(auto w : words)
@@ -82,7 +105,7 @@ namespace ctb
     string flags_to_string(F f)
     {
       string b;
-      static map<string, F> hash = {{"output",fOUTPUT},{"input",fINPUT},{"debug",fDEBUG}};
+      auto hash  = flaghash<F>();
 
       for(auto rec : hash)
       {

@@ -247,6 +247,7 @@ namespace ctb
         warn("Warning: loading graph while instruction table is empty. Graph construction depends on correct input/output flags!");
       L<T, generator_t, IT> loader;
       loader.load_graph(mygenerator, params...);
+      mygenerator.update_types();
     }
 
   template <class T, class IT>
@@ -346,6 +347,7 @@ namespace ctb
       cout << "  -n <comma separated tags>   require all tags to be subset of this set of tags" << endl;
       cout << "  -c compile test - makes generator output only the first instruction of every vector  " << endl;
       cout << "  -w                          handle warnings as errors (gives traces)" << endl;
+      cout << "  -g                          dont show graphs on error" << endl;
       cout << "  -v                          be verbose" << endl;
       cout << "  -vvv                        be extremely verbose" << endl;
       cout << "  -h                          show some help" << endl;
@@ -458,6 +460,9 @@ namespace ctb
                   break;
                 case 'w':
                   warn_as_error = true;
+                  break;
+                case 'g':
+                  allow_graphs = false;
                   break;
                 case 'f':
                 case 'a':
@@ -648,7 +653,7 @@ start:;
   template <class T, class IT>
     void ctb<T,IT>::command_visualize_graph(stringlist&& args)
     {
-      mygenerator.graph.dump_visual();
+      mygenerator.dump_visual();
     }
 
 

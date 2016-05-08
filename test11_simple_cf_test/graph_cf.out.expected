@@ -2,162 +2,182 @@
 #0;
 #0 -> 1
 #0 -> 1
+#0 -> 1
 #1 -> 2
 #1 -> 3
-#1 -> 4
+#0 -> 4
 #2 -> 4
 #3 -> 4
-#4 -> 5
 #0 -> 5
+#4 -> 5
 #partitions are:
 #partition 0:
+#ldb
+#ldb -> _merge_merge_stbuff_3 [label="14:",taillabel="0",headlabel="0"];
+#ldb -> _generic_cf_node_buff_st_4 [label="15:",taillabel="0",headlabel="0"];
 #ldi1
 #ldi2
-#ldi1 -> mul1;
-#ldi2 -> mul1;
-#ldi1 -> add1;
-#ldi2 -> add1;
-#mul1 -> add2;
-#add1 -> add2;
-#add2 -> buff_buff_st_1;
-#add2 -> generic_cf_node_buff_st_4;
-#add2 -> generic_cf_node_buff_st_5;
+#ldi1 -> _cf_transform_noop_vertex [label="9:",taillabel="0",headlabel="0"];
+#ldi2 -> _cf_transform_noop_vertex [label="9:",taillabel="0",headlabel="1"];
+#ldb -> _cf_transform_noop_vertex [label="9:",taillabel="0",headlabel="2"];
+#ldi1 -> add1 [label="4:",taillabel="0",headlabel="0"];
+#ldi2 -> add1 [label="4:",taillabel="0",headlabel="1"];
+#ldi1 -> mul1 [label="3:",taillabel="0",headlabel="1"];
+#ldi2 -> mul1 [label="3:",taillabel="0",headlabel="0"];
+#mul1 -> add2 [label="5:",taillabel="0",headlabel="0"];
+#add1 -> add2 [label="5:",taillabel="0",headlabel="1"];
+#add2 -> _buff_buff_st_1 [label="6:",taillabel="0",headlabel="0"];
+#add2 -> _generic_cf_node_buff_st_5 [label="10:",taillabel="0",headlabel="0"];
+#add2 -> _generic_cf_node_buff_st_6 [label="11:",taillabel="0",headlabel="0"];
 #partition 1:
-#buff_buff_ld_1
-#generic_cf_node_buff_ld_4
-#buff_buff_ld_1 -> add3;
-#generic_cf_node_buff_ld_4 -> add3;
-#ldb
-#ldb -> split_split_st_2;
-#add3 -> split_split_st_2;
-#ldb -> merge_merge_stbuff_3;
+#_buff_buff_ld_1
+#_generic_cf_node_buff_ld_5
+#_buff_buff_ld_1 -> add3 [label="13:",taillabel="0",headlabel="0"];
+#_generic_cf_node_buff_ld_5 -> add3 [label="13:",taillabel="0",headlabel="1"];
+#_generic_cf_node_buff_ld_4
+#add3 -> _split_split_st_2 [label="18:",taillabel="0",headlabel="1"];
+#_generic_cf_node_buff_ld_4 -> _split_split_st_2 [label="18:",taillabel="0",headlabel="0"];
 #partition 2:
-#split_split_ldtrue_2
-#split_split_ldtrue_2 -> merge_merge_sttrue_3;
+#_split_split_ldtrue_2
+#_split_split_ldtrue_2 -> _merge_merge_sttrue_3 [label="20:",taillabel="0",headlabel="0"];
 #partition 3:
-#split_split_ldfalse_2
-#split_split_ldfalse_2 -> merge_merge_stfalse_3;
+#_split_split_ldfalse_2
+#_split_split_ldfalse_2 -> _merge_merge_stfalse_3 [label="22:",taillabel="0",headlabel="0"];
 #partition 4:
-#merge_merge_proc_3
+#_merge_merge_proc_3
 #partition 5:
-#generic_cf_node_buff_ld_5
-#merge_merge_ld_3
-#merge_merge_ld_3 -> add4;
-#generic_cf_node_buff_ld_5 -> add4;
-#add4 -> h_st;
+#_merge_merge_ld_3
+#_generic_cf_node_buff_ld_6
+#_merge_merge_ld_3 -> add4 [label="25:",taillabel="0",headlabel="0"];
+#_generic_cf_node_buff_ld_6 -> add4 [label="25:",taillabel="0",headlabel="1"];
+#add4 -> h_st [label="26:",taillabel="0",headlabel="0"];
 #factor invisible edges are
+#_buff_buff_ld_1
+#_buff_buff_st_1 -> _buff_buff_ld_1 [label="7:",taillabel="0",headlabel="0"];
+#_generic_cf_node_buff_ld_5
+#_generic_cf_node_buff_st_5 -> _generic_cf_node_buff_ld_5 [label="12:",taillabel="0",headlabel="0"];
+#_generic_cf_node_buff_ld_4
+#_generic_cf_node_buff_st_4 -> _generic_cf_node_buff_ld_4 [label="17:",taillabel="0",headlabel="0"];
 #ldi1
 #ldi2
-#buff_buff_ld_1
-#buff_buff_st_1 -> buff_buff_ld_1;
-#generic_cf_node_buff_ld_4
-#generic_cf_node_buff_st_4 -> generic_cf_node_buff_ld_4;
 #ldb
-#merge_merge_ld_3
-#merge_merge_proc_3 -> merge_merge_ld_3;
-#generic_cf_node_buff_ld_5
-#generic_cf_node_buff_st_5 -> generic_cf_node_buff_ld_5;
-#merge_merge_proc_3
-#merge_merge_stbuff_3 -> merge_merge_proc_3;
-#merge_merge_sttrue_3 -> merge_merge_proc_3;
-#merge_merge_stfalse_3 -> merge_merge_proc_3;
-#split_split_ldfalse_2
-#split_split_st_2 -> split_split_ldfalse_2;
-#split_split_ldtrue_2
-#split_split_st_2 -> split_split_ldtrue_2;
+#_generic_cf_node_buff_ld_6
+#_generic_cf_node_buff_st_6 -> _generic_cf_node_buff_ld_6 [label="16:",taillabel="0",headlabel="0"];
+#_merge_merge_ld_3
+#_merge_merge_proc_3 -> _merge_merge_ld_3 [label="24:",taillabel="0",headlabel="0"];
+#_merge_merge_proc_3
+#_merge_merge_stbuff_3 -> _merge_merge_proc_3 [label="23:",taillabel="0",headlabel="0"];
+#_merge_merge_sttrue_3 -> _merge_merge_proc_3 [label="23:",taillabel="0",headlabel="1"];
+#_merge_merge_stfalse_3 -> _merge_merge_proc_3 [label="23:",taillabel="0",headlabel="2"];
+#_split_split_ldfalse_2
+#_split_split_st_2 -> _split_split_ldfalse_2 [label="21:",taillabel="1",headlabel="0"];
+#_split_split_ldtrue_2
+#_split_split_st_2 -> _split_split_ldtrue_2 [label="19:",taillabel="0",headlabel="0"];
 digraph G {
 edge [style=dotted,arrowhead=odot];
+_buff_buff_ld_1
+_generic_cf_node_buff_ld_5
+_generic_cf_node_buff_ld_4
 ldi1
 ldi2
-buff_buff_ld_1
-generic_cf_node_buff_ld_4
 ldb
-merge_merge_ld_3
-generic_cf_node_buff_ld_5
-merge_merge_proc_3
-split_split_ldfalse_2
-split_split_ldtrue_2
+_generic_cf_node_buff_ld_6
+_merge_merge_ld_3
+_merge_merge_proc_3
+_split_split_ldfalse_2
+_split_split_ldtrue_2
 edge [style=dotted,arrowhead=normal];
+_buff_buff_ld_1
+_buff_buff_st_1 -> _buff_buff_ld_1 [label="7:",taillabel="0",headlabel="0"];
+_generic_cf_node_buff_ld_5
+_generic_cf_node_buff_st_5 -> _generic_cf_node_buff_ld_5 [label="12:",taillabel="0",headlabel="0"];
+_generic_cf_node_buff_ld_4
+_generic_cf_node_buff_st_4 -> _generic_cf_node_buff_ld_4 [label="17:",taillabel="0",headlabel="0"];
 ldi1
 ldi2
-buff_buff_ld_1
-buff_buff_st_1 -> buff_buff_ld_1;
-generic_cf_node_buff_ld_4
-generic_cf_node_buff_st_4 -> generic_cf_node_buff_ld_4;
 ldb
-merge_merge_ld_3
-merge_merge_proc_3 -> merge_merge_ld_3;
-generic_cf_node_buff_ld_5
-generic_cf_node_buff_st_5 -> generic_cf_node_buff_ld_5;
-merge_merge_proc_3
-merge_merge_stbuff_3 -> merge_merge_proc_3;
-merge_merge_sttrue_3 -> merge_merge_proc_3;
-merge_merge_stfalse_3 -> merge_merge_proc_3;
-split_split_ldfalse_2
-split_split_st_2 -> split_split_ldfalse_2;
-split_split_ldtrue_2
-split_split_st_2 -> split_split_ldtrue_2;
+_generic_cf_node_buff_ld_6
+_generic_cf_node_buff_st_6 -> _generic_cf_node_buff_ld_6 [label="16:",taillabel="0",headlabel="0"];
+_merge_merge_ld_3
+_merge_merge_proc_3 -> _merge_merge_ld_3 [label="24:",taillabel="0",headlabel="0"];
+_merge_merge_proc_3
+_merge_merge_stbuff_3 -> _merge_merge_proc_3 [label="23:",taillabel="0",headlabel="0"];
+_merge_merge_sttrue_3 -> _merge_merge_proc_3 [label="23:",taillabel="0",headlabel="1"];
+_merge_merge_stfalse_3 -> _merge_merge_proc_3 [label="23:",taillabel="0",headlabel="2"];
+_split_split_ldfalse_2
+_split_split_st_2 -> _split_split_ldfalse_2 [label="21:",taillabel="1",headlabel="0"];
+_split_split_ldtrue_2
+_split_split_st_2 -> _split_split_ldtrue_2 [label="19:",taillabel="0",headlabel="0"];
 edge [style=solid];
+_buff_buff_ld_1
+_generic_cf_node_buff_ld_5
+_buff_buff_ld_1 -> add3 [label="13:",taillabel="0",headlabel="0"];
+_generic_cf_node_buff_ld_5 -> add3 [label="13:",taillabel="0",headlabel="1"];
+_generic_cf_node_buff_ld_4
+add3 -> _split_split_st_2 [label="18:",taillabel="0",headlabel="1"];
+_generic_cf_node_buff_ld_4 -> _split_split_st_2 [label="18:",taillabel="0",headlabel="0"];
 ldi1
 ldi2
-ldi1 -> add1;
-ldi2 -> add1;
-ldi1 -> mul1;
-ldi2 -> mul1;
-mul1 -> add2;
-add1 -> add2;
-add2 -> buff_buff_st_1;
-add2 -> generic_cf_node_buff_st_4;
-add2 -> generic_cf_node_buff_st_5;
-buff_buff_ld_1
-generic_cf_node_buff_ld_4
-buff_buff_ld_1 -> add3;
-generic_cf_node_buff_ld_4 -> add3;
+ldi1 -> mul1 [label="3:",taillabel="0",headlabel="1"];
+ldi2 -> mul1 [label="3:",taillabel="0",headlabel="0"];
+ldi1 -> add1 [label="4:",taillabel="0",headlabel="0"];
+ldi2 -> add1 [label="4:",taillabel="0",headlabel="1"];
+mul1 -> add2 [label="5:",taillabel="0",headlabel="0"];
+add1 -> add2 [label="5:",taillabel="0",headlabel="1"];
+add2 -> _buff_buff_st_1 [label="6:",taillabel="0",headlabel="0"];
 ldb
-ldb -> split_split_st_2;
-add3 -> split_split_st_2;
-ldb -> merge_merge_stbuff_3;
-merge_merge_ld_3
-generic_cf_node_buff_ld_5
-merge_merge_ld_3 -> add4;
-generic_cf_node_buff_ld_5 -> add4;
-add4 -> h_st;
-merge_merge_proc_3
-split_split_ldfalse_2
-split_split_ldfalse_2 -> merge_merge_stfalse_3;
-split_split_ldtrue_2
-split_split_ldtrue_2 -> merge_merge_sttrue_3;
+ldi1 -> _cf_transform_noop_vertex [label="9:",taillabel="0",headlabel="0"];
+ldi2 -> _cf_transform_noop_vertex [label="9:",taillabel="0",headlabel="1"];
+ldb -> _cf_transform_noop_vertex [label="9:",taillabel="0",headlabel="2"];
+add2 -> _generic_cf_node_buff_st_5 [label="10:",taillabel="0",headlabel="0"];
+add2 -> _generic_cf_node_buff_st_6 [label="11:",taillabel="0",headlabel="0"];
+ldb -> _merge_merge_stbuff_3 [label="14:",taillabel="0",headlabel="0"];
+ldb -> _generic_cf_node_buff_st_4 [label="15:",taillabel="0",headlabel="0"];
+_generic_cf_node_buff_ld_6
+_merge_merge_ld_3
+_merge_merge_ld_3 -> add4 [label="25:",taillabel="0",headlabel="0"];
+_generic_cf_node_buff_ld_6 -> add4 [label="25:",taillabel="0",headlabel="1"];
+add4 -> h_st [label="26:",taillabel="0",headlabel="0"];
+_merge_merge_proc_3
+_split_split_ldfalse_2
+_split_split_ldfalse_2 -> _merge_merge_stfalse_3 [label="22:",taillabel="0",headlabel="0"];
+_split_split_ldtrue_2
+_split_split_ldtrue_2 -> _merge_merge_sttrue_3 [label="20:",taillabel="0",headlabel="0"];
 0;
+0 -> 1
 0 -> 1
 0 -> 1
 1 -> 2
 1 -> 3
-1 -> 4
+0 -> 4
 2 -> 4
 3 -> 4
-4 -> 5
 0 -> 5
+4 -> 5
+_buff_buff_ld_1 [color="black",label="_buff_buff_ld_1 "];
+_generic_cf_node_buff_ld_5 [color="black",label="_generic_cf_node_buff_ld_5 "];
+add3 [color="black",label="add3 "];
+_generic_cf_node_buff_ld_4 [color="black",label="_generic_cf_node_buff_ld_4 "];
+_split_split_st_2 [color="black",label="_split_split_st_2 "];
 ldi1 [color="black",label="ldi1 "];
 ldi2 [color="black",label="ldi2 "];
-add1 [color="black",label="add1 "];
 mul1 [color="black",label="mul1 "];
+add1 [color="black",label="add1 "];
 add2 [color="black",label="add2 "];
-buff_buff_st_1 [color="black",label="buff_buff_st_1 "];
-generic_cf_node_buff_st_4 [color="black",label="generic_cf_node_buff_st_4 "];
-generic_cf_node_buff_st_5 [color="black",label="generic_cf_node_buff_st_5 "];
-buff_buff_ld_1 [color="black",label="buff_buff_ld_1 "];
-generic_cf_node_buff_ld_4 [color="black",label="generic_cf_node_buff_ld_4 "];
-add3 [color="black",label="add3 "];
+_buff_buff_st_1 [color="black",label="_buff_buff_st_1 "];
 ldb [color="black",label="ldb "];
-split_split_st_2 [color="black",label="split_split_st_2 "];
-merge_merge_stbuff_3 [color="black",label="merge_merge_stbuff_3 "];
-merge_merge_ld_3 [color="black",label="merge_merge_ld_3 "];
-generic_cf_node_buff_ld_5 [color="black",label="generic_cf_node_buff_ld_5 "];
+_cf_transform_noop_vertex [color="black",label="_cf_transform_noop_vertex "];
+_generic_cf_node_buff_st_5 [color="black",label="_generic_cf_node_buff_st_5 "];
+_generic_cf_node_buff_st_6 [color="black",label="_generic_cf_node_buff_st_6 "];
+_merge_merge_stbuff_3 [color="black",label="_merge_merge_stbuff_3 "];
+_generic_cf_node_buff_st_4 [color="black",label="_generic_cf_node_buff_st_4 "];
+_generic_cf_node_buff_ld_6 [color="black",label="_generic_cf_node_buff_ld_6 "];
+_merge_merge_ld_3 [color="black",label="_merge_merge_ld_3 "];
 add4 [color="black",label="add4 "];
 h_st [color="black",label="h_st "];
-merge_merge_proc_3 [color="black",label="merge_merge_proc_3 "];
-split_split_ldfalse_2 [color="black",label="split_split_ldfalse_2 "];
-merge_merge_stfalse_3 [color="black",label="merge_merge_stfalse_3 "];
-split_split_ldtrue_2 [color="black",label="split_split_ldtrue_2 "];
-merge_merge_sttrue_3 [color="black",label="merge_merge_sttrue_3 "];
+_merge_merge_proc_3 [color="black",label="_merge_merge_proc_3 "];
+_split_split_ldfalse_2 [color="black",label="_split_split_ldfalse_2 "];
+_merge_merge_stfalse_3 [color="black",label="_merge_merge_stfalse_3 "];
+_split_split_ldtrue_2 [color="black",label="_split_split_ldtrue_2 "];
+_merge_merge_sttrue_3 [color="black",label="_merge_merge_sttrue_3 "];
 }

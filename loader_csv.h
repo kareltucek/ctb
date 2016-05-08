@@ -149,6 +149,8 @@ namespace ctb
      s << "#note\ttype\toutput type\tinput types\top id\tflags\twidth in\twidth out\tcode\ttags\trating\tcode_custom[0]\tcode_custom[1]..." << endl;
      for(auto o : instab.instab)
      {
+       if(o.second->opid.empty() || o.second->opid[0] == '_')
+         continue;
        for(auto i : o.second->versions)
        {
          writer_plain::basic_ignorant_exporter w;
@@ -192,6 +194,8 @@ namespace ctb
      s << "#note\ttype\ttype id\tbitwidth\twidth\tcode" << endl;
      for(auto t : instab.typetab)
      {
+       if(t.second->tid.empty() || t.second->tid[0] == '_')
+         continue;
        for(auto v : t.second->versions)
        {
          writer_plain::basic_ignorant_exporter w;
@@ -295,7 +299,7 @@ namespace ctb
        for(int i = ciSize; i < data.size(); i++)
          if(!data[i].empty())
            ccode.push_back(data[i]);
-       instab.addtype(data[ciOutType]);
+       instab.add_type(data[ciOutType]);
        typename IT::operation_t& operation = instab.add_operation(data[ciOpId],data[ciOutType],splitlist(data[ciInTypes]),f);
        operation.add_code(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],ccode,data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
      }
@@ -303,22 +307,23 @@ namespace ctb
      {
        checksize(ceSize, data);
        int f = fEXPANSION;
-       instab.addtype(data[ceOutType]);
+       instab.add_type(data[ceOutType]);
        auto in_types = splitlist(data[ceInTypes]);
        auto out_types = splitlist(data[ceOutType]);
+       //cout << "adding expansion with types: " << data[ceInTypes] << " " << data[ceOutType] << endl;
        typename IT::operation_t& operation = instab.add_operation(data[ceOpId],data[ceOutType],in_types,f);
        operation.add_expansion(data[ceName],data[ceTransformer],splitlist(data[ceArgs]),data[ceNote], in_types, out_types);
      }
      else if (data[cvType] == "type_version")
      {
        checksize(cvSize, data);
-       typename IT::type_t& type = instab.addtype(data[cvTId],::ctb::stoi(data[cvBW]));
+       typename IT::type_t& type = instab.add_type(data[cvTId],::ctb::stoi(data[cvBW]));
        type.add_code_type(::ctb::stoi(data[cvW]), data[cvCode], data[cvNote]);
      }
      else if(data[ccType] == "type_conversion")
      {
        checksize(ccSize, data);
-       typename IT::type_t& type = instab.addtype(data[ccTId],::ctb::stoi(data[ccBW]));
+       typename IT::type_t& type = instab.add_type(data[ccTId],::ctb::stoi(data[ccBW]));
        type.add_code_conversion(::ctb::stoi(data[ccWIn]), ::ctb::stoi(data[ccWOut]),data[ccCode1],data[ccCode2],data[ccCodeCustom],data[ccCodeGeneric],data[ccNote],data[ccTag],::ctb::stoi(data[ccRating]));
        }
        else

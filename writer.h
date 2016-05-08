@@ -127,8 +127,9 @@ namespace ctb
        typedef writer<M, dLet, dLet, false> preprocessor;
        stringlist data; /**holds (formatted) data*/
        bool last_terminated;
-       template <dollar_mode dollars, typename ... Types> void preprocessline(string format, Types ... args);
-       template <dollar_mode dollars, typename J, typename ... Types> void shake(J itr, J itre, const string& line, Types ... args);
+       template <dollar_mode dollars, typename ... Types> void preprocessline(const string& format, const Types&... args);
+       template <dollar_mode dollars, typename ... Types> void preprocessline_needed(string format, const Types&... args);
+       template <dollar_mode dollars, typename J, typename ... Types> void shake(J itr, J itre, const string& line, const Types&... args);
        void trim() ;
        void add(string&& str, bool terminal) ;
        void process(int& pos, const string& format) ;
@@ -180,7 +181,7 @@ namespace ctb
        /*printing*/ template<dollar_mode dollars = I, typename ... Types> writer& printf(const string& filename, const Types&... params) ; /** print, but the first argument is a filename of a file which is to be loaded instead of the format string */
        /*printing*/ template<dollar_mode dollars = I, typename ... Types, typename Type> writer& push  (const Type& format, const Types&... params) ; /** explicit push on a new line. To be used with list_concat for simple creation of delimited lists.*/
        /*printing*/ template<dollar_mode dollars = I, typename ... Types> writer& pushf (const string& filename, const Types&... params) ; /** pushf is again a file-loaded version of push */
-       /*printing*/ template<dollar_mode dollars = I, typename Types> writer<M,I,O,C>& append(Types str) ;
+       /*printing*/ template<dollar_mode dollars = I, typename Types> writer<M,I,O,C>& append(const Types& str) ;
 
        /*output*/   template<dollar_mode dollars = O> void write(ostream& ss) const ;
        /*output*/   template<dollar_mode dollars = O> void write_file(string filename) const ;
@@ -623,7 +624,26 @@ namespace ctb
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
      template <dollar_mode dollars, typename ... Types>
-     void writer<M,I,O,C>::preprocessline(string line, Types ... args)
+     void writer<M,I,O,C>::preprocessline(const string& line, const Types& ... args)
+     {
+       int offset = 0;
+       int s,a,e;
+       s = line.find("${", offset);
+       if(s == string::npos) goto skip;
+       a = line.find("->", s);
+       if(a == string::npos) goto skip;
+       e = line.find("}", s);
+       if(e == string::npos) goto skip;
+       preprocessline_needed<dollars, Types...>(line, args...);
+       return;
+skip:
+       print_internal<dollars>(line, args...);
+     }
+
+
+   template <class M, dollar_mode I, dollar_mode O, bool C>
+     template <dollar_mode dollars, typename ... Types>
+     void writer<M,I,O,C>::preprocessline_needed(string line, const Types& ... args)
      {
        typedef pair<vector<string>, vector<string> > sub_t; //substitution
        typedef vector<sub_t> subtab_t;
@@ -671,7 +691,7 @@ namespace ctb
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
      template <dollar_mode dollars, typename J, typename ... Types>
-     void writer<M,I,O,C>::shake(J itr, J itre, const string& line, Types... args)
+     void writer<M,I,O,C>::shake(J itr, J itre, const string& line, const Types&... args)
      {
        if(itr == itre)
        {
@@ -694,14 +714,14 @@ namespace ctb
    template <class M, dollar_mode I, dollar_mode O, bool C>
      template<dollar_mode dollars, typename ... Types> writer<M,I,O,C>& writer<M,I,O,C>::print_cartesian(const string& format, const Types&... params)  
      {
-#ifdef TESTOVANI
+#ifdef DEBUGFIELDS
        const char*  err = format.c_str();
 #endif
        try
        {
          if(C)
          {
-           if(aliasenv_cart::depth() > 100)
+           if(aliasenv_cart::depth() > 10)
              warning(string("writer has ")+ ctb::to_string(aliasenv_cart::depth())+" nested instances, run with -w to break and see the stack of printer");
            aliasenv_cart::push();
            preprocessline<dollars>(format, params...);
@@ -765,7 +785,7 @@ namespace ctb
    template <class M, dollar_mode I, dollar_mode O, bool C>
      template<dollar_mode dollars, typename ... Types> void writer<M,I,O,C>::print_internal(const string& format, const Types&... params)  //print("a[$1] = a[$1] $ $2", i, j) -> "a[i] = a[i] $ j
      {
-#ifdef TESTOVANI
+#ifdef DEBUGFIELDS
        const char* f = format.c_str();
        verbose(string() + "      writer::print_internal (internal) line " + ctb::to_string(data.size()) + " format '" + format + "'", 4);
 #endif
@@ -908,7 +928,7 @@ namespace ctb
    template <class M, dollar_mode I, dollar_mode O, bool C>
      template<dollar_mode dollars, typename ... Types> writer<M,I,O,C>& writer<M,I,O,C>::print(const Types&... params)
      {
-#ifdef TESTOVANI
+#ifdef DEBUGFIELDS
        tuple<const Types&...> t(params...);
        string format = ctb::to_string(get<0>(t));
        verbose(string() + "writer::print of '" + format + "'", 3);
@@ -938,7 +958,7 @@ namespace ctb
      }
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
-     template <dollar_mode dollars , typename Type> writer<M,I,O,C>& writer<M,I,O,C>::append(Type str)
+     template <dollar_mode dollars , typename Type> writer<M,I,O,C>& writer<M,I,O,C>::append(const Type& str)
      {
        print<dollars>("$1", str);
        return *this;

@@ -9,6 +9,7 @@ namespace ctb
 {
   typedef pair<string,bool> error_struct;
   static bool warn_as_error = false;
+  static bool allow_graphs = true;
   static int be_verbose = 0;
 
   void verbose(const string& e, int l = 1)
@@ -44,6 +45,20 @@ namespace ctb
 };
 
 #ifndef TESTOVANI
+
+#define RETHROWORWARN(msg)\
+catch(std::exception& e)\
+{\
+  error(string(e.what())+"\n    "+msg);\
+}\
+catch (error_struct& err)\
+{\
+  if(err.second)\
+    error(string(msg) + "\n    "+err.first, err.second);\
+  else\
+    warn(string(msg) + "\n    "+err.first, err.second);\
+}
+
 #define RETHROW(msg)\
 catch(std::exception& e)\
 {\
@@ -53,6 +68,7 @@ catch (error_struct& err)\
 {\
   error(string(msg) + "\n    "+err.first, err.second);\
 }
+
 #else
 #define RETHROW(msg)\
   catch (error_struct& err)\

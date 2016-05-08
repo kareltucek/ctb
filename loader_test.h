@@ -70,7 +70,7 @@ namespace ctb
       typename T::opid_t debug_id = it.dec(v_opid).get_debug_opid();
       typename T::vid_t name = get_op_name(debug_id,"DEBUG", id++);
       gen.add_vert(name, debug_id);
-      gen.addedge(v,name,0, 0);
+      gen.add_edge(v,name,0, 0);
     }
 
 
@@ -78,6 +78,7 @@ namespace ctb
   template <class T, class G, class IT>
     void test_loader<T,G,IT>::adddebug(G& gen, const IT& it, int depth, const stringlist& v)
     {
+      //construct queue of vertices which should get debug output
       set<typename T::vid_t> l;
       queue<const typename G::node_t*>* q = new queue<const typename G::node_t*>();
       if(v.empty())
@@ -97,6 +98,7 @@ namespace ctb
             warning(string("vertex for debug not found" ).append(n));
         }
       }
+      //perform bfs to find vertices implied by depth
       for(int i = depth; i > 0; i--)
       {
         queue<const typename G::node_t*>* qn = new queue<const typename G::node_t*>();
@@ -113,6 +115,7 @@ namespace ctb
         q = qn;
       }
       delete q;
+      //add debug nodes;
       for(auto n : l)
         gendbg(gen, it, n);
       //      l.insert(n.second->id);
@@ -121,7 +124,7 @@ namespace ctb
   template <class T, class G, class IT>
     typename T::vid_t test_loader<T,G,IT>::get_op_name(typename T::opid_t t, const string& base, int v)
     {
-      return cvt<string,typename T::vid_t>::convert(string(base).append(to_string(v)).append("_").append(cvt<typename T::opid_t, string>::convert(t)));
+      return string("_") + cvt<string,typename T::vid_t>::convert(string(base).append(to_string(v)).append("_").append(cvt<typename T::opid_t, string>::convert(t)));
     }
 
   template <typename T, class G, class IT>
@@ -133,7 +136,7 @@ namespace ctb
       int j = 0;
       for( typename vector<typename vector<typename T::opid_t>::iterator>::const_iterator in = it->begin(); in != it->end(); ++in)
       {
-        graph.addedge(get_op_name(**in,"INPUT", j), vid, j, 0);
+        graph.add_edge(get_op_name(**in,"INPUT", j), vid, j, 0);
         ++j;
       }
       auto itre = outs.find(op->out_type);
@@ -144,7 +147,7 @@ namespace ctb
         {
           typename T::vid_t n = cvt<string,typename T::vid_t>::convert(cvt<typename T::vid_t, string>::convert(get_op_name(itro,"OUTPUT", j)).append(cvt<typename T::vid_t,string>::convert(vid)));
           graph.add_vert(n,itro,split_params(string("ioindex=")+ctb::to_string(++oid)));
-          graph.addedge(vid, n, 0, 0);
+          graph.add_edge(vid, n, 0, 0);
           ++j;
         }
       }
@@ -158,6 +161,7 @@ namespace ctb
       oid = 0;
       pid = 0;
 
+      //construct maps of input and output instructions
       for(auto o : instab.instab)
       {
         if(o.second->is(fINPUT))
@@ -184,6 +188,10 @@ namespace ctb
         if(o.second->is(fINPUT))
           continue;
         if(o.second->is(fOUTPUT))
+          continue;
+        if(o.second->is(fEXPANSION))
+          continue;
+        if(o.second->is(fNOOP))
           continue;
         q->push_back(o.second);
       }

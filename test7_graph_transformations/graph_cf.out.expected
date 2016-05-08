@@ -1,35 +1,92 @@
 #factor structure is:
 #0;
+#0 -> 1
+#0 -> 2
+#0 -> 3
+#1 -> 3
+#2 -> 3
+#3 -> 4
 #partitions are:
 #partition 0:
 #ldi
-#ldi -> zero;
-#zero -> split;
-#ldi -> split;
-#zero -> merge;
-#split -> merge;
-#split -> merge;
-#merge -> sti;
+#ldi -> zero [label="3:",taillabel="0",headlabel="0"];
+#zero -> _merge_merge_stbuff_2 [label="5:",taillabel="0",headlabel="0"];
+#zero -> _split_split_st_1 [label="4:",taillabel="0",headlabel="0"];
+#ldi -> _split_split_st_1 [label="4:",taillabel="0",headlabel="1"];
+#ldi -> _cf_transform_noop_vertex [label="2:",taillabel="0",headlabel="0"];
+#partition 1:
+#_split_split_ldtrue_1
+#_split_split_ldtrue_1 -> _merge_merge_sttrue_2 [label="8:",taillabel="0",headlabel="0"];
+#partition 2:
+#_split_split_ldfalse_1
+#_split_split_ldfalse_1 -> _merge_merge_stfalse_2 [label="9:",taillabel="0",headlabel="0"];
+#partition 3:
+#_merge_merge_proc_2
+#partition 4:
+#_merge_merge_ld_2
+#_merge_merge_ld_2 -> sti [label="12:",taillabel="0",headlabel="0"];
 #factor invisible edges are
 #ldi
+#_merge_merge_ld_2
+#_merge_merge_proc_2 -> _merge_merge_ld_2 [label="11:",taillabel="0",headlabel="0"];
+#_merge_merge_proc_2
+#_merge_merge_stbuff_2 -> _merge_merge_proc_2 [label="10:",taillabel="0",headlabel="0"];
+#_merge_merge_sttrue_2 -> _merge_merge_proc_2 [label="10:",taillabel="0",headlabel="1"];
+#_merge_merge_stfalse_2 -> _merge_merge_proc_2 [label="10:",taillabel="0",headlabel="2"];
+#_split_split_ldfalse_1
+#_split_split_st_1 -> _split_split_ldfalse_1 [label="7:",taillabel="1",headlabel="0"];
+#_split_split_ldtrue_1
+#_split_split_st_1 -> _split_split_ldtrue_1 [label="6:",taillabel="0",headlabel="0"];
 digraph G {
 edge [style=dotted,arrowhead=odot];
 ldi
+_merge_merge_ld_2
+_merge_merge_proc_2
+_split_split_ldfalse_1
+_split_split_ldtrue_1
 edge [style=dotted,arrowhead=normal];
 ldi
+_merge_merge_ld_2
+_merge_merge_proc_2 -> _merge_merge_ld_2 [label="11:",taillabel="0",headlabel="0"];
+_merge_merge_proc_2
+_merge_merge_stbuff_2 -> _merge_merge_proc_2 [label="10:",taillabel="0",headlabel="0"];
+_merge_merge_sttrue_2 -> _merge_merge_proc_2 [label="10:",taillabel="0",headlabel="1"];
+_merge_merge_stfalse_2 -> _merge_merge_proc_2 [label="10:",taillabel="0",headlabel="2"];
+_split_split_ldfalse_1
+_split_split_st_1 -> _split_split_ldfalse_1 [label="7:",taillabel="1",headlabel="0"];
+_split_split_ldtrue_1
+_split_split_st_1 -> _split_split_ldtrue_1 [label="6:",taillabel="0",headlabel="0"];
 edge [style=solid];
 ldi
-ldi -> zero;
-zero -> split;
-ldi -> split;
-zero -> merge;
-split -> merge;
-split -> merge;
-merge -> sti;
+ldi -> _cf_transform_noop_vertex [label="2:",taillabel="0",headlabel="0"];
+ldi -> zero [label="3:",taillabel="0",headlabel="0"];
+zero -> _split_split_st_1 [label="4:",taillabel="0",headlabel="0"];
+ldi -> _split_split_st_1 [label="4:",taillabel="0",headlabel="1"];
+zero -> _merge_merge_stbuff_2 [label="5:",taillabel="0",headlabel="0"];
+_merge_merge_ld_2
+_merge_merge_ld_2 -> sti [label="12:",taillabel="0",headlabel="0"];
+_merge_merge_proc_2
+_split_split_ldfalse_1
+_split_split_ldfalse_1 -> _merge_merge_stfalse_2 [label="9:",taillabel="0",headlabel="0"];
+_split_split_ldtrue_1
+_split_split_ldtrue_1 -> _merge_merge_sttrue_2 [label="8:",taillabel="0",headlabel="0"];
 0;
+0 -> 1
+0 -> 2
+0 -> 3
+1 -> 3
+2 -> 3
+3 -> 4
 ldi [color="black",label="ldi "];
+_cf_transform_noop_vertex [color="black",label="_cf_transform_noop_vertex "];
 zero [color="black",label="zero "];
-split [color="black",label="split "];
-merge [color="black",label="merge "];
+_split_split_st_1 [color="black",label="_split_split_st_1 "];
+_merge_merge_stbuff_2 [color="black",label="_merge_merge_stbuff_2 "];
+_merge_merge_ld_2 [color="black",label="_merge_merge_ld_2 "];
 sti [color="black",label="sti "];
+_merge_merge_proc_2 [color="black",label="_merge_merge_proc_2 "];
+_split_split_ldfalse_1 [color="black",label="_split_split_ldfalse_1 "];
+_merge_merge_stfalse_2 [color="black",label="_merge_merge_stfalse_2 "];
+_split_split_ldtrue_1 [color="black",label="_split_split_ldtrue_1 "];
+_merge_merge_sttrue_2 [color="black",label="_merge_merge_sttrue_2 "];
 }

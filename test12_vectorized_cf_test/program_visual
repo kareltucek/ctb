@@ -3,7 +3,7 @@ loadgraph xml graph.xml
 #visualize
 exportgraph dot graph.out
 #transform cf show
-transform cf show
+transform cf 
 visualize
 exportgraph dot graph_cf.out
 generate cf output.h vectordbg

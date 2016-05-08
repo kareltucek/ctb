@@ -12,9 +12,11 @@
       <vertex opid="SPLIT_int32_t" vid="split" params="ioindex=0"></vertex>
       <vertex opid="MERGE_int32_t" vid="merge" params="ioindex=0"></vertex>
       <vertex opid="BUFF_int32_t" vid="buff" params="ioindex=0"></vertex>
+      <vertex opid="BUFF_int32_t" vid="buff2" params="ioindex=0"></vertex>
       <edge to="add2" from="ldi1" to_pos="0"></edge>
       <edge to="add3" from="add2" to_pos="1"></edge>
-      <edge to="h_st" from="add4" to_pos="0"></edge>
+      <edge to="buff2" from="add4" to_pos="0"></edge>
+      <edge to="h_st" from="buff2" to_pos="0"></edge>
       <edge to="add2" from="ldi2" to_pos="1"></edge>
       <edge to="add4" from="add2" to_pos="1"></edge>
       <edge to="buff" from="add2" to_pos="0"></edge>

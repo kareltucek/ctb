@@ -6,7 +6,7 @@ run : macrotest
 	./macrotest
 
 buffer_test_preprocessed.h : buffer_test.h 
-	../ctb -f program
+	../ctb -f program ${CTB_ARGS}
 
 macrotest : main.cpp buffer_test_preprocessed.h
 	${CXX} -ggdb main.cpp -o macrotest  -m32 -msse4.1

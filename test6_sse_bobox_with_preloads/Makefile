@@ -3,7 +3,7 @@ FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wn
 all : output.h test run
 
 output.h : ../ctb ../sse_set/C_table.csv graph.xml
-	../ctb -f program
+	../ctb -f program ${CTB_ARGS}
 
 test : output.h
 	${CXX} ${FLAGS} -DNDEBUG -ggdb main.cpp -I../../bobox/boback/h -I../../ulibpp/h   ../../bobox/boback/lib/release/boback.a  ../../ulibpp/lib/release/ulibpp.a -lstdc++ -lrt -lnuma -pthread  -o test -msse4.1

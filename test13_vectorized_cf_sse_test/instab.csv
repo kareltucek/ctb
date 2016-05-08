@@ -12,51 +12,53 @@
 
 split st	instruction		bool,\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-	SPLIT_ST_$type	output	1	1			0\
+	SPLIT_ST_$type	effectoutput	1	1			0\
 	labels:  SPLIT_ST_$$ioindex: \
 	labelsr: REQ_SPLIT_ST_$$ioindex: \
 	gonextone: if($$$$$$$${BUFFER_FULL(L_$$ioindex)}) goto REQ_SPLIT_LDL_$$ioindex; if($$$$$$$${BUFFER_FULL(R_$$ioindex)}) goto REQ_SPLIT_LDR_$$ioindex;\
 	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR(L_$$ioindex)}) goto SPLIT_LDL_$$ioindex; if($$$$$$$${BUFFER_FULL_GRANULAR(R_$$ioindex)}) goto SPLIT_LDR_$$ioindex;\
-	default: if($$arg1){ $$$$$$$${BUFFER_PUSH_ONE($$buffersize,$width,L_$$ioindex,$abbrev,$$arg2)}; } else { $$$$$$$${BUFFER_PUSH_ONE($$buffersize,$width,R_$$ioindex,$abbrev,$$arg2)}; };
+	default: if($$arg1 != 0){ $$$$$$$${BUFFER_PUSH_ONE($$[$$buffersize*$$buffercoefout0],$width,L_$$ioindex,$abbrev,$$arg2)}; } else { $$$$$$$${BUFFER_PUSH_ONE($$[$$buffersize*$$buffercoefout1],$width,R_$$ioindex,$abbrev,$$arg2)}; \
+    };\
+    printf("#sss split by %i\n", $$arg1);
 
 split load	instruction	\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		SPLIT_LD${side->L,R}_$type	input	1	1			0\
+		SPLIT_LD${side->L,R}_$type	effectinput	1	1			0\
 	labels:  SPLIT_LD$side_$$ioindex: \
 	labelsr: REQ_SPLIT_LD$side_$$ioindex: \
-	global:  $$$$$$$${BUFFER_DECL($$buffersize,$width,$$granularity,$$granularity,$side_$$ioindex,$dtype)};\
-	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$buffersize,$width,$side_$$ioindex)};\
+	global:  $$$$$$$${BUFFER_DECL($$[$$buffersize*$$buffercoefin0],$width,$$granularity,$$granularity,$side_$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$[$$buffersize*$$buffercoefin0],$width,$side_$$ioindex)};\
 	goprevone: if($$$$$$$${BUFFER_EMPTY($side_$$ioindex)}) goto REQ_SPLIT_ST_$$ioindex;\
 	goprev:    if($$$$$$$${BUFFER_EMPTY_GRANULAR($side_$$ioindex)}) goto REQ_SPLIT_ST_$$ioindex;\
 	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR($side_$$ioindex)} || \
 	emptyind:     $$$$$$$${BUFFER_EMPTY($side_$$ioindex)} || \
-	default: $$type $$name; $$$$$$$${BUFFER_PEEK_ONE($$buffersize,$width,$side_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($side_$$ioindex)};
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_ONE($$[$$buffersize*$$buffercoefin0],$width,$side_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($side_$$ioindex)};
     
 split load	instruction	\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		SPLIT_LD${side->L,R}_$type	input	$width	$width			0\
-	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$buffersize,$width,$side_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR($side_$$ioindex)};
+		SPLIT_LD${side->L,R}_$type	effectinput	$width	$width			0\
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$[$$buffersize*$$buffercoefin0],$width,$side_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR($side_$$ioindex)};
 
 
 merge st	instruction		\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-	MERGE_ST${side->L,R}_$type	output	1	1			0\
+	MERGE_ST${side->L,R}_$type	effectoutput	1	1			0\
 	labels:  MERGE_ST$side_$$ioindex: \
 	labelsr: REQ_MERGE_ST$side_$$ioindex: \
-	global:  $$$$$$$${BUFFER_DECL($$buffersize,$width,$$granularity,$$granularity,$side_$$ioindex,$dtype)};\
-	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$buffersize,$width,$side_$$ioindex)};\
+	global:  $$$$$$$${BUFFER_DECL($$[$$buffersize*$$buffercoefout0],$width,$$granularity,$$granularity,$side_$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$[$$buffersize*$$buffercoefout0],$width,$side_$$ioindex)};\
 	gonextone: if($$$$$$$${BUFFER_FULL($side_$$ioindex)}) goto REQ_MERGE_$$ioindex;\
 	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR($side_$$ioindex)}) goto MERGE_$$ioindex;\
 	fullgran:     $$$$$$$${BUFFER_FULL_GRANULAR($side_$$ioindex)} || \
-	default: $$$$$$$${BUFFER_PUSH_ONE($$buffersize,$width,$side_$$ioindex,$abbrev,$$arg1)};
+	default: $$$$$$$${BUFFER_PUSH_ONE($$[$$buffersize*$$buffercoefout0],$width,$side_$$ioindex,$abbrev,$$arg1)};
 
 merge process	instruction	\
-${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		MERGE_PROC_$type	input	1	1			0\
+${type,stype,width,dtype,abbrev->bool,bool,16,__m128i,epi8,ssebool,bool,16,__m128i,epi16,double,double,2,__m128d,ps,float,float,4,__m128,pd,int16_t,int16_t,8,__m128i,epi16,int32_t,int32_t,4,__m128i,epi32,int64_t,int64_t,2,__m128i,epi64,int8_t,int8_t,16,__m128i,epi8,uint16_t,uint16_t,8,__m128i,epi16,uint32_t,uint32_t,4,__m128i,epi32,uint64_t,uint64_t,2,__m128i,epi64,uint8_t,uint8_t,16,__m128i,epi8}\
+		MERGE_PROC_$type	effectoutput,effectinput	1	1			0\
 	labels:  MERGE_$$ioindex: BUFF_LD_$$ioindex:\
 	labelsr: REQ_MERGE_$$ioindex: REQ_BUFF_LD_$$ioindex:\
-	global:  $$$$$$$${BUFFER_DECL($$buffersize,$width,$$granularity,$$granularity,M_$$ioindex,$dtype)};\
-	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$buffersize,$width,M_$$ioindex)};\
+	global:  $$$$$$$${BUFFER_DECL($$[$$buffersize*$$buffercoefout0],$width,$$granularity,$$granularity,M_$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$[$$buffersize*$$buffercoefout0],$width,M_$$ioindex)};\
 	indic:   merge_part\
 	gonextone: if($$$$$$$${BUFFER_FULL(M_$$ioindex)}) goto REQ_MERGE_LD_$$ioindex;\
 	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR(M_$$ioindex)}) goto MERGE_LD_$$ioindex;\
@@ -66,66 +68,74 @@ ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,
 	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)} || \
 	emptyind:     $$$$$$$${BUFFER_EMPTY($$ioindex)} || \
 	defaultsingle: \
-bool tmp; $$$$$$$${BUFFER_PEEK_ONE(16,16,$$ioindex,epi8,tmp)}; \
-$$type myval;\
-if(tmp)\
+bool tmp; $$$$$$$${BUFFER_PEEK_ONE($$[$$buffersize*$$buffercoefin0],16,$$ioindex,epi8,tmp)}; \
+$stype myval;\
+printf("#cond %i, left %i, right %i\n", $$$${BUFFER_SIZE($$ioindex)}, $$$${BUFFER_SIZE(L_$$ioindex)}, $$$${BUFFER_SIZE(R_$$ioindex)});\
+if(tmp != 0)\
 {\
   if($$$$$$$${BUFFER_EMPTY(L_$$ioindex)})\
+  {\
+    printf("#going left\n");\
     goto REQ_MERGE_STL_$$ioindex;\
-  $$$$$$$${BUFFER_PEEK_ONE($$buffersize,$width,L_$$ioindex,$abbrev,myval)}; $$$$$$$${BUFFER_CONSUME_ONE(L_$$ioindex)};\
+  }\
+  $$$$$$$${BUFFER_PEEK_ONE($$[$$buffersize*$$buffercoefin1],$width,L_$$ioindex,$abbrev,myval)}; $$$$$$$${BUFFER_CONSUME_ONE(L_$$ioindex)};\
 }\
 else\
 {\
   if($$$$$$$${BUFFER_EMPTY(R_$$ioindex)})\
+  {\
+    printf("#going right\n");\
     goto REQ_MERGE_STR_$$ioindex;\
-  $$$$$$$${BUFFER_PEEK_ONE($$buffersize,$width,R_$$ioindex,$abbrev,myval)}; $$$$$$$${BUFFER_CONSUME_ONE(R_$$ioindex)};\
+  }\
+  $$$$$$$${BUFFER_PEEK_ONE($$[$$buffersize*$$buffercoefin2],$width,R_$$ioindex,$abbrev,myval)}; $$$$$$$${BUFFER_CONSUME_ONE(R_$$ioindex)};\
 }\
+  printf("#sss merge by %i\n", tmp);\
 $$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};\
-$$$$$$$${BUFFER_PUSH_ONE($$buffersize,$width,M_$$ioindex,$abbrev,myval)};
+$$$$$$$${BUFFER_PUSH_ONE($$[$$buffersize*$$buffercoefout0],$width,M_$$ioindex,$abbrev,myval)};
 
 merge load	instruction	\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		MERGE_LD_$type	input	1	1			0\
+		MERGE_LD_$type	effectinput	1	1			0\
 	labels:  MERGE_LD_$$ioindex: \
 	labelsr: REQ_MERGE_LD_$$ioindex: \
 	goprevone: if($$$$$$$${BUFFER_EMPTY(M_$$ioindex)}) goto REQ_MERGE_$$ioindex;\
 	goprev:    if($$$$$$$${BUFFER_EMPTY_GRANULAR(M_$$ioindex)}) goto REQ_MERGE_$$ioindex;\
 	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR(M_$$ioindex)} || \
 	emptyind:     $$$$$$$${BUFFER_EMPTY(M_$$ioindex)} || \
-	default: $$type $$name; $$$$$$$${BUFFER_PEEK_ONE($$buffersize,$width,M_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE(M_$$ioindex)};
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_ONE($$[$$buffersize*$$buffercoefin0],$width,M_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE(M_$$ioindex)};
 
 merge load	instruction	\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		MERGE_LD_$type	input	$width	$width			0\
-	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$buffersize,$width,M_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR(M_$$ioindex)};
+		MERGE_LD_$type	effectinput	$width	$width			0\
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$[$$buffersize*$$buffercoefin0],$width,M_$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR(M_$$ioindex)};
 
 buffer st	instruction		\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-	BUFF_ST_$type	output	1	1			0\
+	BUFF_ST_$type	effectoutput	1	1			0\
 	labels:  BUFF_ST_$$ioindex: \
 	labelsr: REQ_BUFF_ST_$$ioindex: \
-	global:  $$$$$$$${BUFFER_DECL($$buffersize,$width,$$granularity,$$granularity,$$ioindex,$dtype)};\
-	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$buffersize,$width,$$ioindex)};\
+	global:  $$$$$$$${BUFFER_DECL($$[$$buffersize*$$buffercoefout0],$width,$$granularity,$$granularity,$$ioindex,$dtype)};\
+	logs:    $$$$$$$${BUFFER_DUMP_VECTOR($$[$$buffersize*$$buffercoefout0],$width,$$ioindex)};\
 	gonextone: if($$$$$$$${BUFFER_FULL($$ioindex)}) goto REQ_BUFF_LD_$$ioindex;\
 	gonext:    if($$$$$$$${BUFFER_FULL_GRANULAR($$ioindex)}) goto BUFF_LD_$$ioindex;\
 	fullgran:     $$$$$$$${BUFFER_FULL_GRANULAR($$ioindex)} || \
-	default: $$$$$$$${BUFFER_PUSH_ONE($$buffersize,$width,$$ioindex,$abbrev,$$arg1)};
+	default: $$$$$$$${BUFFER_PUSH_ONE($$[$$buffersize*$$buffercoefout0],$width,$$ioindex,$abbrev,$$arg1)};
 
 buffer ld	 instruction	\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		BUFF_LD_$type	input	1	1			0\
+		BUFF_LD_$type	effectinput	1	1			0\
 	labels:  BUFF_LD_$$ioindex:\
 	labelsr: REQ_BUFF_LD_$$ioindex:\
 	goprevone: if($$$$$$$${BUFFER_EMPTY($$ioindex)}) goto REQ_BUFF_ST_$$ioindex;\
 	goprev:    if($$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)}) goto REQ_BUFF_ST_$$ioindex;\
 	emptygran:    $$$$$$$${BUFFER_EMPTY_GRANULAR($$ioindex)} || \
 	emptyind:   $$$$$$$${BUFFER_EMPTY($$ioindex)} ||\
-	default: $$type $$name; $$$$$$$${BUFFER_PEEK_ONE($$buffersize,$width,$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_ONE($$[$$buffersize*$$buffercoefin0],$width,$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_ONE($$ioindex)};
 
 buffer ld	 instruction	\
 ${type,width,dtype,abbrev->bool,16,__m128i,epi8,ssebool,16,__m128i,epi16,double,2,__m128d,ps,float,4,__m128,pd,int16_t,8,__m128i,epi16,int32_t,4,__m128i,epi32,int64_t,2,__m128i,epi64,int8_t,16,__m128i,epi8,uint16_t,8,__m128i,epi16,uint32_t,4,__m128i,epi32,uint64_t,2,__m128i,epi64,uint8_t,16,__m128i,epi8}\
-		BUFF_LD_$type	input	$width	$width			0\
-	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$buffersize,$width,$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR($$ioindex)};
+		BUFF_LD_$type	effectinput	$width	$width			0\
+	default: $$type $$name; $$$$$$$${BUFFER_PEEK_VECTOR($$[$$buffersize*$$buffercoefin0],$width,$$ioindex,$abbrev,$$name)}; $$$$$$$${BUFFER_CONSUME_VECTOR($$ioindex)};
 
 #note	type	output type	input types	op id	name	transformer	args
 split	expansion	int32_t,int32_t	bool,int32_t	SPLIT_int32_t	split	cf	SPLIT_ST_int32_t,SPLIT_LDL_int32_t,SPLIT_LDR_int32_t

@@ -1,15 +1,15 @@
 #FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0 
-FLAGS=  -Wall -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline 
+FLAGS=  -Wall -Wno-unused-variable -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline -DDEBUGFIELDS 
 #-DTESTOVANI
 
-
-CXX=clang++
+export CTB_ARGS= -w
+export CXX=g++
 
 SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h graph_factor.h aliasenv_cfmacros.h split.h aliasenv_cf.h aliasenv_bind.h languages.h
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir7 testdir10 testdir11 testdir12 testdir13
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir7 testdir10 testdir11 testdir12 testdir13 testdir14
 fulltest : all testdir6 testdir4
 
 test : test.cpp $(SOURCES)
@@ -57,11 +57,21 @@ testdir12 : ctb
 testdir13 : ctb
 	make -C test13_vectorized_cf_sse_test
 
+testdir14 : ctb
+	make -C test14_inference_test 
+
 ssedir : ctb
 	make -C sse_set
 
-clean :
+clean : cleanctb cleanthesis cleantests
+
+cleanctb :
 	-rm test ctb
+
+cleanthesis :
+	-make -C thesis clean
+
+cleantests :
 	-make -C test1_simple clean
 	-make -C test2_exports clean
 	-make -C test3_loaders clean
@@ -72,10 +82,10 @@ clean :
 	-make -C test8_graph_transformations2 clean
 	-make -C test9_cf_macros clean
 	-make -C test10_cf_macros clean
-	-make -C thesis clean
 	-make -C test11_simple_cf_test clean
 	-make -C test12_vectorized_cf_test clean
 	-make -C test13_vectorized_cf_sse_test clean
+	-make -C test14_inference_test clean
 	
 
 

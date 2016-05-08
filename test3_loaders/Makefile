@@ -4,7 +4,8 @@ all : test
 
 
 output_csv.h : ../ctb instab.xml graph.xml
-	../ctb -f ./program && diff output_xml.h output_csv.h
+	../ctb -f ./program ${CTB_ARGS}
+	diff output_xml.h output_csv.h
 
 
 test : output_csv.h
