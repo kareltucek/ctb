@@ -14,7 +14,9 @@ namespace ctb
   /**
    * This cf serves as a custom macro preprocessor. Reason is that it turns out that C preprocessor is too weak language for this complex macros. Not that it would not be cappable of arithmetics and recurse, but it is a real pain.
    *
-    decl("BUFFER_DECL", "size, vsize, ingranularity, outgranularity, id, type")
+    decl("BUFFER_DECL", "capacity, vsize, ingranularity, outgranularity, id, type")
+
+    decl("BUFFER_SIZE", "id")
 
     decl("BUFFER_FULL", "id")
     decl("BUFFER_FULL_GRANULAR", "id")
@@ -22,15 +24,15 @@ namespace ctb
     decl("BUFFER_EMPTY_GRANULAR", "id")
     decl("BUFFER_EMPTY", "id")
 
-    decl("BUFFER_PUSH_SIMPLE", "size, vsize, id, val")
-    decl("BUFFER_PUSH_ONE", "size, vsize, id, typeabbrev, val")
+    decl("BUFFER_PUSH_SIMPLE", "capacity, vsize, id, val")
+    decl("BUFFER_PUSH_ONE", "capacity, vsize, id, typeabbrev, val")
 
     decl("BUFFER_CONSUME_ONE", "id")
     decl("BUFFER_CONSUME_VECTOR", "id")
 
-    decl("BUFFER_PEEK_SIMPLE", "size, vsize, id, to")
-    decl("BUFFER_PEEK_ONE", "size, vsize, id, typeabbrev, to")
-    decl("BUFFER_PEEK_VECTOR", "size, vsize, id, typeabbrev, to")
+    decl("BUFFER_PEEK_SIMPLE", "capacity, vsize, id, to")
+    decl("BUFFER_PEEK_ONE", "capacity, vsize, id, typeabbrev, to")
+    decl("BUFFER_PEEK_VECTOR", "capacity, vsize, id, typeabbrev, to")
    *
    *
    * */
@@ -113,48 +115,52 @@ namespace ctb
     {
       /*just for the decl macro syntax*/
     }
-    decl("BUFFER_DECL", "size, vsize, ingranularity, outgranularity, id, type")
+    decl("BUFFER_DECL", "capacity, vsize, ingranularity, outgranularity, id, type")
     {
-      for(int i = 0; i < TOINT("$[$size/$vsize]"); ++i)
+      for(int i = 0; i < TOINT("$[$capacity/$vsize]"); ++i)
       {
         P("$type gendecl_${id}_${i};"); 
       }
       P("int gendecl_readat_${id} = 0;"); 
       P("int gendecl_contains_${id} = 0;"); 
-      P("static const int gendecl_size_${id} = $size;"); 
+      P("static const int gendecl_capacity_${id} = $capacity;"); 
       P("static const int gendecl_outgran_${id} = $outgranularity;"); 
       P("static const int gendecl_ingran_${id} = $ingranularity;"); 
       P("static const int gendecl_vsize_${id} = $vsize;"); 
     }
-    decl("BUFFER_DUMP_VECTOR", "size, vsize, id")
+    decl("BUFFER_DUMP_VECTOR", "capacity, vsize, id")
     {
       P("printf(\"  BUFFER $id, of size %i\\n\", gendecl_contains_${id});"); 
-      for(int i = 0; i < TOINT("$[$size/$vsize]"); ++i)
+      for(int i = 0; i < TOINT("$[$capacity/$vsize]"); ++i)
       {
         P("DEBUG_SSE( gendecl_${id}_${i}, gendecl_${id}_${i});"); 
         P("if($i == gendecl_readat_${id} / $vsize) printf(\" ->\");");
-        P("if($i == ((gendecl_readat_${id} + gendecl_contains_${id}) % gendecl_size_${id}) / $vsize) printf(\" <-\");");
+        P("if($i == ((gendecl_readat_${id} + gendecl_contains_${id}) % gendecl_capacity_${id}) / $vsize) printf(\" <-\");");
         P("printf(\"\\n\");");
       }
     }
-    decl("BUFFER_DUMP", "size, id")
+    decl("BUFFER_SIZE", "id")
+    {
+      P("gendecl_contains_${id}"); 
+    }
+    decl("BUFFER_DUMP", "capacity, id")
     {
       P("printf(\"  BUFFER $id, of size %i\\n\", gendecl_contains_${id});"); 
-      for(int i = 0; i < TOINT("$[$size]"); ++i)
+      for(int i = 0; i < TOINT("$[$capacity]"); ++i)
       {
         P("printf(\"    %i\", gendecl_${id}_${i});"); 
         P("if($i == gendecl_readat_${id}) printf(\" ->\");");
-        P("if($i == (gendecl_readat_${id} + gendecl_contains_${id}) % gendecl_size_${id}) printf(\" <-\");");
+        P("if($i == (gendecl_readat_${id} + gendecl_contains_${id}) % gendecl_capacity_${id}) printf(\" <-\");");
         P("printf(\"\\n\");");
       }
     }
     decl("BUFFER_FULL", "id")
     {
-      P(" (gendecl_contains_${id} == gendecl_size_${id}) "); 
+      P(" (gendecl_contains_${id} == gendecl_capacity_${id}) "); 
     }
     decl("BUFFER_FULL_GRANULAR", "id")
     {
-      P("(gendecl_size_${id} - gendecl_ingran_${id} < gendecl_contains_${id} )"); 
+      P("(gendecl_capacity_${id} - gendecl_ingran_${id} < gendecl_contains_${id} )"); 
     }
     decl("BUFFER_EMPTY_GRANULAR", "id")
     {
@@ -164,51 +170,51 @@ namespace ctb
     {
       P(" (gendecl_contains_${id} == 0) "); 
     }
-    decl("BUFFER_PUSH_SIMPLE", "size, vsize, id, val")
+    decl("BUFFER_PUSH_SIMPLE", "capacity, vsize, id, val")
     {
-      P("switch((gendecl_readat_${id} + gendecl_contains_${id}) % ${size}){ "); 
-      for (auto i = 0; i < TOINT("$size"); i++) 
+      P("switch((gendecl_readat_${id} + gendecl_contains_${id}) % ${capacity}){ "); 
+      for (auto i = 0; i < TOINT("$capacity"); i++) 
         P("case $i: gendecl_$id_$i = $val; break;");
       P("};"); 
       P("gendecl_contains_$id += $vsize;"); 
     }
-    decl("BUFFER_PUSH_ONE", "size, vsize, id, typeabbrev, val")
+    decl("BUFFER_PUSH_ONE", "capacity, vsize, id, typeabbrev, val")
     {
-      P("switch((gendecl_readat_${id} + gendecl_contains_${id}) % ${size}){ "); 
-      for (auto i = 0; i < TOINT("$size"); i++) 
+      P("switch((gendecl_readat_${id} + gendecl_contains_${id}) % ${capacity}){ "); 
+      for (auto i = 0; i < TOINT("$capacity"); i++) 
         P("case $i: gendecl_$id_$[$i/$vsize] = _mm_insert_$typeabbrev(gendecl_$id_$[$i / $vsize], $val, $i % gendecl_vsize_$id); break;");
       P("};"); 
       P("gendecl_contains_$id++;"); 
     }
-    decl("BUFFER_PEEK_SIMPLE", "size, vsize, id, to")
+    decl("BUFFER_PEEK_SIMPLE", "capacity, vsize, id, to")
     {
       P("switch(gendecl_readat_$id){ ");
-      for (auto i = 0; i < TOINT("$size"); i++) 
+      for (auto i = 0; i < TOINT("$capacity"); i++) 
         P("case $i: $to = gendecl_$id_$[$i / $vsize]; break;");
       P("}");
     }
-    decl("BUFFER_PEEK_ONE", "size, vsize, id, typeabbrev, to")
+    decl("BUFFER_PEEK_ONE", "capacity, vsize, id, typeabbrev, to")
     {
       P("switch(gendecl_readat_$id){ ");
-      for (auto i = 0; i < TOINT("$size"); i++) 
+      for (auto i = 0; i < TOINT("$capacity"); i++) 
         P("case $i: $to = _mm_extract_$typeabbrev(gendecl_$id_$[$i / $vsize], $i % gendecl_vsize_$id); break;");
       P("}");
     }
-    decl("BUFFER_PEEK_VECTOR", "size, vsize, id, typeabbrev, to")
+    decl("BUFFER_PEEK_VECTOR", "capacity, vsize, id, typeabbrev, to")
     {
       P("switch(gendecl_readat_$id){ ");
-      for (auto i = 0; i < TOINT("$size"); i++) 
-        P("case $i: $to = _mm_alignr_epi8(gendecl_$id_$[(1 + ($i/$vsize)) % ($size/$vsize)], gendecl_$id_$[$i / $vsize], ($i%gendecl_vsize_$id)*(16/gendecl_vsize_$id)); break;");
+      for (auto i = 0; i < TOINT("$capacity"); i++) 
+        P("case $i: $to = _mm_alignr_epi8(gendecl_$id_$[(1 + ($i/$vsize)) % ($capacity/$vsize)], gendecl_$id_$[$i / $vsize], ($i%gendecl_vsize_$id)*(16/gendecl_vsize_$id)); break;");
       P("}");
     }
     decl("BUFFER_CONSUME_VECTOR", "id")
     {
-      P("gendecl_readat_$id = ((gendecl_readat_$id + gendecl_vsize_$id) % gendecl_size_$id);");
+      P("gendecl_readat_$id = ((gendecl_readat_$id + gendecl_vsize_$id) % gendecl_capacity_$id);");
       P("gendecl_contains_$id -= gendecl_vsize_$id;");
     }
     decl("BUFFER_CONSUME_ONE", "id")
     {
-      P("gendecl_readat_$id = ((gendecl_readat_$id + 1) % gendecl_size_$id);");
+      P("gendecl_readat_$id = ((gendecl_readat_$id + 1) % gendecl_capacity_$id);");
       P("gendecl_contains_$id--;");
     }
     else
