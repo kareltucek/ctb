@@ -346,6 +346,8 @@ namespace ctb
       cout << "  -n <comma separated tags>   require all tags to be subset of this set of tags" << endl;
       cout << "  -c compile test - makes generator output only the first instruction of every vector  " << endl;
       cout << "  -w                          handle warnings as errors (gives traces)" << endl;
+      cout << "  -v                          be verbose" << endl;
+      cout << "  -vvv                        be extremely verbose" << endl;
       cout << "  -h                          show some help" << endl;
       cout << "" << endl;
       cout << "Actions are to be specified by standard input one per line. A '#' can be used as a comment at a beginning of a line." << endl;
@@ -451,6 +453,9 @@ namespace ctb
             {
               switch (args[i][j])
               {
+                case 'v':
+                  be_verbose++;
+                  break;
                 case 'w':
                   warn_as_error = true;
                   break;

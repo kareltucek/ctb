@@ -767,6 +767,7 @@ namespace ctb
      {
 #ifdef TESTOVANI
        const char* f = format.c_str();
+       verbose(string() + "      writer::print_internal (internal) line " + ctb::to_string(data.size()) + " format '" + format + "'", 4);
 #endif
        int from = 0;
        if(format.length() == 0) //ensure handling of empty pushes
@@ -910,6 +911,7 @@ namespace ctb
 #ifdef TESTOVANI
        tuple<const Types&...> t(params...);
        string format = ctb::to_string(get<0>(t));
+       verbose(string() + "writer::print of '" + format + "'", 3);
 #endif
        return print_type<dollars>(params...);
      }

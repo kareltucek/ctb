@@ -9,6 +9,14 @@ namespace ctb
 {
   typedef pair<string,bool> error_struct;
   static bool warn_as_error = false;
+  static int be_verbose = 0;
+
+  void verbose(const string& e, int l = 1)
+  {
+    if(be_verbose >= l)
+      cout << "info: " << e << endl; 
+  }
+
 
   void error(const string& e, bool critical = true)
   {

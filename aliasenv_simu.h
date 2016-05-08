@@ -97,10 +97,12 @@ namespace ctb
       writer<aliasenv_simu> calls;
       for(int i = 1; i <= granularity; i *= 2)
       {
+        verbose(string() + "aliasenv simu - generating body for width " + ctb::to_string(i));
         bodies += generate_body(i, generator, name);
         calls.print("test_body$1();", i);
       }
 
+      verbose(string() + "aliasenv simu - composing output ");
       writer<aliasenv_simu> box;
       box.print("$fbox", decl, bodies, calls) ;
       return box;
@@ -151,9 +153,13 @@ namespace ctb
       wrt code;
       generator.generate(granularity, code, opts);
 
+        verbose(string() + "aliasenv simu -     generated vectorized " );
+
       wrt code2;
       if(granularity != 1)
         generator.generate(1, code2, opts);
+
+        verbose(string() + "aliasenv simu -     generated singular " );
 
       wrt inc;
       for(auto n : generator.graph.in)
@@ -161,8 +167,11 @@ namespace ctb
       for(auto n : generator.graph.out)
         inc.print("pos_out_$1 += batch_size;", n->data.get_param("ioindex"));
 
+        verbose(string() + "aliasenv simu -     printing body of a single function" );
       wrt box;
       box.print("$fbody", name, ilist, olist,decl, envelopes, minlist, code, code2, inc, granularity);
+
+        verbose(string() + "aliasenv simu -     function composed" );
 
       return box;
     }
