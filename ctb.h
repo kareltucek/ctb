@@ -674,9 +674,9 @@ start:;
         return 0;
       if(hash_command.find(words[0]) == hash_command.end())
         error( string("invalid command: ").append(line), false);
-      cout << "processing command " << words[0] << "...";
+      cout << "processing command " << words[0] << "..." << flush;
       (hash_command[words[0]].first)(move(words));
-      cout << "... done!" << endl;
+      cout << " ... done!" << endl;
       return 0;
     }
 
