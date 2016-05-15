@@ -1,0 +1,55 @@
+#include <stdio.h>
+void test()
+{
+  int remains_0 = 100;
+  printf("sep\n");
+  {
+  PARTITION_0:
+    {
+      printf("//JUMPED INTO COMPONENT %i\n", 0);
+      if(remains_0 == 0) goto PARTITION_1;
+      if(remains_0 == 0) goto PARTITION_0_PROC;
+    PARTITION_0_PROC:
+      int var_LDI_id2_tw1_0_atld = (int)(1+1);
+      int var_LDI_id2_tw1_1_atld = (int)(1+1);
+      int var_LDI_id2_tw1_2_atld = (int)(1+1);
+      int var_LDI_id2_tw1_3_atld = (int)(1+1);
+      int4 = var_LDI_id4_tconv_w4_0_atld = var_LDI_id2_tw1_0_atld + var_LDI_id2_tw1_1_atld + var_LDI_id2_tw1_2_atld + var_LDI_id2_tw1_3_atld;
+      int4 var_ID_id3_tw4_0_atid = (int4)(var_LDI_id4_tconv_w4_0_atld);
+      int4 var_M_id5_tw4_0_atm = (int4)(var_LDI_id2_tw1_0_atld + var_LDI_id2_tw1_1_atld + var_LDI_id2_tw1_2_atld + var_LDI_id2_tw1_3_atld);
+      printf("OUTPUT %i\n", var_LDI_id4_tconv_w4_0_atld) /*var_STI4_id6_tw4_0_atst4*/;
+      int2 var_ID_id8_tconv_w2_0_atid = (int2)(left(var_ID_id3_tw4_0_atid));
+      int2 var_ID_id8_tconv_w2_2_atid = (int2)(right(var_ID_id3_tw4_0_atid));
+      printf("OUTPUT %i\n", var_ID_id8_tconv_w2_0_atid) /*var_STI2_id7_tw2_0_atst22*/;
+      printf("OUTPUT %i\n", var_ID_id8_tconv_w2_2_atid) /*var_STI2_id7_tw2_2_atst22*/;
+      int var_ID_id10_tconv_w1_0_atid = select(0, var_ID_id3_tw4_0_atid);
+      int var_ID_id10_tconv_w1_1_atid = select(1, var_ID_id3_tw4_0_atid);
+      int var_ID_id10_tconv_w1_2_atid = select(2, var_ID_id3_tw4_0_atid);
+      int var_ID_id10_tconv_w1_3_atid = select(3, var_ID_id3_tw4_0_atid);
+      printf("OUTPUT %i\n", var_ID_id10_tconv_w1_0_atid) /*var_STI1_id9_tw1_0_atst1*/;
+      printf("OUTPUT %i\n", var_ID_id10_tconv_w1_1_atid) /*var_STI1_id9_tw1_1_atst1*/;
+      printf("OUTPUT %i\n", var_ID_id10_tconv_w1_2_atid) /*var_STI1_id9_tw1_2_atst1*/;
+      printf("OUTPUT %i\n", var_ID_id10_tconv_w1_3_atid) /*var_STI1_id9_tw1_3_atst1*/;
+      int2 var_S_id11_tw2_0_ats = 1;
+      int2 var_S_id11_tw2_2_ats = 2;
+      printf("OUTPUT %i\n", var_S_id11_tw2_0_ats) /*var_STI2_id12_tw2_0_atst2*/;
+      printf("OUTPUT %i\n", var_S_id11_tw2_2_ats) /*var_STI2_id12_tw2_2_atst2*/;
+      remains_0--;
+      printf("sep\n");
+      goto PARTITION_0;
+    }
+  }
+PARTITION_1:
+  printf("//JUMPED TO THE FINISH LOG PARTITION\n");
+  ;
+  printf("sep last\n");
+  return;
+/*PARTITION_1:
+  return;
+  */
+}
+int main()
+{
+  test();
+  return 0;
+}

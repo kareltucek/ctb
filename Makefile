@@ -2,14 +2,14 @@
 FLAGS=  -Wall -Wno-unused-variable -Wno-return-local-addr -Wno-unused-but-set-parameter -Wno-unused-parameter -Wno-reorder -Wno-sign-compare -ggdb --std=c++0x  -g -gdwarf-2 -O0   -fmax-errors=5  -fno-inline -DDEBUGFIELDS 
 #-DTESTOVANI
 
-export CTB_ARGS= -w
+export CTB_ARGS= -w -g
 export CXX=g++
 
 SOURCES = datatypes.h ctb.h instructions.h test.cpp writer.h loader_xml.h graph.h aliasenv_maker.h aliasenv_simple.h aliasenv_bobox.h loader_csv.h Makefile tagmaster.h proxy.h generator.h errorhandling.h parser.h loader_test.h cartesian_multiplier.h aliasenv_generator.h aliasenv_simu.h ptrglue.h cf_transform.h multicont.h graph_factor.h aliasenv_cfmacros.h split.h aliasenv_cf.h aliasenv_bind.h languages.h
 
 all : test ctb basictest
 
-basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir7 testdir10 testdir11 testdir12 testdir13 testdir14
+basictest : testdir1 testdir2 testdir3 ssedir testdir5 testdir7 testdir10 testdir11 testdir12 testdir13 testdir14 testdir15 testdir16 testdir17
 fulltest : all testdir6 testdir4
 
 test : test.cpp $(SOURCES)
@@ -17,6 +17,9 @@ test : test.cpp $(SOURCES)
 
 ctb : main.cpp $(SOURCES)
 	${CXX} ${FLAGS} main.cpp -l tinyxml2 -o ctb
+
+tmp :
+	g++ --std=c++0x tmp.cpp
 
 testdir1 : test
 	./test && make -C test1_simple
@@ -60,6 +63,16 @@ testdir13 : ctb
 testdir14 : ctb
 	make -C test14_inference_test 
 
+testdir15 : ctb
+	make -C test15_obscure_conversions 
+
+testdir16 : ctb
+	make -C test16_matrix_mult 
+
+testdir17 : ctb
+	make -C test17_split 
+
+
 ssedir : ctb
 	make -C sse_set
 
@@ -86,9 +99,6 @@ cleantests :
 	-make -C test12_vectorized_cf_test clean
 	-make -C test13_vectorized_cf_sse_test clean
 	-make -C test14_inference_test clean
-	
-
-
-
-
-
+	-make -C test15_obscure_conversions clean
+	-make -C test16_matrix_mult clean
+	-make -C test17_split clean

@@ -170,6 +170,30 @@ namespace ctb
     return result;
   }
 
+  int stoi_def(string str, int d)
+  {
+    if(str.empty())
+      return d;
+    try
+    {
+      return ctb::stoi(str);
+    }
+    catch(...)
+    {
+      return d;
+    }
+  }
+
+  template <typename L>
+  vector<int> lstoi(const L& cont)
+  {
+    vector<int> res;
+    for(const auto& s : cont)
+      res.push_back(ctb::stoi(s));
+
+    return res;
+  }
+
   template <typename A, typename B>
   map<string,string> toparam(A a, B b)
   {

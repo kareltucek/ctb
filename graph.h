@@ -1,6 +1,7 @@
 #ifndef GRAPH_GUARD
 #define GRAPH_GUARD
 
+#include <fstream>
 #include "defines.h"
 #include "datatypes.h"
 #include <functional>
@@ -95,9 +96,6 @@ namespace ctb
         typedef map<I, node*> vertex_container_t;
         typedef vector<node*> vertex_list_t;
         int index;
-        node* tovert(I);
-        node* tovert(node*);
-        node* tovert(node&);
         string toname(I);
         string toname(node*);
         string toname(node&);
@@ -108,6 +106,9 @@ namespace ctb
         int classids;
         int classids_current;
       public:
+        node* to_vert(I);
+        node* to_vert(node*);
+        node* to_vert(node&);
         typedef edge edge_t;
         typedef node node_t;
         typedef I id_t;
@@ -118,8 +119,8 @@ namespace ctb
         graph_basic();
         ~graph_basic();
         template <typename...L> node* add_vert(I v, bool in , bool out , L&&... p) ; /** v is identifier of a vetes, in and out specify whether vertex should be registered as output/input, p... are parameters to be passed to the 'data' member upon construction*/
-        template <typename J, typename K, typename...L> edge* add_edge_ex(J aid, K bid, int b_argpos, int a_argpos, int layer, L&&...) ;
-        template <typename J, typename K, typename...L> edge* add_edge(J aid, K bid, int b_argpos = -1, int a_argpos = -1, int layer = 0) ; /** self describing I believe*/
+        template <typename J, typename K, typename...L> edge* add_edge_ex(J aid, K bid, int b_argpos, int a_argpos, int layer, L&&...) ; /** The parameter list forwards parameters to the data member of the edge structure together with the 'this' pointer*/
+        template <typename J, typename K, typename...L> edge* add_edge(J aid, K bid, int b_argpos = -1, int a_argpos = -1, int layer = 0) ;
         //template <typename J> void rm_edge(J aid, J bid, int layer = 0);
         template <typename J> void rm_vert(J v);
         template <typename J, typename K> void connect_as(J v, K as, bool inputs = true, bool outputs = true);
@@ -135,6 +136,8 @@ namespace ctb
         //bool cycle_exists(node* n, const vector<int>& at_layers = {0}, set<node*> vertices = {}, int remains = -1);
         bool cycle_exists(node** n = NULL);
         void factorize();
+        void dump_visual() const;
+        void dump(ostream&) const;
         void update_factor();
         int size();
     };
@@ -148,12 +151,44 @@ namespace ctb
     {
     }
 
+  template <class T, class U, class I, bool directed>
+    void graph_basic<T,U,I,directed>::dump_visual() const
+    {
+      ofstream ofs;
+      ofs.open("/tmp/graphjfjfjf");
+      dump(ofs);
+      ofs.close();
+      cout << "showing graph" << endl;
+      string command = "bash -c \"cat /tmp/graphjfjfjf | dot -Tpng > /tmp/graphjfjfjf.png && gpicview /tmp/graphjfjfjf.png\"";
+      system(command.c_str());
+    }
+
+  template <class T, class U, class I, bool directed>
+    void graph_basic<T,U,I,directed>::dump (ostream& o) const
+    {
+      bool printlabels = true;
+
+      //output edges of standard graph
+      auto h = [&](node_t* n)
+      { 
+        if(n->in.empty() )
+          o <<  ctb::to_string(n->id) << endl;
+        for( auto e : n->in ) 
+          o <<  ctb::to_string(e->from->id) << " -> " << ctb::to_string(e->to->id) << endl;
+      };
+
+      //print actual graph
+      o << "digraph G {" << endl;
+      const_cast<graph_basic*>(this)->crawl_topological(h);
+      o << "}" << endl;
+    }
+
 
   template <class T, class U, class I, bool directed>
     template <typename J>
     typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::get_vert(J v)  
     {
-      return tovert(v);
+      return to_vert(v);
     }
 
   template <class T, class U, class I, bool directed>
@@ -196,19 +231,19 @@ namespace ctb
     }
 
   template <class T, class U, class I, bool directed>
-    typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::tovert(node& v)
+    typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::to_vert(node& v)
     {
       return &v;
     }
 
   template <class T, class U, class I, bool directed>
-    typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::tovert(node* v)
+    typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::to_vert(node* v)
     {
       return v;
     }
 
   template <class T, class U, class I, bool directed>
-    typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::tovert(I v)
+    typename graph_basic<T,U,I,directed>::node* graph_basic<T,U,I,directed>::to_vert(I v)
     {
       typename vertex_container_t::iterator a = verts.find(v);
       if(a == verts.end())
@@ -340,6 +375,22 @@ namespace ctb
       h.calculate_distances(); //implicit test of crawling functions
       assert(h.get_dist(1,3) == 2);
       assert(h.get_dist(1,4) == 1);
+      //  
+      graph_basic<dummy, dummy, int, true> l;
+      l.add_vert(1, false, false);
+      l.add_vert(2, false, false);
+      l.add_vert(3, false, false);
+      l.add_vert(4, false, false);
+      l.add_edge(1,2);
+      l.add_edge(1,2);
+      l.add_edge(1,3);
+      l.add_edge(2,3);
+      l.add_edge(3,4);
+      l.add_edge(1,4);
+      l.add_edge(4,1);
+      l.calculate_distances(); //implicit test of crawling functions
+      assert(l.get_dist(1,3) == 1);
+      assert(l.get_dist(1,4) == 1);
 
       i = 0;
       graph_basic<dummy, dummy, int, true> k;
@@ -418,6 +469,9 @@ namespace ctb
         return;
       int size = this->index;
 
+      //first we initialize a routing table (the "map"). I.e. fill it by empty records with infinite distances.
+      crawl_topological([&](node* n){ n->init_map(size);});
+
       int passid = node::newid();
 
       for(auto v : verts) //this will ensure that all components will be crawled
@@ -425,13 +479,12 @@ namespace ctb
         node* n = v.second;
         if(n->lastpass != passid)
         {
-          //first we initialize a routing table (the "map"). I.e. fill it by empty records with infinite distances.
-          n->template crawl<true, true>(
-              [=](node* n)->bool{ n->init_map(size); n->lastpass = passid; return true;}, 
-              [=](node*n)->bool{return n->map.size() != size;} 
-              );
+          //n->template crawl<true, true>(
+          //    [=](node* n)->bool{  n->init_map(size); return true;}, 
+          //    [=](node*n)->bool{bool res = n->lastpass != passid; n->lastpass = passid; return res;} 
+          //    );
           //then we update the distances. If we improved any route, the f function will add all neighbours to the queue. The g function lets the algorithm work undisturbed.
-          n->template crawl<directed, true>(
+          n->template crawl<false, true>(
               [=](node* n)->bool{ return n->update_distances();}, 
               [=](node*n)->bool{return true;} 
               );
@@ -555,8 +608,8 @@ namespace ctb
     template <typename J, typename K>
     void graph_basic<T,U,I,directed>::connect_as(J _u, K _as, bool inputs, bool outputs)
     {
-      node* u = tovert(_u);
-      node* as = tovert(_as);
+      node* u = to_vert(_u);
+      node* as = to_vert(_as);
 
       if(inputs)
       {
@@ -589,7 +642,7 @@ namespace ctb
     template <typename J>
     void graph_basic<T,U,I,directed>::rm_vert(J v)
     {
-      auto a = tovert(v);
+      auto a = to_vert(v);
       if(a == NULL)
         error( "unknown vertex id in rm_vert");
       set<edge*> edges;
@@ -649,8 +702,8 @@ namespace ctb
     typename graph_basic<T,U,I,directed>::edge* graph_basic<T,U,I,directed>::add_edge_ex(J aid, K bid, int b_argpos, int a_argpos, int l, L&&... p)
     {
       classids_current++; 
-      auto a = tovert(aid);
-      auto b = tovert(bid);
+      auto a = to_vert(aid);
+      auto b = to_vert(bid);
 
       if(a == NULL)
         error( string("unknown vertex in add_edge: ") + toname(aid) + " (-> " + toname(bid) + ")");
@@ -739,9 +792,13 @@ namespace ctb
     template <bool Inverted>
     void graph_basic<T,U,I,directed>::node::crawl_topological(function<void(node*)> f, std::vector<int> layers)
     {
-      int passid = node::newid();
+      set<node*> visited;
 
-      crawl<true, Inverted>([=](node* n)-> bool { f(n); n->lastpass = passid; return true;}, [=](node* n)->bool{return n->lastpass != passid;}, layers);
+      crawl<true, Inverted>(
+          [&](node* n)-> bool { f(n); return true;}, 
+          [&](node* n)->bool{bool res = visited.find(n) == visited.end(); visited.insert(n); return res ; } ,
+          layers
+          );
     }
 
   /**
@@ -765,6 +822,10 @@ namespace ctb
     template <bool recurse, bool inverse>
     void graph_basic<T,U,I,directed>::node::crawl(function<bool(node*)> f, function<bool(node*)> g, std::vector<int> layers, queue<node*>* q, bool root)
     {
+      static int depth = 0;
+      if(depth > 50)
+        warning("stack contains 50 nested calls of the crawler template");
+      depth++;
       bool myqueue = false;
       if(q == NULL)
       {
@@ -773,6 +834,7 @@ namespace ctb
       }
       if(!g(this))
       {
+        depth--;
         return;
       }
       if(recurse && directed)
@@ -799,6 +861,7 @@ namespace ctb
       }
       if(root)
       {
+        depth = 0;
         while(!q->empty())
         {
           node* n = q->front();
@@ -808,6 +871,7 @@ namespace ctb
         if(myqueue)
           delete q;
       }
+      depth--;
     }
 };
 

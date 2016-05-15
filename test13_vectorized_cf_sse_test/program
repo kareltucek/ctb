@@ -1,4 +1,4 @@
-loadinstab csv instab.csv
+loadinstab csv ../sse_set/C_table_cf.csv
 loadgraph xml graph.xml
 exportgraph dot graph.out
 transform cf

@@ -32,24 +32,56 @@ namespace ctb
     protected:
       typedef map<string, string> aliastab_t;
       static map<string,string> const * params;
+      static map<string,string> const * names;
+      static map<string,string> const * convs;
       static aliastab_t aliases;
       static void init();
       static bool check_pos_alias(const string& name, const string& a, int offset);
     public:
       typedef language_empty language;
-      static string alias(const string& a, bool* s = NULL, int n = -1);
+      static void setnamemap(map<string,string>const * map);
       static void setparammap(map<string,string>const * map);
+      static void setconvmap(map<string,string>const * map);
+      static void set_widths(int in, int out);
+      static void set_granularity(int packsize);
+      static string alias(const string& a, bool* s = NULL, int n = -1);
       template <class G> static writer<aliasenv_generator> generate(int m,  G& graph, string name) ;
   };
 
   map<string, string> aliasenv_generator::aliases;
   map<string, string> const* aliasenv_generator::params = NULL;
+  map<string, string> const* aliasenv_generator::names = NULL;
+  map<string, string> const* aliasenv_generator::convs = NULL;
 
 #define ADD(a,b) aliases.insert(aliastab_t::value_type(a,b))
+
+  void aliasenv_generator::setnamemap(map<string,string>const* map)
+  {
+    aliasenv_generator::names = map;
+  }
+
+  void aliasenv_generator::setconvmap(map<string,string>const* map)
+  {
+    aliasenv_generator::convs = map;
+  }
 
   void aliasenv_generator::setparammap(map<string,string>const* map)
   {
     aliasenv_generator::params = map;
+  }
+
+#define SET(a,b) aliases[a]=b
+
+  void aliasenv_generator::set_granularity(int g)
+  {
+    SET("packsize", ctb::to_string(g));
+  }
+
+  void aliasenv_generator::set_widths(int in, int out)
+  {
+    if(in > 0)
+      SET("widthin", ctb::to_string(in));
+    SET("widthout", ctb::to_string(out));
   }
 
   bool aliasenv_generator::check_pos_alias(const string& name, const string& a, int offset)
@@ -71,23 +103,43 @@ namespace ctb
     aliasenv_generator::init();
     if(params == NULL)
       warning("aliasenv_generator was invoked without specification of params. You are not supposed to use the generating aliasenv on its own.");
+    if(convs != NULL)
+    {
+      auto itr2 = convs->find(a);
+      if(itr2 != convs->end())
+      {
+        if(s!= NULL)
+          *s = true;
+        return itr2->second;
+      }
+    }
+    else if(names != NULL) //names are *not* to be searched during width conversions
+    {
+      auto itr2 = names->find(a);
+      if(itr2 != names->end())
+      {
+        if(s!= NULL)
+          *s = true;
+        return itr2->second;
+      }
+    }
+    if(params != NULL)
+    {
+      auto itr2 = params->find(a);
+      if(itr2 != params->end())
+      {
+        if(s!= NULL)
+          *s = true;
+        return itr2->second;
+      }
+    }
     auto itr = aliases.find(a);
     if(itr == aliases.end())
     {
-      if(params != NULL)
-      {
-        auto itr2 = params->find(a);
-        if(itr2 != params->end())
-        {
-          if(s!= NULL)
-            *s = true;
-          return itr2->second;
-        }
-      }
-      if(check_pos_alias("arg", a, 8)) //join case of custom code
-        return alias(a,s,n);
-      if(check_pos_alias("name", a, 9)) //split case of custom_code conversion
-        return alias(a,s,n);
+      //if(check_pos_alias("arg", a, 8)) //join case of custom code
+      //  return alias(a,s,n);
+      //if(check_pos_alias("name", a, 10)) //split case of custom_code conversion //note that zeroth name is on eleventh field, so name<1+19> goes to the field 11
+      //  return alias(a,s,n);
 
       if(s != NULL)
         *s = false;
@@ -124,9 +176,6 @@ namespace ctb
     ADD("oindex", "$6");
     ADD("vindex", "$7");
     ADD("classid", "$8");
-    ADD("arg1", "$9");
-    ADD("arg2", "$10");
-    ADD("arg3", "$11");
 
 
     initialized = true;

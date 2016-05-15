@@ -1,0 +1,41 @@
+#factor structure is:
+#0;
+#partitions are:
+#partition 0:
+#ld
+#ld -> id [label="3:",taillabel="0",headlabel="0"];
+#ld -> m [label="4:",taillabel="0",headlabel="0"];
+#ld -> st4 [label="5:",taillabel="0",headlabel="0"];
+#ld -> _cf_transform_noop_vertex [label="2:",taillabel="0",headlabel="0"];
+#id -> st22 [label="6:",taillabel="0",headlabel="0"];
+#id -> st1 [label="7:",taillabel="0",headlabel="0"];
+#m -> s [label="8:",taillabel="0",headlabel="0"];
+#s -> st2 [label="9:",taillabel="0",headlabel="0"];
+#factor invisible edges are
+#ld
+digraph G {
+edge [style=dotted,arrowhead=odot];
+ld
+edge [style=dotted,arrowhead=normal];
+ld
+edge [style=solid];
+ld
+ld -> _cf_transform_noop_vertex [label="2:",taillabel="0",headlabel="0"];
+ld -> id [label="3:",taillabel="0",headlabel="0"];
+ld -> m [label="4:",taillabel="0",headlabel="0"];
+ld -> st4 [label="5:",taillabel="0",headlabel="0"];
+id -> st22 [label="6:",taillabel="0",headlabel="0"];
+id -> st1 [label="7:",taillabel="0",headlabel="0"];
+m -> s [label="8:",taillabel="0",headlabel="0"];
+s -> st2 [label="9:",taillabel="0",headlabel="0"];
+0;
+ld [color="black",label="ld "];
+_cf_transform_noop_vertex [color="black",label="_cf_transform_noop_vertex "];
+id [color="black",label="id "];
+m [color="black",label="m "];
+st4 [color="black",label="st4 "];
+st22 [color="black",label="st22 "];
+st1 [color="black",label="st1 "];
+s [color="black",label="s "];
+st2 [color="black",label="st2 "];
+}

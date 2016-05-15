@@ -1,4 +1,4 @@
-loadinstab csv instab.csv
+loadinstab csv C_table.csv
 loadgraph xml graph.xml
 #visualize
 exportgraph dot graph.out

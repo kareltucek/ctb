@@ -6,7 +6,7 @@ make_anyway :
 	make -C .. ctb
 
 test : output.preprocessed.cpp
-	${CXX} -ggdb output.preprocessed.cpp -o test
+	${CXX} -ggdb output.preprocessed.cpp -o test -fmax-errors=10
 
 visual : make_anyway
 	../ctb -f program_visual ${CTB_ARGS}

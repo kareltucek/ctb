@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<graph_list Name="list">
+   <graph Name="graph1">
+      <vertex opid="LDI" vid="ld" params=""></vertex>
+      <vertex opid="ID" vid="id" params=""></vertex>
+      <vertex opid="S" vid="s" params=""></vertex>
+      <vertex opid="M" vid="m" params=""></vertex>
+      <vertex opid="STI4" vid="st4" params=""></vertex>
+      <vertex opid="STI2" vid="st2" params=""></vertex>
+      <vertex opid="STI2" vid="st22" params=""></vertex>
+      <vertex opid="STI1" vid="st1" params=""></vertex>
+      <edge from="ld" to="id" from_pos="0" to_pos="0"></edge>
+      <edge from="ld" to="m" from_pos="0" to_pos="0"></edge>
+      <edge from="ld" to="st4" from_pos="0" to_pos="0"></edge>
+      <edge from="m" to="s" from_pos="0" to_pos="0"></edge>
+      <edge from="s" to="st2" from_pos="0" to_pos="0"></edge>
+      <edge from="id" to="st22" from_pos="0" to_pos="0"></edge>
+      <edge from="id" to="st1" from_pos="0" to_pos="0"></edge>
+   </graph>
+</graph_list>

@@ -1,4 +1,4 @@
-loadinstab csv ../sse_set/C_table.csv
+loadinstab csv ../sse_set/C_table_bobox.csv
 loadgraph xml graph.xml
 generate bobox output.h
 

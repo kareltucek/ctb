@@ -12,6 +12,8 @@ int main(int c, char** cc)
 
   try
   {
+    warn_as_error=true;
+    allow_graphs=false;
     imp_cont_default::self_test();
     cartesian_multiplier_default::self_test(); 
     graph_basic_default::self_test();

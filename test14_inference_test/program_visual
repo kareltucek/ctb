@@ -1,0 +1,4 @@
+loadinstab csv instab.csv
+loadgraph xml graph.xml
+exportgraph dot graph.out
+visualize

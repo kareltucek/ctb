@@ -154,7 +154,8 @@ namespace ctb
        template <typename ... Types> void getnth(int i, const string*& rs, const writer<M,I,O,C>*& rw, const stringlist& a, const Types&... params);
        writer<M,I,O,C> to_writer(const int& r);
        writer<M,I,O,C> to_writer(const string& r);
-       const writer<M,I,O,C>& to_writer(const writer<M,I,O,C>& r);
+       template <class N, dollar_mode J, dollar_mode K, bool D>
+       const writer<M,I,O,C>& to_writer(const writer<N,J,K,D>& r);
        const stringlist& to_writer(const stringlist& r);
        string get_string() const; //does handle dollars internally!
      public:
@@ -203,6 +204,7 @@ namespace ctb
    typedef aliasenv_maker<empty_tag, language_cpp> aliasenv_empty_cpp;
    typedef writer<aliasenv_empty_cpp> writer_default;
    typedef writer<aliasenv_empty> writer_plain;
+   typedef writer<aliasenv_empty_cpp, dLet, dLet> writer_nonexpansive_cpp_formatter;
 
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
@@ -617,9 +619,10 @@ namespace ctb
      }
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
-     const writer<M,I,O,C>& writer<M,I,O,C>::to_writer(const writer<M,I,O,C>& r)
+   template <class N, dollar_mode J, dollar_mode K, bool D>
+     const writer<M,I,O,C>& writer<M,I,O,C>::to_writer(const writer<N,J,K,D>& r)
      {
-       return r;
+       return *((writer<M,I,O,C>*)&r);
      }
 
    template <class M, dollar_mode I, dollar_mode O, bool C>
@@ -819,7 +822,7 @@ skip:
            char pe = format[from+1] == '[' ? ']' : '}';
            int lastfrom = from;
 
-           if(format[from+1] == pb) // && !preprocess && P::value)
+           if(format[from+1] == pb && (dollars == dEat || dollars == dLet)) // && !preprocess && P::value)
            {
              int indent = 1;
              int start = from+2;
@@ -847,7 +850,17 @@ skip:
            }
            else
            {
-             add("$", false);
+             switch (dollars)
+             {
+               case dExpand:
+                 add("$$", false);
+                 break;
+               case dEat:
+               case dLet:
+               case dIgnore:
+                 add("$", false);
+                 break;
+             }
              ++from;
            }
          }

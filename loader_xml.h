@@ -231,7 +231,7 @@ namespace ctb
               ccode.push_back(getstr(itr2, "code_custom"));
             for(XMLElement * itr3 = itr->FirstChildElement("code_custom"); itr3 != NULL; itr3 = itr3->NextSiblingElement("code_custom"))
               ccode.push_back(itr3->GetText());
-            t.add_code(getint(itr2, "width_in"),getint(itr2, "width_out"), getstr(itr2, "code"),ccode,getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
+            t.add_code(::ctb::lstoi(splitlist(getanystr(itr2, "widths_in"))),getanyint(itr2, "width_out"), getstr(itr2, "code"),ccode,getanystr(itr2,"note"),getanystr(itr2,"tags"),getanyint(itr2,"rating"));
           }
         }
       }

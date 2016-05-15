@@ -48,9 +48,9 @@ namespace ctb
       void factorize();
       static void self_test();
 
-      void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";}, function<string(node_t*)> g = [](node_t* n){return "";}, function<string(edge_t*)> h = [](edge_t* e){return "";});
-      template<bool detach = false> void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";});
-      template<bool detach = false> void dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f = [](node_t* n){return "black";}, function<string(edge_t*)> h = [](edge_t* e){return "";});
+      void dump(ostream& o, function<string(node_t*)> f = [](node_t* n){return "black";}, function<string(node_t*)> g = [](node_t* n){return "";}, function<string(edge_t*)> h = [](edge_t* e){return "";}) const;
+      template<bool detach = false> void dump_visual(function<string(node_t*)> f = [](node_t* n){return "black";}) const;
+      template<bool detach = false> void dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f = [](node_t* n){return "black";}, function<string(edge_t*)> h = [](edge_t* e){return "";}) const;
 
   };
   typedef graph_factor<dummy,dummy,int,true> graph_factor_default;
@@ -73,14 +73,14 @@ namespace ctb
 
   template <class T, class U, class I, bool directed>
       template<bool detach>
-    void graph_factor<T,U,I,directed>::dump_visual(function<string(node_t*)> f)
+    void graph_factor<T,U,I,directed>::dump_visual(function<string(node_t*)> f) const
     {
       dump_visual_label([](node_t* n){return "";}, f);
     }
 
   template <class T, class U, class I, bool directed>
       template<bool detach>
-    void graph_factor<T,U,I,directed>::dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f, function<string(edge_t*)> h)
+    void graph_factor<T,U,I,directed>::dump_visual_label(function<string(node_t*)> g, function<string(node_t*)> f, function<string(edge_t*)> h) const
     {
       ofstream ofs;
       ofs.open("/tmp/graphjfjfjf");
@@ -94,11 +94,11 @@ namespace ctb
     }
 
   template <class T, class U, class I, bool directed>
-    void graph_factor<T,U,I,directed>::dump (ostream& o, function<string(node_t*)> colour_callback, function<string(node_t*)> label, function<string(edge_t*)> edgelab)
+    void graph_factor<T,U,I,directed>::dump (ostream& o, function<string(node_t*)> colour_callback, function<string(node_t*)> label, function<string(edge_t*)> edgelab) const
     {
       //std::cout << "dumping graph!" << endl;
       bool printlabels = true;
-      auto& graph = *this;
+      auto& graph = *const_cast<graph_factor*>(this);
 
       string prefix = "#";
       int layer = 1;

@@ -2,20 +2,20 @@
 <root Name="root">
    <instruction_list Name="instruction_list">
       <operation  opid="ADDI" out_type="INT" in_types="INT,INT" >
-         <instruction width_out="1" code="$arg1 + $arg2" width_in="1"></instruction>
-         <instruction width_out="4" code="_mm_add_epi32($arg1, $arg2)" width_in="4"></instruction>
+         <instruction width_out="1" code="$arg1 + $arg2" widths_in="1,1"></instruction>
+         <instruction width_out="4" code="_mm_add_epi32($arg1, $arg2)" widths_in="4,4"></instruction>
       </operation>
       <operation  opid="MULI" out_type="INT" in_types="INT,INT" >
-         <instruction width_out="1" code="$arg1 * $arg2" width_in="1"></instruction>
-         <instruction width_out="2" code="_mm_shuffle_epi32(_mm_mul_epu32($arg1, $arg2), _MM_SHUFFLE (0,0,2,0))" width_in="2"></instruction>
+         <instruction width_out="1" code="$arg1 * $arg2" widths_in="1,1"></instruction>
+         <instruction width_out="2" code="_mm_shuffle_epi32(_mm_mul_epu32($arg1, $arg2), _MM_SHUFFLE (0,0,2,0))" widths_in="2,2"></instruction>
       </operation>
       <operation  opid="STI" out_type="INT" in_types="INT" flags="output">
-         <instruction width_out="1" code="$output = $arg1" width_in="1"></instruction>
-         <instruction width_out="4" code="_mm_storeu_si128((__m128i*)&amp;$output, $arg1)" width_in="4"></instruction>
+         <instruction width_out="1" code="$output = $arg1" widths_in="1"></instruction>
+         <instruction width_out="4" code="_mm_storeu_si128((__m128i*)&amp;$output, $arg1)" widths_in="4"></instruction>
       </operation>
-      <operation flags="input" opid="LDI" out_type="INT" in_types="" >
-         <instruction width_out="1" code="$input" width_in="1"></instruction>
-         <instruction width_out="4" code="_mm_loadu_si128((const __m128i*)&amp;$input)" width_in="4"></instruction>
+      <operation flags="input" opid="LDI" out_type="INT"  >
+         <instruction width_out="1" code="$input" ></instruction>
+         <instruction width_out="4" code="_mm_loadu_si128((const __m128i*)&amp;$input)" ></instruction>
       </operation>
    </instruction_list>
    <type_list Name="type_list">

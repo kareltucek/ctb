@@ -6,17 +6,17 @@ make_anyway :
 	make -C .. ctb
 
 test : output.preprocessed.cpp
-	${CXX} -ggdb output.preprocessed.cpp -o test -msse4.1
+	${CXX} -ggdb output.preprocessed.cpp -o test -msse4.1 -fmax-errors=10 --std=c++11 -Wno-parentheses-equality
 
 visual : make_anyway
 	../ctb -f program_visual ${CTB_ARGS}
 
-graph.out graph_cf.out output.preprocessed.cpp : graph.xml instab.csv ../ctb
+graph.out graph_cf.out output.preprocessed.cpp : macros.h graph.xml ../ctb
 	../ctb -f program ${CTB_ARGS}
 
 
 run : graph.out test
-	./check_output.sh 
+	./test > /dev/null
 	#diff graph_cf.out graph_cf.out.expected
 
 clean :

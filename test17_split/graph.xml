@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<graph_list Name="list">
+   <graph Name="graph1">
+
+     <vertex opid="LD_uint32_t"  vid="a"      params="ioindex=1"></vertex>
+       <vertex opid="LD_ssebool_byte"  vid="c"      params="ioindex=0">      </vertex>
+       <vertex opid="SPLIT_uint32_t"  vid="u"      ></vertex>
+       <vertex opid="ST_uint32_t"  vid="v"      params="ioindex=0"></vertex>
+       <vertex opid="ST_uint32_t"  vid="w"      params="ioindex=1"></vertex>
+
+      <edge from="a"  to="u"            to_pos="1"> </edge>                                                
+      <edge from="c"  to="u"            to_pos="0"> </edge>                                                
+      <edge from="u"  to="w" from_pos="0"     to_pos="0"> </edge>                                                
+      <edge from="u"  to="v" from_pos="1"     to_pos="0"> </edge>                                                
+   </graph>
+</graph_list>

@@ -1,3 +1,5 @@
-loadinstab csv C_table.csv
-exportinstab csv C_table_expanded.csv
+loadinstab csv C_table_bobox.csv
+exportinstab csv C_table_bobox_expanded.csv
+loadinstab csv C_table_cf.csv
+exportinstab csv C_table_cf_expanded.csv
 

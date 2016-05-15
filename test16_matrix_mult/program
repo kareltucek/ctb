@@ -1,0 +1,9 @@
+loadinstab csv ../sse_set/C_table_cf.csv
+loadgraph xml graph.xml
+exportgraph dot graph.out
+transform cf
+exportgraph dot graph_cf.out
+generate cf output.cpp vector
+preprocess cfmacros output.cpp output.preprocessed0.cpp
+preprocess cfmacros output.preprocessed0.cpp output.preprocessed.cpp
+

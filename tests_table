@@ -13,9 +13,12 @@ At this point we start implementing the control flow
 test7_graph_transformations - this is a simple test of the transformations. We wish to preserve this test for later use as a possible showcase since it is simple. Instruction tables are inconsistent in this test!
 test8_graph_transformations2 - inherits the structure of test 7, but becomes more complex for the purpose of testing the partitioning. Instruction tables are inconsistent in this test! This test is now part of test11.
 test11_graph_basic_cf_test - inherits the structure of test 8, but targets generation of a simple control flow graph. We edit the instructions for sake of a simple test.
-test12_graph_basic_cf_test - This test aims vectorized generation.
+test12_graph_basic_cf_test - This test aims vectorized generation without fully vectorized buffers
+test13_graph_basic_cf_test - Full test of control flow with all SSE capabilities
 
 test9_cf_macros - this test is no longer used. Its purpose was implementation of a C macro buffer. 
 test10_cf_macros - Here we reimplement the same macros using our own preprocessor. Much more convenient
 
-
+test14_inference_test - tests that inference does not break with incomplete information and also that loops dont cause problems
+test15_obscure_conversions - tests conversion patterns
+test16_matrix_mult - contains a benchmark of 2 dimensional matrix multiplication

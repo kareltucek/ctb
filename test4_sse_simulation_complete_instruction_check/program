@@ -1,4 +1,4 @@
-loadinstab csv ../sse_set/C_table.csv
+loadinstab csv ../sse_set/C_table_bobox.csv
 testgraph
 adddebug 2
 generate simu output.h

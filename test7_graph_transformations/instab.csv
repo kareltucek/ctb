@@ -1,18 +1,18 @@
 #note	type	output type	input types	op id	flags	width in	width out	code	tags	rating	code custom	
-	instruction	INT	INT,INT	ADDI		1	1	$$arg1 + $$arg2		0		
+	instruction	INT	INT,INT	ADDI		1,1	1	$$arg1 + $$arg2		0		
 	instruction	BOOL	INT	ZERO		1	1	$$arg1 == 0		0		
-	instruction	INT	INT,INT	MULI		1	1	$$arg1 * $$arg2		0		
+	instruction	INT	INT,INT	MULI		1,1	1	$$arg1 * $$arg2		0		
 	instruction	INT	INT	INC		1	1	$$arg1++		0		
 	instruction	INT		LDI	input	1	1	i_$ioindex++		0	global: int i_$ioindex = 0;	
 	instruction		INT	STI	output	1	1	$$output = $$arg1		0		
 	instruction	BOOL		LDB	input	1	1	(i_$ioindex % 3) == 0		0	global: int i_$ioindex = 0;	
 
 
-	instruction		BOOL,INT	SPLIT_ST_INT	effectoutput	4	4	SPLIT_ST($$arg1, $$arg2)		0		
+	instruction		BOOL,INT	SPLIT_ST_INT	effectoutput	4,4	4	SPLIT_ST($$arg1, $$arg2)		0		
 	instruction	INT	INT	SPLIT_LD${side->L,R}_INT	effectinput	4	4	SPLIT_LD($$arg1)		0		
 	instruction	INT	INT	MERGE_ST${side->L,R}_INT	effectoutput	4	4	MERGE_ST($$arg1)		0		
 	instruction	INT	INT	MERGE_LD_INT	effectinput	4	4	MERGE_LD($$arg1)		0		
-	instruction	INT	BOOL,INT,INT	MERGE_PROC_INT	effectinput,effectoutput	4	4	MERGE_PROC($$arg1)		0		
+	instruction	INT	BOOL,INT,INT	MERGE_PROC_INT	effectinput,effectoutput	4,4,4	4	MERGE_PROC($$arg1)		0		
 	instruction	${type->INT,BOOL}	$type	BUFF_ST_$type	effectoutput	4	4	BUFF_ST($$arg1)		0		
 	instruction	${type->INT,BOOL}	$type	BUFF_LD_$type	effectinput	4	4	BUFF_LD($$arg1)		0		
 

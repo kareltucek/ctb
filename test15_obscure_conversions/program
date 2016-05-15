@@ -1,0 +1,9 @@
+loadinstab csv instab.csv
+loadgraph xml graph.xml
+exportgraph dot graph.out
+transform cf expandonly
+exportgraph dot graph_intermediate_cf.out
+transform cf
+exportgraph dot graph_cf.out
+generate cf output.cpp  simpledbg
+

@@ -135,7 +135,7 @@ namespace ctb
          public:
            type() = delete;
            type(instruction_table*, int bitwidth);
-           typedef graph_general<dummy, dummy, int, false> graph_distance_t;
+           typedef graph_general<dummy, dummy, int, true> graph_distance_t;
            typename T::opid_t debug_op;
            //TODO index this a bit intelligently...
            /*EAPI*/vector<type_version> versions;
@@ -171,8 +171,8 @@ namespace ctb
            typedef vector<ccode_pair> ccode_cont;
            struct instruction //holds information for generation
            {
-             const int width;
-             const int width_in;
+             const int max_width;
+             const vector<int> widths_in;
              const int width_out;
              const string code;
              const ccode_cont code_custom;
@@ -186,8 +186,10 @@ namespace ctb
            //vector<typename T::tid_t> in_types
            instruction_table* parent;
            void update_tags() const;
+           const instruction* find_inst(int w, bool complain, bool check_tags) const;
          public:
            typedef ccode_cont ccode_cont_t;
+           typedef ccode_pair ccode_pair_t;
            /*TAPI*/vector<expansion> expansions;
            /*TAPI*/typedef expansion expansion_t;
            /*EAPI*/vector<instruction> versions;
@@ -196,15 +198,15 @@ namespace ctb
            /*EAPI*/vector<typename T::tid_t> in_types;
            /*EAPI*/typename T::flag_t flags; 
            /*EAPI*/typename T::opid_t opid;
-           /*IAPI*/void add_code(int wi, int wo, const string& c, const stringlist& cc, const string&,const string&, int r);
+           /*IAPI*/void add_code(const vector<int>& wi, int wo, const string& c, const stringlist& cc, const string&,const string&, int r);
            /*IAPI*/void add_expansion(const string&, const string&, const vector<typename T::opid_t>& args, const string&, vector<typename T::tid_t>, vector<typename T::tid_t>);
            /*API*/bool is(typename T::flag_t f) const ;
-           /*API*/int get_max_width(int bound = 1000000000, int* in = NULL, int* out = NULL)const;
+           /*API*/int get_max_width(int bound = 1000000000, const vector<int>** ins = NULL, int* out = NULL, bool strict = false)const;
            /*API*//*DEPRECATED*///void imbue_width(int w)const;
            /*API*/typename T::opid_t get_debug_opid() const;
            /*API*/bool get_type_string(int w, string&)const;
-           /*API*/bool get_op_string(int w, string& c, ccode_cont_t& cc, size_t&)const;
-           /*API*/bool get_conv_string(int from, int to, string& c1, string& c2, string&cc, string& type, size_t&)const;
+           /*API*/bool get_op_string(int wo, string& c, ccode_cont_t& cc, size_t& p, const vector<int>**, int&, int&)const;
+           /*API*/bool get_conv_string(int from, int to, string& c1, string& c2, string&cc, string& cg, string& type, size_t&)const;
            /*API*/const typename type::graph_distance_t& get_conversion_graph() const;
            operation(typename T::opid_t i, typename T::tid_t ot, const vector<typename T::tid_t>& it, typename T::flag_t f, type* t, instruction_table* parent);
            operation() = delete;
@@ -325,7 +327,6 @@ namespace ctb
    template <class T>
      void instruction_table<T>::add_expansion(typename T::opid_t id, const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types, vector<tid_t> types_out)
      {
-       //cout << "adding expansion tab " << id << " " << ctb::l_to_string(types) << " " <<ctb::l_to_string(types_out) <<  endl;
        auto& op = add_operation(id, "", types, fEXPANSION);
        op.add_expansion(n, t, a, m, types, types_out);
      }
@@ -333,15 +334,17 @@ namespace ctb
    template <class T>
      void instruction_table<T>::operation::add_expansion(const string& n, const string& t, const vector<opid_t>& a, const string& m, vector<tid_t> types, vector<tid_t> types_out)
      {
-       //cout << "adding expansion tab " << opid << " " << ctb::l_to_string(types) << " " <<ctb::l_to_string(types_out) <<  endl;
        expansions.push_back(make_expansion({n,t,a,m,types, types_out}));
-       //cout << "    " << ctb::l_to_string(expansions.front().in_types) << " -> " << ctb::l_to_string(expansions.front().out_types) << endl;
        parent->exptab[t][n].push_back(make_expansion({n,t,a,m,types,types_out}));
      }
 
    template <class T>
-     void instruction_table<T>::operation::add_code(int wi, int wo, const string& c, const stringlist& cc, const string& n,const string& t,int r)
+     void instruction_table<T>::operation::add_code(const vector<int>& wi, int wo, const string& c, const stringlist& cc, const string& n,const string& t,int r)
      {
+       if(wi.size() != in_types.size() && (wi.size() < in_types.size() || !is(fINPUT | fEFINPUT)))
+         error(string("the widths_in field has to match the in_types field (lenghts must equal)! At operation ") + opid);
+       if((wi.size() != 1 || in_types.size() != 1) && is( fDEBUG ))
+         error(string("debuf nodes must have exactly one input") + opid);
        ccode_cont_t ccode_split;
        for(const string& code: cc)
        {
@@ -352,7 +355,20 @@ namespace ctb
          }
          RETHROW("in definition of instruction code: "+ ctb::to_string(this->opid) + ". Note that current format of code is '<output writer name>:<code itself>', e.g. 'default:$$name = add($$arg1, $$arg2);");
        }
-       versions.push_back(make_instruction({wi > wo ? wi : wo, wi, wo, c,ccode_split,n,t,r,parent->is_tag_satisfactory(t)}));
+       int mw = wo;
+       for(int i : wi)
+         mw = i > mw ? i : mw;
+       if(wo == 0)
+       {
+         if(is(fOUTPUT | fEFOUTPUT | fDEBUG))
+           wo = mw;
+         else
+           error(string("The width_out field has to be specified for non-output node types (and has to be nonzer)! At ") + opid);
+       }
+       if(mw == 0)
+         error(string("Every instruction has to have some width specified. The width_out field is always legal (even if the node does not output anything).") + opid);
+
+       versions.push_back(make_instruction({mw, wi, wo, c,ccode_split,n,t,r,parent->is_tag_satisfactory(t)}));
      }
 
    template <class T>
@@ -362,19 +378,14 @@ namespace ctb
      }
 
    template <class T>
-     int instruction_table<T>::operation::get_max_width(int bound, int* in, int* out)const
+     int instruction_table<T>::operation::get_max_width(int bound, const vector<int>** wins, int* wout, bool strict)const
      {
-       int w = 0;
-       for(const auto& ins : versions)
-       {
-         if(ins.width <= bound && ins.width > w)
-         {
-           w = ins.width;
-           if(in != NULL) *in = ins.width_in;
-           if(out != NULL) *out = ins.width_out;
-         }
-       }
-       return w;
+       const auto* in = find_inst(bound, false, strict);
+       if(in == NULL)
+         return 0;
+       if(wins != NULL) *wins = &in->widths_in;
+       if(wout != NULL) *wout = in->width_out;
+       return in->max_width;
      }
 
    /*
@@ -403,33 +414,61 @@ namespace ctb
      }
 
    template <class T>
-     bool instruction_table<T>::operation::get_op_string(int w, string& c, ccode_cont_t& cc, size_t& printability)const
+     const typename instruction_table<T>::operation::instruction* instruction_table<T>::operation::find_inst(int b, bool complain, bool check_tags) const
      {
-       if(w == -1)
-         w = imbued_width;
+       verbose(string() + "searching for instruction of width " + ctb::to_string( b ) + " at " + opid, 2);
        bool s = false;
-       int r = 0;
-       for( auto ins : versions)
+       int w = -1;
+       int r = -1;
+       const instruction* ptr = NULL;
+       for( const auto& ins : versions)
        {
-         if ( (ins.satisfactory & mSELECT) && ins.width_in == w && ins.rating >= r)
+         verbose(string() + "    version " + ctb::to_string(ins.width_out), 2);
+         int wc = ins.max_width;
+         if( !(ins.satisfactory & mSELECT || !check_tags) )
+           verbose(string() + "      (refused - bad tags) ", 2);
+         else if( ! (wc <= b))
+           verbose(string() + "      (refused - too wide) ", 2);
+         else if ( ! (wc <= b) )
+           verbose(string() + "      (refused - too wide) ", 2);
+         else if (! (ins.max_width > w || (ins.max_width == w && ins.rating > r)))
+           verbose(string() + "      (refused - already got better one) ", 2);
+         else
          {
-           c = ins.code;
-           cc = ins.code_custom;
-           r = ins.rating;
+           verbose(string() + "      (accepted as candidate) ", 2);
            s = true;
-           printability = (ins.satisfactory & mPRINT) ? (ins.satisfactory & mONCE) ? 1 : 100000 : 0;
+           ptr = &ins;
+           w = ins.max_width;
+           r = ins.rating;
          }
        }
-       if(!s)
+       if(!s && complain)
        {
          warn( string("instruction of width_in = ").append(to_string(w)).append(" at operation ").append(opid).append(" satisfying current tags not found"));
-         printability = 0;
        }
-       return s;
+       return ptr;
      }
 
    template <class T>
-     bool instruction_table<T>::operation::get_conv_string(int from, int to, string& c1, string& c2, string& cc, string& t, size_t& printability) const
+     bool instruction_table<T>::operation::get_op_string(int w, string& c, ccode_cont_t& cc, size_t& printability, const vector<int>** insw, int& outw, int& mw)const
+     {
+       if(w == -1)
+         w = imbued_width;
+
+       const auto* ins = find_inst(w, true, true);
+       if(ins == NULL)
+         return false;
+       c = ins->code;
+       cc = ins->code_custom;
+       *insw = &ins->widths_in;
+       outw = ins->width_out;
+       mw = ins->max_width;
+       printability = (ins->satisfactory & mPRINT) ? (ins->satisfactory & mONCE) ? 1 : 100000 : 0;
+       return true;
+     }
+
+   template <class T>
+     bool instruction_table<T>::operation::get_conv_string(int from, int to, string& c1, string& c2, string& cc, string& cg, string& t, size_t& printability) const
      {
        bool s = false;
        int r = 0;
@@ -440,6 +479,7 @@ namespace ctb
            c1 = con.code1;
            c2 = con.code2;
            cc = con.code_custom;
+           cg = con.code_generic;
            get_type_string(to, t);
            r = con.rating;
            s = true;
@@ -473,6 +513,8 @@ namespace ctb
    template <class T>
      typename instruction_table<T>::operation_t& instruction_table<T>::add_operation(typename T::opid_t op, typename T::tid_t t, const vector<typename T::tid_t>& it, typename T::flag_t f)
      {
+       if(t == "" && !it.empty() && (f & (fOUTPUT)) )
+         t = it[0];
        if(instab.find(op) != instab.end())
        {
          auto& myop = *instab.find(op)->second;
@@ -553,10 +595,8 @@ namespace ctb
        vector<const expansion_t*> acceptable;
        for(auto& exp : exps)
        {
-         //cout << "trying expansion " << exp.name << " with types: " << ctb::l_to_string(exp.in_types) << endl;
          if(sig_acceptable(exp.in_types, types))
          {
-           //cout << "   accepting expansion " << exp.name << endl;
            acceptable.push_back(&exp);
          }
        }

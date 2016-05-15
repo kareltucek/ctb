@@ -10,8 +10,7 @@ namespace ctb
    * -------------------
    * Languages describe how should writer input and output be autoformatted. 
    *
-   * This happens in two phases - first takes place while putting things into writer - that is breaking text into lines. Second phase is outputting phase (stream/file/string/whatever), when the lines are indented.
-   *
+   * This happens in two phases - first takes place while putting things into writer - that is breaking text into lines. Second phase is outputting phase (stream/file/string/whatever), when the lines are indented.  *
    * Languages thus provide two callbacks:
    *
    * shouldbreak:
@@ -65,6 +64,9 @@ namespace ctb
           case '\r':
           case '?':
             braf = true;
+            break;
+          case '#':
+            brbf = true;
             break;
           case '}':
             braf = true;

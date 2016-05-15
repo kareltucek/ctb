@@ -1,0 +1,18 @@
+#note	type	output type	input types	op id	flags	width in	width out	code	tags	rating	code custom	
+	instruction	INT		LDI	input	1	1	1+1		0	
+	instruction	INT	INT	ID		4	4	$$arg1		0	
+	instruction	INT	INT	M		1	4	$$arg1n1 + $$arg1n2 + $$arg1n3 + $$arg1n4		0	
+	instruction	INT	INT	S		4	2			0	default: $$type $$name1 = 1; $$type $$name2 = 2;
+	instruction		INT	STI4	output	4	4	printf("OUTPUT %i\n", $$arg1)		0		
+	instruction		INT	STI2	output	2	2	printf("OUTPUT %i\n", $$arg1)		0		
+	instruction		INT	STI1	output	1	1	printf("OUTPUT %i\n", $$arg1)		0		
+
+#note	type	type id	bitwidth	width	code
+	type_version	INT	32	1	int
+	type_version	INT	32	2	int2
+	type_version	INT	32	4	int4
+#note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
+j	type_conversion	INT	32	1	4			$$type = $$name = $$arg1 + $$arg2 + $$arg3 + $$arg4;			0
+j	type_conversion	INT	32	4	2	left($$arg1)	right($$arg1)				0
+j	type_conversion	INT	32	4	1				$$type $$name = select($$vindex, $$arg1);		0
+

@@ -3,7 +3,7 @@ loadgraph xml graph.xml
 exportgraph dot graph.out
 transform cf
 exportgraph dot graph_cf.out
-generate cf output.cpp vectordbg
+generate cf output.cpp testgran2
 preprocess cfmacros output.cpp output.preprocessed0.cpp
 preprocess cfmacros output.preprocessed0.cpp output.preprocessed.cpp
 

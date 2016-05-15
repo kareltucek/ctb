@@ -44,7 +44,12 @@ namespace ctb
   }
 };
 
-#ifndef TESTOVANI
+#define NOTHROW \
+catch (error_struct& err)\
+{\
+  return;\
+}
+
 
 #define RETHROWORWARN(msg)\
 catch(std::exception& e)\
@@ -59,6 +64,8 @@ catch (error_struct& err)\
     warn(string(msg) + "\n    "+err.first, err.second);\
 }
 
+
+#ifndef TESTOVANI
 #define RETHROW(msg)\
 catch(std::exception& e)\
 {\
@@ -68,7 +75,6 @@ catch (error_struct& err)\
 {\
   error(string(msg) + "\n    "+err.first, err.second);\
 }
-
 #else
 #define RETHROW(msg)\
   catch (error_struct& err)\

@@ -2,7 +2,7 @@ FLAGS= -DTESTOVANI -Wall -Wno-unused-but-set-parameter -Wno-unused-parameter -Wn
 
 all : output.h test run
 
-output.h : ../ctb ../sse_set/C_table.csv graph.xml
+output.h : ../ctb ../sse_set/C_table_bobox.csv graph.xml
 	../ctb -f program ${CTB_ARGS}
 
 test : output.h

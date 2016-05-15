@@ -79,6 +79,7 @@ namespace ctb
 #define decl(dname, dargs) else if(name == dname && declargs(dargs, args.size(), name))
 #define S(a) ++i; aliasenv_subtab::access(a) = string("$")+ctb::to_string(i);
 #define TOINT(a) ctb::stoi(writer<aliasenv_subtab>().print(a,args, i ).write_str())
+#define GET(a) writer<aliasenv_subtab>().print(a,args, i ).write_str()
 #define P(s) w.print(s, args, i); 
 #define C() if(args_present != i-1) warning(string("expected ") + ctb::to_string(i-1) + " arguments at " + name + ", but got " + ctb::to_string(args_present));
 
@@ -182,7 +183,7 @@ namespace ctb
     {
       P("switch((gendecl_readat_${id} + gendecl_contains_${id}) % ${capacity}){ "); 
       for (auto i = 0; i < TOINT("$capacity"); i++) 
-        P("case $i: gendecl_$id_$[$i/$vsize] = _mm_insert_$typeabbrev(gendecl_$id_$[$i / $vsize], $val, $i % gendecl_vsize_$id); break;");
+        P("case $i: gendecl_$id_$[$i/$vsize] = _mm_insert_$typeabbrev((__m128i)gendecl_$id_$[$i / $vsize], $val, $i % gendecl_vsize_$id); break;");
       P("};"); 
       P("gendecl_contains_$id++;"); 
     }
@@ -197,7 +198,7 @@ namespace ctb
     {
       P("switch(gendecl_readat_$id){ ");
       for (auto i = 0; i < TOINT("$capacity"); i++) 
-        P("case $i: $to = _mm_extract_$typeabbrev(gendecl_$id_$[$i / $vsize], $i % gendecl_vsize_$id); break;");
+        P("case $i: $to = _mm_extract_$typeabbrev((__m128i)gendecl_$id_$[$i / $vsize], $i % gendecl_vsize_$id); break;");
       P("}");
     }
     decl("BUFFER_PEEK_VECTOR", "capacity, vsize, id, typeabbrev, to")

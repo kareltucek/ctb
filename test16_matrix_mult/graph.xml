@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<graph_list Name="list">
+   <graph Name="graph1">
+
+     <vertex opid="LD_uint32_t"  vid="a"      params="ioindex=0"></vertex>
+       <vertex opid="LD_uint32_t"  vid="b"      params="ioindex=1">      </vertex>
+       <vertex opid="LD_uint32_t"  vid="c"      params="ioindex=2"></vertex>
+       <vertex opid="LD_uint32_t"  vid="d"      params="ioindex=3"></vertex>
+       <vertex opid="LD_uint32_t"  vid="e"      params="ioindex=4"></vertex>
+       <vertex opid="LD_uint32_t"  vid="f"      params="ioindex=5"></vertex>
+       <vertex opid="LD_uint32_t"  vid="g"      params="ioindex=6"></vertex>
+       <vertex opid="LD_uint32_t"  vid="h"      params="ioindex=7"></vertex>
+       <vertex opid="MUL_uint32_t" vid="ae"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="bg"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="ce"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="dg"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="af"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="bh"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="cf"     ></vertex>
+       <vertex opid="MUL_uint32_t" vid="dh"     ></vertex>
+       <vertex opid="ADD_uint32_t" vid="adds"   ></vertex>
+       <vertex opid="ADD_uint32_t" vid="addt"   ></vertex>
+       <vertex opid="ADD_uint32_t" vid="addu"   ></vertex>
+       <vertex opid="ADD_uint32_t" vid="addv"   ></vertex>
+       <vertex opid="ST_uint32_t"  vid="s"      params="ioindex=0"></vertex>
+       <vertex opid="ST_uint32_t"  vid="t"      params="ioindex=1"></vertex>
+       <vertex opid="ST_uint32_t"  vid="u"      params="ioindex=2"></vertex>
+       <vertex opid="ST_uint32_t"  vid="v"      params="ioindex=3"></vertex>
+
+       <edge from="a"     to="ae"           to_pos="0"></edge>                            
+      <edge from="b"     to="bg"           to_pos="0"> </edge>              
+      <edge from="c"     to="ce"           to_pos="0"> </edge>              
+      <edge from="d"     to="dg"           to_pos="0"> </edge>              
+      <edge from="a"     to="af"           to_pos="0"> </edge>              
+      <edge from="b"     to="bh"           to_pos="0"> </edge>              
+      <edge from="c"     to="cf"           to_pos="0"> </edge>              
+      <edge from="d"     to="dh"           to_pos="0"> </edge>              
+      <edge from="e"     to="ae"           to_pos="1"> </edge>              
+      <edge from="g"     to="bg"           to_pos="1"> </edge>              
+      <edge from="e"     to="ce"           to_pos="1"> </edge>              
+      <edge from="g"     to="dg"           to_pos="1"> </edge>              
+      <edge from="f"     to="af"           to_pos="1"> </edge>              
+      <edge from="h"     to="bh"           to_pos="1"> </edge>              
+      <edge from="f"     to="cf"           to_pos="1"> </edge>              
+      <edge from="h"     to="dh"           to_pos="1"> </edge>              
+      <edge from="ae"    to="adds"         to_pos="0"> </edge>                                              
+      <edge from="bg"    to="adds"         to_pos="1"> </edge>                
+      <edge from="ce"    to="addt"         to_pos="0"> </edge>                
+      <edge from="dg"    to="addt"         to_pos="1"> </edge>                
+      <edge from="af"    to="addu"         to_pos="0"> </edge>                
+      <edge from="bh"    to="addu"         to_pos="1"> </edge>                
+      <edge from="cf"    to="addv"         to_pos="0"> </edge>                
+      <edge from="dh"    to="addv"         to_pos="1"> </edge>                
+      <edge from="adds"  to="s"            to_pos="0"> </edge>              
+      <edge from="addt"  to="t"            to_pos="0"> </edge>             
+      <edge from="addu"  to="u"            to_pos="0"> </edge>             
+      <edge from="addv"  to="v"            to_pos="0"> </edge>                                                
+   </graph>
+</graph_list>

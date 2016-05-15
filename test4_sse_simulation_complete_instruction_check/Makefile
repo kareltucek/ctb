@@ -8,7 +8,7 @@ all : ../ctb sse test run
 sse :
 	make -C ../sse_set
 
-output.h : ../ctb ../sse_set/C_table.csv Makefile
+output.h : ../ctb ../sse_set/C_table_bobox.csv Makefile
 	../ctb -f ./program -v
 
 test : output.h simu.cpp macros.h random_eng.h

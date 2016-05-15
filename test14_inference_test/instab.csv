@@ -1,0 +1,35 @@
+#note	type	output type	input types	op id	flags	width in	width out	code	tags	rating	code custom	
+	instruction	INT	INT,INT	ADDI		1,1	1	$$arg1 + $$arg2		0		
+	instruction	BOOL	INT	ZERO		1	1	$$arg1 == 0		0		
+	instruction	INT	INT,INT	MULI		1,1	1	$$arg1 * $$arg2		0		
+	instruction	INT	INT	INC		1	1	$$arg1++		0		
+	instruction	INT		LDI	input	1	1	i_$ioindex++		0	global: int i_$ioindex = 0;	
+	instruction	INT	INT	STI	output	1	1	$$output = $$arg1		0		
+	instruction	BOOL		LDB	input	1	1	(i_$ioindex % 3) == 0		0	global: int i_$ioindex = 0;	
+
+
+	instruction		BOOL,INT	SPLIT_ST_INT	effectoutput	4,4	4	SPLIT_ST($$arg1, $$arg2)		0		
+	instruction	INT		SPLIT_LD${side->L,R}_INT	effectinput	4	4	SPLIT_LD($$arg1)		0		
+	instruction		INT	MERGE_ST${side->L,R}_INT	effectoutput	4	4	MERGE_ST($$arg1)		0		
+	instruction	INT		MERGE_LD_INT	effectinput	4	4	MERGE_LD($$arg1)		0		
+	instruction	INT		MERGE_PROC_INT	effectoutput,effectinput	4	4	MERGE_PROC($$arg1)		0		
+	instruction		${type->INT,BOOL}	BUFF_ST_$type	effectoutput	4	4	BUFF_ST($$arg1)		0		
+	instruction		${type->INT,BOOL}	BUFF_LD_$type	effectoutput	4	4	BUFF_LD($$arg1)		0		
+
+#note	type	output type	input types	op id	flags	name	transformer	args
+split	expansion	INT,INT	BOOL,INT	SPLIT_INT	split	cf	SPLIT_ST_INT,SPLIT_LDL_INT,SPLIT_LDR_INT
+split	expansion	INT	BOOL,INT,INT	MERGE_INT	merge	cf	MERGE_LD_INT,MERGE_PROC_INT,MERGE_STL_INT,MERGE_STR_INT,BUFF_ST_INT
+split	expansion	${type->INT,BOOL}	$type	BUFF_$type	buffer	cf	BUFF_ST_$type, BUFF_LD_$type
+
+#note	type	type id	bitwidth	width	code
+	type_version	FLOAT	32	1	float
+	type_version	FLOAT	32	4	__m128
+	type_version	FLOAT	32	2	__m128
+	type_version	INT	32	1	int
+	type_version	INT	32	2	__m128i
+	type_version	INT	32	4	__m128i
+#note	type	type id	bitwidth	width in	width out	code1	code2	code custom	code generic	tags	rating
+	type_conversion	FLOAT	32	2	4	_mm_movelh_ps($$arg1, $$arg2)					0
+	type_conversion	INT	32	2	4	_mm_unpacklo_epi32($$arg1,$$arg2)					0
+	type_conversion	INT	32	4	2	$$arg1	_mm_srli_si128($$arg1,4)				0
+
