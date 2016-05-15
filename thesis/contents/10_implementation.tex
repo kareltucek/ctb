@@ -3,12 +3,16 @@
 
 Here we introduce employed graph-related algorithms. 
 
-\algref{Graph crawler}
-We implement most of our algorithms using a simple crawling template. Its api corresponds to the following function.
+We provide code samples in a partially functional pseudo language inspired by C++11. We omit all unneccesary keywords, signatures and parts of signatures which are not necessary for semantical understanding. We do so to simplify and shorten the code.
 
-%\mybeginfig
+Code samples shown in this chapter aim to explain the main ideas without all implementation details. The actual implementation of may be found in files \ttt{graph.h}, \ttt{graph\_factor.h} and \ttt{cf\_transformer.h}.
+
+\algref{Graph crawler}
+We implement most of our algorithms using a relatively simple crawling template. This template is designed to be usable for wide variety of tasks. Its semantics roughly corresponds to the following pseudo-code (exact implementation may be found at the very end of the \ttt{graph.h} header file). This template was designed to crawl graphs in topological order.
+
+\mybeginfig %
 \begin{code}
-fun crawler<recurse, inverse>(node n, fun f, fun g, list l = {0})
+fun crawler<recurse, inverse>(node* n, fun f, fun g, list l = {0})
 {
   if(!g(n))
     return
@@ -20,22 +24,22 @@ fun crawler<recurse, inverse>(node n, fun f, fun g, list l = {0})
       crawler(u, f, g)
 }
 \end{code}
+\myendfig{crawlerapi}{Our callback-driven crawling template.} %
 
 \begin{description}
-  \item [l] list of edge layers to be used.
-  \item [Child (parent)] of vertex v is a vertex u such that there exists an edge (v, u) ( (u,v) ).
-  \item [f,g] are possibly effectfull functions of type $V \arrow bool$.
-  \item [Inverse] switches direction of this algorithm.
-  \item [Recurse] turns on and off the search of parents.
+  \item \ttt{l} list of edge layers to be used.
+  \item \ttt{Child (parent)} of vertex v is a vertex u such that there exists an edge (v, u) ( (u,v) ).
+  \item \ttt{f,g} are possibly effectfull functions of type $V \arrow bool$. The function \ttt{f} is designed to perform some work while the \ttt{g} function is designed to control which nodes are to be crawled.
+  \item \ttt{Inverse} switches direction of this algorithm, i.e., makes it consider edges in an inversed direction.
+  \item \ttt{Recurse} turns on and off the search of parents.
 \end{description}
-%\myendfig{crawlerapi}{Our callback-driven crawling template.}
 
-We implement the second recursive call using a queue to prevent infinite loops on call stack. The actual implementation also handles crawling on a defined subset of graph layers passed by the \ttt{l} argument.
+We implement the second recursive call using an out-of-scope queue which is passed implicitly to prevent some loops on call stack. This precaution reduces the maximum number of nested calls to the longest directed stroke\footnote{A path which may contain vertices multiple times} which is present. This functionality (if used properly) allows algorithms to be writen so that the maximum number of nested calls does not exceed the length of the longest directed \emph{path}. The actual implementation also handles crawling on a defined subset of graph layers passed by the \ttt{l} argument.
 
 \algref{Topological search}
 We implement topological search of connected partitions using the following snippet. This function is very useful since it stands for \ttt{foreach(v in topological order) f(v); }. If there is no topological ordering for the component in question, then this code is equivalent to an unordered \ttt{foreach}.
 
-%\mybeginfig
+\mybeginfig %
 \begin{code}
 fun crawl_partition_topological(node* n, fun f)
 {
@@ -52,12 +56,12 @@ fun crawl_topological(fun f)
       crawl_partition_topological(v, f);
 }
 \end{code}
-%\myendfig{crawlertopo}{Topological search algorithm.}
+\myendfig{crawlertopo}{Topological search algorithm.} %
 
 There are only three things to note:
 \begin{itemize}
-  \item The \ttt{lastpass} variable is used in combination with the \ttt{passid} variable as an auxiliary mark which denotes whether a node was visited. The \ttt{passid} ensures that a new mark which was not yet used is used.
-  \item This function is not reentrant as shown. In real implementation we use a bit more complex call which uses a set per every such call.
+  \item The \ttt{lastpass} variable is used in combination with the (out-of-scope) \ttt{passid} variable as an auxiliary mark which denotes whether a node was visited. The \ttt{passid} ensures that a new mark which was not yet used is used.
+  \item This function is not reentrant as shown. In real implementation we use a bit more complex call which uses an out-of-scope set instead of the \ttt{passid} variable. 
   \item We could write this in an even simpler manner, using only the \ttt{g} callback. Unfortunately, such solution would enter an infine loop if there was a cycle in the presumably acyclic graph. This solution does not enter an infinite loop, which is the preferred behaviour. 
 \end{itemize}
 
@@ -70,7 +74,7 @@ We detect cycles in two steps:
 
 Both these steps may be done by simple calls to the topological search algorithm.
 
-%\mybeginfig
+\mybeginfig %
 \begin{code}
 fun find_cycle()
 {
@@ -85,35 +89,35 @@ fun find_cycle()
   return node_on_cycle;
 }
 \end{code}
-%\myendfig{findcycleapi}{Cycle detection algorithm.}
+\myendfig{findcycleapi}{Cycle detection algorithm.} %
 
 \algref{Shortest path search}
 For the purpose of shortest-path routeing, we maintain a map of size $| G |$ in every vertex. This map contains one record per every vertex of $G$. This record contains:
 
 \begin{itemize}
   \item distance
-  \item next node on shortest path
+  \item next node on a shortest path
 \end{itemize}
 
-This solution, despite being quite minimalistic, requires $O(n^2)$ memory, which may be a problem for big graphs. Since we use minimal path search only for the purpose of finding shortest width-conversion path, this limitation does not concern us much. An alternative would be running Dijkstra's algorithm on every request \cite{TODO}.
+This solution, despite being quite minimalistic, requires $O(n^2)$ memory, which may be a problem for big graphs. Since we use minimal path search only for the purpose of finding shortest width-conversion path, this limitation does not concern us much. An alternative would be running Dijkstra's algorithm on every request \cite{chapters}.
 
-We fill these routeing structures using the well known Bellman-Ford algorithm \cite{TODO} implemented using our callback machinery. Equivalent pseudo code may be:
-%%\mybeginfig
+We fill these routing structures using the well known Bellman-Ford algorithm \cite{chapters} implemented using our callback machinery. Equivalent pseudo code may be:
+\mybeginfig %
 \begin{code}
 foreach(vertex v)
 {
   crawl<false,false>( v
-    , (node*){ recalculate v; return updated || first pass;}
-    , (node*){ return true }
+    , (node* n){ recalculate n; return updated || first pass;}
+    , (node* n){ return true }
   ); 
 }
 \end{code}
-%\myendfig{bellmanfordapi}{Pseudo code of the Bellman-Ford algorithm.}
+\myendfig{bellmanfordapi}{Pseudo code of the Bellman-Ford algorithm.} %
 
 \algref{Factor graph construction}
 Construction of a factor graph is again a simple process. The only interesting part is the second step in which we try to sort the components (pseudo) topologically even if no topological ordering exists.
 
-We should remind the reader that we use two instances of the standard graph to to represent the graph and its factor graph. The actual implementation just uses inheritance to allow the factor graph to be a member of the graph. For now, we will simply use the names $G$ and $factorgraph$.
+We should remind the reader that we use two instances of the standard graph to to represent the graph and its factor graph. The actual implementation just uses inheritance to allow the factor graph to be a member of the graph (\ttt{class G: public graph\_t<...> \{ graph\_t<...> factor; \};}). For now, we will simply use the names \ttt{G} and \ttt{factorgraph}.
 \begin{enumerate}
   \item The crawling algorithm is used to assign component ids\footnote{We use the term \emph{class id} in actual implementation. This is in accordance with standard algebraic terminology.} to all vertices. We show this in figure \ref{fig:factoralgclasses}.
   \item Then we try to remap component ids so that the components are in an order resembling our subjective feeling of a correct (pseudo) topological ordering. 
@@ -151,7 +155,7 @@ factorgraph->crawl_topological((node* n){
 foreach(node n in G)
   n->classid = translation[n->classid];
 \end{code}
-\myendfig{factoralgorder1}{Factorisation -- construction of translation map for acyclic graphs.}
+\myendfig{factoralgorder1}{Factorisation -- construction of a translation map for acyclic graphs.}
 
 \mybeginfigloose
 \begin{code}
@@ -184,7 +188,7 @@ vector<int> translation = keys of maxins sorted by value;
 foreach(node n in G)
   n->classid = translation[n->classid];
 \end{code}
-\myendfig{factoralgorder2}{Factorisation -- construction of translation map for acyclic graphs.}
+\myendfig{factoralgorder2}{Factorisation -- construction of a translation map for possibly cyclic graphs.}
 
 \mybeginfigloose
 \begin{code}
@@ -207,7 +211,7 @@ We implement this algorithm as described by algorithm \ref{alg:cycleremalg}. We 
 
 We would like to shed some light on structure of the instruction table to make the internal workings of the generator clearer. We shall postpone exact field semantics into chapter \ref{sec:formats}, which is dedicated to api description. The architecture may be visualised by the following diagram:
 
-\graph{instab}{Class diagram of the instruction table}
+\graph{instab}{Architectural diagram of the instruction table}
 
 \begin{description}
   \item [Nodes] of this graph correspond to either `structs' or `classes'.
@@ -247,7 +251,7 @@ We would like to shed some light on structure of the instruction table to make t
     \begin{itemize}
       \item \emph{Transformation name} and \emph{transformer identifier}, which define which graph transformer should process them. We should note that graph transformers are free to ignore these identifiers.
       \item \emph{Transformation identifier}, which also acts as the operation id.
-      \item \emph{Type signature}, which is used to choose specific expansion from the set of expansions identified by the same identifier.\footnote{This mechanics allows very simple introduction of type inference. This would be implemented as a graph transformation and its full control would still remain under control of the user.}
+      \item \emph{Type signature}, which is used to choose specific expansion from the set of expansions identified by the same identifier.\footnote{This mechanism allows very simple introduction of type inference. This would be implemented as a graph transformation and its full control would still remain under control of the user.}
       \item List of \emph{instruction identifiers} which specify some target instructions for the expansion.
     \end{itemize}
     For instance, consider explicit buffers, defined in definition \ref{def:nodetypes1}. Buffers may be represented by single nodes in the input graph. This identifier may have two expansions defined. When the `cf' transformer is run, it should choose one of the expansions depending on types of neighbouring nodes and expand it to two new nodes.
@@ -282,42 +286,52 @@ We would like to shed some light on structure of the instruction table to make t
     \end{itemize}
 \end{description}
 
-Consider again the figure \ref{fig:vectorizedfragment}. Lines 1,2,4 and 7 were generated from an instruction patterns of \emph{instructions}. The lines 3,5 and 6 were generated from instruction patterns of two \emph{width conversions} (the lines 5 and 6 are two patterns defined by a common width conversion). All type specifiers present in the figure were resolved from input and output widths and types of instructions and of width conversions. The patterns of instructions and types were composed together by internal mechanics of the writer. (However, the form of this composition was defined by the form of the pattern. The writer itself is an independent text processor which has \emph{no} information about internal needs of the generator.)
+Consider again code fragment given in figure \ref{fig:vectorizedfragment} (fragment of the vectorized generator). Lines 1,2,4,7,8 were generated from instruction patterns of \emph{instructions}. The lines 3,5 and 6 were generated from instruction patterns of two \emph{width conversions} (the lines 5 and 6 are two patterns defined by a common width conversion). All type specifiers present in the figure were resolved from input and output widths and types of instructions and of width conversions. The patterns of instructions and types were composed together by internal mechanics of the writer. (However, the form of this composition was defined by the form of the pattern. The writer itself is an independent text processor which has \emph{no} information about internal needs of the generator.)
 
-The following example shows how a single line of the resulting code may be composed from various patterns. We show a single call to the writer as may be issued by the generator. The real situation is more complicated since this example does not consider vectorization. Consider the target environment to be represented by a \ttt{clang} alias environment (aliasenv).
+The example in figure \ref{fig:expeval} shows how a single line of the resulting code may be composed from various patterns. We show a single call to the writer as may be issued by the generator. Some context is provided via string declarations. The real situation is more complicated since this example does not consider vectorization. Assume the target environment to be represented by a fictive \ttt{clang} alias environment which inherits the \ttt{generator} alias environment. 
+
+This example illustrates the context of the generator, of instruction patterns and of instruction-related structures. However, main point of this example lays in the principle of the text processing environment, e.g., of cooperation between a writer and alias environments.  Understanding of the principle of alias environments is crutial for understanding of the entire system.
+
 
 \mybeginfig
 \begin{loosecode}
-    //decided based on the type of node
+//determined by the node type
 string pattern_type = "$opexpr";
-    //retrieved from instruction table
+//retrieved from the instruction table
 string type_code = "int";
 string ins_code = "$arg1 + $arg2"; 
-    //memoized names of variables containing 
-    //  results of the operations of vertices a and b
+//memoized names of variables containing 
+//  results of the operations of vertices a and b
 string arg1 = "var_a";
 string arg2 = "var_b";
-    //new variable name constructed from id of vertex c
+//a new variable name constructed from id of vertex c
 string name = "var_c";
-    //the actual call
+//the actual call
 w.print("$opexpr", type_code, ins_code, width, arg1, arg2, name);
-    //the process of evaluation
-    ("$opexpr" -> "$type $name = $operation;") //by clang aliasenv
-"$type $name = $operation;"                //intermediate result
-    ("$type" -> "$1")                      //by generator aliasenv
-    ("$1" -> type_code)                    //by writer
-"int $name = $operation;"
-    ("$name" -> "$6")                      //by generator aliasenv
-    ("$6" -> name)                         //by writer
-"int var_c = $arg1 + $arg2;"
-    ("$arg1" -> "$4")                      //by generator aliasenv
-    ("$4" -> arg1)                         //by writer
-"int var_c = var_a + $arg2;"
-    ("$arg2" -> "$5")                      //by generator aliasenv
-    ("$5" -> arg2)                         //by writer
-"int var_c = var_a + var_b;"               //the final result
+//the process of evaluation
+//    ("$opexpr" -> "$type $name = $operation;") //by clang aliasenv
+//"$type $name = $operation;"                //intermediate result
+//    ("$type" -> "$1")                      //by generator aliasenv
+//    ("$1" -> type_code)                    //by writer
+//"int $name = $operation;"
+//    ("$name" -> "$6")                      //by generator aliasenv
+//    ("$6" -> name)                         //by writer
+//"int var_c = $arg1 + $arg2;"
+//    ("$arg1" -> "$4")                      //by generator aliasenv
+//    ("$4" -> arg1)                         //by writer
+//"int var_c = var_a + $arg2;"
+//    ("$arg2" -> "$5")                      //by generator aliasenv
+//    ("$5" -> arg2)                         //by writer
+//"int var_c = var_a + var_b;"               //the final result
 \end{loosecode}
 \myendfig{expeval}{Example of instruction pattern evaluation.}
+
+
+\begin{description}
+  \item \ttt{type\_code, ins\_code, pattern\_type, arg1, arg2} are some string variables which were retrieved from contextual information, i.e., either directly or indirectly from the structure of the processed graph for from instruction tables.
+  \item \ttt{w.print...} is the actual code which prints an instruction pattern into a writer wich acts as data sink for the generator.
+  \item \ttt{comments} after the call show intermediate results of the writer and the flow of evaluation.
+\end{description}
 
 
 

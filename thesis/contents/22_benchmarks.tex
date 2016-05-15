@@ -1,0 +1,30 @@
+\subsubsection{Matrix multiplication}
+
+Scenario 16 contains 2-dimensional integer matrix multiplication benchmark. This is a graph without any control flow. We used 10000 records. Time was measured by the \ttt{clock()} function. Results are shown in figure \ref{fig:bench1}. 
+
+The handwritten solution was implemented by nested loops, so its run-time may have been negatively affected by insufficient compiler optimisation. We ran compilation with the \ttt{-O3} flag.
+
+The pack size was 4 since there were no instructions which could use higher vectorisation factor. Thus, load and store instructions were vectorized with factor 4 while multiplications were vectorized with factor 2. This is because the SSE set does not provide multiplication with higher vectorisation factor than 2. Also note that the shifted test took significantly longer time due to the cost of its offset switch and additional preload instruction. The shifted version should converge towards efficiency of the aligned solution with increasing pack size (again the $w$ number).
+
+\mybeginfig
+\begin{tabular}{c|c|c|c|c|c}
+  \          & handwritten & nonvectorized & aligned & unaligned & shifted \\ \hline
+  clang++    & 145          & 53           & 28     & 29       & 46     \\ \hline
+  g++        & 124          & 56           & 28     & 30       & 39     \\ 
+\end{tabular}
+\myendfig{bench2}{Benchmark of the nonvectorized split operation (in cpu ticks).}
+
+\subsubsection{Split instruction}
+
+Scenario 17 contains a benchmark with graph of a single instruction -- a split instruction. This instruction splits a stream of 32-bit integers into two new streams. Since this graph contains booleans, the pack size is 16. Other properties remain the same.
+
+We do not provide a vectorized version of the split instruction, so we did not expect good performance. Also, the graph algorithm has to perform two stores and multiple width conversions while the handwriten version just loads and stores the variables without any penalty. Considering this, the results shown in figure \ref{fig:bench2} are still reasonable ones.
+
+\mybeginfig
+\begin{tabular}{c|c|c|c|c|c}
+  \          & handwritten & nonvectorized & aligned & unaligned & shifted \\ \hline
+  clang++    & 41          & 150           & 166     & 171       & 166     \\ \hline
+  g++        & 36          & 135           & 128     & 152       & 133     \\ 
+\end{tabular}
+\myendfig{bench2}{Benchmark of the nonvectorized split operation (in cpu ticks).}
+

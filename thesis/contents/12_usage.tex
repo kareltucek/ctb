@@ -10,7 +10,7 @@ Our framework was developed under Linux and therefore it assumes standard Unix t
   \item CPU implementing SSE 4.2  (optional - for test scenarios which generate SSE instructions)
 \end{itemize}
 
-The project may be compiled by make:
+The project may be built by make invoked from the root directory:
 \begin{code}
 > make
 \end{code}
@@ -25,13 +25,13 @@ By default, make compiles the ctb executable and unit tests and runs basic test 
 \end{description}
 
 
-This library may be used in three ways:
+Ctb may be used in three ways:
 \begin{itemize}
-  \item As a separate executable controlled by text commands.
-  \item As a header C++11 library. In this case, the \ttt{"ctb.h"} file has to be included in the project. The \ttt{ctb::ctb} class serves as the library frontend. This frontend may be used in two ways, either of them requiring creation of a single object of the ctb instance:
+  \item As a separate executable (\ttt{ctb}) controlled by text commands. See the help (\ttt{ctb -h}) for list of identifiers identifying available environments and transformers.
+  \item As a header C++11 library. In this case, the \ttt{"ctb.h"} file has to be included in the project. The \ttt{ctb::ctb} class serves as the library frontend. This frontend may be used in two ways, both of them requiring creation of a single object of the ctb instance:
   \begin{itemize}
-    \item using text commands
-    \item using raw templated calls to commands
+    \item using text commands - see the \ttt{int parse\_command(string)} method of the ctb class (in \ttt{ctb.h}.
+    \item using raw templated calls to commands - see the rest of public methods defined in \ttt{ctb.h}.
   \end{itemize}
 \end{itemize}
 

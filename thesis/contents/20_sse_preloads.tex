@@ -1,9 +1,8 @@
+Most of our implementation assumes to receive its input by means of more-or-less continuous arrays (e.g., by a sequence of long arrays per every input). The SSE extension provides fast aligned load and store operations whose use is indeed desirable for this purpose. The aligned load/store operations load vectors of values from continuous memory areas which are required to begin at multiples of 16 bytes (128 bits). 
 
-The SSE extension provides fast aligned load and store operations. These operations load vectors of values from continuous memory areas which are required to begin at multiples of 16 bytes (128 bits). 
+So, idieally, we would like all these arrays aligned to 16 bytes and be of lengths of multiples of 16 bytes. However, the world is not always ideal, so we dedicate this section to alternative approaches. Besides the fast loads, the extension also provides the \ttt{alignr} operation. This operation takes two SSE registers and an \emph{offset}, concatenates the two registers and selects a new (continuous) SSE register shifted by \emph{offset}. 
 
-The extension also provides the \ttt{alignr} operation. This operation takes two SSE registers and an \emph{offset}, concatenates the two registers and selects a new (continuous) SSE register shifted by \emph{offset}. 
-
-The \ttt{alignr} opperation allows implementation of an efficient non-aligned load. This works by preloading the first aligned area into an auxiliary variable and then chaining a sequence of load operations through the \ttt{alignr} operation. 
+The \ttt{alignr} opperation allows implementation of an efficient non-aligned load. This works by preloading the first aligned area into an auxiliary variable and then chaining a sequence of load operations through the \ttt{alignr} operation (figure \ref{fig:alignedloads}). One problem is still present --- the last argument of \ttt{alignr} has to be a compile-time constant, which means that either all offsets have to be known or that we have to switch over all possible offsets. We implement the latter option per every operation. Stores may be implemented analogically.
 
 \mybeginfig
 \begin{code}
@@ -27,20 +26,16 @@ aux1 = aux2;
   \item[offset] is the difference between the actual address of the required data and the preceding aligned address.
 \end{description}
 
-Most of our implementation assumes to receive its input by means of more-or-less continuous arrays (e.g., by a sequence of long arrays per every input). Ideally, we would like all these arrays aligned to 16 bytes and be of lengths of multiples of 16 bytes. However, the world is not always ideal. For this reason, we also consider the situation that data inputs are shifted with respect to the output arrays. Since we do not have any means of performing efficient unaligned store\footnote{This is since we would have to store results temporarily somewhere using effects. It is not entirely impossible, but we would have to keep track of these data by means of effects and ensure that the data remaining after termination get written.}, we assume at least ideally aligned output arrays.
-
-As the result, we propose generation of three different instances of the graph-processing code fragment. Use of these code fragments would then be switched during processing in order to achieve efficient processing of all data. These three fragments would be:
+As the result, we propose generation of four different instances of the graph-processing code fragment. Use of these code fragments would then be switched during processing in order to achieve efficient processing of all data. These three fragments would be:
 \begin{itemize}
 \item Non-vectorized realisation.
 \item Vectorised realisation utilising unaligned load and store operations.
 \item Vectorised realisation utilising aligned load and store operations.
+\item Vectorised realisation utilising shifted load and store operations.
 \end{itemize}
 
-The aligned, vectorised realisation would be used on sequences of data rows such that all input and output arrays are continuous across these sequences. Furthermore, these sequences of data would have to be aligned with all output arrays. 
+The vectorised realisations would be used on sequences of data rows such that all input and output arrays are continuous across these sequences. Aligned version would be used if possible, shifted or unaligned otherwise. 
 
-The non-vectorised version would be used to process preambles and epilogues around transitions of data containers. This means processing the last \ttt{offset} rows before an end of any of the containers as well as processing the first \ttt{packsize - offset} after begining of any container. The former processes the last \ttt{offset} lines which cannot be loaded by the vectorised algorithm. The latter ensures that rows processed by vectorised algorithm stay aligned with output containers.
-
-The unaligned vectorised version would be used in cases where no feasible solution using aligned stores exists.
-
+The non-vectorised version could be used to process preambles and epilogues around transitions of data containers. This means processing the last \ttt{offset} rows before an end of any of the containers as well as processing the first \ttt{packsize - offset} after begining of any container. The former processes the last \ttt{offset} lines which cannot be loaded by the vectorised algorithm. The latter ensures that rows processed by vectorised algorithm stay aligned with output containers. However, this depends on the actual algorithm - the 'bobox', 'simple' and 'simu' environment do need this (explicit) processing of preambles and epilogues but the 'cf' environment (algorithm \ref{alg:crawler}) does not as long as all alignment-related conditions are satisfied.
 
 

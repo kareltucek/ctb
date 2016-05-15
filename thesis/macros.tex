@@ -74,7 +74,8 @@
 \newcommand{\myquote}[2]{\\ \\ \centerline{\sl{``#1''}\cite{#2}}}
 \newcommand{\myloosequote}[2]{{\sl{``#1''}\cite{#2}}}
 
-\newcommand{\algref}[1]{\begin{alg}[#1]\end{alg}}
+%\newcommand{\algref}[1]{\begin{alg}[#1]\end{alg}}
+\newcommand{\algref}[1]{\subsubsection{#1}}
 
 \newcommand{\myexpr}[1]{ $ #1 $ }
 
@@ -99,7 +100,7 @@
 \newcommand{\graphplain}[1]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\end{figure}}
 \newcommand{\graph}[2]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\caption{#2}\label{fig:#1}\end{figure}}
 %\newcommand{\graph}[1]{\begin{figure}[H]\centering\resizebox{.9\linewidth}{!}{\input{contents/graphs/final/#1}}\end{figure}}
-  \newcommand{\graphn}[1]{\begin{sidewaysfigure}\resizebox{1\linewidth}{!}{\input{contents/graphs/final/#1}}\end{sidewaysfigure}}
+  \newcommand{\graphn}[2]{\begin{sidewaysfigure}\resizebox{1\linewidth}{!}{\input{contents/graphs/final/#1}}\caption{#2}\end{sidewaysfigure}}
 %k\newcommand{\graph}[1]{\input{contents/graphs/final/#1}\end{figure}}
 %k\resizebox{.9\linewidth}{!}{\input{plot.tex}}
 \newcommand{\parspace}{\vspace{1\baselineskip}}

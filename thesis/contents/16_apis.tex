@@ -64,6 +64,9 @@ imp_contB<output_options> option_struct();
 int partition_count();
 bool partition_is_topo_max(int partition);
 bool partition_is_topo_min(int partition);
+void update_types();
+void update_factor();
+graph_t& get_factor();
 \end{code}
 
 \begin{description}
@@ -75,6 +78,8 @@ impl_contB<writer<example_aliasenv>> w;
 \begin{code}
 w["empty_output_indicators"].write_str();
 \end{code}
+\item \ttt{update\_types} forces full type inference and structure check. This may be neccessary during graph transformations since.
+\item \ttt{update\_factor} updates the factor graph. This has to be called manually because unstable factor graph is not desired during transformations.
 \item \ttt{options} specify special behaviour for specific layers. Instance of this structure may be either manually constructed or obtained by the \ttt{option\_struct} method. Setting options works exactly as in case of the writer. For instance:
 \begin{code}
 auto o = generator.option_struct();
@@ -84,6 +89,8 @@ Currently available options are:
 \begin{description}
 \item \ttt{once} causes generator to write an instruction into such layer only once per vertex.
 \item \ttt{global\_once} causes generator to write the value into such layer only if the corresponding layer of writer does not contain anything yet.
+\item \ttt{layer} causes generator to write the pattern into the layer specified by this field. This applies only if this field is non-empty.
+\item \ttt{order} allows specification of evaluation order of patterns. Patterns of layers with lower \ttt{order} field get outputted before those with higher \ttt{order}. This defaults to \ttt{-1}. This is useful if combined with the \ttt{layer} option since this allows the user to specify how patterns of different fields should be interleaved. 
 \end{description}
 \end{description}
 
@@ -118,10 +125,12 @@ edge* in_at,out_at(int i, bool check_uniqueness = true);
   \item \ttt{id} contains vertex id.
   \item \ttt{classid} is id of the component of connectedness if the factor graph is up-to-date. Make sure you have called the \ttt{graph.update\_factor()} method. This is not done automatically since factor graph and this id is apparently not stable with respect to factorisation.
   \item \ttt{colourmark} is and auxiliart identifier which may be used by the user for marking of vertices during graph algorithms.
-  \item \ttt{data} contain the data type specified by the \ttt{T} template parameter. The generator's data type contains a pointer to the corresponding operation (\ttt{op}), an operation id (\ttt{opid}) and parameter access methods (\ttt{get\_param(string)} and \ttt{set\_param(string,string)}). 
+  \item \ttt{data} contain the data type specified by the \ttt{T} template parameter. The generator's data type contains a pointer to the corresponding operation (\ttt{op}), an operation id (\ttt{opid}), parameter access methods (\ttt{get\_param(string)} and \ttt{set\_param(string,string)}). 
   \item \ttt{in, out} are containers containing pointers to incoming and outgoing edges. Layer 0 may be iterated by simple \ttt{for(e : in)}, other layers by \ttt{for(e : in.get\_layer(1))}.
   \item \ttt{in\_at, out\_at} provide direct access to the \ttt{i}th edge.
 \end{description}
+
+The underlying graph may be accessed directly through the \ttt{graph} member. The factor graph may be accessed through the \ttt{factor} member of \ttt{graph}. The factor graph again provides the same api as shown above. Namely, the \ttt{get\_vert(int p)} method returns a vertex representing partition \ttt{p}. Its \ttt{data} member contains a set \ttt{vertices} of vertices of this component. Furtermore there are sets \ttt{in} and \ttt{out} of vertices which connect this component from/to another partition.  
 
 \subsection{Instruction table import API}
 
@@ -130,7 +139,7 @@ Instruction tables may be constructed via the following api:
 \begin{code}
 operation& add_operation(opid_t op_id, tid_t out_type, 
   vector<tid_t>& in_types, flag_t flags);
-void operation::add_code(int width_in, int width_out, string code, 
+void operation::add_code(vector<int> widths_in, int width_out, string code, 
   stringlist code_custom, string note, string tags, int rating);
 
 type& add_type(typename T::tid_t t, int bitwidth = 0);
@@ -159,6 +168,14 @@ Api required from custom transformers is the following:
 
 Semantics of these fields are again the same. There are no restrictions on content of \ttt{args} and no restrictions on what the transformer is allowed to do with the generator or with its graph.
 
+\subsection{Tag handler API}
+
+Tag handlers are supposed to provide a single function:
+\begin{code}
+bool are_satisfied(string tag_list);
+\end{code}
+
+The \ttt{tag\_list} is a string list of tags of an instruction or width conversion. The return value is boolean which tels whether the tags satisfy \emph{some} conditions. The tag structures may be defined by whoever wants to define them. Currently, we use one tag structure to pass command-line specified tags and another one to restrict instruction sets for the `bobox' environment. Tag handlers are passed directly to the instruction table via a shared pointer. This is the only class in our framework which needs to use dynamic polymorphism.
 
 \subsection{Custom commands}
 

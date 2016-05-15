@@ -5,14 +5,14 @@
 
 TODO: some broader motivation (What?)
 
-The main goal of this work is implementation of a framework which may serve as the backmost part of a (trans) compiler\footnote{Trans-compiler is a compiler which translates source code into some other programming language or another intermediate form.} and which would provide some specific parallelism-related features.\footnote{Do not panic!} We also wish to investigate the problem of employment of control flow\footnote{The term \emph{control flow} is generally used for all mechanisms that use some form of the goto instruction, like branching, loops, switches (\dots). Although the general meaning encompasses function calls, we will use this term only for branching and loops.} in parallelized environments of a specific form.
+One of goals of this work is implementation of a framework which may serve as the backmost part of a (trans) compiler\footnote{Trans-compiler is a compiler which translates source code into some other programming language or another intermediate form.} and which would provide some specific parallelism-related features. We also wish to investigate the problem of employment of control flow\footnote{The term \emph{control flow} is generally used for all mechanisms that use some form of the goto instruction, like branching, loops, switches (\dots). Although the general meaning encompasses function calls, we will use this term only for branching and loops.} in parallelized environments of a specific form.
 
 \section{Problem introduction, input examples}
 
 Our problem is basically turning an intermediate code represented by some oriented graph and stripped of some type of dependencies into a fragment of code in some target language while utilising some intrinsic\footnote{Providing direct access to instructions of the target platform} SIMD\footnote{\emph{Single-Instruction Multiple-Data} instructions are instructions which take multiple independent sets of input values and perform an operation parallelly on all of them. E.g., performing an element-wise addition of two vectors.} extension. The aim is to achieve a situation in which multiple evaluations of the same computation are processed at the same time employing the mentioned fine-grained-parallelism. 
 
 
-We assume input in a form of a graph annotated by some operations. We assume this input to be either written by hand or produced by a specialised software similar to a compiler back-end. We expect this software to identify, extract and preprocess code which is suitable for fine-grained parallelism.  An example of this software may be Parallax \cite{parallax}. We do not provide any integration at the moment since Parallax is still under development and exact interfaces are still unclear.
+We assume input in a form of a graph annotated by some operations. We assume this input to be either written by hand or produced by a specialised software similar to a compiler back-end. We expect this software to identify, extract and preprocess code which is suitable for fine-grained parallelism.  An example of this software may be Parallax, mentioned in \cite{pipelines}. We do not provide any integration at the moment since Parallax is still under development and exact interfaces are still unclear.
 
 
 Since textual description of the problem may be too unclear, we provide some examples.
@@ -83,7 +83,7 @@ int f(int a)
 Control flow may be represented in different ways. Since we wish to handle data in a streamlined fashion, splitting and merging data streams proposes itself. We will restrict our attention to control flow in form of branching and loops represented in this fashion. To be more precise, we restrict ourselves to investigation of control flow which actually splits data into multiple streams. We also assume nesting of the control flow constructs.
 
 \begin{rem}
-  What we will not develop is the \emph{`compute all branches on all data and select the desired results'}\footnote{We believe that every serious reader of this work knows what we mean. We provide a bit more detailed explanation in section \ref{sec:branching}, but a casual reader should feel free to skip this reference safely.} version of the problem. One of the reasons is that it has been satisfactorily investigated before (e.g., \cite{who_knows}). Another, more pragmatic, reason is that our framework is capable of employing this mechanism in means of standard arithmetic-like operations as long as the input is properly preprocessed.
+  What we will not develop is the \emph{`compute all branches on all data and select the desired results'}\footnote{We believe that every serious reader of this work knows what we mean. We provide a bit more detailed explanation in section \ref{sec:branching}, but a casual reader should feel free to skip this reference safely.} version of the problem. One of the reasons is that it has been satisfactorily investigated before (e.g., \cite{select} and \cite{select2}). Another, more pragmatic, reason is that our framework is capable of employing this mechanism in means of standard arithmetic-like operations as long as the input is properly preprocessed.
 \end{rem}
 
 
@@ -112,7 +112,7 @@ The control flow thus will be represented by some form of split and merge operat
   \item[A compiler] is used to compile all sources requiring compilation.
   \item[Executables] are either more or less conventional executable files which contain all introduced computations.
   \item[Control graph] is some description of a task for the distributed environment.
-  \item[Distributed environment] such as Bobox \cite{bobox} is an environment which finally composes all computations and other auxiliary C modules into a final pipeline and runs it. 
+  \item[Distributed environment] such as Bobox (\cite{bobox}, \cite{pipelines}, \cite{hfg}) is an environment which finally composes all computations and other auxiliary C modules into a final pipeline and runs it. 
 \end{description}
 
 \section{Overview of employed methods}
@@ -145,19 +145,17 @@ Next thing we show is that every such pipeline may be realised by SIMD instructi
 \myendfig{introfusion}{Example illustrating how operations may ba joined across different invocations of a computation.}
 
 
-  Regarding control flow, our approach is to cut the input graph into partitions (basic blocks)\footnote{The term \emph{basic-block} is often used in theory of compilers, meaning consistent sequences of instructions without any control flow. Thus, any procedure may be told to consist of basic blocks and goto instructions.} which process data regularly. That means cutting all control flow nodes into multiple parts and introducing some new data flow between these by some sort of effects. This way we obtain a new graph which consists of basic blocks and control flow edges. We further modify this result to obtain an acyclic graph (or more precisely a graph with some sort of topological ordering\footnote{Ordering of an acyclic graph, which satisfies dependencies represented by edges. This ordering typically represents an order in which steps of some process may be carried out, e.g., steps in the process of cooking a meal. See \cite{kapitoly} for exact definition.}). 
+  Regarding control flow, our approach is to cut the input graph into partitions (basic blocks)\footnote{The term \emph{basic-block} is often used in theory of compilers, meaning consistent sequences of instructions without any control flow. Thus, any procedure may be told to consist of basic blocks and goto instructions.} which process data regularly. That means cutting all control flow nodes into multiple parts and introducing some new data flow between these by some sort of effects. This way we obtain a new graph which consists of basic blocks and control flow edges. We further modify this result to obtain an acyclic graph (or more precisely a graph with some sort of topological ordering\footnote{Ordering of an acyclic graph, which satisfies dependencies represented by edges. This ordering typically represents an order in which steps of some process may be carried out, e.g., steps in the process of cooking a meal. See \cite{chapters} for exact definition.}). 
 
 \graph{introfactor}{Graph from figure \ref{fig:introcf} split into partitions suitable for processal}
 
-  After obtaining an acyclic graph consisting of basic blocks, we try to find an algorithm which crawls this new graph and gradually pushes data through the basic blocks. We use (constant-size) buffers \footnote{Memory area which is used to compensate for differences in the rate of flow of data between components of a computer system (\cite{thesarus}). We use the terms \emph{queue} and \emph{buffer} almost interchangeably.} to store intermediate results between these basic blocks.
-
-  %http://www.thefreedictionary.com/buffer
+  After obtaining an acyclic graph consisting of basic blocks, we try to find an algorithm which crawls this new graph and gradually pushes data through the basic blocks. We use (constant-size) buffers \footnote{Memory area which is used to compensate for different processing speeds of components or computations. We use the terms \emph{queue} and \emph{buffer} almost interchangeably.} to store intermediate results between these basic blocks.
 
 \begin{rem}
   To be precise we allow cycles in a specific form which does not void the \emph{semantical} meaning of topological ordering. This may sound a bit strange, but it is exactly what happens when we use loops in programming languages.
 \end{rem}
 
-  We should also make clear that our purpose is not to study low-level problematics of compiler construction (these are also well-understood \cite{compiler_theory}). Although we wish to have all intermediate results allocated into CPU registers, we do not deal with register allocation nor we do restrict our register resources. In many aspects, we heavily rely on standard features of target compilers, such as on register allocation or dead code elimination.
+  We should also make clear that our purpose is not to study low-level problematics of compiler construction (these are also well-understood \cite{compilers}). Although we wish to have all intermediate results allocated into CPU registers, we do not deal with register allocation nor we do restrict our register resources. In many aspects, we heavily rely on standard features of target compilers, such as on register allocation or dead code elimination.
 
 To address the question of assumptions for analytical part of this work, we should state the following points:
 \begin{itemize}
@@ -198,7 +196,6 @@ The rest of this thesis is organized as follows:
   \item Chapter \ref{ch:implementation} introduces architecture of our framework on high level of abstraction, explains its basic working principles and mentions concrete algorithms which were employed.
   \item Chapter \ref{ch:faq} describes technical details of the implementation, APIs, input file formats and exact semantics of their fields
   \item Chapter \ref{ch:sse} provides a brief introduction to the SSE extension and explains how is the provided example SSE instruction set built.
-  \item TODO: fill in some conclusion.
 \end{itemize}
 
 

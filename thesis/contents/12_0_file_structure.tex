@@ -1,0 +1,52 @@
+\subsubsection{Framework source codes}
+\begin{description}
+  \item \ttt{ctb/aliasenv\_*.h} files contain definitions of alias environments.
+  \item \ttt{ctb/cartesian\_multiplier.h} contains the cartesian multiplier.
+  \item \ttt{ctb/cf\_transform.h} contains graph transformations which perform cycle removal, node expansion and buffer size allocation.
+  \item \ttt{ctb/context.h} contains definition of a sample structure interfacing the `cf' aliasenv output.
+  \item \ttt{ctb/\string{conversions.h,datatypes.h,defines.h,errorhandling.h\string}} contain auxiliary structures.
+  \item \ttt{ctb/\string{graph.h,graph\_factor.h\string}} contain implementation of graph structures.
+  \item \ttt{ctb/generator.h} contains implementation of the generator.
+  \item \ttt{ctb/instructions.h} contains implementation of structures storing instruction tables.
+  \item \ttt{ctb/loader*.h} contain definitions of structures for import, export and possibly dynamic creation of graphs and instruction tables. 
+  \item \ttt{ctb/multicont.h} contains our implicit containers.
+  \item \ttt{ctb/parser.h} contains an evaluator of arithmetic expressions.
+  \item \ttt{ctb/\string{proxy.h,ptrglue.h\string}} contain auxiliary structures serving for syntax-related constructs.
+  \item \ttt{ctb/split.h} contains string-processing utilities.
+  \item \ttt{ctb/\string{taghandler.h,tagmaster.h\string}} contain definitions of tag-handling structures.
+  \item \ttt{ctb/writer.h} contain definitions of the Writer class.
+\end{description}
+
+\subsubsection{Other framework files}
+
+\begin{description}
+  \item \ttt{ctb/main.cpp} constructs the ctb executable.
+  \item \ttt{ctb/test.cpp} constructs an axecutable containing all unit tests.
+  \item \ttt{ctb/Makefile} contains (machine) description of the building process. 
+  \item \ttt{ctb/\string{ctb,test\string}} are the produced executable files.
+  \item \ttt{ctb/control-flow-notes/} contains the first draft of partition-handling code.
+  \item \ttt{ctb/sse\_cf\_macros/buffer.h} contains a set of C macros implementing a SSE in-register buffer. This set is not fully functional.
+  \item \ttt{ctb/sse\_cf\_macros/pp\_macros.h} contains macro support for the buffer. These are taken from a third-party repository \cite{cloak}.
+  \item \ttt{ctb/sse\_set/src*.csv} contain definitions of SSE instructions. These are split into multiple files to prevent duplicities in different load/store sets.
+  \item \ttt{ctb/sse\_set/C\_table*} are tables concatenated from the partial source tables. There is a deprecated version used by the `bobox' environment and a refined version which expects specific handling provided by the `cf' environment.
+  \item \ttt{ctb/templates/*} are template files used by some alias environments.
+\end{description}
+
+\subsubsection{Control files}
+
+\begin{description}
+  \item \ttt{ctb/tests\_table} contains brief description of test scenarios.
+  \item \ttt{ctb/test*/} directories contain test scenarios.
+  \item \ttt{ctb/test*/Makefile} are used to execute tests. This may be done by invocation of make.
+  \item \ttt{ctb/test*/*.expected} are files which are diff-checked against actual results.
+  \item \ttt{ctb/test*/graph.xml} contain description of input graphs.
+  \item \ttt{ctb/test*/instab.\string{xml,csv\string}} contain description instruction sets for scenarios. 
+  \item \ttt{ctb/test*/\string{program,program\_visual\string}} contain task description for ctb. The visual version usually contains added visualisation commands and arguments. The visual version may be invoked by \ttt{make visual}.
+  \item \ttt{ctb/test*/check\_output.sh} contains a sequence of commands which check that results obtained from the tests are correct. (If not present, then this is done by Makefile).
+  \item \ttt{ctb/test*/astable.sh} is an awk script which formats streamed tabular information into a tabular view. 
+  \item \ttt{ctb/test*/run.sh} present in tests which encompass control flow invokes the test executable altogether with the \ttt{astable} script. This results in a nice visualisation of content of buffers between any two iterations of the crawler algorithm.
+  \item \ttt{ctb/test*/macros.h} contain test scenarios in case of scenarios which encompass control flow (12,13,16,17).
+  \item \ttt{ctb/test*/*.\string{h,cpp\string}} also contain various test-related functionality such as programmed result-checking, macros for dumping of register content...
+\end{description}
+
+

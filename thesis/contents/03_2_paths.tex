@@ -1,7 +1,8 @@
+\label{sec:shortpaths}
 
-One thing which should be adressed at this point is the problem of indirect width conversions. We have avoided this broblem by assuming that direct width conversions always exist in the \emph{vectorized generator} problem (\ref{pro:vectorproblem}).  Although this problem does not seem difficult, we have not been able to find an optimal solution which would work in feasible complexity. 
+One thing which should be adressed at this point is the problem of indirect width conversions. We have avoided this broblem by assuming that direct width conversions always exist in the \emph{vectorized generator} problem (problem \ref{pro:vectorproblem}).  Although this problem does not seem difficult, we have not been able to find an optimal solution which would work in feasible complexity. 
 
-Our actual implementation deals with the problem by generating all conversions which lay on the shortest (or cheapest) path between the data provider and the data consumer. This approach may produce suboptimal results if there are multiple consumers. This algorithm may be further improved if we recalculate distances after production of every single path (considering vertices of the generated path to have distance 0). Unfortunately, this improvement still does not ensure optimal results, as is shown by the following counterexample.
+The simples approach is generating all conversions which lay on the shortest (or cheapest) path between the data provider and the data consumer. This approach may produce suboptimal results if there are multiple consumers. This algorithm may be further improved if we recalculate distances after production of every single path (considering vertices of the generated path to have distance 0). Unfortunately, this improvement still does not ensure optimal results, as is shown by the following counterexample.
 
 \graph{pathcounter}{Example showing that iterated shortest path algorithm is not optimal for trees.}
 
@@ -13,7 +14,7 @@ Our actual implementation deals with the problem by generating all conversions w
 
 The improved shortest/cheapest path algorithm may first choose the path $ a \arrow 2 + d \arrow b $ and then the path $ a \arrow 4 \arrow c $, yielding path of cost $6+d$. The cheapest path is apparently $5+d$. The variable $d$ shows that strategies like \emph{cheapest path first} or \emph{most expensive path first} do not solve the problem.
 
-This problem may be formulated as an integer linear programme\footnote{Linear programming formulates problems as systems of linear equations. More information may be found in \cite{TODO}}. However, this does not imply existence of polynomial solution since integer programming is NP-hard. 
+This problem may be formulated as an integer linear programme\footnote{Linear programming formulates problems as systems of linear equations. More information may be found in \cite{ilp}}. However, this does not imply existence of polynomial solution since integer programming is NP-hard. 
 
 \mybeginalg{ilp}{ILP of minimal distribution tree}
 Let $P$ be the set of a single producer, $C$ be the set of all consumers and $W$ the set of all possible widths. Let $G(V,E)$ be a graph such that:

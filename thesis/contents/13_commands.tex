@@ -24,6 +24,6 @@ The available commands are:
   \item \ttt{testgraph} -- testgraph is a custom command which acts as a special version of loadgraph. This loader function constructs a graph from the loaded instructions, trying to utilise all available operations. 
   \item \ttt{adddebug  [depth=1 [<list of vertex ids>]]} -- This command hooks a debug node\footnote{These are special output nodes which are supposed to output values directly. These are not subject to width conversions.} to every vertex specified in the space separated list and to all its predeccesors up to \ttt{depth}. Debug nodes are automatically selected from operations of type \emph{debug}. If the list is empty, debug nodes are hooked to all vertices.
   \item \ttt{transform  <transformer>} -- the graph transformed identified by the first argument is invoked. This transformer is free to edit the loaded graph as it pleases.
-  \item \ttt{visualise} -- writes the currently loaded graph into a temporary file and invokes the dot (graphviz) with gpicview to show the graph to the user. We use this mechanics for error reporting as well.
-  \item \ttt{preprocess <aliasenv> <filein> <fileout> } -- processes the \ttt{filein} by the aliasenv identified by \ttt{aliasenv} and writes the results to \ttt{fileout}.
+  \item \ttt{visualise} -- writes the currently loaded graph into a temporary file and invokes the dot (graphviz) with gpicview to show the graph to the user. We use this mechanism for error reporting as well.
+  \item \ttt{preprocess <aliasenv> <filein> <fileout> } -- processes the \ttt{filein} by the aliasenv identified by \ttt{aliasenv} and writes the results to \ttt{fileout}. The \ttt{<aliasenv>} string may be found in a list provided by the \ttt{ctb -h} help.
 \end{itemize}

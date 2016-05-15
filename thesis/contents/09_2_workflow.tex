@@ -20,16 +20,16 @@ First an instance of the ctb class is invoked and passed the programme shown. Th
 \begin{itemize}
   \item Csv loader is passed the instab.csv file and a reference to the instruction table stored in ctb. The loader fills the table and returns.
   \item Graph of the generator is filled in the same manner.
-  \item The `cf' transformer is used to expand control flow nodes and partition the graph.
+  \item The `cf' transformer is used to expand control flow nodes and partition the graph (as described in the section \ref{sec:partitioning}.
   \item The `cf' alias environment is provided with the generator and asked to generate output:
   \begin{itemize}
-    \item The alias environment uses the generator to generate code for every partition. This is done by invocation of the generator. This generator object is provided with an instance of writer which is provided with an environment created by composition of the `cf' alias environment and of the generator environment. The generator then iterates through the graph. Every vertex is processed as follows::
+    \item The alias environment uses the generator to generate code for every partition. This is done by invocation of the generator. This generator object is provided with an instance of writer which is provided with an environment created by composition of the `cf' alias environment and of the generator environment. The generator then iterates through the graph. Every vertex is processed as follows:
     \begin{itemize}
       \item Corresponding instruction patterns are retrieved from the instruction table of the ctb object.
       \item These patterns are printed into the supplemented writer. Hence, the writer receives a simple pattern and a list of various objects (strings, names, numbers, indices, offsets...). The writer processes them as follows:
         \begin{itemize}
           \item Pattern is evaluated using various text expansions, potentially utilising new auxiliary alias environments. Every time the writer encounters a dollar subexpression which cannot be (directly) substitued by some argument, it calls the root alias environment:
-          \item The environment either resolves the request or forwards it to its childs. The childs repeat this process until an environment which can expand the subexpression is found. This alias environment processes this subexpression and returns some result back to the writer. This expression is then \emph{again} evaluated by the writer, possibly invoking the root alias environment again.
+          \item The environment either resolves the request or forwards it to its children. The children repeat this process until an environment which can expand the subexpression is found. This alias environment processes this subexpression and returns some result back to the writer. This expression is then \emph{again} evaluated by the writer, possibly invoking the root alias environment again.
         \end{itemize}
     \end{itemize}
     \item The alias environment composes all the pieces into a consistent C file.

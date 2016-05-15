@@ -17,10 +17,10 @@ Consider the following problem.
 If highest instruction widths of all operations present in g$G$ were the same ones, we could use the \emph{simple generator}. We would simply replace all types by the corresponding vector versions and use vectorized counterparts of all instructions. Typically, the width will vary with the bit length of the data type in question and therefore we cannot use this approach with more than one data type present in $G$.
 
 
-This algorithm may be easily corrected:
+This algorithm may be easily corrected to the following steps:
 \begin{itemize}
   \item Generate a number of SIMD instruction which suffices for processal of some $w$ data rows. Do this for every vertex.
-  \item Add some width conversions which adapt data outputted by one instruction for the width of next instruction.
+  \item Add some width conversions which adapt data outputted by one instruction for the width of the next instruction.
 \end{itemize}
 
 As an example, we provide a simple computation which performs modulo 4 on integers. We use nonvectorized store and load instructions and a vectorized mod4 instruction on 16 bit integers as our instruction set. We represent vectorized instructions by well known C constructs since we believe such representation to be brief and readable.

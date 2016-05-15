@@ -1,23 +1,39 @@
 The following environments with generation capabilities are present:
-\begin{description}
-  \item[simple] environment was the first implemented environment. It prepares random data into arrays created according to the graph specification and runs the result for a fixed number of iterations. This environment handles only graphs consisting of regular operations.
 
-  \item[simu] environment is an improvement of the `simple' environment. This environment was designed for testing of the provided SSE instruction table.
+\subsubsection{Simple}
+`Simple' environment was the first implemented environment. It prepares random data into arrays created according to the graph specification and runs the result for a fixed number of iterations. This environment handles only graphs consisting of regular operations.
 
-  \item[bobox] environment provides functionality similar to the simple environment but features interface of the bobox environment and is tailored to utilize the capabilities of aligned load and store operations. Besides the generator-related functionality, this environment also generates code which manages the envelope system of the bobox environment. However, these higher-level capabilities should have been abstracted outside of our framework and it has been a huge mistake that we have allowed pollution of our output environment by API which could have been abstracted into an unrelated unit.
+\subsubsection{Simu}
+`Simu' environment is an improvement of the `simple' environment. This environment was designed for testing of the provided SSE instruction table.
 
-  \item[cf] environment implements algorithm \ref{alg:crawler}. This environment already abstracts its API. This environment provides three functions enclosed into a class with a templated context type (this is shown in figure \ref{fig:fragmentapi}). These three functions take a number of rows to be processed and a context structure which provides arrays of data, indices and offsets. The required context structure API is shown in figure \ref{fig:contextapi}. The \ttt{\$input} and \ttt{\$output} patterns of this environment are set to \ttt{"ctx.data[\$ioindex]+ctx.index[\$ioindex]*ctx.size"}. 
-\end{description}
+\subsubsection{Bobox}
+`Bobox' environment provides functionality similar to the simple environment except for two things. First, its API is API of the bobox environment and second, it is tailored to utilize the capabilities of aligned load and store operations. Besides the generator-related functionality, this environment also generates code which manages the envelope system of the bobox environment. With hindsight, we have to admit that this API layer should rather have been abstracted entirely outside of our framework. 
+
+  \subsubsection{Cf}
+  `Cf' environment implements algorithm \ref{alg:crawler}. This environment already abstracts its API and fully uses the SSE instruction set.
+    
+    The output file consists of four functions enclosed into a class with two templated context types (this is shown in figure \ref{fig:fragmentapi}). These four functions take a number of rows to be processed and a context structure which provides arrays of data, indices and offsets. The required context structure API is shown in figure \ref{fig:contextapi}. 
 
 \mybeginfig
 \begin{code}
-template<typename CTX>
-class box_/*name*/
+template<typename CTXIN, typename CTXOUT>
+class box_<name>
 {
-  void proc_vector_aligned   (int, CTX);
-  void proc_vector_unaligned (int, CTX);
-  void proc_singular         (int, CTX);
+  void process_single    (int, CTXIN&, CTXOUT&);
+  void process_aligned   (int, CTXIN&, CTXOUT&);
+  void process_unaligned (int, CTXIN&, CTXOUT&);
+  void process_shifted   (int, CTXIN&, CTXOUT&);
 }
+#define IN_INDICES_<name> <values>
+#define IN_TYPES_<name> <values>
+#define IN_TYPES_IL_<name> <values>
+#define OUT_INDICES_<name> <values>
+#define OUT_TYPES_<name> <values>
+#define OUT_TYPES_IL_<name> <values>
+#ifdef RUN_BOX
+  RUN_BOX(box_<name>, IN_INDICES_<name>, IN_TYPES<name>...);
+#endif
+
 \end{code}
 \myendfig{fragmentapi}{API of the resulting code of the `cf' environment.}
 
@@ -26,9 +42,35 @@ class box_/*name*/
 \begin{code}
 struct context
 {
-  /???
+  <type1>* data_0; <type2> *data_1; ...
+  int index_0;     int index_1;  ...
+  int offset_0;    int offset_1; ...
 }
 \end{code}
 \myendfig{contextapi}{API of the context for the `cf' environment.}
-TODO: fix these apis according to the actual implementation 
+
+
+    The \ttt{\$input} pattern of this environment is set to \ttt{"ictx.data\_\$ioindex[ictx.index\_\$ioindex+\$iindex]"}. Indices are supposed to be incremented by entire packsize at ends of code of partitions --- this way we do not introduce new dependencies between load instructions. Indices may be simply incremented by adding the \ttt{"\$inputinc"} pattern to the \ttt{"increments"} pattern layer. The alias \ttt{inputinc} is set to \ttt{ictx.offset\_\$ioindex+=\$packsize}. Aliases \ttt{"output"} and \ttt{"outputinc"} are defined analogically.
+
+    The following writer layers are used for the purpose of instruction-code generation:
+    \begin{description}
+      \item \ttt{global} gets outputted into the toplevel scope of the processing function. Suitable for injection of testing values.
+      \item \ttt{default} layer serves for the standard output.
+      \item \ttt{preload} layer has the \ttt{once} flag turned on and is directed to the default layer, meaning that this layer is generated before the \ttt{default} layer while the topological ordering of all instructions is preserved.
+      \item \ttt{shiftacum} and \ttt{shiftacumpreload} are analogical to the pair of \ttt{default} and \ttt{preload}. The difference is that this layer gets outputted into a different layer which is handled specially. Namely, when the \ttt{"EXPANDSHIFT"} alias is encountered in any output layer, the content of the acumulator is printed into a swich pattern which realizes shifted loads. The resulting switch gets printed into the default layer.
+    \end{description}
+
+Also, there are also 7 macro constructs which are designed to enable easy automatic management of the resulting box. Namely these contain:
+\begin{description}
+  \item \ttt{IN\_INDICES\_<name>} set to coma separated list of input indices.
+  \item \ttt{IN\_TYPES\_<name>} set to coma separated list of input types.
+  \item \ttt{IN\_TYPES\_IL\_<name>} set to coma separated list of input types and interleaved by dummy types in index order. This means that if this list is zipped with the sequence \ttt{0, 1, 2, 3...} then the types correspond to their \ttt{ioindex}es.
+  \item Analogical macros for outputs.
+  \item \ttt{RUN\_BOX} expansion if the macro is defined. This macro may be simply included into the resulting code fragment. In that case, the macro may use the defined index and type lists to construct appropriate context types and to pass these into some processing function.Such function is then free to fill the contexts with data and use the generate box as it finds appropriate. 
+\end{description}
+
+We also provide a sample context template (\ttt{context.h}). This template provides storage for the required fields, basic methods for offset calculation and also acumulator lists. The lists allow generic processal of these contexts (such as filling of input fields and retrieval of the processed data). In other words, any processing environment (such as bobox) can be simply interfaced by a single file containing a single generic algorithm. There is no need to generate environment-specific interface for every box.
+
+
+
 

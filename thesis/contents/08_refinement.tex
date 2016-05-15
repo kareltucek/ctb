@@ -1,4 +1,4 @@
-The unordered solution seems to be superior to the ordered one in many aspects. An optimal situation would, of course, be if we could drop the condition. Unfortunately, the data receiver may need the data ordered.  We, of course, may add row indices into the data rows for identification, but that does not solve the problem entirely, since either we will have to store the results one by one or someone else will have to retrieve them one by one. Either version would increase the amount of data transfers between CPU and RAM significantly. 
+The unordered solution seems to be superior to the ordered one in many aspects. An optimal situation would, of course, be if we could return data rows in an arbitrary order. Unfortunately, the data receiver may need the data ordered.  We, of course, may add row indices into the data rows for identification, but that does not solve the problem entirely, since either we will have to store the results one by one or someone else will have to retrieve them one by one. Either version would increase the amount of data transfers between CPU and RAM significantly. 
 
 
 Ideally, we would like to reorder the data back using as few RAM stores and loads as possible. For this purpose, we may use the information about performed shuffling of the data. We propose the following approach:
@@ -12,4 +12,4 @@ Ideally, we would like to reorder the data back using as few RAM stores and load
   Note that we cannot pipe the original pipeline directly to the one built backwards. Imagine that the first data row to enter the processing pipeline is the last one to come out. If we piped the first pipeline directly into the sorting one, we would have to store \emph{all} the data in CPU registers until the first data row was processed and could be piped into the sorting pipeline.
 \end{rem}
 
-This approach surely has its drawbacks, but for some pipelines may reduce the amount of RAM transfers needed for sorting of the data.
+This approach surely has its drawbacks, but for some pipelines may reduce the amount of RAM transfers needed for reordering of the data.

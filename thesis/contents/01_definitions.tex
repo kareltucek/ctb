@@ -1,7 +1,7 @@
 %Reader should be familiar with the basic terminology of the graph theory. We will assume knowledge of the following terms: \emph{directed graph}, \emph{multigraph}, \emph{topological ordering}, \emph{path}, \emph{cycle}, \emph{connected component}, \emph{depth first search (DFS)}. Definitions of these may be found in \cite{kapitoly}. 
 
 
-We provide a significant number of definitions of our own. We construct these formalisms since this problem has not yet been described in this exact form (as far as we know).  We provide these formalisms mainly for the sake of clarity. (TODO: Can I afford the following one sentence disclaimer?) We do not aim for full formalisation of all the introduced theory, since such formalisation would require possibly hundreds of pages and would be of no use for us. Since introducing all used formalisms at once does not seem wise, we choose to build our formalisms incrementally. We will provide some forward references and some limited amount of forward context to keep the flow of information as consistent as possible, but our main goal will be providing information at places where they are actually used.
+We provide a significant number of definitions of our own. We construct these formalisms since this problem has not yet been described in this exact form (as far as we know).  We provide these formalisms mainly for the sake of clarity. We only define the minimum formalism neccessary for this thesis. Since introducing all used formalisms at once does not seem wise, we choose to build our formalisms incrementally. We will provide some forward references and some limited amount of forward context to keep the flow of information as consistent as possible, but our main goal will be providing information at places where they are actually used.
 
 
 In this section, the reader should get some intuitive understanding of flow graph meaning, of what flow graphs represent and should note the difference between instructions and operations. The reader should feel free to skip formal details.
@@ -37,7 +37,7 @@ In this section, the reader should get some intuitive understanding of flow grap
   \item $G(V,E)$ is a nonempty connected directed multigraph with annotations defined by $from$, $to$ and $op$.  
   \item Let $G$ be acyclic except for edges which are explicitly allowed to be on cycles by semantics of $O$ and by node classification provided later. \footnote{This requirement may be ignored for the time being since there are no general restrictions on semantics of $O$. We include this requirement since implicit acyclicality will greatly simplify enumerations of assumptions.}
   \item $O$ is a set of operations.
-  \item Vertices in $inputs$ have no incoming edges and vertices in $outputs$ have no outgoing edges. Also, we require that the $op$ annotations of these vertices have semantics of input or output nodes as described later in definition \ref{def:node_types0}.
+  \item Vertices in $inputs$ have no incoming edges and vertices in $outputs$ have no outgoing edges. Also, we require that the $op$ annotations of these vertices have semantics of input or output nodes as described later in definition \ref{def:nodetypes0}.
   %\item $\forall(v) \in V |out(v)| \leq 1$ 
   \item Any directed edge is uniquely identified by its destination vertex and the $to$ annotation. I.e.:
     \begin{align*} &(\forall{e,f \in E(G)})(\exists a,b,c,d) \\ &(e \sim (a,b) \land f \sim (c,d) \land b = d \land to(e) = to(f) \Rightarrow e = f )\end{align*}
@@ -45,7 +45,7 @@ In this section, the reader should get some intuitive understanding of flow grap
     We will write $G(V,E)$ (with $O$) for brevity.
 \myenddef
 
-  This definition of flow graphs is nearly identical to the definition of \emph{gate networks} given in \cite{ads}, although our use of flow graphs resembles more the use of \emph{Kahn networks} (\cite{asdfe}). 
+    This definition resembles the concept of Kahn networks (\cite{kahn}) as well as Hybrid flow graphs (\cite{hfg}).
 
   Flow graphs represent pipeline computations. Edges represent data flow. The edges may also be understood as data queues. Vertices represent data transformations. The $to$ annotation identifies arguments for operations represented by members of $O$. The $to$ annotation identifies outputs of operations which return more than one value. The nullary functions $input$ and $output$ denote sets of nodes which are meant as data inputs or outputs.
 
@@ -62,7 +62,7 @@ Some semantical meaning of this graph may be:
 
 \begin{rem}
   The reader may be asking why is G required to be (implicitly) acyclic. The main reason is that this way of thinking of flow graphs matches the way we use flow graphs. More specifically, the apparent problem is that unrestricted loops may introduce unsolvable dependencies. Later, we define special node types which are allowed to void acyclicality in exchange for a guarantee of not introducing cyclical dependencies. This way, there still exists a topological ordering in its \emph{semantical} sense (although not in the definitorical one). 
-  %We alter the definition of a flow graph in section \ref{sec:node_types}. 
+  %We alter the definition of a flow graph in section \ref{sec:nodetypes}. 
 \end{rem}
 
 \subsubsection{Relation between flow graphs and computations}

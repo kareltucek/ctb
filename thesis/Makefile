@@ -21,6 +21,10 @@ thesis: thesis.tex $(wildcard *.tex) bibliography.bib
 	pdflatex $<
 	pdflatex $<
 
+cleanplain : 
+	rm -f *.log *.dvi *.aux *.toc *.lof *.lot *.out *.bbl *.blg
+	rm -f thesis.pdf
+
 clean:
 	rm -f *.log *.dvi *.aux *.toc *.lof *.lot *.out *.bbl *.blg
 	rm -f thesis.pdf

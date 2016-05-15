@@ -1,3 +1,4 @@
+\label{sec:preprocessor}
 This section explains how the writer (also \emph{the preprocessor}) works. This may be of interest since all text is handled using the writer class. Also the instruction tables specified in csv are preprocessed by the writer.
 
 As we have already indicated, the writer class is basically a string container which allows appending of expressions via a printf like function. Unlike printf, the print method uses shell-like dollar expressions. This allows reuse of arguments and does not restrict the order of arguments. A very simple example follows.
@@ -36,7 +37,7 @@ yields
 \begin{code}
 "a[i] = a[i] $ j"
 \end{code}
-\myendfig{printhello}{Another simple example of usage of writer's print method}
+\myendfig{printhello2}{Another simple example of usage of writer's print method}
 
 \subsubsection{Alias expansion}
 

@@ -1,4 +1,4 @@
-We will skip any broader introduction of the SSE extension, since deeper knowledge of the actual instruction set is not neccessary for the purpose of this text. Brief, informal introduction to the SSE extension may be found at \cite{TODO}. More detailed text on SSE usage may be found at \cite{TODO}. Documentation may be found at \cite{TODO} and \cite{TODO}. Papers which discuss more advanced aspects of efficient use of this (and similar) extensions are \cite{TODO} and \cite{TODO}. We provide only the neccessary conceptual minimum of the SSE type system.
+We will skip any broader introduction of the SSE extension, since deeper knowledge of the actual instruction set is not neccessary for the purpose of this text. A very brief and very informal informal introduction to the SSE extension may be found at \cite{ssetut}. SSE reference documentation is provided by \cite{reference}. A handy reference is the cheat-sheet available at \cite{cheats}. Paper which discusses more advanced aspects of efficient use of this (and similar) extensions and provides other valuable references is \cite{autotuning}. We provide only the neccessary conceptual minimum of the SSE type system.
 
 We will omit the \ttt{\_mm\_} prefixes and other non-substantial information contained in function names.
 
@@ -107,9 +107,9 @@ The results are still aligned. The problem with this operation comes when two ve
 
 %https://software.intel.com/sites/default/files/a6/22/18072-347603.pdf
 
-Width conversions (as described above) may be implemented by means of a set of \ttt{shuffle} operations. We provide an excerpt dedicated to shuffle macros from the SSE documentation \cite{TODO} to portray its semantics: 
+Width conversions (as described above) may be implemented by means of the set of \ttt{shuffle} instructions provided by SSE. We provide an excerpt dedicated to shuffle macros from the SSE documentation \cite{reference} to portray its semantics: 
 
-\myloosequote{ The Streaming SIMD Extensions (SSE) provide a macro function to help create constants that describe shuffle operations. The macro takes four small integers (in the range of 0 to 3) and combines them into an 8-bit immediate value used by the SHUFPS instruction. You can view the four integers as selectors for choosing which two words from the first input operand and which two words from the second are to be put into the result word. }{TODO}
+\myloosequote{ The Streaming SIMD Extensions (SSE) provide a macro function to help create constants that describe shuffle operations. The macro takes four small integers (in the range of 0 to 3) and combines them into an 8-bit immediate value used by the SHUFPS instruction. You can view the four integers as selectors for choosing which two words from the first input operand and which two words from the second are to be put into the result word. }{reference}
 
 
 

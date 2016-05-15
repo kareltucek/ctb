@@ -39,7 +39,7 @@ As a solution, we propose another algorithm. This algorithm addresses the first 
 
 \mybeginalg{crawler}{Ordered crawler algorithm}
   Let $G$, $O$, $I$ be defined as in the problem \ref{pro:orderedproblem}. Let $w$ be a positive integer. Generate code corresponding to the following diagram for every component of $G$ and do so in topological order.
-\graphn{crawler}
+\graphn{crawler}{Algorithm \ref{alg:crawler}.}
 \begin{description}
  \item[partition 0] For simplicity, we assume that all input sources are placed in the partition 0. This is w.l.o.g since we may use a separate counter for every partition. 
   \item[terminating variable] When we exhaust all input, we set this variable to zero to indicate that the first partition should process all its remaining data and terminate. Upon termination of any component, this variable is incremented and the process repeated with the next partition.

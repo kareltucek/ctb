@@ -2,9 +2,12 @@
 
 mkdir final
 rm final/*
-cp fixed/* final/
+for i in fixed/*
+do
+  cat $i | ./postprocess.sh > $(echo "$i" | sed 's/^fixed/final/g')
+done
 for i in *.tex
 do
-  [ -f final/$i ] || cp $i final/
+  [ -f final/$i ] || cat $i | ./postprocess.sh > final/$i
 done
 
