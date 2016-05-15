@@ -160,7 +160,7 @@ namespace ctb
          w.push(writer_plain(o.second->in_types).list_concat(",").write_str());
          w.push(o.second->opid);
          w.push(flags_to_string(o.second->flags));
-         w.push(to_string(i.width_in));
+         w.push(l_to_string(i.widths_in));
          w.push(to_string(i.width_out));
          w.push(i.code);
          w.push(i.tags);
@@ -299,9 +299,10 @@ namespace ctb
        for(int i = ciSize; i < data.size(); i++)
          if(!data[i].empty())
            ccode.push_back(data[i]);
+       auto in_widths = ::ctb::lstoi(splitlist(data[ciWIn]));
        instab.add_type(data[ciOutType]);
        typename IT::operation_t& operation = instab.add_operation(data[ciOpId],data[ciOutType],splitlist(data[ciInTypes]),f);
-       operation.add_code(::ctb::stoi(data[ciWIn]),::ctb::stoi(data[ciWOut]),data[ciCode],ccode,data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
+       operation.add_code(in_widths,::ctb::stoi_def(data[ciWOut], 0),data[ciCode],ccode,data[ciNote],data[ciTag],::ctb::stoi(data[ciRating]));
      }
      else if(data[ciType] == "expansion")
      {
