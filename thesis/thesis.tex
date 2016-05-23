@@ -1,32 +1,31 @@
 %%% The main file. It contains definitions of basic parameters and includes all other parts.
 
-%% Settings for single-side (simplex) printing
-% Margins: left 40mm, right 25mm, top and bottom 25mm
-% (but beware, LaTeX adds 1in implicitly)
-\documentclass[12pt,a4paper,usenames]{report}
-\setlength\textwidth{145mm}
-\setlength\textheight{247mm}
-\setlength\oddsidemargin{15mm}
-\setlength\evensidemargin{15mm}
-\setlength\topmargin{0mm}
-\setlength\headsep{0mm}
-\setlength\headheight{0mm}
-% \openright makes the following text appear on a right-hand page
-\let\openright=\clearpage
+%%% Settings for single-side (simplex) printing
+%% Margins: left 40mm, right 25mm, top and bottom 25mm
+%% (but beware, LaTeX adds 1in implicitly)
+%\documentclass[12pt,a4paper,usenames]{report}
+%\setlength\textwidth{145mm}
+%\setlength\textheight{247mm}
+%\setlength\oddsidemargin{15mm}
+%\setlength\evensidemargin{15mm}
+%\setlength\topmargin{0mm}
+%\setlength\headsep{0mm}
+%\setlength\headheight{0mm}
+%% \openright makes the following text appear on a right-hand page
+%\let\openright=\clearpage
 
 %% Settings for two-sided (duplex) printing
-% \documentclass[12pt,a4paper,twoside,openright]{report}
-%\usepackage[english]{babel}
-%\selectlanguage{english}
-% \setlength\textwidth{145mm}
-% \setlength\textheight{247mm}
-% \setlength\oddsidemargin{14.2mm}
-% \setlength\evensidemargin{0mm}
-% \setlength\topmargin{0mm}
-% \setlength\headsep{0mm}
-% \setlength\headheight{0mm}
-% \let\openright=\cleardoublepage
+ \documentclass[12pt,a4paper,twoside,openright]{report}
+ \setlength\textwidth{145mm}
+ \setlength\textheight{247mm}
+ \setlength\oddsidemargin{14.2mm}
+ \setlength\evensidemargin{0mm}
+ \setlength\topmargin{0mm}
+ \setlength\headsep{0mm}
+ \setlength\headheight{0mm}
+ \let\openright=\cleardoublepage
 
+ \raggedbottom
 
 %%disable overfull lines and disable hphenation
 %%\usepackage[none]{hyphenat}
@@ -35,8 +34,12 @@
 %\usepackage{hyphenat}
 %\allowhyphens
 %%\overfullrule=0mm
-%\hfuzz=10mm
+\hfuzz=5mm
 \setlength{\emergencystretch}{10pt}
+
+
+\interfootnotelinepenalty=10000
+
 
 \DeclareTextFontCommand{\ttt}{\ttfamily\hyphenchar\font=45\relax}
 \DeclareTextFontCommand{\trm}{\rmfamily\hyphenchar\font=45\relax}
@@ -51,6 +54,7 @@
 %\usepackage{amsmath}        % extensions for typesetting of math
 \usepackage{amsfonts}       % math fonts
 \usepackage{amsthm}         % theorems, definitions, etc.
+\usepackage{thmtools}
 \usepackage{bbding}         % various symbols (squares, asterisks, scissors, ...)
 \usepackage{bm}             % boldface symbols (\bm)
 \usepackage{graphicx}       % embedding of pictures
@@ -114,11 +118,11 @@
 
 % Abstract (recommended length around 80-200 words; this is not a copy of your thesis assignment!)
 \def\Abstract{%
-  The center of our interest is a problem of pipelined realisation of a special case of data processing networks. These realisations are supposed to realise some computations on series of independent data sets while utilizing SIMD instructions. The aim of this paper is to theoretically investigate possibilities and problems of employment of control flow in these networks and also to implement a general framework suitable for generation of these realisations.
+The center of our interest is a problem of pipelined realisation of a special case of data processing networks. These realisations are supposed to realise some computations on series of independent data sets while utilizing SIMD instructions. The aim of this paper is to theoretically investigate the possibilities and the problems of employment of control flow in these networks and also to implement a general framework suitable for generation of these realisations.
 
-The main idea is utilisation of an algorithm crawling over partitions of a network factorised with respect to the employed control flow. Our idea is that SIMD parallelism should take place on the same instruction realized across multiple data sets.
+The main idea is utilisation of an algorithm crawling over partitions of a network factorised with respect to its control flow. Our idea is that SIMD parallelism should take place on the same instruction realised across multiple data sets.
 
-We illustrate problems relevant to employment of branching and loops in these networks. We specially discuss a problem of data ordering and also provide relevant proofs. In the analytical part, we show implementation of a general framework which we believe to be suitable for processal of the introduced problem. We also provide examples utilising Intel's SIMD Streaming Extensions.
+We illustrate the problems relevant to employment of branching and loops in these networks. We especially discuss a problem of data ordering and also provide relevant proofs. In the analytical part, we show implementation of a general framework which we believe to be suitable for processing of these networks. We also provide examples utilising Intel's SIMD Streaming Extensions.
 }
 
 % 3 to 5 keywords (recommended), each enclosed in curly braces
@@ -147,7 +151,7 @@ We illustrate problems relevant to employment of branching and loops in these ne
 \tableofcontents
 
 %%% Each chapter is kept in a separate file
-\setlength{\parskip}{4mm plus6mm minus2mm}
+\setlength{\parskip}{4mm plus2mm minus2mm}
 \include{preface}
 \include{contents/content}
 
@@ -179,7 +183,7 @@ We illustrate problems relevant to employment of branching and loops in these ne
 %%% should be uploaded to SIS and optionally also included in the thesis on a~CD/DVD.
 \chapwithtoc{Attachments}
 \begin{itemize}
-  \item Source code of our framework with examples of instruction tables and example implementations of alias environments should be distributed along with electronic version of this thesis. Plain git repository may be found at \url{http://www.ktweb.cz/ctb}. Browsable mirror is to be found at \url{http://www.github.com/kareltucek/ctb}. 
+  \item Source code of our framework with examples of instruction tables and example implementations of alias environments should be distributed along with electronic version of this thesis. Plain git repository may be found at \url{http://www.ktweb.cz/ctb}. Browsable mirror is to be found at \url{http://www.github.com/kareltucek/ctb}. Description of directory structure may be found in Section \ref{sec:directories}.
 \end{itemize}
 
 \openright

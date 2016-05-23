@@ -1,0 +1,34 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\node (a) at (110bp,114bp) [draw,ellipse] {C code of boxes};
+  \node (splitter) at (110bp,213bp) [draw,rectangle] {graph splitter};
+  \node (e) at (110bp,48bp) [draw,ellipse] {binary modules};
+  \node (g2) at (0bp,81bp) [draw,ellipse] {control graph};
+  \node (g) at (110bp,180bp) [draw,ellipse] {graphs};
+  \node (source) at (110bp,280bp) [draw,ellipse] {source code};
+  \node (i) at (250bp,213bp) [draw,ellipse] {$\begin{matrix} \text{description of} \\ \text{instructions} \end{matrix}$ };
+  \node (generator) at (110bp,246bp) [draw,rectangle] {graph generator};
+  \node (wrapper) at (250bp,147bp) [draw,ellipse] {interface wrapper};
+  \coordinate (dm0) at (152bp,147bp);
+  \node (p) at (110bp,15bp) [draw,ellipse] {generic runtime code};
+  \node (ctb) at (110bp,147bp) [draw,rectangle,thick] {box generator};
+  \node (lib) at (250bp,81bp) [draw,ellipse] {$\begin{matrix} \text{library for distributed} \\ \text{data processing} \end{matrix}$ };
+  \coordinate (dm1) at (228bp,81bp);
+  \node (compiler) at (110bp,81bp) [draw,rectangle] {C compiler};
+  \draw [->] (i) -- (ctb);
+  \draw [->] (source) -- (generator);
+  \draw [->] (compiler) -- (e);
+  \draw [->] (g2) -- (p);
+  \draw [->] (generator) -- (splitter);
+  \draw [->] (e) -- (p);
+  \draw [->] (splitter) -- (g2);
+  \draw [->] (splitter) -- (g);
+  \draw [->] (wrapper) -- (compiler);
+  \draw [->] (a) -- (compiler);
+  \draw [->] (g) -- (ctb);
+  \draw [->] (lib) -- (p);
+  \draw [->] (ctb) -- (a);
+%
+\end{tikzpicture}
+

@@ -1,9 +1,9 @@
 
-\section{Workflow examples}
+\section{Work-flow examples}
 
-\subsection*{Programmme example}
+\subsection*{Programme example}
 
-As an example of workflow of ctb, we provide the programme of the 13th test:
+As an example of work-flow of ctb, we provide the programme of the 13th test:
 
 \mybeginfig
 \begin{code}
@@ -20,7 +20,7 @@ First an instance of the ctb class is invoked and passed the programme shown. Th
 \begin{itemize}
   \item Csv loader is passed the instab.csv file and a reference to the instruction table stored in ctb. The loader fills the table and returns.
   \item Graph of the generator is filled in the same manner.
-  \item The `cf' transformer is used to expand control flow nodes and partition the graph (as described in the section \ref{sec:partitioning}.
+  \item The `cf' transformer is used to expand control flow nodes and partition the graph (as described in Section \ref{sec:partitioning}).
   \item The `cf' alias environment is provided with the generator and asked to generate output:
   \begin{itemize}
     \item The alias environment uses the generator to generate code for every partition. This is done by invocation of the generator. This generator object is provided with an instance of writer which is provided with an environment created by composition of the `cf' alias environment and of the generator environment. The generator then iterates through the graph. Every vertex is processed as follows:
@@ -28,24 +28,24 @@ First an instance of the ctb class is invoked and passed the programme shown. Th
       \item Corresponding instruction patterns are retrieved from the instruction table of the ctb object.
       \item These patterns are printed into the supplemented writer. Hence, the writer receives a simple pattern and a list of various objects (strings, names, numbers, indices, offsets...). The writer processes them as follows:
         \begin{itemize}
-          \item Pattern is evaluated using various text expansions, potentially utilising new auxiliary alias environments. Every time the writer encounters a dollar subexpression which cannot be (directly) substitued by some argument, it calls the root alias environment:
+          \item Pattern is evaluated using various text expansions, potentially utilising new auxiliary alias environments. Every time the writer encounters a dollar subexpression which cannot be (directly) substituted by some argument, it calls the root alias environment:
           \item The environment either resolves the request or forwards it to its children. The children repeat this process until an environment which can expand the subexpression is found. This alias environment processes this subexpression and returns some result back to the writer. This expression is then \emph{again} evaluated by the writer, possibly invoking the root alias environment again.
         \end{itemize}
     \end{itemize}
     \item The alias environment composes all the pieces into a consistent C file.
   \end{itemize}
-  \item The output file now contains some nonexpanded macros since we intentionally wrote the instruction table in that way. The last two calls expand these macros twice by simply writing the contents of the files into a writer parametrized by the cfmacros environment and outputting the results.
+  \item The output file now contains some non-expanded macros since we intentionally wrote the instruction table in that way. The last two calls expand these macros twice by simply writing the contents of the files into a writer parametrised by the cfmacros environment and outputting the results.
 \end{itemize}
 
 \subsection*{Alias environment example}
 
 We feel that our description of generation-related functionality of alias environments has been quite vague. This is due to the fact that its exact functionality lays entirely in user-space. For this reason, we provide the following example.
 
-Assume, that the modulo 4 graph (figure \ref{fig:mod4}) is to be processed by an alias environment identified as `simple'. 
+Assume, that the modulo 4 graph (Figure \ref{fig:mod4}) is to be processed by an alias environment identified as `simple'. 
 
 \begin{itemize}
   \item First, this environment receives a generator object and the number 2 as vector size (let us call this \ttt{w}).  
-  \item Then, the environment invokes the generator twice with two different writer objects (let us call these \ttt{body1} and \ttt{body2}). When the generator returns, the writers contain the code fragments shown in figure \ref{fig:twocodefrags}.
+  \item Then, the environment invokes the generator twice with two different writer objects (let us call these \ttt{body1} and \ttt{body2}). When the generator returns, the writers contain the code fragments shown in Figure \ref{fig:twocodefrags}.
   \item Finally the environment composes these two results into a consistent C file. This step may consist of creation of two preambles for preparation of input and output (\ttt{prep\_ins}, \ttt{prep\_outs}) and of a call to a new writer object supplemented with a template. This is shown in figures \ref{fig:templatecomposition} and \ref{fig:aliasenvcodeexample}.
 \end{itemize}
 

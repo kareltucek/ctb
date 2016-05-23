@@ -2,6 +2,8 @@ digraph G{
 #include
 #horizontalLinear
 #width 330
+#verticalLinear 
+#height 150
 
 c1[label="LDI, MOD2, SPLIT (if)",shape="ellipse"];
 c2[label="MUL7",shape="ellipse"];

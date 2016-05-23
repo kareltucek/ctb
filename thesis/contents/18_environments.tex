@@ -1,16 +1,16 @@
 Implementation of an entirely new environment, e.g., providing support for an entirely new language, a SSE extension and a target distributed environment, may require the following steps:
 
 \begin{enumerate}
-  \item Writing a new instruction table.
+  \item Writing of a new instruction table.
   \item Implementation of a new alias environment. 
   \item Implementation of a new language formatter, unless you are fine with non-formatted output files. In that case feel free to use the \ttt{language\_empty} structure.
-  \item If a new control flow strategy or a new type of control flow node is to be introduced, a new graph transformer may be also neccessary.
+  \item If a new control flow strategy or a new type of control flow node is to be introduced, a new graph transformer may be also necessary.
 \end{enumerate}
 
 The first two things which the user should think about are:
 
 \begin{itemize}
-  \item Representation of vectorized data types. All elements need to retain the correct order when being split or merged.
+  \item Representation of vectorised data types. All elements need to retain the correct order when being split or merged.
   \item Exact strategy of employment of control flow.
 \end{itemize}
 

@@ -2,8 +2,8 @@ digraph{
 #vertical 10
 #include
   rankdir = LR;
-  a[label="preamble",shape="circle"]
-  b[label="condition",shape="circle"]
+  a[label="preamble",shape="ellipse"]
+  b[label="condition",shape="ellipse"]
   c[label="SPLIT"]
 
   g1[style="invis"];

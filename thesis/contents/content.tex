@@ -8,32 +8,36 @@
     %define a box
     \section{Formal introduction, definitions, notation} \input{contents/01_definitions}
 
-    \section{Code generation} 
-
+    \pagebreak
+    \section{Code generation} \label{sec:codegeneration}
 
         \subsection{Simple code generation} \input{contents/02_simple_generation} %describe the dollar notation
 
-        \subsection{Vectorized code generation} \input{contents/03_vectorized_generation}
+        \subsection{vectorised code generation} \input{contents/03_vectorized_generation}
 
         \subsection{Indirect width conversions} \input{contents/03_2_paths}
 
+    \pagebreak
     \section{Handling control flow} \input{contents/04_cf_generation}
 
-        \subsection{Partitioning the graph} \input{contents/05_partitioning}
+        \subsection{Graph partitioning} \input{contents/05_partitioning}
 
         \subsection{Order-preserving evaluation} \input{contents/06_crawler}
 
         \subsection{Out-of-order evaluation} \input{contents/07_unordered}
 
-        \subsection{Out-of-order evaluation refinement} \input{contents/08_refinement}
+        \subsection{Refinement of out-of-order evaluation} \input{contents/08_refinement}
 
 \chapter{Architectural overview}
 
     \label{ch:implementation}
 
+   \input{contents/09_0_intro}
+
    \input{contents/09_components}
 
-    \input{contents/10_implementation}
+    \pagebreak
+    \section{Graph algorithms} \input{contents/10_implementation}
 
     \input{contents/11_implementation2}
 
@@ -45,7 +49,7 @@
 
     \section{CTB commands} \input{contents/13_commands}
 
-    \section{File structure} \input{contents/12_0_file_structure}
+    \section{Directory structure} \input{contents/12_0_file_structure}
 
     \section{Text preprocessor} \input{contents/14_preprocessor}
 
@@ -68,10 +72,14 @@
 
     \section{Considering load and store problems}  \input{contents/20_sse_preloads}
 
-    \section{Buffer marcos} \input{contents/21_buffers}
+    \section{Buffer macros} \input{contents/21_buffers}
 
     \section{Benchmarks} \input{contents/22_benchmarks}
-      
+
+\chapter{Conclusion}
+  \label{ch:conc}
+ 
+    \input{contents/23_conclusion}
 
 %\begin{code}
 %for i in abc

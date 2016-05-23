@@ -1,4 +1,4 @@
-We will skip any broader introduction of the SSE extension, since deeper knowledge of the actual instruction set is not neccessary for the purpose of this text. A very brief and very informal informal introduction to the SSE extension may be found at \cite{ssetut}. SSE reference documentation is provided by \cite{reference}. A handy reference is the cheat-sheet available at \cite{cheats}. Paper which discusses more advanced aspects of efficient use of this (and similar) extensions and provides other valuable references is \cite{autotuning}. We provide only the neccessary conceptual minimum of the SSE type system.
+We will skip any broader introduction of the SSE extension, since deeper knowledge of the actual instruction set is not necessary for the purpose of this text. A very brief and very informal introduction to the SSE extension may be found in \cite{ssetut}. SSE reference documentation is provided by \cite{reference}. A handy reference is the cheat-sheet available at \cite{cheats}. Paper which discusses more advanced aspects of efficient use of the SSE (and similar) extensions is \cite{autotuning}. We provide only the necessary conceptual minimum of the SSE type system.
 
 We will omit the \ttt{\_mm\_} prefixes and other non-substantial information contained in function names.
 
@@ -6,21 +6,21 @@ We will omit the \ttt{\_mm\_} prefixes and other non-substantial information con
 
 \subsubsection{SSE type system}
 
-SSE provides a number of 128 bit registers, which may be directly used by means of the \ttt{\_m128} type. Such register can contain $128/length$ values of signed or unsigned integers of lengths from 8 to 64, single-precision floating point numbers and double-precision floating point numbers. Booleans are supposed to be represented by masks whose bits are either all 1 or 0.
+SSE provides a number of 128 bit registers, which may be directly used by means of the \ttt{\_m128} type. Such register can contain $128/\mf{length}$ values of signed or unsigned integers of lengths from 8 to 64, single-precision floating point numbers and double-precision floating point numbers. Boolean values are supposed to be represented by masks whose bits are either all 1 or 0.
 
-The content of these registers is to be interpretted as a right-to-left list of values. Note that semantics of shifting operations make this point important. The reader may ask why is it to be this way, and rightly so --- the reason is the clash of our customs of writing lists left-to-right while writing numbers right-to-left. Consistent, increasing order of elements is often desired for the purpose of width conversions and casts.
+The content of these registers is to be interpreted as a right-to-left list of values. Note that semantics of shifting operations make this point important. The reader may ask why is it to be this way, and rightly so --- the reason is the clash of our customs of writing lists left-to-right while writing numbers right-to-left. Consistent, increasing order of elements is often desired for the purpose of width conversions and casts.
 
 \subsubsection{Our type system}
 
 As we have already mentioned, we provide the following data types:
 \begin{itemize}
-\item Signed and unsigned integers if widths 8, 16, 32, 64.
+\item Signed and unsigned integers of widths 8, 16, 32, 64.
 \item Single-precision and double-precision floating point numbers.
-\item Byte booleans, which are suitable for use with control flow.
-\item Bit boolean vectors, which are suitable for high throughput computations without control flow.
+\item Byte bools, which are suitable for use with control flow.
+\item Bit Boolean vectors, which are suitable for high throughput computations without control flow.
 \end{itemize}
 
-We use the simples and most obvious way of arangement of data in SSE registers when a register is to be filled entirely. However, when two vectors of different widths of the stored data types are to be processed by one operation, we need to select only some data from the vector of the narrower data type width. Broadly speaking, we always use positions in their intuitive order which are multiples of $128/n$ where $n$ stands for the number of data elements we want to store into a single register. 
+We use the simplest and most obvious way of arrangement of data in SSE registers when a register is to be filled entirely. However, when two vectors of different widths of the stored data types are to be processed by one operation, we need to select only some data from the vector of the narrower data type width. Broadly speaking, we always use positions in their intuitive order which are multiples of $128/n$ where $n$ stands for the number of data elements we want to store into a single register. 
 
 Consider the following example of a 16 bit integer width conversion from width 8 to 4 (numbers represent order of elements).
 
@@ -49,9 +49,9 @@ $\arrow$
 }
 \end{longtable}
 %\end{center}
-\myendfig{sse_conversion}{Width conversion realised on SSE registers}
+\myendfig{sse_conversion}{Width conversion realised on SSE registers.}
 
-This way, elements stay always aligned with other elements from the same data row. Such vector may enter a computation with another vector consisting of four 16-bit integers. But it may as well enter a computation with a vector of four 32-bit integers. This property is especially handy with booleans if we edit boolean splits to copy the value into both fields. Visually this means performing the previous split as follows:
+This way, elements stay always aligned with other elements from the same data row. Such vector may enter a computation with another vector consisting of four 16-bit integers. But it may as well enter a computation with a vector of four 32-bit integers. This property is especially handy with bools if we edit Boolean splits to copy the value into both fields. Visually this means performing the previous split as follows:
 
 \mybeginfig
 %\begin{center}
@@ -73,9 +73,9 @@ $\arrow$
 \end{tabular}
 \end{longtable}
 %\end{center}
-\myendfig{sse_boolean_conversion}{Width conversion suitable for booleans.}
+\myendfig{sse_boolean_conversion}{Width conversion suitable for bools.}
 
-Notice that to perform this split, a nontrivial data reordering was neccessary. A simpler approach would simply select every second element by an \emph{and} mask and then then shift the second vector. Showing this by a pseudo-vector C operation, we would do:
+Notice that to perform this split, a nontrivial data reordering was necessary. A simpler approach would simply select every second element by an \emph{and} mask and then put it into a new vector. Showing this by a pseudo-vector C operation, we would do:
 
 \mybeginfig
 \begin{code}
@@ -103,7 +103,7 @@ $\arrow$
 %\end{center}
 \myendfig{sse_bad_conversion}{Example of a possibly malfunctioning width conversion.}
 
-The results are still aligned. The problem with this operation comes when two vectors of different base width come into contact. If we wanted to sum the vectors from figure \ref{fig:sse_bad_conversion} with a vector of 16-bit integers, we would get an element-wise sum of the vector $((4,2),(3,1))$ with the vector $((4,3),(2,1))$. Of course, this problem may be further addressed by proper setting of a fixed ordering per every data width. The technical difficulty is that all load, store, split and merge operations would have to shuffle data in a rather nontrivial fashion. 
+The results are still aligned. The problem with this operation comes when two vectors of different base width come into contact. If we wanted to sum the vectors from Figure \ref{fig:sse_bad_conversion} with a vector of 16-bit integers (the original width of \ttt{input} was 8-bit), we would get an element-wise sum of the vector $((4,2),(3,1))$ with the vector $((4,3),(2,1))$. Of course, this problem may be further addressed by proper setting of a fixed ordering per every data width. The technical difficulty is that all load, store, split and merge operations would have to shuffle data in a rather nontrivial fashion. 
 
 %https://software.intel.com/sites/default/files/a6/22/18072-347603.pdf
 

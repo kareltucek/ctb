@@ -1,22 +1,24 @@
 Consider the following problem:
 
+\label{sec:crawler}
+
 \mybeginprob{orderedproblem}{Ordered realisation of control flow}
-  Let $G(V,E)$ be a consistent flow graph with $O$ and $I$ defined as in the \emph{vectorized code generation}. Let $G$ consist only of regular nodes (including input and output nodes), splits and merges.  Also, let control flow nodes of $G$ be expanded according to the previous section and let the factor graph of $G$ be acyclic. We wish to generate code which realises the graph $G$ on an arbitrary number of data rows, utilising SIMD instructions whenever possible. We also wish the order of data rows preserved in the output.
+  Let $G(V,E)$ be a consistent flow graph with $O$ and $I$ defined as in the \emph{vectorised code generation}. Let $G$ consist only of regular nodes (including input and output nodes), splits and merges.  Also, let control flow nodes of $G$ be expanded according to the previous section and let the factor graph of $G$ be acyclic. We wish to generate a code fragment which realises the graph $G$ on an arbitrary number of data rows, utilising SIMD instructions whenever possible. We also wish the order of data rows to be kept in the output.
 \myendprob
 
 \begin{rem} 
-Note that by expanding nodes we have obtained a graph which contains \emph{only} regular operations. Also, note that the graph is acyclic since we did not include any node type representing loops in the problem definition. We will add loops into this algorithm later.
+Note that by node expansion, we have obtained a graph which contains \emph{only} regular operations. Also, note that the graph is acyclic since we did not include any node type representing loops in the problem definition. We add loops into this algorithm later.
 \end{rem}
 
-We already know that components of $G$ can be processed as basic blocks. We propose components of $G$ to be connected by constant-sized register-mapped buffers in place of layer 1 and 2 edges. The reason for our decision to make buffers register-mapped is that we wish to minimise the amount of transfers between CPU and RAM. The reason to make our buffers constant-sized is apparently the fact that register space is limited. We again choose $w$ as the number of data rows processed in one invocation of a vectorized version of a partition. We also wish to preserve the order of data rows in all merges in this proposal.
+We already know that components of $G$ can be processed as basic blocks. We propose components of $G$ to be connected by constant-sized register-mapped buffers in place of layer 1 and 2 edges. The reason for our decision to make buffers register-mapped is that we wish to minimise the amount of transfers between CPU and RAM. The reason to make our buffers constant-sized is apparently the fact that register space is limited. We again choose $w$ as the number of data rows processed in one invocation of a vectorised version of a partition. We also wish to preserve the order of data rows in all merges in this proposal.
 
 
 To illustrate the problem, we present the following algorithm.
 
 \mybeginalg{naivealg}{Naive crawling algorithm} \ 
 \begin{code}
-enter the first compontent, 
-  effectively pushing w data records into pipeline.
+enter the first component, 
+  effectively pushing w data records into the pipeline.
 DFS( component C in factor of G )
 {
   if (C has >= w records in every input)
@@ -31,25 +33,25 @@ DFS( component C in factor of G )
 There are two problems:
 
 \begin{itemize}
-  \item If we wanted to process all data available in one go, the size of buffers would have to increase exponentially with every merge, since every merge may have both its buffers nearly full and therefore output $2*w$ records.
-  \item Since we wish merges to preserve the order of all data, there may arise a situation in which a single element prevents merge. If we waited with processing of this branch until there were $w$ input data rows available, the other branch may overfill its buffers.
+  \item If we wanted to process all data available at a partition in one go, the size of buffers would have to increase exponentially with every merge, since every merge may have both its buffers nearly full and therefore output $2*w$ records.
+  \item Since we wish merges to preserve the order of all data, there may arise a situation in which a single element prevents merge. If we waited with the processing of this branch until there were $w$ input data rows available, the other branch may overfill its buffers.
 \end{itemize}
 
-As a solution, we propose another algorithm. This algorithm addresses the first problem by pulling new data on demand. The second problem is solved by introduction of pull semantics which causes a branch to process less than $w$ records if needed. We generate code similar to the following diagram for every component $i$.
+As a solution, we propose Algorithm \ref{alg:crawler}. This algorithm addresses the first problem by pulling new data on demand. The second problem is solved by introduction of pull semantics which causes a branch to process less than $w$ records if needed. We generate code similar to the following diagram for every component $i$.
 
 \mybeginalg{crawler}{Ordered crawler algorithm}
-  Let $G$, $O$, $I$ be defined as in the problem \ref{pro:orderedproblem}. Let $w$ be a positive integer. Generate code corresponding to the following diagram for every component of $G$ and do so in topological order.
+  Let $G$, $O$, $I$ be defined as in Problem \ref{pro:orderedproblem}. Let $w$ be a positive integer. Generate code corresponding to the following diagram for every component of $G$ and do so in topological order.
 \graphn{crawler}{Algorithm \ref{alg:crawler}.}
 \begin{description}
- \item[partition 0] For simplicity, we assume that all input sources are placed in the partition 0. This is w.l.o.g since we may use a separate counter for every partition. 
-  \item[terminating variable] When we exhaust all input, we set this variable to zero to indicate that the first partition should process all its remaining data and terminate. Upon termination of any component, this variable is incremented and the process repeated with the next partition.
-  \item[remaining variable] We use this variable to indicate the count of data rows which are yet to be retrieved from all data sources. 
-  \item[bold line] denotes implicit continuation, i.e., the next operation in case condition does not hold. 
-  \item[solid line] denotes the next operation in case condition holds.
-  \item[dotted line] denotes jumps to different partitions (in case condition holds).
+ \item[partition 0] For simplicity, we assume that all input sources are placed in partition 0. This is w.l.o.g. since we may use a separate counter for each partition. 
+ \item[\ttt{terminating} variable] When we exhaust all input, we set this variable to zero to indicate that the first partition should process all its remaining data and terminate. Upon termination of any component, this variable is incremented and the process repeated with the next partition.
+  \item[\ttt{remaining} variable] -- We use this variable to indicate the count of data rows which are yet to be retrieved from all data sources. 
+  \item[bold line] denotes implicit continuation, i.e., the next operation in case that related condition does not hold. 
+  \item[solid line] denotes the next operation in case that related condition holds.
+  \item[dotted line] denotes jumps to different partitions (in case that related condition holds).
   \item[rectangle] denotes a goto label.
- \item[empty inputs] --- When we say \emph{empty input}, we mean an input which is supposed to provide data. I.e., on split we do not jump into a branch which is not supposed to provide input.
-  \item[space in buffers] --- When we say enough space in outputs (in the context of vectorized body), we mean the requirement that capacities of all output buffers of the component in question allow insertion of at least $w$ elements. When we say enough data (in the context of vectorized body), we mean the requirement that every input buffer of the component in question contains at least $w$ elements. When we specify input from/to \emph{j}, we mean that j denotes the partition to/from which the unsatisfied buffer leads, i.e., we are quantifying over \emph{j}.
+ \item[empty inputs] -- When we say \emph{empty input}, we mean an input which is supposed to provide data. I.e., on split, we do not jump into a branch which is not supposed to provide input.
+  \item[space in buffers] -- When we say enough space in outputs (in the context of vectorised body), we mean a requirement that the capacities of all output buffers of the component in question allow insertion of at least $w$ elements. When we say enough data (in the context of vectorised body), we mean a requirement that every input buffer of the component in question contains at least $w$ elements. When we specify input from/to \emph{j}, we mean that j denotes the partition to/from which the unsatisfied buffer leads, i.e., we are quantifying over \emph{j}.
   \item[i] is an index of the current partition. These indices are topologically ordered.
   \item[j] is an index of any other partition depending on context. 
   \item[handle termination zero] \ \ \ 
@@ -84,31 +86,32 @@ if ( i == terminating )
 \end{description}
 \myendalg
 
-\mybeginclaim{crawlerproof}{Functionality of the first solution}
-  We claim that the algorithm \ref{alg:crawler} solves the problem \ref{pro:orderedproblem} under the stated conditions if all buffers have positive capacity. That is:
+\mybeginclaim{crawlerproof}{Functionality of the order-preserving solution}
+  We claim that Algorithm \ref{alg:crawler} solves Problem \ref{pro:orderedproblem} under the stated conditions if all buffers have positive capacity. That is:
 \begin{enumerate}
   \item Algorithm produces correct results (if it terminates).
   \item Algorithm does not enter an infinite loop during the pre-termination phase unless there is an infinite loop contained in the semantics of $G$ with respect to the data processed.
   \item Algorithm terminates correctly.
 \end{enumerate}
 \begin{proof}[Proof of 1]
-  Our algorithm never retrieves data from an empty buffer and never pushes data into a full buffer. Also, we required $G$ to be consistent with the semantics of the defined control flow node types.  
-  Consistency of $G$ ensures that all data of any single data row will get processed without leaving unprocessable elements in buffers. This means that as long as elements of all data rows pass through all operations in order, there is no way how could two elements from different data rows get processed as if they were from the same data row.  Thus, all results are correct. 
+  Our algorithm never retrieves data from an empty buffer and never pushes data into a full buffer. Also, we require $G$ to be consistent with the semantics of the defined control flow node types.  
+
+  Consistency of $G$ ensures that all data of any single data row will get processed without leaving unprocessable elements in buffers. This means that as long as the elements of all data rows pass through all operations in order, there is no way how two elements from different data rows could get processed as if they were from the same data row.  Thus, all results are correct. 
 \end{proof}
-\begin{proof}[Proof of 2] So let there be a flow graph $G(V,E)$ and a sequence of data rows such that the described algorithm enters an infinite loop which does not process any data. Let $C$ be this loop (a subgraph of a factor graph $H$ of $G$)\footnote{This is a directed acyclic graph with all degrees equal to two, not a directed cycle!}. Let $t$ be a topological ordering of $H$. Also, let there be a description of  contents of buffers at the moment when algorithm iterates over $C$.
+\begin{proof}[Proof of 2] Let there be a flow graph $G(V,E)$ and a sequence of data rows such that the described algorithm enters an infinite loop which does not process any data. Let $C$ be this loop (a subgraph of a factor graph $H$ of $G$)\footnote{This is a directed acyclic graph with all degrees equal to two, not a directed cycle!}. Let $t$ be a topological ordering of $H$. Also, let there be a description of  contents of buffers at the moment when algorithm iterates over $C$.
   \begin{itemize}
     %\item The assumption that $C \in H$ is correct since if there is an infinite cycle which uses an edge on layer 2 then the algorithm processes data and hence, behaves correctly. Besides, we have not allowed any cycles (and therefore edges on layer 2) to exist in $G$ (yet).
-    \item Apparently, the algorithm iterates only over singular code of partitions. This means that every partitions in $C$ has either entirely full output or entirely empty input. Also, no partition is contained in $C$ more than once.
-    \item Let $M = \{v \in C \mid \neg (\exists u \in C)( u <_t v \land (u,v) \in C )\}$ (informally all minimal vertices in $C$ with respect to topological order of components restricted to edges in $C$). Let $n$ be the largest index of a data row such that row $n$ was processed by all components. Such $n$ exists since every components in $M$ has a full output queue (otherwise our algorithm would dot continue downwards).
+    \item Apparently, the algorithm iterates only over singular code of partitions. This means that every partition in $C$ has either entirely full output or entirely empty input. Also, no partition is contained in $C$ more than once.
+    \item Let $M = \{v \in C \mid \neg (\exists u \in C)( u <_t v \land (u,v) \in C )\}$ (informally all minimal vertices in $C$ with respect to topological order of components restricted to edges in $C$)(shown in Figure \ref{fig:cycle}. Let $n$ be the largest index of a data row processed by all components. Such $n$ does exist since every component in $M$ has a full output queue (otherwise our algorithm would not continue downwards).
 
-    \item Let $a \in C$ be any partition which the $n$th data row is the last processed one. Then there is an output buffer of $a$ which contains data from the $n$th row. Let $e \in C$ be an edge which corresponds to this buffer.  Let $b,c \in C$ such that there exists paths $P_{ab}, P_{cb} \in C \land e \in P_{ab} \land c \in M$. 
+    \item Let $a \in C$ be any partition in which the $n$th data row is the last processed one. Then there is an output buffer of $a$ which contains data from the $n$th row. Let $e \in C$ be an edge which corresponds to this buffer.  Let $b,c \in C$ such that paths $P_{ab}, P_{cb} \in C \land e \in P_{ab} \land c \in M$ axist. 
 
-    \item Let $m$ be the highest index such that an element from $m$th row is still present on path $P_{ab}$. 
+    \item Let $m$ be the highest index such that an element from the $m$th row is still present on the path $P_{ab}$. 
 
-    \item Partitions $a,c$ have processed the $m$th row since $a,c \in M$ and $m \geq n$. Partition $b$ has not processed the $m$th row since an element from the $m$th row is still on the path $P_{ab}$. That means that there is an element from the $m$th row on path $P_{cb}$. (This holds since our algorithm never chooses a branch in which no data from the required data row are to be found, and since the required data row is exactly the $m$th one. That is also the reason why we did not use the $n$th row.) But that is a contradiction because one of the two paths is empty.
+    \item Partitions $a,c$ have processed the $m$th row since $a,c \in M$ and $m \geq n$. Partition $b$ has not processed the $m$th row since an element from the $m$th row is still on the path $P_{ab}$. That means that there is an element from the $m$th row on the path $P_{cb}$. (This holds since our algorithm never chooses a branch in which no data from the required data row are to be found, and since the required data row is exactly the $m$th one. That is also the reason why we do not use the $n$th row.) That is a contradiction because one of the two paths is empty.
 
   \end{itemize}
-    \graph{cycle}{Illustration showing cycle $C$ and set $M$ from the second point of proof of \ref{cla:crawlerproof}}
+    \graph{cycle}{An illustration showing cycle $C$ and set $M$ from the second point of proof of Claim \ref{cla:crawlerproof}.}
 
 \end{proof}
 \begin{proof}[Proof of 3]
@@ -120,24 +123,25 @@ Thus, we have shown that general consistent flow graphs consisting of regular no
 
 \subsubsection{Loops}
 
-It is easy to see that the proposed \emph{loop merge} operation is well defined and that it behaves as expected in the definitorical sense given in \emph{realisation of a flow graph on a single data row} (define \ref{def:realisation}). It may seem, that the previous algorithm still provides correct results on a graph with \emph{loop merge} nodes, since the second point of the proof still holds. The real problem comes with data ordering as the following ideas illustrate:
+It is easy to see that the proposed \emph{loop merge} operation is well defined and that it behaves as expected in the definitorical sense given in \emph{realisation of a flow graph on a single data row} (Definition \ref{def:realisation}). It may seem that the previous algorithm still provides correct results on a graph with \emph{loop merge} nodes, since the second point of the proof still holds. (The point which fails is the first one.) The real problem comes with data ordering as the following ideas illustrate:
+
 \begin{enumerate}
     \item Moving data over a backwards edge may result in insertion of these data after data from a data row with higher index. 
-    \item The point 1) does interfere with the first point of the proof badly since the merge operation is not deterministic. 
-    \item We may decide to let multiple data rows enter the loop and then postpone exit of every row with non-minimal index (with respect to being in the loop in question). We would then pull the minimal-index row through the loop using the nonvectorized pull-semantics\footnote{By pull semantics we mean the mechanism which allows processal of data in nonvectorized manner} until it exited the loop. This does not work due to point 1). We would have to implement multiple `waiting' buffers at every \emph{loop merge} and we would still have to pull a significant amount of data by the nonvectorized bodies. Actually, the efficiency of this approach would decrease with increasing $w$ due to increasing probability that a non-minimal row will need to exit the loop prior to the minimal row.
-    \item We may improve the semantics of the \emph{loop merge} node so that elements of data rows remain synchronised inside of loops and then add a `waiting' buffer at the exit from the loop which would sort the rows into the initial ordering. This does not work since the row waited for may remain in the loop for a very long time. (We would need to use unbounded queues instead of constant-size buffers)
-    \item We may employ the previous point the other way around. We may make all other data wait for data coming from loops. This approach does work except for the problem that the rest of the network is performed in noninitial order. This is approximately the way the second proposal copes with the problem. We cannot use it here since we required data to be processed and outputted in-order. For this reason, there is no algorithm which processes arbitrary loops and outputs data in-order and which does not use unbounded queues.
+    \item The point 1 does interfere with the first point of the proof (of Claim \ref{cla:crawlerproof}) since the merge operation may have data from different data rows in its inputs and since it ignores their order.
+    \item We may decide to let multiple data rows enter the loop and then postpone exit of every row with non-minimal index (with respect to being in the loop in question). We would then pull the minimal-index row through the loop using the non-vectorised pull-semantics\footnote{By pull semantics we mean the mechanism which allows processing of data in non-vectorised manner} until it exited the loop. This does not work due to point 1. We would have to implement multiple `waiting' buffers at every \emph{loop merge} and we would still have to pull a significant amount of data by the non-vectorised bodies. Moreover, efficiency of this approach would decrease with increasing $w$ due to increasing probability that a non-minimal row will need to exit the loop prior to the minimal row.
+    \item We may improve semantics of the \emph{loop merge} node so that elements of data rows remain synchronised inside of loops. Then, we would add a `waiting' buffer at the loop exit. This buffer would reorder data rows back into the initial order. This does not work since the row which is waited for may remain in the loop for a very long time. (We would need to use unbounded queues instead of constant-size buffers.)
+    \item We may employ the previous point the other way around. We may make all other data wait for data coming from loops. This approach does work except for the problem that the rest of the network is performed in non-initial order. This is approximately the way the second proposal copes with the problem. We cannot use it here since we required data to be processed and outputted in order. For this reason, there is no algorithm which at the same time processes arbitrary loops in fully vectorised manner, outputs data in-order and uses only unbounded queues.
     \item We may ensure that at most one data row enters the loop at the same time. This makes sense since the theoretical single data row apparently works. 
 \end{enumerate}
 
-The approach suggested by 6) and 3) (which is basicaly a more complicated version of 6) ) may be realised and would work in a \emph{single row realisation} environment on general flow graphs consisting of the node types defined. We provide an example which shows that the algorithm \ref{alg:crawler} does not work with flow graphs with arbitrarily placed \emph{loop merge} nodes. The code generated by the algorithm \ref{alg:crawler} for the following example may change the order of some data rows despite consistency of the flow graph. 
+The approach suggested by 6. and 3. --- point 3 is basically a more complicated version of point 6 --- may be implemented and would work in a \emph{single row realisation} environment on general flow graphs consisting only of regular, split, merge and loop merge nodes. Figure \ref{fig:counterexample} shows that Algorithm \ref{alg:crawler} does not work with flow graphs with arbitrarily placed \emph{loop merge} nodes. The code generated by Algorithm \ref{alg:crawler} for the following example may change the order of some data rows, despite consistency of the flow graph. 
 
-\graph{counterexample}{Counterexample showing that algorithm \ref{alg:crawler} does not work for graphs containing arbitrarily placed \emph{loop merge} nodes. }
+\graph{counterexample}{A counter-example showing that Algorithm \ref{alg:crawler} does not work for graphs containing arbitrarily placed \emph{loop merge} nodes. }
 
-Restricting the algorithm \ref{alg:crawler} with allowed \emph{loop merge} nodes to flow graphs generated by means of observations \ref{obs:schemeconsistency} - \ref{obs:schemesequencing} solves the problem.
+Restricting Algorithm \ref{alg:crawler} with allowed \emph{loop merge} nodes to flow graphs generated by means of Observations \ref{obs:schemeconsistency} -- \ref{obs:schemesequencing} solves the problem if we ensure that data remain in order.
 
 \mybegindef{loopmerge}{Implementation of the loop merge operation}
-  Let every loop merge operation have a boolean flag as its state, initialized to false. Modify the algorithm \ref{alg:crawler} to set this flag to $true$ every time any partition processes data\footnote{Since we need just 1 bit of information per every such node, it is possible to put all these flags into one integer\footnotemark so that this operation remains cheap.}\footnotetext{Provided that there is not more of these nodes than is the integers size.}. Furthermore, modify the same algorithm to use only the singular body of the loop merge node (this is no problem since loop merge node is always the only one in a partition). Let the code of the partition of loop merge node be defined by the code shown in figure \ref{fig:loopmergebody}.
+  Let every loop merge operation have a Boolean flag (\ttt{state}) as its internal state, initialised to false. Modify Algorithm \ref{alg:crawler} to set this flag to \ttt{true} every time any partition processes data\footnote{Since we need just 1 bit of information per every such node, it is possible to put all these flags into one integer\footnotemark so that this operation remains cheap.}\footnotetext{Provided that there is not more of these nodes than integer's length.}. Furthermore, modify the same algorithm to use only the singular body of the loop merge node (this is no problem since loop merge node is always the only one in a partition). Let the code of the partition of the loop merge node be defined by the code shown in Figure \ref{fig:loopmergebody}.
 \myenddef
 \mybeginfigloose
 \begin{code}
@@ -173,21 +177,21 @@ else
 }
 repeat
 \end{code}
-\myendfig{loopmergebody}{Body of a loop merge partition for the definition \ref{def:loopmerge}}
+\myendfig{loopmergebody}{Body of a loop merge partition for Definition \ref{def:loopmerge}.}
 
 \mybeginclaim{unorderedloopsproof}{First solution with loops}
-  We claim that the algorithm \ref{alg:crawler} implementing \emph{loop merge} nodes as in the definition \ref{def:loopmerge} solves the problem \ref{pro:orderedproblem} with \emph{loop merge} nodes if $G$ was created by means of composition of the \emph{branching} and \emph{loop merge} scheme (definition \ref{def:schemes}) by means of observations \ref{obs:schemeconsistency}-\ref{obs:schemesequencing}.
+  We claim that Algorithm \ref{alg:crawler} implementing \emph{loop merge} nodes as in Definition \ref{def:loopmerge} solves Problem \ref{pro:orderedproblem} with allowed \emph{loop merge} nodes if $G$ was created by means of composition of the \emph{branching} and \emph{loop merge} scheme (Definition \ref{def:schemes}) by means of Observations \ref{obs:schemeconsistency} -- \ref{obs:schemesequencing}.
   \begin{proof}
-    We need to check that the three points of the proof of claim \ref{cla:crawlerproof} still holds.
+    We need to check that the three points of the proof of Claim \ref{cla:crawlerproof} still hold.
     \begin{enumerate}
-      \item The state ensures that as long as there is a data row present in the loop, no new row is retrieved from the first input. Data obtained from the second input must have been earlier processed by the first input. Thus, data remain in order and valid.
-      \item Note that if no data were processed second time a \emph{loop merge} partition is entered it continues to the partition of the first input. This means that the assumption from the original proof that $C \in H$ still holds. Furthermore, it means that either:
+      \item The \ttt{state} ensures that as long as there is a data row present in the loop, no new row is retrieved from the first input. Data obtained from the second input must have been earlier processed by the first input. Thus, data remain in order and valid.
+      \item Note that if no data had been processed second time a \emph{loop merge} partition was entered, the algorithm continues to the partition of the first input. This means that the assumption from the original proof that $C \subseteq H$ holds. Furthermore, it means that either:
        \begin{itemize}
     %\item The assumption that $C \in H$ is correct since if there is an infinite cycle which uses an edge on layer 2 then the algorithm processes data and hence, behaves correctly. Besides, we have not allowed any cycles (and therefore edges on layer 2) to exist in $G$ (yet).
-         \item Some data were processed. In this case, a data-processing infinite loop is correct behaviour.
-         \item No data were processed. In this case, the cycle does not use the second input. Thus, the original proof holds.
+         \item some data were processed. In this case, a data-processing infinite loop is a correct behaviour; or
+         \item no data were processed. In this case, the cycle does not use the second input. Thus, the original proof holds.
        \end{itemize}
-     \item This partition apparently terminates correctly (unless there is an infinite loop in the semantics of $O$ with respect to the data being processed).
+     \item This partition apparently terminates correctly (unless there is an infinite loop in the semantics of $O$ with respect to the data which are processed).
     \end{enumerate}
   \end{proof}
 \myendclaim
@@ -197,18 +201,18 @@ repeat
 We provide some observations relating to efficiency of the provided solution.
 
 \begin{observation}
-  Let there be two parallel branches of computation leading from a common predecessor partition to a common successor such that both branches receive data from the same data rows. Let the sum of buffer capacities of one of the branches be significantly higher than the corresponding sum on the other branch. This means that one branch has significantly higher average density of data per buffer. Notice that now the output buffer of the branch with smaller capacity is likely to cause the content of the other branch to be processed even though most of the buffers on this branch does not provide enough data for vectorized processal.
+  Let there be a computation (i.e. a realisation of a consistent flow graph). Let therein be two parallel branches leading from a common predecessor partition to a common successor partition such that both branches receive data from the same data rows (i.e., the data are not being split in the root node). Let the sum of buffer capacities of one of the branches be significantly higher than the corresponding sum on the other branch. This means that one branch has significantly higher average density of data per buffer. Note that now the output buffer of the branch with smaller capacity is likely to cause the content of the other branch to be processed. It causes the content to be processed even though majority of buffers on this branch does not provide enough data for vectorised processing.
 \end{observation}
 
-We believe that the reader has some intuitive understanding of this observation. We do not provide exact definitions since we do not draw any exact conclusions and since these definitions would be truly tedious.
+We believe that the reader has some intuitive understanding of this observation. We do not provide exact definitions because we do not draw any exact conclusions and because these definitions would be truly tedious.
 
 
-We propose assigning buffer capacities according to the following algorithm although we have no proof of feasibility which would have realistic assumptions about the input data. Let $H$ be an acyclic factor graph of a flow graph $G$ with expanded control flow nodes. Let $w$ be (again) a chosen size of vectors and let $c \in \N$ be an arbitrary coefficient.
+We propose assigning buffer capacities according to the following algorithm. We do so even though we have no proof of feasibility which would have realistic assumptions about input data. 
 
-\mybeginalg{balancer}{Buffer capacity calculator}\ 
+\mybeginalg{balancer}{Buffer capacity calculator} Let $H$ be an acyclic factor graph of a flow graph $G$ with expanded control flow nodes. Let $w$ be (again) a chosen size of vectors and let $c \in \N$ be an arbitrary coefficient.
 \begin{samepage}
 \begin{code}
-fun l(partition d) { an integer anotation of components of H}
+fun l(partition d) { an integer annotation of components of H}
 
 fun balance_sizes(H, w, c)
 {
@@ -225,14 +229,18 @@ fun balance_sizes(H, w, c)
 \end{samepage}
 \myendalg
 
-\mybeginobs{minmaxvectorizable}{Vectorized processal of data sources and sinks}
-  Suppose that all output buffers of the topologically minimal and all input buffers of the topologically maximal partitions (in a factor graph of $G$ w.r.t. connectedness) have size at least $w$. We claim that if we uncomment the commented node, i.e., if we force vectorized processing of those partitions, then the algorithm still works.
+\mybeginobs{minmaxvectorisable}{vectorised processing of data sources and sinks}
+  Suppose that all output buffers of the topologically minimal partitions and all input buffers of the topologically maximal partitions (in a factor graph of $G$ w.r.t. connectedness) have size at least $w$. We claim that if we uncomment the commented node, i.e., if we force vectorised processing of those partitions, then the algorithm still works.
   \begin{proof}
-    Vectorized and singular processing are equivalent in these partitions as long as buffers have sufficient capacity. This holds since these partitions will never be required to forward data from a predecessor to a succesor. 
+    vectorised and singular processing are equivalent in these partitions as long as buffers have sufficient capacity. This holds since these partitions will never be required to forward data from a predecessor to a successor. 
   \end{proof}
 \myendobs
 
 \begin{rem} 
-  Although this observation may not seem interesting for theoretical analysis, it is vital for efficient implementation of vectorized load and store operations. (This is due to typical alignment requirements of fast load and store operations)
+  Note, that if the buffer capacity is $w$, forcing of vectorised processing of partitions may cause their data providers to process data singularly as well. For this reason, we propose that the coefficient \ttt{c} from Algorithm \ref{alg:balancer} should be at least 2.
+\end{rem}
+
+\begin{rem} 
+  Although this observation may not seem interesting for theoretical analysis, it is vital for efficient implementation of vectorised load and store operations. (This is due to typical alignment requirements of fast load and store operations.)
 \end{rem}
 

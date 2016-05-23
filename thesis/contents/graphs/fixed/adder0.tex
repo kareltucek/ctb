@@ -1,0 +1,23 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\node (a) at (137bp,68bp) [draw,rectangle] {a LD};
+  \node (c) at (255bp,44bp) [draw,rectangle] {c ADD};
+  \node (b) at (137bp,17bp) [draw,rectangle] {b LD};
+  \node (d) at (318bp,44bp) [draw,rectangle] {d ST};
+  \coordinate (fa) at (18bp,68bp);
+  \coordinate (fb) at (18bp,17bp);
+  \coordinate (fd) at (380bp,44bp);
+  \draw [->] (b) -- (c);
+  \draw [->,dashed] (fb) -- (b);
+  \draw [->,dashed] (fa) -- (a);
+  \definecolor{strokecol}{rgb}{0,0,0};
+  \pgfsetstrokecolor{strokecol}
+  \draw (70bp,75bp) node {external stream};
+  \draw [->,dashed] (d) -- (fd);
+  \draw [->] (c) -- (d);
+  \draw [->] (a) -- (c);
+  \draw (206bp,68bp) node {internal stream};
+%
+\end{tikzpicture}
+

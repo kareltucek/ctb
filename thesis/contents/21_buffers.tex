@@ -1,18 +1,18 @@
+\label{sec:buffer}
 \subsubsection{Working principle}
 
 We implement a register-stored SSE buffer by means of macros resolved by the `cfmacros' alias environment. A buffer created by these macros consists of a number of circularly organised registers and two variables which denote the number of stored elements (\ttt{contains}) and the current reading position (\ttt{readat}). We also define some constants which allow us to simply retrieve information such as the total capacity (\ttt{capacity}) of the buffer.
 
-Stores (pushes) are performed by means of a switch which uses the value \ttt{(readat + contains) \% capacity} to determine a code fragment which inserts a single element at the correct position. We assume that the target C compiler optimises such switch into a single jump instruction with its address determined by the expression.
+Stores (pushes) are performed by means of a switch which uses the value \ttt{(readat + contains) \% capacity} to determine a code fragment which inserts a single element at the correct position. We assume that the target C compiler optimises such switch into a single jump instruction with its address determined by the expression.  Loads (pops/peeks) are implemented likewise but provide also vectorised version using the \ttt{alignr} instruction. 
 
-Loads (pops/peeks) are implemented likewise. 
+Of course, this scheme requires quite large numbers of SSE registers even for small graphs, while standard CPUs provide only 16 such registers. We assume this data to be stored mostly in the L1 cache and automatically loaded when needed. We leave spill code\footnote{The actual machine load and store instructions added after the first iteration of scheduling and register allocation for variables which could not fit into the actual CPU registers.} optimisations to the target C compiler. The compiler may also be supplemented with profiling statistics for this purpose.
 
-Of course, this scheme requires quite large numbers of SSE registers even for small graphs, while standard CPUs provide only 16 such registers. We assume this data to be stored mostly in the L1 cache and automatically loaded when needed. We leave spill code\footnote{The actual machine load and store instructions added after the first iteration of scheduling and register allocation for variables which could not fit into the actual CPU registers.} optimisations to the target C compiler possibly provided with profiling statistics.
+\subsubsection{Buffer API}
 
-\subsubsection{API}
+%API of these buffers follows:
 
-API of these buffers follows:
-
-\begin{code}
+\mybeginfig
+\begin{loosecode}
 BUFFER_DECL(capacity, vsize, inpacksize, outpacksize, id, type)
 BUFFER_SIZE(id)
 
@@ -31,7 +31,8 @@ BUFFER_CONSUME_VECTOR(id)
 BUFFER_PEEK_SIMPLE(capacity, vsize, id, to)
 BUFFER_PEEK_ONE(capacity, vsize, id, typeabbrev, to)
 BUFFER_PEEK_VECTOR(capacity, vsize, id, typeabbrev, to)
-\end{code}
+\end{loosecode}
+\myendfig{api10}{Buffer creation macros API reference.}
 
 \begin{description}
   \item \ttt{id} is an identifier of the buffer.
@@ -41,32 +42,40 @@ BUFFER_PEEK_VECTOR(capacity, vsize, id, typeabbrev, to)
   \item \ttt{inpacksize and outpacksize} are the sizes of data packs which are processed by a single invocation of the partitions (again the $w$ value of the two partitions the buffer connects). Current implementations assign this number uniformly.
   \item \ttt{DECL} produces declarations of all variables realising the buffer. These are to be accumulated into a layer of a writer which goes into global scope (w.r.t. the code of partitions).
   \item \ttt{SIZE} returns the number of elements actually stored in this container.
-  \item \ttt{FULL, EMPTY} resolve to expression which determine whether the buffer is full or empty. The \ttt{GRANULAR} versions take the \ttt{inpacksize} and \ttt{outpacksize} into account, meaning whether an entire vector of values produced by a vectorized partition code can fit into the buffer.
+  \item \ttt{FULL, EMPTY} resolve to expression which determine whether the buffer is full or empty. The \ttt{GRANULAR} versions take the \ttt{inpacksize} and \ttt{outpacksize} into account, meaning whether an entire vector of values produced by a vectorised partition code can fit into the buffer.
   \item \ttt{PUSH} adds a value into the container.
   \item \ttt{CONSUME} increases the \ttt{readat} counter and decreases the \ttt{contains} counter, effectively removing the head element from the buffer.
   \item \ttt{PEEK} allows reading of the head element (or vector).
-  \item \ttt{SIMPLE} versions of the \ttt{PUSH} and \ttt{PEEK} operations dont take the subvector structure into account. A simple variation of the buffer for simple types (such as \ttt{int}) may be constructed using these operations.
+  \item \ttt{SIMPLE} versions of the \ttt{PUSH} and \ttt{PEEK} operations do not take the subvector structure into account. A simple variation of the buffer for simple types (such as \ttt{int}) may be constructed using these operations.
 \end{description}
 
 \section{ Implementation of splits and merges }
 
-As we have already said, the control flow is implemented according to algorithm \ref{alg:crawler}. For the purpose of generation of all the conditions, we allow operations to have defined an arbitrary number of instruction patterns. Results of these patterns are then accumulated to different writer layers, which are intended for specific chunks of code as shown in the diagram of the algorithm \ref{alg:crawler}. It remains to discuss some details.
+\label{sec:splitsmerges}
 
-Every control flow node gets a unique identifier assigned as its parameter (This is done during node expansion). These ids are preserved during node expansion. Every control flow operation uses this id to construct identifiers for all buffers it requires. These buffers are then declared in one of the expanded nodes by the \ttt{DECL} macro and further used by other macros.
+As we have already said, the control flow is implemented according to Algorithm \ref{alg:crawler}. For the purpose of generation of all the conditions, we allow operations to have defined an arbitrary number of instruction patterns. Results of these patterns are then accumulated to different writer layers, which are intended for specific chunks of code as shown in the diagram of Algorithm \ref{alg:crawler}. It remains to discuss some details.
 
-Also, every expanded control flow node adds a new label into an acumulator (writer layer) dedicated to labels of the current partition. This way, the expanded nodes maintain links to the partitions which contain their data sinks and sources without needing any explicit information about identifiers of these partitions.
+Every control flow node gets a unique identifier assigned as its parameter. (This is done during node expansion.) These ids are preserved during node expansion. Every control flow operation uses this id to construct identifiers for all buffers it requires. These buffers are then declared in one of the expanded nodes by the \ttt{DECL} macro and further used by other macros.
 
-Despite our brevity, we have described what was worth describing. All other details are technicalities boiling down to the diagram of the algorithm \ref{alg:crawler}.
+Buffer sizes are assigned into parameters with respect to edge position. This means that aliases (node parameters) like \ttt{buffercoefin1}, \ttt{buffercoefin2}, etc. are assigned by the size assignment algorithm (implemented as part of the cf graph transformer in \ttt{cf\_transform.h}) and then used in macro expansions. This may be seen in Figure \ref{fig:balancer}.
+
+Also, every expanded control flow node adds a new label into an accumulator (writer layer) dedicated to labels of the current partition. This way, the expanded nodes maintain links to partitions which contain their data sinks/sources without needing any explicit information about identifiers of these partitions.
+
+Both splits and merges are currently provided only in non-vectorised version -- meaning that the actual split or merge of two streams is performed by a simple loop-like mechanism which always handles one record only. vectorised versions of control flow operations may be easily added once a vectorised version of the \ttt{BUFFER\_PUSH} operation exists.
+
+Despite our brevity, we have described what was worth describing. All other details are technicalities boiling down to the diagram of Algorithm \ref{alg:crawler}. The actual implementation of control flow instructions may be found in \ttt{sse\_set/src\_cf.csv}. Corresponding graph transformations (node expansion, cycle removal and buffer size assignment algorithm) may be found in \ttt{cf\_transform.h}.
 
 \section{ Summary of the provided instruction table }
 
 The C instruction table which we provide may be found in the \ttt{sse\_set} directory of ctb. It covers:
 \begin{itemize}
-  \item Standard C operators in both vectorised and nonvectorised version.
+  \item Standard C operators in both vectorised and non-vectorised version.
   \item The discussed data types.
-  \item Width conversions, in the simple version in which one width is double of the other.
+  \item Width conversions.
   \item Load and store operations in both aligned and unaligned versions.
   \item Split and merge operations. These are provided in different variations in directories of the corresponding tests. 
 \end{itemize}
+
+The table has been tested by mechanism described in Section \ref{sec:testing}.
 
 

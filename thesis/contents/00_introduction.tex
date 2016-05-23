@@ -1,28 +1,88 @@
 %\chapter*{Introduction}
 %\addcontentsline{toc}{chapter}{Introduction}
 
-\section{Overview}
+\section{Overview of our goals}
 
-TODO: some broader motivation (What?)
+%\begin{define}
+%  test test normal buffer string some filling $\mathit{math}\ \mathit{buffer}\ \mathit{italic}$ test
+%\end{define}
 
-One of goals of this work is implementation of a framework which may serve as the backmost part of a (trans) compiler\footnote{Trans-compiler is a compiler which translates source code into some other programming language or another intermediate form.} and which would provide some specific parallelism-related features. We also wish to investigate the problem of employment of control flow\footnote{The term \emph{control flow} is generally used for all mechanisms that use some form of the goto instruction, like branching, loops, switches (\dots). Although the general meaning encompasses function calls, we will use this term only for branching and loops.} in parallelized environments of a specific form.
+The first goal of this thesis is a theoretical analysis of a problem of vectorised realisation of a specific class of data processing networks. We are especially interested in networks suitable for representation of small fragments (e.g., basic blocks) of computer programs or --- more generally --- of some computations. Our second goal is the design and the implementation of a framework which would be suitable for generation of these realisations.  Our third goal is the implementation of some subset of concepts theoretically described by this thesis. The implementation should provide a tangible proof-of-concept and verify that our framework can be used for task for which it has been designed. Currently, we target a framework for transformation of graph-described network in C code.
+
+\section{Motivation}
+
+The Bobox project \cite{bobox} is an example of a distributed environment based on a network of components (\emph{boxes}) interconnected by data streams. The structure of the network is defined by an annotated directed graph \footnote{Graph related theory may be found in \cite{chapters}. Basic understanding of graph-related terminology is crucial for this text.} which may be supplied by various means, e.g., by transformation from an SQL query. Besides such high-level non-procedural sources, transformation from a traditional procedural language is also attempted (\cite{dbnetworks}, \cite{hfg}), essentially converting procedural code into a graph representing both the control flow and the data flow. However, the elementary operations of a procedural language are too small to be effective elements of distributed processing; therefore, grouping of elementary operations into larger boxes is necessary.
+
+%More tangible motivation for existence of such framework is provided by ideas of misters Bednárek and Brabec, since our framework is a possible back-end candidate for their project. These gentelmans present an unconvencial approach to automatic parallelisation of computer programmes. This approach, summarized in \cite{dbnetworks}, considers a computer program as a data-processing network. The approach suggests that this network could be split into smaller subnetworks and then run by means of a distributed system. 
+
+The suggested transformation of a programme may be structurally understood as a process consisting of the following steps:
+
+\begin{enumerate}
+  \item A programme, represented either by some means, e.g., by an SQL query, by a source code or by some form of byte-code, is analysed and transformed into some graph representation. 
+  \item This graph is optimised.
+  \item The graph is cut into smaller chunks. This transformation should provide graph representation of modules running as sequential (albeit vectorised) code within a distributed environment.
+  \item Finally, the graph needs to be converted into some executable form. Various tools may be employed for this purpose. The approach described by this thesis assumes that the module graphs are transformed into C modules with general interface suitable for streamlined processing. These modules may then be connected into a network as described by the global structure of the graph, using a library for physical data exchange and synchronisation.
+\end{enumerate}
+
+%The first two steps, which are currently the center of interest of mister Brabec, may be seen as a front-end of the transformation. The third step acts as a neccessary bridge between the main transformation and some back-end. 
+
+Put together, the tools may be integrated as shown in Figure \ref{fig:integration}.
+
+\graph{integration}{The assumed integration of our framework.}
+
+\begin{description}
+  \item[Graph generator], such as Parallax (\cite{pipelines}), takes some representation of a programme and transforms it into some graph representation. 
+  \item[Graph splitter] cuts the graph into smaller chunks and extracts vectorisable excerpts, which are then send to the box generator. Besides, it creates some representation of a higher level pipeline and some control C code. This piece is currently in early stages of development.
+  \item[Graphs] represent some small computations. Those are the graphs described in the rest of this chapter. The exact form of these graphs may be found in Section \ref{sec:definitions} (Definition \ref{def:flowgraph}).
+  \item[Description of instructions] is a definition of the instruction set of the target language and SIMD extension. Exact formats are described by Section \ref{sec:formats}.
+  \item[Box generator] (the goal of this thesis) receives these small vectorisable graphs and transforms them into C modules (`boxes') which may serve as building blocks for higher-level pipelines. These C modules have stream interfaces. This is where our thesis enters the scene. This generator is described by the rest of this thesis.
+  \item[C code of a box] is a C module which realises some computation in a pipelined manner. These boxes provide a general interface (described in Section \ref{sec:env2}).
+  \item[Interface wrapper] is a generic template which serves for translation of general interface of computation generated by the box generator to an interface of some target library. Interface of boxes is further described in Section \ref{sec:env2}. This may be seen as a necessary implementation detail.
+  \item[A compiler] is used to compile all code fragments that require compilation.
+  \item[Binary modules] is a bunch of more or less conventional executable files which contain all introduced computations. These may, for instance, be in a format of dynamic libraries.
+  \item[Control graph] is a description of a task for the target environment. This describes how boxes should be interconnected.
+  \item[Library for distributed data processing] is some library providing tools for distributed data processing. Bobox is an example of such environment. Bobox is further described by \cite{bobox}. Furthermore, the use of Bobox in this context is covered by \cite{pipelines} and \cite{hfg}. 
+  \item[Generic run-time code] is composed of binary modules and of description of the control graph. It is not inaccurate to think of this product as of a distributed environment consisting of computations connected by data streams.
+\end{description}
+
+
+    This thesis aims to explore the possibilities of description and realisation of networks in a context similar to the context of the box generator introduced in Figure \ref{fig:integration}. In other words, we would like to know which networks may be realised and how these networks may be realised. Also, for the sake of efficiency, we wish to investigate the possibilities of vectorisation of these networks. Moreover, we would like to design a system capable of generation of code fragments which would realise these networks and which would utilise vectorised SIMD\footnote{\emph{Single-Instruction Multiple-Data} instructions are instructions which take multiple independent sets of input values and perform an operation parallely on all of them. E.g., performing an element-wise addition of two vectors.} instructions. 
+
+    Since we wish to output vectorised code, this problem is a problem of a specific case of vectorisation. Vectorisation is usually performed in a procedural context of a single basic block\footnote{The term \emph{basic-block} is often used in theory of compilers, meaning consistent sequences of instructions without any control flow. Thus, any procedure may be seen as consisting of basic blocks and goto instructions.} and is well understood in this context. This thesis, however, investigates this problem in an environment in which the computations are guaranteed to be provided with sequences of independent data sets.  In other words, our environment is an environment where computations are described by flow graphs. Data in this environment are served in table-like sets with mutually independent rows. Every single row of this imaginary table therefore represents a set of inputs for a predefined computation which is always the same one. We describe this in more detail in Section \ref{sec:problemintro} of the Introduction.
+
+A problem which we especially wish to investigate is a problem of employment of control flow\footnote{The term \emph{control flow} is generally used for all mechanisms that use some form of branching or loops. Although the general meaning encompasses function calls, we will use this term only for branching and loops.} in this environment.
+
+\section{Related work}
+    Overview of methods relevant to compiler construction may be found in \cite{compilers}. These methods provide a good overview of issues of lower abstraction level, therefore providing us with information how should the target C fragments be composed in order to be efficiently translatable.
+    
+    A paper focusing on an efficient use of SIMD extensions and on auto-tuning systems is \cite{autotuning}. Papers describing recent attempts of vectorisation in environments containing branching are \cite{select}, \cite{select2}. Proposed approaches discuss branching methods employing select instructions. These methods provide good results for code with shallow branching, and may be simply employed in our framework by means of preprocessing of an input graph. For this reason we do not investigate branching employed by means of the select operation in this work. However, none of these papers is directly related to our problem, since they assume standard procedural context.
+    
+    Description of semantics of very general data processing networks may be found in \cite{kahn}. This description is not suitable for our networks due to its generality. Semantics of processing networks which is more related to our problem may be found in \cite{hfg} and \cite{dbnetworks}. This representation is of interest to us since we assume input generated by tools using these representations. However, these flow graphs were designed for different purpose and are unsuitable for our problem. 
+    
+    Information related to the Bobox project is to be found in \cite{bobox}. Contextual bridge between Bobox and processing networks is provided by \cite{pipelines}. This article provides an alternative view of integration of ParallaX and Bobox. Analysis of another problem, discussing optimisation of processing of SQL queries, which uses a graph-based approach is \cite{bindings}. This article, together with \cite{dbnetworks}, provides some insight into the actual motivation of ParallaX.
 
 \section{Problem introduction, input examples}
+\label{sec:problemintro}
 
-Our problem is basically turning an intermediate code represented by some oriented graph and stripped of some type of dependencies into a fragment of code in some target language while utilising some intrinsic\footnote{Providing direct access to instructions of the target platform} SIMD\footnote{\emph{Single-Instruction Multiple-Data} instructions are instructions which take multiple independent sets of input values and perform an operation parallelly on all of them. E.g., performing an element-wise addition of two vectors.} extension. The aim is to achieve a situation in which multiple evaluations of the same computation are processed at the same time employing the mentioned fine-grained-parallelism. 
+Our problem is basically turning an intermediate code represented by some oriented graph and stripped of some type of dependencies into a fragment of code in some target language, while utilising some intrinsic\footnote{Providing direct access to instructions of the target platform} SIMD extension. The aim is to achieve a situation in which multiple evaluations of the same computation are processed at the same time by means of the mentioned fine-grained-parallelism. 
+
+We assume input in a form of a graph annotated by some operations. We assume this input to be either written by hand, or produced by a specialised software similar to a compiler back-end. We expect this software to identify, extract and preprocess code which is suitable for fine-grained parallelism.  An example of this software may be Parallax, mentioned in \cite{pipelines}. We do not provide any integration at the moment since Parallax is still under development and exact interfaces are still unclear.
+
+\FloatBarrier
+
+\graphfloating{adder0}{A simple adder computation.}
+
+Graph in Figure \ref{fig:adder0} represents a computation which takes values from two (external) streams, sums them and produces another (external) stream. The LD operations represent data input for our algorithm, i.e., the LD may evaluate to some effectful\footnote{When using the term \emph{effect}, we mean (\emph{impure}) side effects of operations or concealed data flow. We use this word the same way functional programmers do.} expressions. The ADD operation represents addition. The ST operation represents an effectful expression which hands the produced values over to a consumer. 
+
+\FloatBarrier
+
+In this explanation, we have used the word \emph{stream} strictly for external streams (managed by a third party). Every external stream stands merely for an input (or an output) for our computation. This makes sense since every computation, represented by a graph, may be seen as a building block of some higher level pipeline. Such pipelines may be (and are supposed to be) constructed by the specialised software mentioned above. However, the internal functionality of these computations also resembles (or will resemble) pipeline computations, and therefore we will use the word \emph{pipeline} for realisations of these computations and the word \emph{stream} for edges in our graphs. We will also talk of these edges as of \emph{queues}. 
 
 
-We assume input in a form of a graph annotated by some operations. We assume this input to be either written by hand or produced by a specialised software similar to a compiler back-end. We expect this software to identify, extract and preprocess code which is suitable for fine-grained parallelism.  An example of this software may be Parallax, mentioned in \cite{pipelines}. We do not provide any integration at the moment since Parallax is still under development and exact interfaces are still unclear.
+From this point of view, the load and store instructions may be perceived as operations which merely transform external streams into internal streams. Note that although we needed to make this clear, we will not talk about or work with external streams anymore. Loads and stores will be just data sources and sinks for us. Also, we will not use dashed lines anymore.
 
 
-Since textual description of the problem may be too unclear, we provide some examples.
-
-\graph{adder0}{Simple adder computation}
-
-This graph represents a computation which takes values from two (external) streams, sums them and produces another (external) stream. The LD operations represent some data input for our algorithm, i.e., the LD may evaluate to some effectful\footnote{When saying \emph{effect}, we mean (\emph{impure}) side effects of operations or concealed data flow. We use this word the same way functional programemers do.} expressions. The ADD operation represents addition. The ST operation represents an effectfull expression which hands the produced values over to a consumer. 
-
-
-So, this graph surely could be understood as a representation of the C function given in figure \ref{fig:adder0code}. However, semantical meaning we wish to assign to these graphs is a bit different. A more accurate interpretation understands this graph to be a computation\footnote{We will try to use this term consistently with its standard use in functional programming, i.e., as a data channel which transforms the data flowing through. However, at some places we may not manage to keep this promise since in some cases we lack more exact terms.} which repeatedly invokes the function, with possible overlaps in time. In other words, we have performed the \emph{lift} transformation, which is well known in functional programming.
+This said, this graph surely could be understood as a representation of the C function given in Figure \ref{fig:adder0code}. However, the semantic meaning we wish to assign to these graphs is different. A more accurate interpretation understands this graph to be a computation\footnote{We will try to use this term consistently with its meaning in functional programming, i.e., as a data channel which transforms the data flowing through. However, sometimes we may not manage to keep this promise since in some cases we lack more exact terms.} which repeatedly invokes the function, with possible overlaps in time. In other words, we have \emph{lifted} the function into a stream context as a functional programmer might have said \footnote{More information on functional programming may be found in \cite{functional}.}.
 
 \mybeginfig
 \begin{code}
@@ -31,21 +91,16 @@ int f(int a, int b)
   return a+b;
 }
 \end{code}
-\myendfig{adder0code}{C fragment corresponding to figure \ref{fig:adder0}}
-
-In this explanation we have used the word \emph{stream} strictly for external streams (managed by some third party). Every external stream stands merely for an input or an output for our computation. This makes sense since every computation, represented by a graph, may be seen as a building block of some higher level pipeline. Such pipelines may be (and are supposed to be) constructed by the specialised software mentioned above. Another thing is that the internal functionality of these computations also resembles (or will resemble) pipelines, and therefore we will use the word \emph{pipeline} for these computations and the word \emph{stream} for edges in our graphs. We will also talk of these edges as of \emph{queues}. 
+\myendfig{adder0code}{C fragment corresponding to Figure \ref{fig:adder0}.}
 
 
-From this point of view, the load and store instructions may be perceived as operations which merely transform external streams into internal streams. Note that although we needed to make this clear, we will not talk about or work with external streams anymore. Loads and stores will be just data sources and sinks for us. Also, we will use dashed lines no more.
-
-
-Output of our framework is supposed to be a code fragment which receives some input data in form somehow equivalent to a table such that:
+Output of our framework is supposed to be a code fragment which receives some input data in a form somehow equivalent to a table such that:
 \begin{itemize}
   \item Columns of this table correspond to input operations in the graph. Any column also may be seen as a single data stream or as a set of synchronous data streams. 
-  \item Every line describes input data for one calculation. (For instance, input data for one invocation of a function corresponding to a graph)
-  \item Different rows represent independent calculations (but still defined by the same graph). 
+  \item Every line describes input data for one calculation. (For instance, input data for one invocation of a function corresponding to a graph.)
+  \item Different rows represent independent calculations. (These calculations are still defined by the same graph). 
 \end{itemize}
-The code then produces some results per every row of the table, effectively adding some new columns.
+The code then produces results per each row of the table, effectively adding some new columns.
 
   \mybeginfig
 \begin{center}
@@ -58,13 +113,13 @@ The code then produces some results per every row of the table, effectively addi
   3&2&5\\
   \end{tabular}
 \end{center}
-\myendfig{adder0data}{Example data input and output for example figure \ref{fig:adder0} }
+\myendfig{adder0data}{Example data input and output for Figure \ref{fig:adder0}.}
 
 The produced code fragment (e.g., C code) may, for instance, take the columns $a$ and $b$ and produce the column $d$. 
 
 %, since full implementation exceeds the scope of this work,
 
-The second problem, which we wish to touch on a mostly theoretical level, is employment of control flow in these networks. Consider the following C function. 
+The second problem, which we wish to touch on a mostly theoretical level, is employment of control flow in these networks. We wish to implement control flow only as an experimental feature meant as a proof of concept. Consider the following C function: 
 
 \mybeginfig
 \begin{code}
@@ -78,49 +133,35 @@ int f(int a)
   return a;
 }
 \end{code}
-\myendfig{introcfcode}{Example C fragment employing control flow}
+\myendfig{introcfcode}{Example C fragment employing control flow.}
 
-Control flow may be represented in different ways. Since we wish to handle data in a streamlined fashion, splitting and merging data streams proposes itself. We will restrict our attention to control flow in form of branching and loops represented in this fashion. To be more precise, we restrict ourselves to investigation of control flow which actually splits data into multiple streams. We also assume nesting of the control flow constructs.
+Control flow may be represented in various ways. Since we wish to handle data in a streamlined fashion, splitting and merging data streams seems suitable. We will restrict our attention to control flow in form of branching and loops represented in this fashion. To be more precise, we restrict ourselves to investigate control flow which actually splits data into multiple streams. We also assume nesting of the control flow constructs.
 
 \begin{rem}
-  What we will not develop is the \emph{`compute all branches on all data and select the desired results'}\footnote{We believe that every serious reader of this work knows what we mean. We provide a bit more detailed explanation in section \ref{sec:branching}, but a casual reader should feel free to skip this reference safely.} version of the problem. One of the reasons is that it has been satisfactorily investigated before (e.g., \cite{select} and \cite{select2}). Another, more pragmatic, reason is that our framework is capable of employing this mechanism in means of standard arithmetic-like operations as long as the input is properly preprocessed.
+  What we will not develop is the \emph{`computing of all branches on all data and selecting the desired results'}\footnote{We believe that every serious reader of this work knows what we mean. We provide a more detailed explanation in Section \ref{sec:branching}, but the reader should feel free to skip this reference safely.} version of the problem. One of the reasons is that it has been satisfactorily investigated before (e.g., \cite{select} and \cite{select2}). Another, more pragmatic, reason is that our framework is capable of employing this mechanism by means of standard arithmetic-like operations as long as the input is properly preprocessed.
 \end{rem}
 
 
-The control flow thus will be represented by some form of split and merge operations. These may be understood as operations splitting (and merging) data streams in a non-1:1 ratio. In addition, we may use (and require in our input) some special condition operations. For instance, the provided C function may be represented by the graph in figure \ref{fig:introcf}.
+The control flow thus will be represented by some form of split and merge operations. These may be understood as operations splitting (and merging) data streams in a non-1:1 ratio. In addition, we may use (and require in our input) some special operations. For instance, the provided C function may be represented by the graph in Figure \ref{fig:introcf}.
 
-\graph{introcf}{Graph representation of figure \ref{fig:introcfcode}}
+\graph{introcf}{Graph representation of Figure \ref{fig:introcfcode}.}
 
 \begin{description}
-  \item[ST,LD] - again some effectfull IO expressions.
+  \item[ST, LD] - again some effectful IO expressions.
   \item[LT] - \emph{less than} condition with 100 as its second operand.
-  \item[ADD,MOD,MUL] - addition, modulo and multiplication, all used with constant second operands.
-  \item[SPLIT] - a special control flow operation which takes a value and a boolean and sends the value either to its right or left output depending on the supplemented boolean.
+  \item[ADD, MOD, MUL] - addition, modulo and multiplication, all used with constant second operands.
+  \item[SPLIT] - a special control flow operation which takes a value and a Boolean and sends the value either to its right or left output depending on the supplemented Boolean.
   \item[MERGE] - exact opposite of the SPLIT operation.
-  \item[CONDITION] - a special control flow operation which manages loops. 
+  \item[CONDITION] - a special control flow operation which manages loops.
 \end{description}
 
-  While we believe we have sufficiently illustrated problems of our interest, we have been very vague about details of context in which our framework is assumed to work (according to our assignment). To put this right, we provide the following diagram.
-
-\graph{integration}{Diagram describing assumed integration of our framework.}
-
-\begin{description}
-  \item[Specialised software] such as Parallax takes representation of a programe and transforms it into some graph representation. Furthermore, it cuts the graph into small chunks and extracts parallelizable excerpts, which it sends to our framework. Besides, it creates some representation of a higher level pipeline and some control C code.
-  \item[Graphs] are the graphs described in the previous subsection. We assume these graphs to be in form of xml-formatted files or streams.
-  \item[Description of instructions] is some definition of the instruction set of the target language and SIMD extension. 
-  \item[Our framework] receives these small parallelizable graphs and transforms them into C modules which may serve as building blocks for higher-level pipelines. These C modules have stream interfaces.
-  \item[A compiler] is used to compile all sources requiring compilation.
-  \item[Executables] are either more or less conventional executable files which contain all introduced computations.
-  \item[Control graph] is some description of a task for the distributed environment.
-  \item[Distributed environment] such as Bobox (\cite{bobox}, \cite{pipelines}, \cite{hfg}) is an environment which finally composes all computations and other auxiliary C modules into a final pipeline and runs it. 
-\end{description}
 
 \section{Overview of employed methods}
 
-In this paper, we begin by showing that pipelines without control flow may be easily transformed into the anticipated form. We produce these results by generating vertices of the input graph in topological order. This way, the output of every vertex gets stored in a unique variable. 
+In this paper, we begin by showing that networks without control flow may be easily transformed into the anticipated form. We produce these results by generating vertices of the input graph in the topological order. This way, the output of every vertex gets stored in a unique variable. 
 
   
-Next thing we show is that every such pipeline may be realised by SIMD instructions only (as long as there is sufficiently complete SIMD set available). The first step is fusing corresponding operations across multiple invocations of the same computation into SIMD instructions. The second step is adding some data conversions on edges which connect instructions of different vector width or alignment. This way we can process data in packs of $LCM$\footnote{Least Common Multiple} of widths of the used instructions. This way instructions may be fused into blocks which may, for instance, somehow correspond to the figure \ref{fig:introfusion}:
+Next thing we show is that every network without control flow may be realised by SIMD instructions only (as long as there is a sufficiently complete SIMD set available). The first step is fusing corresponding operations across multiple invocations of the same computation into SIMD instructions. The second step is adding some data conversions on edges which connect instructions of different vector width or alignment. This way we can process data in packs of $LCM$\footnote{Least Common Multiple} of widths of the used instructions. This way the instructions may be fused into blocks which may, for instance, correspond to Figure \ref{fig:introfusion}:
 
 \mybeginfig
 \begin{center}
@@ -142,60 +183,66 @@ Next thing we show is that every such pipeline may be realised by SIMD instructi
     \cline{2-9}
   \end{tabular}
 \end{center}
-\myendfig{introfusion}{Example illustrating how operations may ba joined across different invocations of a computation.}
+\myendfig{introfusion}{An example illustrating how operations may by joined across different invocations of a computation.}
 
 
-  Regarding control flow, our approach is to cut the input graph into partitions (basic blocks)\footnote{The term \emph{basic-block} is often used in theory of compilers, meaning consistent sequences of instructions without any control flow. Thus, any procedure may be told to consist of basic blocks and goto instructions.} which process data regularly. That means cutting all control flow nodes into multiple parts and introducing some new data flow between these by some sort of effects. This way we obtain a new graph which consists of basic blocks and control flow edges. We further modify this result to obtain an acyclic graph (or more precisely a graph with some sort of topological ordering\footnote{Ordering of an acyclic graph, which satisfies dependencies represented by edges. This ordering typically represents an order in which steps of some process may be carried out, e.g., steps in the process of cooking a meal. See \cite{chapters} for exact definition.}). 
+  Regarding control flow, our approach is to cut the input graph into partitions (basic blocks) which process data regularly. That means cutting all control flow nodes\footnote{We use the term \emph{node} as a term relating to some kind of realisation of a \emph{vertex}. We use these terms interchangeably. } into multiple parts and introducing some new data flow between these by some sort of effects. This way we obtain a new graph which consists of basic blocks and control flow edges. We further modify this result to obtain an acyclic graph (or more precisely a graph with some sort of topological ordering\footnote{Ordering of an acyclic graph, which satisfies dependencies represented by edges. This ordering typically represents an order in which steps of a process may be carried out, e.g., steps in the process of cooking a meal. See \cite{chapters} for exact definition.}). This is shown in Figure \ref{fig:introfactor}.
 
-\graph{introfactor}{Graph from figure \ref{fig:introcf} split into partitions suitable for processal}
+\graphfloating{introfactor}{Graph from Figure \ref{fig:introcf} split into partitions suitable for processing.}
 
-  After obtaining an acyclic graph consisting of basic blocks, we try to find an algorithm which crawls this new graph and gradually pushes data through the basic blocks. We use (constant-size) buffers \footnote{Memory area which is used to compensate for different processing speeds of components or computations. We use the terms \emph{queue} and \emph{buffer} almost interchangeably.} to store intermediate results between these basic blocks.
+  After obtaining an acyclic graph consisting of basic blocks, we try to find an algorithm which crawls this new graph and gradually pushes data through the basic blocks. We use (constant-size) buffers \footnote{This is a memory area which is used to compensate for different processing speeds of components or computations. We use the terms \emph{queue} and \emph{buffer} almost interchangeably.} to store intermediate results between these basic blocks.
+
 
 \begin{rem}
-  To be precise we allow cycles in a specific form which does not void the \emph{semantical} meaning of topological ordering. This may sound a bit strange, but it is exactly what happens when we use loops in programming languages.
+  To be precise we allow cycles in a specific form which does not void the \emph{semantic} meaning of topological ordering. This may sound strange, but when thinking about it, it is \emph{exactly} what happens when we use loops in programming languages. We discuss this problem in Section \ref{sec:partitioning}.
 \end{rem}
 
-  We should also make clear that our purpose is not to study low-level problematics of compiler construction (these are also well-understood \cite{compilers}). Although we wish to have all intermediate results allocated into CPU registers, we do not deal with register allocation nor we do restrict our register resources. In many aspects, we heavily rely on standard features of target compilers, such as on register allocation or dead code elimination.
+  \FloatBarrier
+
+  We should also clarify that our purpose is not to study low-level problematics of compiler construction (these are also well-understood \cite{compilers}). Although we wish to have all intermediate results allocated into CPU registers, we do not deal with register allocation nor we do restrict our register resources. In many aspects, we heavily rely on standard features of target compilers, such as on register allocation or dead code elimination.
 
 To address the question of assumptions for analytical part of this work, we should state the following points:
 \begin{itemize}
-  \item We assume to have at least $O(n)$ space available in CPU registers with respect to size of input graphs. The actual amount of space needed and available is left up to the provider of our input and to the target compiler. Thus, it is responsibility of the provider to carve up the input into pieces which the target compiler can fit into registers (or into the first level cache) if the provider wishes them to be fitted there.
+  \item We assume to have at least $O(n)$ space available in CPU registers with respect to size of input graphs. The actual amount of space needed and available is left up to the provider of our input and to the target compiler. Thus, it is a responsibility of the provider to carve up the input into pieces which the target compiler can fit into the registers (or into the first level cache) if the provider wishes them to be fitted there.
   \item We wish to minimise the amount of transfers between RAM and CPU.
   \item We wish to utilise fast aligned stores and loads.
-  \item Maximal utilisation of the SIMD extension is preferred. Even if the cost needed for data conversions exceeds actual performance gains.
-  \item These are part of our assignment.
+  \item Maximal utilisation of the SIMD extension is preferred, even if the cost needed for data conversions exceeds actual performance gains.
 \end{itemize}
 
 \subsubsection{Summary of our results}
 
-  As we have already stated, we show how graphs without control flow may be solved while utilising a SIMD extension on all data except for some epilogue (e.g. the last few rows of data which do not suffice to fill entire vector). 
+  As we have already stated, we show how graphs without control flow may be solved while utilising a SIMD extension on all data except for some epilogue (e.g. the last few rows of data which do not suffice to fill entire vector). This topic is discussed in more detail in Section \ref{sec:codegeneration}.
 
 
-  Regarding control flow, there is a problem of data ordering (i.e., requirement that all data should be processed and outputted in the original input order). This problem is discussed in chapters dedicated to control flow .  Furthermore, we discuss the problem of loops, which turns out to be more difficult than originally thought.  
+  Regarding control flow, there is a problem of data ordering (i.e., requirement that all data should be processed and outputted in the original input order). This problem is discussed in chapters dedicated to control flow (sections \ref{sec:crawler} and \ref{sec:unordered}).  Furthermore, we discuss the problem of loops, which turns out to be more difficult than originally expected (again, sections \ref{sec:crawler} and \ref{sec:unordered}).
 
 
 We show two different approaches to this problem - one which preserves the order of the data and one which does not. 
 
 
-  The first proposed solution, which preserves ordering, may possibly use SIMD instructions on all data in a pipeline without loops. This solution, unfortunately, relies on pull semantics, which allows processing of basic blocks without parallelism. Hence, we have almost no guarantee that SIMD instructions will be employed in runtime. Also, this solution does not work well with loops due to the ordering requirement. Loops can be employed only using the pull semantics, causing data to be processed in nonvectorized manner (in loops).
+  The first proposed solution (Section \ref{sec:crawler}), which preserves ordering, may possibly use SIMD instructions on all data in a network without loops. This solution, unfortunately, relies on pull semantics, which allows processing of basic blocks without parallelism. Hence, we have almost no guarantee that SIMD instructions will be employed in runtime. Also, this solution does not work well with loops due to the ordering requirement. Loops can be employed only using the pull semantics, causing data to be processed in non-vectorised manner (in loops).
 
 
-The second approach promises possibility of unordered solution of pipelines which contain only branching such that all data are processed by SIMD instructions only (except for some epilogues and some split and merge internals). We show that loops can be added to this solution with some memory-consumption penalty without loss of parallel processing. This solution, unfortunately, relies on the ability of deciding whether two conditions are equivalent, which is something we are at the very least not able to verify in some cases since this guarantee may lay in effects. Still, implementation of this solution may be possible with some heuristics on general graphs and is possible with some additional restrictions on form of control flow present in input.
+The second approach (Section \ref{sec:unordered}) promises a possibility of an unordered solution of networks which contain only branching such that all data are processed by SIMD instructions only (except for some epilogues and some split and merge internals). We show that loops can be added to this solution with some memory-consumption penalty without loss of parallel processing. This solution, unfortunately, relies on the ability of deciding whether two conditions are equivalent, which is something we are at the very least not able to verify in some cases since this guarantee may lay in effects. Still, implementation of this solution may be possible with some heuristics on general graphs and is possible with some additional restrictions on form of control flow present in input.
 
 
-  In the analytical part of this work we implement the mentioned framework. Our implementation is general with respect to SIMD extension, programming language and target environment --- it may also be seen as a highly sophisticated text processing environment.
+  We implement a general framework designed for the introduced task. Our implementation is designed to be easily extensible and also to be general with respect to SIMD extension, programming language and target environment --- it may also be seen as a highly sophisticated text processing environment.  
 
+We implement the basic SIMD code generator and also all graph transformations needed for the ordered solution of control flow. Furthermore, we implement a generic set of macros which implements a register-allocated buffer and use these macros for implementation of generic split and merge instructions. Using these, we implement a showcase of the first solution which can handle branching. Our solution has significant overhead on control flow instructions, but that has been expected. There is a room for improvement, but the amount of engineering efforts needed for full and optimal implementation greatly exceeds the scope of this work.
+  
+  Besides the actual framework, we provide an example instruction table for the Intel Streaming SIMD Extension (SSE) in version 4.2. This instruction set contains all standard operators of the C language implemented for variety of data types (8-64 bit signed and unsigned integers, bools, floats and doubles). This table, although being thoroughly tested using a test-graph generator tailored for this purpose, is not guaranteed to be bug-free due to its vast scope. 
 
-Besides the actual framework, we provide an example instruction table for the Intel Streaming SIMD Extension (SSE) in version 4.2. This instruction set contains all standard operators of the C language implemented for variety of data types (8-64 bit signed and unsigned integers, booleans, floats and doubles). This table, although being thoroughly tested, is not guaranteed to be bug-free due to its vast scope. Also, we implement all graph transformations needed for the ordered solution of control flow. Furthermore, we implement a generic set of macros which implement a register-allocated buffer and use these macros for implementation of generic split and merge instructions. Using these, we implement showcase of the first solution which is capable of handling branching. Our solution has significant overhead on control flow instructions, but that was expected. There are reserves for improvement, but the amount of engineering effort needed for full and optimal implementation greatly exceeds the scope of this work.
+\pagebreak
 
-\section{Note on paper structure}
+\section{Note on thesis structure}
 
-The rest of this thesis is organized as follows:
+The rest of this thesis is organised as follows:
 \begin{itemize}
-  \item Chapter \ref{ch:analysis} begins by introduction of formal task assignment. Then follows section \ref{sec:simplegensec} which deals with the simple case of pipelines without any control flow. Section \ref{sec:analysis} discusses the problem of control flow in-depth.
-  \item Chapter \ref{ch:implementation} introduces architecture of our framework on high level of abstraction, explains its basic working principles and mentions concrete algorithms which were employed.
-  \item Chapter \ref{ch:faq} describes technical details of the implementation, APIs, input file formats and exact semantics of their fields
-  \item Chapter \ref{ch:sse} provides a brief introduction to the SSE extension and explains how is the provided example SSE instruction set built.
+  \item Chapter \ref{ch:analysis} begins by formal introduction of the problem. Then Section \ref{sec:simplegensec} follows and deals with the simple case of networks without any control flow. Section \ref{sec:analysis} discusses the problem of control flow in-depth.
+  \item Chapter \ref{ch:implementation} introduces the architecture of our framework on high level of abstraction, explains its basic working principles and mentions concrete algorithms which were employed.
+  \item Chapter \ref{ch:faq} describes technical details of the implementation, APIs, input file formats and exact semantics of their fields.
+  \item Chapter \ref{ch:sse} provides a brief introduction to the SSE extension and explains how the provided example SSE instruction set is built.
+  \item Chapter \ref{ch:conc} summarises our results in concrete context of the previous chapters.
 \end{itemize}
 
 

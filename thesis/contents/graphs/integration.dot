@@ -1,28 +1,43 @@
 digraph G{
-#horizontalLinear
 #verticalLinear
-#height=200
+#height=280
 #include
-  source[label="source code"];
-  parallax[label="specialized software"];
-  ctb[label="our framework"];
-  g[label="graphs",shape="ellipse"];
-  g2[label="control graph",shape="ellipse"];
-  i[label="description of#newlineinstructions",shape="ellipse"];
-  a[label="C code of boxes",shape="ellipse"];
-  b[label="C code",shape="ellipse"];
-  e[label="executable files",shape="ellipse"];
-  p[label="distributed environment",shape="ellipse"];
-  compiler[label="C compiler"]
 
-  source -> parallax -> g -> ctb;
+
+  subgraph cluster_j {
+    graph[style=invis];
+    rankdir=TB;
+    g2[label="control graph",shape="ellipse"];
+  };
+
+  subgraph cluster_h {
+    graph[style=invis];
+    rankdir=TB;
+    e[label="binary modules",shape="ellipse"];
+    a[label="C code of boxes",shape="ellipse"];
+    ctb[label="box generator"];
+    g[label="graphs",shape="ellipse"];
+    splitter[label="graph splitter"];
+    generator[label="graph generator"];
+    source[label="source code",shape="ellipse"];
+    p[label="generic runtime code",shape="ellipse"];
+    compiler[label="C compiler"];
+    source -> generator -> splitter -> g -> ctb -> a -> compiler -> e -> p;
+  };
+
+  subgraph cluster_i {
+    graph[style=invis];
+    rankdir=TB;
+    i[label="description of#newlineinstructions",shape="ellipse"];
+    wrapper[label="interface wrapper",shape="ellipse"];
+    lib[label="library for distributed#newlinedata processing",shape="ellipse"];
+    dm0[style=invis];
+    dm1[style=invis];
+    i->dm0->wrapper->dm1->lib[style=invis];
+  };
+
   i -> ctb;
-  ctb -> a;
-  parallax -> b;
-  a -> compiler;
-  b -> compiler;
-  compiler -> e;
-  i -> g [style=invis];
-  e -> p;
-  parallax -> g2 -> p;
+  wrapper->compiler;
+  lib->p;
+  splitter -> g2 -> p;
 }

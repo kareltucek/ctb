@@ -1,27 +1,16 @@
 \label{sec:formats}
 
-Our basic input method is input in form of xml files. Besides xml file, we implement also a plain text input interface for instruction tables since this flat files turned out to be much easier to create. 
+Our basic input method is input in form of xml files. Besides xml file, we implement also a plain text input interface for instruction tables since flat files turned out to be much easier to create. 
 
 Regarding output methods, our framework creates neither graphs nor instruction tables, so we do not have any motivation to provide any implicit output interface. All output interfaces we do implement we implement for sake of development convenience.
 
 \subsection{XML}
 
-We use standard XML format, as parsed by the TinyXML2 library. Any field of any structure may be represented either by attribute or by a separate child element. Of course, fields which are present in multiple instances have to be present as child elements.
+We use standard XML format, as parsed by the TinyXML2 library. Any field of any structure may be represented either by an attribute or by a separate child element. Of course, the fields which are present in multiple instances have to be present as child elements.
 
-The structure is described by the following tree. The attributes which are not supposed to be present in multiple instances are specified as the lists following their parent elements.
+The structure is described by figures \ref{fig:xmlgraph} and \ref{fig:xmlinstab}. The attributes which are not supposed to be present in multiple instances are specified as the lists following their parent elements.
 
-
-Graph:
-\dirtree{% 
-.1 graph\_list.
-.2 graph.
-.3 vertex - params, vid, opid.
-.3 edge - from, to, from\_pos, to\_pos.
-}
-
-\pagebreak
-
-Instruction table:
+\mybeginfig
 \dirtree{%
 .1 root.
 .2 instruction\_list.
@@ -35,10 +24,20 @@ Instruction table:
 .4 type\_version - width, bitwidth, code, note.
 .4 type\_conversion  - width\_in, width\_out, code1, code2, \\ code\_custom, code\_generic, note, tags, rating.
 }
+\myendfig{xmlinstab}{The structure of xml instruction table files.}
+
+\mybeginfig
+\dirtree{% 
+.1 graph\_list.
+.2 graph.
+.3 vertex - params, vid, opid.
+.3 edge - from, to, from\_pos, to\_pos.
+}
+\myendfig{xmlgraph}{The structure of xml graph files.}
 
 The following structures are expected to be present at most once: \\ \centerline{\ttt{root, instruction\_list, expansion\_list, type\_list, graph\_list, graph}}
 
-The exact meaning of fields will be given in one of the following subsections.
+The exact meaning of the fields will be given in one of the following subsections.
 
 \subsection{CSV}
 
@@ -51,7 +50,7 @@ Our format has the following general properties:
   \item Our use of this format has the following semantics:
   \begin{itemize}
 	\item Fields which represent lists are comma separated.
-	\item This file is preprocessed on load by a text preprocessor\footnote{An instance of the Writer class parametrized by some suitable parameters.} when the file is loaded.
+	\item This file is preprocessed on load by a text preprocessor\footnote{An instance of the Writer class parametrised by some suitable parameters.} when the file is loaded.
   \end{itemize}
 \end{itemize}
 
@@ -59,14 +58,15 @@ Although we use the term CSV, the reality is that our flat plain-text format has
 
 The reason why we have decided to add a flat representation of instruction tables is that flat plain-text formats are much easier to process by general text-processing tools. Specifically, our problem is that a single instruction table may contain thousands of instructions, which typically share some patterns in some fields and mainly the fact that someone has to write them. For this reason, we have decided to create a flat format which would be preprocessed by our own custom preprocessor. Specifically the cartesian expansion was designed specially for the purpose of simple description of instructions.
 
-This approach, of course, presents one difficulty --- we wish to encode a tree structure into a flat file. We flatten the structure by using one line per every leaf of the tree while specifying significant information of the entire path. This way, some information may be present duplicitly. In reality, we often wish to build instruction tables bottom-up, using a single scheme per multiple leafs, therefore generating multiple instructions of (typically) \emph{different} operations. 
+This approach, of course, presents one difficulty --- we wish to encode a tree structure into a flat file. We flatten the structure by using one line per every leaf of the tree while specifying significant information of the entire path. This way, some information may be present duplicitly. In reality, we often build instruction tables bottom-up, using a single scheme per multiple leaf instructions, therefore generating multiple instructions of (typically) \emph{different} operations by one line. 
 
-The motivation presented in the previous paragraph may need some example. Imagine that we want to generate multiple vectorized versions of the bitwise \emph{or} operation. We will most likely use the same instruction pattern (the same intrinsic function) and just specify it for all integer types which we have defined (signed and unsigned integers of varying bit lengths). This way, we generate one instruction per every integer \emph{or} operation. Note that these are different operations since they operate on different types.
+The motivation presented in the previous paragraph may need an example. Imagine that we want to generate multiple vectorised versions of the bitwise \emph{or} operation. We will most likely use the same instruction pattern (the same intrinsic function) and just specify it for all integer types which we have defined (signed and unsigned integers of varying bit lengths). This way, we generate one instruction per every integer \emph{or} operation. Note that these are different operations since they operate on different types.
 
-We distinguish multiple different types of lines. We do so by the second column, which contains type of record. The first column serves for user-defined note, which serves for user's orientation in the file, development notes, debug...
+We distinguish multiple different types of lines. We do so by the second column, which contains a type of record. The first column serves for user-defined note, which serves for user's orientation in the file, development notes, debug, etc..
 
-We show the structure by the following tree. In this tree, every path between the root node and any leaf list specifies one possible structure of a line. The fields found on this path must be present in their order.
+We show the structure in Figure \ref{fig:csvtab}. In this tree, every path between the root node and any leaf list specifies one possible structure of a line. The fields found on this path must be present in their order.
 
+\mybeginfig
 \dirtree{%
 .1 note.
 .2 type=instruction.
@@ -78,44 +78,45 @@ We show the structure by the following tree. In this tree, every path between th
 .2 type=type\_conversion.
 .3 \trm{\emph{(logical type definition)}} type\_id \\ \trm{\emph{(conversion definition)}} width\_in, width\_out, code\_1, \\ code\_2, code\_custom, code\_generic, tags, rating.
 }
+\myendfig{csvtab}{The structure of csv-formatted instruction tables.}
 
 \subsection{Detailed field semantics}
 
 \subsubsection{Common}
 \begin{description}
-  \item Identifiers - identifiers are supposed to be strings consisting of alphanumeric characters and underscores. This is not a restriction, just recommendation. Note that identifiers starting by an underscore are reserved for internal use.
+  \item Identifiers - identifiers are supposed to be strings consisting of alphanumeric characters and underscores. This is not a restriction, just a recommendation. Note that the identifiers starting by an underscore are reserved for internal use.
   \item \ttt{note} is an arbitrary user-defined string. This is not used by the framework at all, but is preserved for potential debug purposes or for export.
   \item \ttt{tags} is a comma separated list of user-defined strings. These serve for restriction of the instruction set. These flags may be restricted through the command line interface or directly from an alias environment.
-  \item \ttt{rating} is an integer which allows definition of precedence. Always the instruction with highest rating is used if there are more feasible instructions for the required width.
+  \item \ttt{rating} is an integer which allows definition of precedence. The instruction with the highest rating is used if there are more feasible instructions for the required width.
 \end{description}
 
 \subsubsection{Operations and instructions}
   \begin{description}
-    \item \ttt{flags} -- a comma separeted list consisting of flags from the following list. These identify special types of operations. These nodes may be treated specially by graph transformations and also affect how the default \ttt{code} field is used.  
+    \item \ttt{flags} -- a comma separated list consisting of flags from the following list. These identify special types of operations. These nodes may be treated specially by graph transformations and also affect how the default \ttt{code} field is used.  
   \begin{description}
-    \item \ttt{input} -- an operation which acts as a data source. Control flow operations, e.g., operations which carry data via effects over layer 1 or 2 edges are not supposed to be marked as \ttt{input} or \ttt{output}, but as \ttt{effectinput} or \ttt{effectinput}. Type inference is not applied over layer 1 or 2 edges.
+    \item \ttt{input} -- an operation which acts as a data source. Control flow operations, e.g., operations which carry data via effects over layer 1 or 2 edges are not supposed to be marked as \ttt{input} or \ttt{output}, but as \ttt{effectinput} or \ttt{effectoutput}. Type inference is not applied over layer 1 or 2 edges.
     \item \ttt{output} -- an operation which acts as a data sink. Analogical to \ttt{input}.
-    \item \ttt{effectoutput} -- an operation which is similar to output but serve rather for effectfull transport of data. In other words, operations flagged by this flag are not provided with any target storage. These operations may serve for storing values into some temporary place. Also, this flag indicates that output edges should not be type checked (these edges are created by graph transformations, so no check should be necessary). This means that the \ttt{out\_types} field is ignored. Both \ttt{effectoutput} and \ttt{effectinput} are handled as \ttt{input} and \ttt{output} operations during code generation. However, neither \ttt{effectinput} nor \ttt{effectoutput} operations are marked as inputs and outputs for the purpose of graph transformations, i.e., these edges are not present in lists containing input and output nodes.
+    \item \ttt{effectoutput} -- an operation which is similar to output but serves rather for an effectful transport of data. In other words, operations flagged by this flag are not provided with any target storage. These operations may serve for storing values into some temporary place. Also, this flag indicates that output edges should not be type checked (these edges are created by graph transformations, so no check should be necessary). This means that the \ttt{out\_types} field is ignored. Both \ttt{effectoutput} and \ttt{effectinput} are handled as \ttt{input} and \ttt{output} operations during code generation. However, neither \ttt{effectinput} nor \ttt{effectoutput} operations are marked as inputs and outputs for the purpose of graph transformations, i.e., these edges are not present in lists containing input and output nodes.
     \item \ttt{effectinput} -- an operation analogical to \ttt{effectoutput}. 
     \item \ttt{debug} -- an operation which acts as a special data sink for the \ttt{adddebug} command. These nodes have to be specified for all types and all widths if \ttt{adddebug} is to be used. Their type is chosen automatically if they are added via the \ttt{adddebug} command.
-    \item \ttt{noop} -- a special operation which stands for no operation. Such operation is completely ignored. No type checks, no generation, no structure checks. The only requirement is that these nodes have no output edges. This mechanism may be used to bind multiple nodes into the same component. There is one operation of this type automatically generated - its identifier is \ttt{\#noop}. The user should never need to use this flag.
-    \item \ttt{expansion} -- an internal operation type which denotes operation which stand for expansions. The user should never need to use this flag.
+    \item \ttt{noop} -- a special operation which stands for no operation. Such operation is completely ignored. No type checks, no generation, no structure checks. The only requirement is that these nodes have no output edges. This mechanism may be used to bind multiple nodes into the same component. One operation of this type is always (automatically) generated - its identifier is \ttt{\_noop}. The user should never need to use this flag.
+    \item \ttt{expansion} -- an internal operation type which denotes an operation which stands for expansions. The user should never need to use this flag.
   \end{description}
   \item\ttt{opid} -- operation identifier.
   \item\ttt{out\_type} -- \ttt{type\_id} of the output type. The types of operations are strictly checked upon generation with respect to 0 layer edges. Only the first type is considered during generation. Output edges of operations with \ttt{output} flag are checked to be empty regardless of this value. Output types are also not checked for nodes flagged by \ttt{effectoutput}.
   \item\ttt{in\_types} -- list of \ttt{type\_id}s. Type checking conditions are analogical to \ttt{out\_type}. Input types are not checked for nodes flagged by \ttt{effectinput}.
-\item\ttt{width\_in} -- input width of a type conversion (i.e. number of independent data rows its instruction operates on).
+\item\ttt{width\_in} -- input width of a type conversion (i.e., the number of independent data rows processed by a single instruction).
 \item\ttt{widths\_in} -- comma separated list of input widths of an instruction. Analogical to \ttt{width\_in}.
-\item\ttt{width\_out} -- output width of an instruction. Every instruction has to have some width defined (otherwise some control flow nodes would be without any width specification). For this reason, the \ttt{width\_out} serves as the primary width identifier and is always legal. This field may be omitted for output nodes --- in that case the value is determined as maximum of the \ttt{widths\_in} list. In most cases all values of \ttt{widths\_in} and \ttt{width\_out} are supposed to be equal for instructions (not for width conversions). The fields have to be specified because there may exist operations which have properties of both data processing operations and of width conversions.
-  \item\ttt{code} -- an instruction pattern for the instruction. This field is used with respect to the node type, which means that it is substitued into one of three predefined patterns. For instance \ttt{code} may be \ttt{"\$arg1 + \$arg2"}. Note that dollar signs must be doubled in case of the csv format since the csv loader expands single-dollar expressions. Also note that argument expressions are indexed from 1 while edge positions are indexed from 0.
-  \item\ttt{code\_custom} -- taking the format of \ttt{"\textless identifier\textgreater:} \ttt{\textless instruction pattern \textgreater"}. The pattern will be printed into a layer of writer which is identified by \ttt{<identifier>} --- for this reason it may be present multiple times. Custom code does not use a predefined code template, so full code must be present. For example \ttt{"\$type \$name = \$arg1 + \$arg2;"}.
+\item\ttt{width\_out} -- output width of an instruction. Every instruction has to have some width defined (otherwise some control flow nodes would be without any width specification). For this reason, the \ttt{width\_out} serves as the primary width identifier and is always legal. This field may be omitted for output nodes --- in that case the value is determined as maximum of the \ttt{widths\_in} list. In most cases, all values of \ttt{widths\_in} and \ttt{width\_out} are supposed to be equal for instructions (not for width conversions). The fields have to be specified because operationsmay exist which have properties of both data processing operations and of width conversions.
+  \item\ttt{code} -- an instruction pattern for the instruction. This field is used with respect to the node type, which means that it is substituted into one of three predefined patterns. For instance \ttt{code} may be \ttt{"\$arg1 + \$arg2"}. Note that the dollar signs must be doubled in case of the csv format since the csv loader expands single-dollar expressions. Also note that argument expressions are indexed from 1 while edge positions are indexed from 0.
+  \item\ttt{code\_custom} -- taking the format of \ttt{"\textless identifier\textgreater:} \ttt{\textless instruction pattern \textgreater"}. The pattern will be printed into a layer of writer which is identified by \ttt{<identifier>} --- for this reason it may be present multiple times. Custom code does not use a predefined code template, so a full code must be present. For example \ttt{"\$type \$name = \$arg1 + \$arg2;"}.
 \end{description}
 
 \subsubsection{Types, type versions}
 \begin{description}
         \item\ttt{type\_id} -- an identifier of a type.
         \item\ttt{width} -- width operations which operate on this type version. Or length of this vector.
-        \item\ttt{bitwidth} -- hardware bit length of this type per one record. This allows nontrivial extension-specific computations in instruction patterns. This may be 1 or 8 for a boolean type independently of the \ttt{width} argument.
+        \item\ttt{bitwidth} -- a hardware bit length of this type per one record. This allows nontrivial extension-specific computations in instruction patterns. This may be 1 or 8 for a Boolean type independently of the \ttt{width} argument.
         \item\ttt{code} instruction pattern for this type. For instance \ttt{"int"} for an integer.
 \end{description}
 
@@ -124,45 +125,45 @@ We show the structure by the following tree. In this tree, every path between th
 \begin{description}
           \item\ttt{width\_in} -- width of input vectors.
           \item\ttt{width\_out} -- width of output vectors.
-          \item\ttt{code1, code2} if $width\_in/width\_out = 2$, this two field act as selection expressions of the first and second half of the input vector. If $width\_out/width\_in = 2$, then the second field is ignored and the first one acts as a merge expression merging two vectors into one. We show this in example:
+          \item\ttt{code1, code2} if $\mf{width\_in}/\mf{width\_out} = 2$, these two fields act as selection expressions of the first and second half of the input vector. If $\mf{width\_out}/\mf{width\_in} = 2$, then the second field is ignored and the first one acts as a merge expression merging two vectors into one. We show this in Figures \ref{fig:inspast0tex} and  \ref{fig:inspast1tex}:
 
-\mybeginfig
+\mybeginfigindent
 \begin{code}
 width_in=1
 width_out=2
 code1="$arg0 | ($arg1 << 16);"
 \end{code}
-\myendfig{inspast0tex}{Width conversion corresponding to line 3 of figure \ref{fig:vectorizedfragment}}
+\myendfig{inspast0tex}{A width conversion corresponding to line 3 of Figure \ref{fig:vectorisedfragment}.}
 
-\mybeginfig
+\mybeginfigindent
 \begin{code}
 width_in=2
 width_out=1
 code1="$arg1 & 0xFFFF"
 code2="($arg1 & 0xFFFF0000) >> 16"
 \end{code}
-\myendfig{inspast0tex}{Width conversion corresponding to lines 5 and 6 of figure \ref{fig:vectorizedfragment}}
-          \item\ttt{code\_custom} this is a nonmanaged version of the field. This means that all names, types and conversions have to be present in this single field, if this field is to be used on its own.
-          \item\ttt{code\_generic} allows iterated select or insert operation. This means that we may use this field if we can describe all expressions by the same pattern. For instance, if we want to join four elements into a single vector, we may declare the target variable by the \ttt{code\_custom} field and then write a generic select which will modify the variable once per every call.  For this reason, the \ttt{code\_generic} is guaranteed to be generated after \ttt{code\_custom}. This field is nonmanaged (i.e., you have to provide full expression including possibly needed declarations).
+\myendfig{inspast1tex}{A width conversion corresponding to lines 5 and 6 of Figure \ref{fig:vectorisedfragment}.}
+          \item\ttt{code\_custom} is a non-managed version of the field. This means that all names, types and conversions have to be present in this single field, if this field is to be used on its own.
+          \item\ttt{code\_generic} allows iterated select or insert operation. This means that we may use this field if we can describe all expressions by the same pattern. For instance, if we want to join four elements into a single vector, we may declare the target variable by the \ttt{code\_custom} field and then write a generic select which will modify the variable once per every call.  For this reason, the \ttt{code\_generic} is guaranteed to be generated after \ttt{code\_custom}. This field is non-managed (i.e., you have to provide a full expression including all possibly needed declarations, etc.).
 
-\mybeginfig
+\mybeginfigindent
 \begin{code}
 code_custom="$type $name[4];"
 code_generic="$name[$vindex] = $arg;"
 \end{code}
-\myendfig{instex}{Example of use of the \ttt{code\_generic} field showing join of four values into one vector.}
+\myendfig{instex}{An example of use of the \ttt{code\_generic} field showing join of four values into one vector.}
 
 \end{description}
 
 \subsubsection{Graph fields}
 \begin{description}
-\item\ttt{params} -- comma separated list of assigment such as \ttt{"var1=dog,var2=cat"}. Hereby specified values are available during code generation. In other words these values may be used in instruction patterns.
+\item\ttt{params} -- comma separated list of assignment such as \ttt{"var1=dog,var2=cat"}. Hereby specified values are available during code generation. In other words these values may be used in instruction patterns.
 \item\ttt{vid} -- identifier of a vertex.
 \item\ttt{opid} -- operation identifier.
 \item\ttt{from} -- vertex id of an edge.
 \item\ttt{to} -- vertex id of an edge.
-\item\ttt{to\_pos} -- the $to$ annotation identifying arguments of operations. This is indexed from zero.
-\item\ttt{from\_pos} -- the $from$ annotation.
+\item\ttt{to\_pos} -- the $\mf{to}$ annotation identifying arguments of operations. This is indexed from zero.
+\item\ttt{from\_pos} -- the $\mf{from}$ annotation.
 \end{description}
 
 \subsection{Instruction pattern fields semantics}
@@ -173,16 +174,16 @@ This subsection describes aliases provided by the generator, i.e., `variables' w
 \subsubsection{Generator-specific aliases}
 
 \begin{description}
-\item\ttt{type} -- pattern of the type of the result for the correct width.
-\item\ttt{name} -- name generated for the variable.
+\item\ttt{type} -- a pattern of the type of the result for the correct width.
+\item\ttt{name} -- a name generated for the variable.
 \item\ttt{name1, name2...} -- names generated for the variables in the \ttt{code\_custom} field of split operation. These are also generated for standard instructions if the widths are not equal.
 \item\ttt{classid} -- index of the current partition. These are in topological order with respect to the graph structure.
 \item\ttt{basename}  -- name of the first variable in vector. 
 \item\ttt{widthin, widthout}  -- the corresponding vector widths.
-\item\ttt{packsize}  -- the number of values processed in one iteration of the vectorized body. Also called $w$ in this text.
+\item\ttt{packsize}  -- the number of values processed in one iteration of the vectorised body. Also called $w$ in this text.
 \item\ttt{operation} -- the instruction pattern which is being processed.
 \item\ttt{arg1, arg2, arg3...} -- arguments of the operation in question. These are names memoized from some previous iteration of the generator, generated either from an instruction or from a width conversion.
-\item\ttt{arg1n1, arg1n2...} -- allow access to the name1, name2, etc. of arguments in case of instruction with different widths.
+\item\ttt{arg1n1, arg1n2...} -- allow access to the name1, name2, etc. of arguments in case of instructions with different widths.
 \item\ttt{iindex} -- input index -- index denoting position of the first data row of the vector in the currently processed pack of data. 
 
   For instance, for standard instruction of width 4 and pack size 16 the pattern will be expanded four times with values  0, 4, 8 and 12.
@@ -198,8 +199,9 @@ This value is meant for use with generic joins and splits. For instance, assume 
 
 \subsubsection{Other default aliases}
 
-The following patterns are specified as constants in the aliasenv of the generator as default C-specific patterns. Since these are language specific, one may need to override them. This may be done by simple specification of these in your custom alias environment. Those are exactly those patterns which are chosen based on the \ttt{flags} field and affect the \ttt{code} field.
+The following patterns are specified as constants in the aliasenv of the generator as default C-specific patterns. Since these are language specific, one may need to override them. This may be done by their specification a custom alias environment. Those are exactly the patterns which are chosen based on the \ttt{flags} field and affect the (only) \ttt{code} field (and \ttt{code1}, \ttt{code2}).
 
+\mybeginfig
 \begin{description}
 \item \ttt{"\$innercode" -> "\$type \$name = (\$type)(\$operation);"}
 \item \ttt{"\$declcode" -> "\$type \$name;"}
@@ -207,8 +209,9 @@ The following patterns are specified as constants in the aliasenv of the generat
 \item \ttt{"\$inputcode" -> "\$type \$name = (\$type)(\$operation);"}
 \item \ttt{"\$conversioncode" -> "\$type \$name = (\$type)(\$operation);"}
 \end{description}
+\myendfig{fasdfasdewr}{Aliases defined as default patterns in the generator environment.}
 
-We also propose use of the following three aliases which lay entirely in user space.
+We also propose the use of the following three aliases which lay entirely in user space.
 
 \begin{description}
   \item \ttt{ioindex} -- this field is meant to identify input or output data for the purpose of effects. We propose this index to be set as a parameter in vertices of input and output operations. We also propose this index to be set to a numeric value so that input and output data streams may be processed in both dynamic and static manner by a generic algorithm.

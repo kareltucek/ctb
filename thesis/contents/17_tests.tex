@@ -1,6 +1,6 @@
 \label{sec:testing}
-\subsection*{Error hadling}
-All abnormalities that are encountered are reported either as errors or as warnings. Errors are thrown in form of a pair of a string specifying what happened and a bool specifying whether it was critical. These errors are caught in multiple \ttt{try/catch} handlers and rethrown with more detailed context until the ctb class catches the error and writes it out. This way, a stack-like trace of ctb actions is printed with relevant context.  Warnings are printed directly into the standard error stream. If more detailed information about such warning is needed, ctb provides the \ttt{-w} option which makes ctb to process all warnings as errors. 
+\subsection*{Error handling}
+All abnormalities that are encountered are reported either as errors or as warnings. Errors are thrown in form of a pair of a string and a bool. The former specifying what happened and a the latter specifying whether it was critical. These errors are caught in multiple \ttt{try/catch} handlers and re-thrown with more detailed context until the ctb class catches the error and writes it out. This way, a stack-like trace of ctb actions is printed with relevant context.  Warnings are printed directly into the standard error stream. If more detailed information about such a warning is needed, ctb provides the \ttt{-w} option which makes ctb to process all warnings as errors (implying additional stack information). 
 
 Graph visualisation is supposed to be used for debug. All generator related errors are accompanied by visualisation of the graph in question unless the \ttt{-g} switch is used. Visualisation may also be invoked by the \ttt{visualise} command. The visualisation shows vertex names, operation identifiers, \ttt{to\_pos} and \ttt{from\_pos} annotations, order of edges (if assigned) and inferred types of edges.
 
@@ -10,9 +10,9 @@ Graph visualisation is supposed to be used for debug. All generator related erro
 Every unit of ctb contains a static \ttt{self\_test} method. This method contains some scenarios which are supposed to ensure that everything works properly. All these methods are included by the \ttt{test.cpp} file and compiled as a separate executable.
 
 \subsubsection{Test scenarios}
-We also provide a number of scenarios which should ensure that the composed whole works as expected. Some of these scenarios test graph transformations, some test alias environments, some test implementation of macros, some test instruction tables...
+We also provide a number of scenarios which should ensure that the composed whole works as expected. Some of these scenarios test graph transformations, some test alias environments, some test implementation of macros, some test instruction tables, etc..
 
-These tests are usually specified by means of a \ttt{program} file. Results are usually checked agains remembered outputs which were verified by a human being. Since order of some iteration methods of the C++ language is not stable across different compilers, some outputs may differ.
+These tests are usually specified by means of a \ttt{program} file. Results are usually checked against remembered outputs which were verified by a human being. Since the order of some iteration methods of the C++ language is not stable across different compilers, some outputs may differ.
 
 The test directories also serve as examples of usage of ctb.
 
@@ -27,15 +27,15 @@ For the purpose of testing of instruction tables, we provide the \ttt{testgraph}
 
 When writing a new instruction table, we usually wish to ensure two things:
 \begin{itemize}
-  \item Syntactical correctness of regular instructions.
-  \item Semantical correctness of regular instructions.
+  \item The syntactical correctness of regular instructions.
+  `item The emantical correctness of regular instructions.
 \end{itemize}
 
-Syntactical correctness may be ensured by means of compilation of code generated from the testing graph. However, experience shows that these graphs are of enormous size, and therefore their compilation may take very long time. As a solution, we provide a special option \ttt{-c}, which makes the compiler output \emph{only} the first instruction per every vertex. For all other instructions, only a dummy variable is declared.
+Syntactical correctness may be ensured by means of a compilation of a code generated from the testing graph. However, experience shows that these graphs are of enormous size, and therefore their compilation may take very long time. As a solution, we provide a special option \ttt{-c}, which makes the compiler output \emph{only} the first instruction per every vertex. For all other instructions, only a dummy variable is declared.
 
-For testing of semantical correctness of instruction tables, we have implemented the `simu' environment. This environment outputs a fragment of code which constructs an input using a pseudorandom generator. \footnote{We use the mathematical model as described in \cite{generator}.} When the resulting c file is compiled and run, it repeatedly calls functions realizing the graph by different widths and checks that all results are equal to the width 1 results. If a collision is encountered, the problematic fragment is invoked again with a break-point-like indicator set. This causes that detailed log is generated during the iteration which observed wrong behaviour. This log contains contents of sse registers generated via \emph{debug} nodes.
+For testing of the semantic correctness of instruction tables, we have implemented the `simu' environment. This environment outputs a fragment of code which constructs an input using a pseudo-random generator.\footnote{We use the mathematical model described in \cite{generator}.} When the resulting c file is compiled and run, it repeatedly calls functions realising the graph by different widths and checks that all results are equal to the width 1 results. If a collision is encountered, the problematic fragment is invoked again with a break-point-like indicator set. This causes that a detailed log is generated during the iteration which observed the wrong behaviour. This log contains contents of sse registers generated via \emph{debug} nodes.
 
-The `simu' environment is supposed to be used with the \ttt{testgraph} command (mentioned above) to ensure correctness of the entire instruction set. Note that this scheme does not automatically ensure testing of all instructions and width conversions --- the test needs to be performed with different widths and tags to ensure that all conversions and instructions get eventually generated. Also, input and output operations have to be available for all data types.
+The `simu' environment is supposed to be used with the a graph generated by the \ttt{testgraph} command (mentioned above) to ensure correctness of the entire instruction set. Note that this scheme does not automatically ensure testing of all instructions and width conversions --- the test needs to be performed with different widths and tags to ensure that all conversions and instructions get eventually generated. Also, input and output operations have to be available for all data types. This functionality resides in \ttt{loader\_test.h} and \ttt{aliasenv\_simu.h}. 
 
 We do not cover testing of special control-flow-related instructions since these require tailored testing scenarios.
 
@@ -46,21 +46,22 @@ Test directories of our framework are numbered. The following scenarios may be f
 
 \begin{enumerate}
   \item[1] consists of the unit tests and some simple hard-coded generation. The input for this generation is based on sse but is not meant to provide functional output. This results are produced by the `simple' environment.
-  \item[2,3] test that loads end exports of tables work properly.
-  \item[4,5] are `simu' environment tests. The 4 is a full test of the provided SSE table. The 5 shows the same functionality on a simple graph and unlike the 4th test is a part of the basic test chain. See the previous \emph{Instruction table testing} subsection for more details.
-  \item[6] provides an output in the form of bobox boxes. This environment shows full implementation of preloads with respect to bobox semantics of envelope usage.
+  \item[2, 3] test that loads and exports of tables work properly.
+  \item[4, 5] are `simu' environment tests. Test 4 is a full test of the provided SSE table. Test 5 shows the same functionality on a simple graph and, unlike the test 4, is a part of the basic test chain. See the previous \emph{Instruction table testing} subsection for more details.
+  \item[6] provides an output in the form of Bobox boxes. This environment shows full implementation of preloads with respect to Bobox semantics of envelope usage.
   \item[7, 8, 11] test the cycle removal algorithm, node expansion and type inference. These tests provide a 'visual' target, which shows what is going on (\ttt{>make visual}).
   \item[10] tests functionality of provided SSE buffer macros.
-  \item[11] shows functionality of non-vectorized control flow on a simple C table with hard-coded input-output operations. This scenario uses the buffer macros with simple, nonvectorized variables.
-  \item[12] shows the same functionality with fully vectorized bodies but without full employment of sse related capabilities of the buffer.
-  \item[13] shows the same functionality, but uses fully vectorized buffers and the actual SSE table.
+  \item[11] shows functionality of non-vectorised control flow on a simple C table with hard-coded input-output operations. This scenario uses the buffer macros with simple, non-vectorised variables.
+  \item[12] shows the same functionality as test 11 with fully vectorised bodies but without full employment of sse related capabilities of the buffer.
+  \item[13] shows the same functionality as tests 11 and 12, but uses fully vectorised buffers and the actual SSE table.
   \item[14] tests that type inference works with incomplete type information and that loops do not cause any problems.
   \item[15] tests that less common width conversion patterns work as expected.
   \item[16] is a matrix multiplication benchmark.
   \item[17] is a split instruction benchmark.
 \end{enumerate}
 
-The test 9 was meant to test the C preprocessor implementation of a SSE buffer. This implementation may be found in the \ttt{sse\_cf\_macros} directory. If the reader is interested in advanced usage of the C preprocessor, he is welcomed to look around. Macros for recursive computations were taken from \cite{cloak}.
+The test 9 was meant to test the C preprocessor implementation of a SSE buffer. This implementation may be found in the \ttt{sse\_cf\_macros} directory. If the reader is interested in advanced usage of the C preprocessor, he is welcome to look around. Macros for recursive computations were taken from \cite{cloak}.
 
-We should also warn that auxiliary files are often present duplicitly in test directories. Our reason for that is that we wish to minimize confusion caused by implicit linking.
+We should also warn that the auxiliary files are often present duplicitly in the test directories. Our reason for that is that we wish to minimise confusion caused by non-explicit linking.
 
+At this point, we would also like to remind the reader that most of these scenarios contain visual make targets as well as the \ttt{run.sh} script. 

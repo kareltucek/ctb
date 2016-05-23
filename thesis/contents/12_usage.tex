@@ -2,12 +2,12 @@ Our framework was developed under Linux and therefore it assumes standard Unix t
 
 \begin{itemize}
   \item C++11 compliant compiler. Tested compilers are GCC (4.9.3) and CLang (3.7.1).
-  \item TinyXML2 library 
-  \item Make (optional - for compilation of executables, testing, development)
-  \item Dot, gpicview (optional - for graph visualisation)
-  \item Standard shell tools (optional - for test scenarios and development) 
+  \item TinyXML2 library.
+  \item Make. (Optional - for compilation of executables, testing, development)
+  \item Dot, gpicview. (Optional - for graph visualisation.)
+  \item Standard shell tools. (Optional - for test scenarios and development.) 
   \item Functional bobox environment with aligned memory allocator (optional - for scenario 6)
-  \item CPU implementing SSE 4.2  (optional - for test scenarios which generate SSE instructions)
+  \item CPU implementing SSE 4.2. (Optional - for test scenarios which generate SSE instructions.)
 \end{itemize}
 
 The project may be built by make invoked from the root directory:
@@ -21,7 +21,7 @@ By default, make compiles the ctb executable and unit tests and runs basic test 
   \item[basictest] compiles and runs basic regress tests.
   \item[fulltest] runs full check of the sse instruction table and a test of bobox environment.
   \item[ctb] compiles the ctb executable.
-  \item[all] defaults to `ctb' and `basictest'
+  \item[all] defaults to `ctb' and `basictest'.
 \end{description}
 
 
@@ -30,7 +30,7 @@ Ctb may be used in three ways:
   \item As a separate executable (\ttt{ctb}) controlled by text commands. See the help (\ttt{ctb -h}) for list of identifiers identifying available environments and transformers.
   \item As a header C++11 library. In this case, the \ttt{"ctb.h"} file has to be included in the project. The \ttt{ctb::ctb} class serves as the library frontend. This frontend may be used in two ways, both of them requiring creation of a single object of the ctb instance:
   \begin{itemize}
-    \item using text commands - see the \ttt{int parse\_command(string)} method of the ctb class (in \ttt{ctb.h}.
+    \item using text commands - see the \ttt{int parse\_command(string)} method of the ctb class (in \ttt{ctb.h}).
     \item using raw templated calls to commands - see the rest of public methods defined in \ttt{ctb.h}.
   \end{itemize}
 \end{itemize}
@@ -40,7 +40,6 @@ Basic usage reference of the provided executable may be obtained by:
 > ctb -h
 \end{code}
 
-
 The text command controls of this library may be very easily interfaced by raw C commands, which should allow direct language-independent integration.
 
 The simplest way to invoke ctb is by:
@@ -48,9 +47,13 @@ The simplest way to invoke ctb is by:
 > ctb -f programme
 \end{code}
 
-Here \ttt{programme} is a text file containing a sequence of commands.
+Here \ttt{programme} is a text file containing a sequence of commands. Examples may be found in test scenarios.
 
-
+Use from some programming environment is meant to be done by means of creation of a single instance of the ctb class. For instance:
+\begin{code}
+ctb::ctb c;
+c.load_instab<xml_loader, ifstream>(ifstream("table.xml"));
+\end{code}
 
 
 

@@ -33,7 +33,9 @@
 
 %%% Macros for definitions, theorems, claims, examples, ... (requires amsthm package)
 
-\theoremstyle{plain}
+\declaretheoremstyle[bodyfont=\slshape,spaceabove=12pt]{mystyle}
+%headpunct={}
+\theoremstyle{mystyle}
 \newtheorem{thm}{Theorem}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[thm]{Lemma}
@@ -49,6 +51,8 @@
 \newtheorem*{rem}{Remark}
 \newtheorem*{cor}{Corollary}
 \newtheorem*{example}{Example}
+
+\newcommand{\mybeginfigindent}{\begin{figure}[H]\hspace*{5in}}
 
 \newcommand{\mybeginfigloose}{\begin{figure}[h]}
 \newcommand{\mybeginfig}{\begin{figure}[H]}
@@ -77,7 +81,13 @@
 %\newcommand{\algref}[1]{\begin{alg}[#1]\end{alg}}
 \newcommand{\algref}[1]{\subsubsection{#1}}
 
+\makeatletter
+\def\upcase{\expandafter\makeupcase}
+\def\makeupcase#1{\uppercase{#1}}
+
 \newcommand{\myexpr}[1]{ $ #1 $ }
+  %\newcommand{\mf}[1]{\bm{#1}} 
+  \newcommand{\mf}[1]{\mathit{\makeupcase#1}} 
 
 \newcommand{\allowpg}[1]{ \end{code}\ \begin{code} }
 
@@ -99,6 +109,7 @@
 %moje pridavky
 \newcommand{\graphplain}[1]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\end{figure}}
 \newcommand{\graph}[2]{\begin{figure}[H]\centering\input{contents/graphs/final/#1}\caption{#2}\label{fig:#1}\end{figure}}
+\newcommand{\graphfloating}[2]{\begin{figure}[h]\centering\input{contents/graphs/final/#1}\caption{#2}\label{fig:#1}\end{figure}}
 %\newcommand{\graph}[1]{\begin{figure}[H]\centering\resizebox{.9\linewidth}{!}{\input{contents/graphs/final/#1}}\end{figure}}
   \newcommand{\graphn}[2]{\begin{sidewaysfigure}\resizebox{1\linewidth}{!}{\input{contents/graphs/final/#1}}\caption{#2}\end{sidewaysfigure}}
 %k\newcommand{\graph}[1]{\input{contents/graphs/final/#1}\end{figure}}

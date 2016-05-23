@@ -1,21 +1,21 @@
 \label{sec:preprocessor}
-This section explains how the writer (also \emph{the preprocessor}) works. This may be of interest since all text is handled using the writer class. Also the instruction tables specified in csv are preprocessed by the writer.
+This section explains how the Writer class (called also \emph{the preprocessor}) works. This may be of interest since all text is handled using the writer class. Also the instruction tables specified in csv are preprocessed by the writer.
 
-As we have already indicated, the writer class is basically a string container which allows appending of expressions via a printf like function. Unlike printf, the print method uses shell-like dollar expressions. This allows reuse of arguments and does not restrict the order of arguments. A very simple example follows.
+As we have already indicated, the writer class is basically a string container which allows appending of expressions via a printf like function. Unlike printf, the print method uses shell-like dollar expressions. This allows reuse of arguments and does not restrict the order of arguments. A very simple example follows:
 
 \mybeginfig
 \begin{code}
 writer w;
-w.print("There were $1 $2", 7, "dogs");
+w.print("There were $1 $2", 117, "dogs");
 w.write_str()
 \end{code}
 yields
 \begin{code}
-"There were 7 dogs"
+"There were 117 dogs"
 \end{code}
-\myendfig{printhello}{A simple example of usage of writer's print method}
+\myendfig{printhello}{A simple example of usage of writer's print method.}
 
-There is a number of expansions which take place, most of them recursively when the string is being writen into a writer object.
+There is a number of expansions which take place, most of them recursively, when the string is being written into a writer object.
 
 \section*{Expansions}
 
@@ -37,7 +37,7 @@ yields
 \begin{code}
 "a[i] = a[i] $ j"
 \end{code}
-\myendfig{printhello2}{Another simple example of usage of writer's print method}
+\myendfig{printhello2}{Another simple example of usage of writer's print method.}
 
 \subsubsection{Alias expansion}
 
@@ -50,12 +50,12 @@ Cartesian expansion takes place only once at the beginning of evaluation of the 
 
 This means that per every line of input, multiple lines of output are emitted, featuring all combinations of variables specified in the lists.
 
-The left side of the expression, i.e., the identifiers, declares a $tuple$ of aliases (constant variables). The first $|tuple|$ values from the right side are then assigned to this tuple and printed. This is repeated while there are any values remaining on the right side.
+The left side of the expression, i.e., the identifiers, declares a $tuple$ of aliases (constant variables). The first $|tuple|$ values from the right side are then assigned to this tuple and printed. This is repeated as long as there are any values remaining on the right side.
 
 \mybeginfig
 \begin{code}
 writer().print(
-  "${ color -> red, blue } $animal; nice ${ animal -> dog,cat };"
+  "${ colour -> red, blue } $animal; nice ${ animal -> dog,cat };"
 ).write_str()
 \end{code}
 yields
@@ -65,12 +65,12 @@ yields
 "blue dog; nice dog"
 "blue cat; nice cat"
 \end{code}
-\myendfig{cartprint0}{Example of the cartesian expansion}
+\myendfig{cartprint0}{An example of the cartesian expansion.}
 
 \mybeginfig
 \begin{code}
 writer().print(
-  "${ color,animal ->blue,dog,red,cat}ish $animal"
+  "${ colour,animal ->blue,dog,red,cat}ish $animal"
 ).write_str()
 \end{code}
 yields
@@ -78,12 +78,12 @@ yields
 "blueish dog"
 "redish cat"
 \end{code}
-\myendfig{cartprint0}{Example of tuples in the cartesian expansion}
+\myendfig{cartprint0}{An example of tuples in the cartesian expansion.}
 
  %Note that here we do NOT allow nested {}s
 
 \subsubsection{Recursive expansion}
-Expressions of the form form \ttt{"\$\string{ whatever that does not contain `->' \string}"} are evaluated in two steps:
+Expressions of the form \ttt{"\$\string{ whatever that does not contain `->' \string}"} are evaluated in two steps:
 \begin{enumerate}
   \item The content of braces is expanded.
   \item The result is evaluated as a standard alias. That means that the result is evaluated by some alias environment and then printed into the current writer. Of course, the final print is again performed with all expansions.
@@ -95,7 +95,7 @@ This expansion allows correctly paired nested curly braces.
 
 Expressions of the form \ttt{\$[ <expression expression> ]} denote arithmetic expressions. First the content is evaluated by a new writer object. Then, the resulting arithmetic expression is evaluated by the Parser class.
 
-Supported operators are: $(, ), -, +, *, /, \%$
+Supported operators are: $($, $)$, $-$, $+$, $*$, $/$, $\%$
 
 
 \subsection*{Import and export modes}
@@ -106,7 +106,7 @@ Supported operators are: $(, ), -, +, *, /, \%$
 
 If the writer is used to import or export expressions which are to be later processed by another writer object, careful handling of dollar expressions is crucial. For this purpose, we introduce four import/export modes. The writer takes two modes as template parameters. The first mode specifies how the writer should behave when writing data into its private storage. The second mode describes how it should behave when writing them out.
 
-The lifecycle of an expression is the following:
+The life-cycle of an expression is the following:
 \begin{enumerate}
   \item Print is called.
   \item Cartesian expansion is performed, resulting in a sequence of calls into an internal print method.
@@ -146,7 +146,7 @@ Formatting is driven by some specialisation of the language structure which was 
   \item \ttt{void shouldbreak(\\  int pos, string line, \\  bool\& break\_before, bool\& break\_after\\)}
 	\begin{description}
 	  \item[pos and line] provide an exact position and its context.
-	  \item[break\_before and break\_after] are returns which indicate whether the string should be broken before of after the position identified by the \emph{pos} argument in \emph{line}.
+	  \item[break\_before and break\_after] are returns which indicate whether the string should be broken before or after the position identified by the \emph{pos} argument in \emph{line}.
 	\end{description}
 \end{itemize}
 

@@ -1,7 +1,7 @@
 \label{sec:vecgensec}
 
 \mybegindef{width}{Instruction width}
-We will use the term \emph{width} to denote the number of independent data rows a single instruction operates on when we get to utilisation of SIMD instructions.
+We will use the term \emph{width} to denote the number of independent data rows a which are operated by a single SIMD instruction.
 \myenddef
 
 \mybegindef{widthconversion}{Width conversion}
@@ -10,22 +10,22 @@ We will use the term \emph{width} to denote the number of independent data rows 
 
 Consider the following problem.
 
-\mybeginprob{vectorproblem}{Vectorized code generation}
-  Let $G(V,E)$ and $O$ be an acyclic flow graph defined as in the \emph{simple code generation} problem. Furthermore, let there be a set $I$ (of SIMD instructions) and a partial function $enc (operation, width)$ \footnote{We are merely saying that we wish to have some vectorized instructions available and that every operation should be defined at least in its nonvectorized version.} $: O \times \N \arrow I$. Let $enc$ be defined at least on $O \times \{1\}$. Also, let there be a set of width conversions sufficient for direct conversion between any two widths present in $I$. Finally, let all widths be powers of 2. We wish to generate C code which will realise the graph G using instructions of highest possible widths. I.e., every vertex will be performed by the broadest instruction its operation is associated with. 
+\mybeginprob{vectorproblem}{vectorised code generation}
+  Let $G(V,E)$ and $O$ be an acyclic flow graph defined as in the \emph{simple code generation} problem. Furthermore, let there be a set $I$ (of SIMD instructions) and a partial function $\mf{enc} (\mf{operation}, \mf{width})$ \footnote{We are merely saying that we wish to have some vectorised instructions available and that every operation should be defined at least in its non-vectorised version.} $: O \times \N \arrow I$. Let $\mf{enc}$ be defined at least on $O \times \{1\}$. Also, let there be a set of width conversions sufficient for direct conversion between any two widths present in $I$. Finally, let all widths be powers of 2. We wish to generate C code which will realise the graph G using instructions of highest possible widths. In other words, every vertex will be performed by the broadest associated instruction (I.e., the broadest instruction which realises the operation defined by its $\mf{op}$ annotation). 
 \myendprob
 
-If highest instruction widths of all operations present in g$G$ were the same ones, we could use the \emph{simple generator}. We would simply replace all types by the corresponding vector versions and use vectorized counterparts of all instructions. Typically, the width will vary with the bit length of the data type in question and therefore we cannot use this approach with more than one data type present in $G$.
+If highest instruction widths of all operations present in g$G$ were the same ones, we could use the \emph{simple generator}. We would simply replace all types by the corresponding vector versions and use vectorised counterparts of all instructions. Typically, the width will vary with the bit length of the data type in question and therefore we cannot use this approach with more than one data type present in $G$.
 
 
-This algorithm may be easily corrected to the following steps:
+This algorithm may be easily corrected:
 \begin{itemize}
-  \item Generate a number of SIMD instruction which suffices for processal of some $w$ data rows. Do this for every vertex.
+  \item Generate a number of SIMD instruction which suffices for processing of some $w$ data rows. Do this for every vertex.
   \item Add some width conversions which adapt data outputted by one instruction for the width of the next instruction.
 \end{itemize}
 
-As an example, we provide a simple computation which performs modulo 4 on integers. We use nonvectorized store and load instructions and a vectorized mod4 instruction on 16 bit integers as our instruction set. We represent vectorized instructions by well known C constructs since we believe such representation to be brief and readable.
+As an example, we provide a simple computation which performs modulo 4 on integers. We use non-vectorised store and load instructions and a vectorised mod4 instruction on 16 bit integers as our instruction set. We represent vectorised instructions by well known C constructs since we believe such representation to be brief and readable.
 
-\graph{mod4}{Computation performing modulo 4 on a data stream.}
+\graph{mod4}{A computation performing modulo 4 on a data stream.}
 
 \mybeginfig
 \begin{code}
@@ -38,12 +38,12 @@ uint_16 b_conversion_w1_1 = (b & 0xFFFF0000) >> 16;
 output_c[j++] = b_conversion_w1_0;
 output_c[j++] = b_conversion_w1_1;
 \end{code}
-\myendfig{vectorizedfragment}{C fragment realising the modulo 4 computation from figure \ref{fig:mod4} in vectorized manner}
+\myendfig{vectorisedfragment}{C fragment realising the modulo 4 computation from Figure \ref{fig:mod4} in vectorised manner.}
 
-In this example, we have generated two LD instructions (rows 1-2), one MOD4 instruction (row 4) and two ST instructions (rows 7-8). Line 3 merges the outputs of vertex $a$, adapting the data for the vectorized modulo operations. Lines 5 and 6 split its output into two values which are suitable for single-value stores on lines 7 and 8.
+In this example, we have generated two LD instructions (lines 1-2), one MOD4 instruction (line 4) and two ST instructions (lines 7-8). Line 3 merges the outputs of vertex $a$, adapting the data for the vectorised modulo operations. Lines 5 and 6 split their output into two values which are suitable for single-value stores on lines 7 and 8.
 
 
-This problem may be better visualised by a table whose cells represent actually generated instructions. Numbers in cells represent indices of data rows the instruction processes. The width conversions are not shown, but may come in as new rows. Assume that we want our algorithm to process 4 values in one step instead of 2 (or just assume we are showing two invocations at the same time).
+This problem may be better visualised by a table whose cells represent actually generated instructions. Numbers in cells represent indices of data rows which the instruction processes. The width conversions are not shown, but may come in as new rows. Assume that we want our algorithm to process four values in one step instead of two (or just assume we are showing two invocations at the same time).
 
 \mybeginfig
 \begin{center}
@@ -57,18 +57,18 @@ c (ST) & 1 & 2 & 3 & 4\\
   \cline{2-5}
 \end{tabular}
 \end{center}
-\myendfig{modfusion}{Table visualising operations joined across different data rows}
+\myendfig{modfusion}{Table visualising operations joined across different data rows.}
 
 \begin{rem}
   The condition requiring all widths to be powers of two ensures two things:
   \begin{itemize}
-    \item All data vectors are aligned in the meaning that the difference between indices of the first values of any two instances of instructions is a multiple of GCD of their widths. But GCD of two powers of two is always the smaller of the two numbers. This means that the first index of the wider of two instructions is always aligned with the first index of some instance of the smaller one.\footnote{If the meaning of this claim is unclear, the reader may like to try looking at the table in figure \ref{fig:modfusion} for a few seconds. We have merely said that the left boundary of the 3-4 cell in the MOD4 row is aligned with the left boundary of the cells with index 3 at rows of the ST and LD operations.}
+    \item All data vectors are aligned in the meaning that the difference between indices of the first values of any two instances of instructions is a multiple of GCD of their widths. But GCD of two powers of two is always the smaller of the two numbers. This means that the first index of the wider of the two instructions is always aligned with the first index of some instance of the smaller one.\footnote{If the meaning of this claim is unclear, the reader may like to try looking at the table in Figure \ref{fig:modfusion} for a few seconds. We have merely said that the left boundary of the 3-4 cell in the MOD4 row is aligned with the left boundary of the cells with index 3 at the rows of ST and LD operations.}
     \item We are able to process the same amount of data ($w$) at every instruction.
   \end{itemize}
   Without this condition, we would need $w$ to be the least common multiple of the maximum widths of all operations in $G$. 
 \end{rem}
 
-Thus, pseudo code generating the result from figure \ref{fig:vectorizedfragment} may be:
+Thus, pseudo code generating the result from Figure \ref{fig:vectorisedfragment} may be:
 
 \begin{code}
 for(v in V) in topological order
@@ -78,11 +78,11 @@ for(v in V) in topological order
 }
 \end{code}
 
-The same algorithm in more detail --- first, we find maximum width g$w$ of an instruction which may be used in $G$ (we do not consider operations which are not in $G$ at all). Then we generate code processing $w$ data rows in one iteration. Again, we take vertices of $G$ in topological order and process them one by one. For a vertex whose broadest instructions is of width $n$ we generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from incoming vertices, only now we work with a set of names (of variables holding  results of the vertex in question) per every width that was generated. I.e., when generating a code of a vertex we look whether there is a set of names (variables) for width $n$. If there is, then we use it. If there is no such set, we use some width conversion to obtain data for width $n$ (i.e. generating a new set of variables for width $n$). We show code of this algorithm in algorithm \ref{alg:vectorgenerator}.
+The same algorithm in more detail --- first, we find maximum width $w$ of an instruction which may be used in $G$ (we do not consider operations which are not in $G$ at all). Then we generate code processing $w$ data rows in one iteration. Again, we take vertices of $G$ in topological order and process them one by one. For a vertex whose broadest instructions is of width $n$ we generate $w/n$ instances of its broadest instruction. Arguments are again retrieved from incoming vertices, only now we work with a set of names (of variables holding  results of the vertex in question) per every width that was generated. I.e., when generating a code of a vertex we check whether there is a set of names (variables) for width $n$. If there is one, we use it. If there is no such set, we use some width conversion to obtain data for width $n$ (i.e., generating a new set of variables for width $n$). We show code of this algorithm in Algorithm \ref{alg:vectorgenerator}.
 
 \emph{Exactly} the same algorithm, just with some implementation details filled in:
 
-\mybeginalg{vectorgenerator}{Vectorized code generator}\ \ \ 
+\mybeginalg{vectorgenerator}{vectorised code generator}\ \ \ 
 \begin{code}
 fun gen_instruction(instruction, result_name, arg_1, arg_2, ...) 
   { generate actual text representation from arguments; }
