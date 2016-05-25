@@ -85,6 +85,7 @@ cleanthesis :
 	-make -C thesis clean
 
 cleantests :
+	-make -C sse_set clean
 	-make -C test1_simple clean
 	-make -C test2_exports clean
 	-make -C test3_loaders clean
