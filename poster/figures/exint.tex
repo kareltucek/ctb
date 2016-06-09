@@ -1,0 +1,12 @@
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\node (c) at (60bp,10bp) [draw,rectangle] {C module};
+  \node (ctb) at (60bp,40bp) [draw,rectangle] {our framework};
+  \node (g) at (0bp,70bp) [draw,rectangle] {graph};
+  \node (instab) at (120bp,70bp) [draw,rectangle] {instruction table};
+  \draw [->,solid] (instab) -- (ctb);
+  \draw [->,solid] (ctb) -- (c);
+  \draw [->,solid] (g) -- (ctb);
+%
+\end{tikzpicture}
+

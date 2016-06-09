@@ -1,0 +1,29 @@
+\begin{columns}
+\begin{column}{.79\textwidth}
+\begin{longtable}{ m{10cm} m{2cm} m{18cm} m{2cm} m{23cm} }
+  \begin{minipage}{8cm}
+\input{figures2/partitioning0}
+  \end{minipage}
+&
+$\longrightarrow$
+&
+\input{figures2/partitioning1}
+&
+$\longrightarrow$
+&
+\input{figures2/partitioning2}
+\end{longtable}
+\end{column}
+\begin{column}{.2\textwidth}
+\justify
+This figure shows transformations needed for employment of control flow. The first transformation replaces simple control-flow operations by new subgraphs, creating new edges which carry data via buffers. The graph of its components of connectedness (w.r.t. solid lines)(a \emph{factor graph}) is not acyclic (as the attached factor graph shows). The second transformation removes all cycles by means of insertion of new buffers. 
+
+\ 
+
+\ 
+
+  We need to obtain acyclic factor graph because we wish to process components (aka basic blocks) atomically, i.e., without leaving for processing of other components and especially without re-entering the same block again. Cycles and loops in the factor graph correspond exactly to paths containing buffers which return to their originating componentss.
+
+  \ 
+\end{column}
+\end{columns}

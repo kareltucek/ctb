@@ -1,0 +1,20 @@
+
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\node (conv) at (225bp,10bp) [draw,rectangle] {width conversion};
+  \node (tv) at (305bp,10bp) [draw,rectangle] {type version};
+  \node (ins) at (39bp,10bp) [draw,rectangle] {instruction};
+  \node (exp) at (138bp,10bp) [draw,rectangle] {expansion};
+  \node (instab) at (167bp,70bp) [draw,rectangle] {instruction table};
+  \node (type) at (255bp,40bp) [draw,rectangle] {type};
+  \node (op) at (100bp,40bp) [draw,rectangle] {operation};
+  \draw [->] (instab) -- (op);
+  \draw [->] (instab) -- (type);
+  \draw [->] (instab) -- (exp);
+  \draw [->] (op) -- (ins);
+  \draw [->] (type) -- (tv);
+  \draw [->] (op) -- (exp);
+  \draw [->] (type) -- (conv);
+%
+\end{tikzpicture}
+

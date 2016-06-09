@@ -1,0 +1,27 @@
+
+\justify
+This figure shows how control flow may be represented in the environment of processing networks. The control flow itself is handled by MERGE, SPLIT, and CONDITION nodes. The SPLIT and MERGE nodes control direction of flow of data elements. The CONDITION node manages behaviour of the loop by ensuring that elements enter and exit the loop when we expect them to do so. 
+
+\ 
+
+\begin{center}
+\begin{tabular}{ m{10cm} m{23cm} }
+
+
+\begin{minipage}{15cm}
+\begin{verbatim}
+int f(int a)
+{
+  if(a % 2 == 1)
+    a = a*7;
+  else
+    while ( a < 100 )
+      a = a+3;
+  return a;
+}
+\end{verbatim}
+\end{minipage}
+&
+\input{figures2/cf}
+\end{tabular}
+\end{center}

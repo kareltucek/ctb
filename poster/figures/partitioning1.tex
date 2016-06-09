@@ -1,0 +1,66 @@
+
+%#vertical 24
+\begin{tikzpicture}[>=latex,line join=bevel,]
+%%
+\node (ldb) at (152bp,178bp) [draw=black,rectangle] {LDB};
+  \node (merge_stl_3) at (84bp,106bp) [draw=black,rectangle] {MERGE ST};
+  \node (mul1) at (190bp,274bp) [draw=black,rectangle] {MUL};
+  \node (merge_stbuff_3) at (152bp,154bp) [draw=black,rectangle] {MERGE ST};
+  \node (split_ldr_2) at (0bp,130bp) [draw=black,rectangle] {SPLIT LD};
+  \node (1) at (0bp,274bp) [draw,rectangle] {1};
+  \node (0) at (76bp,298bp) [draw,rectangle] {0};
+  \node (3) at (76bp,250bp) [draw,rectangle] {3};
+  \node (2) at (38bp,274bp) [draw,rectangle] {2};
+  \node (buff_st_1) at (114bp,226bp) [draw=black,rectangle] {BUFFER ST};
+  \node (merge_ld_3) at (114bp,58bp) [draw=black,rectangle] {MERGE LD};
+  \node (split_ldl_2) at (84bp,130bp) [draw=black,rectangle] {SPLIT LD};
+  \node (split_st_2) at (38bp,154bp) [draw=black,rectangle] {SPLIT ST};
+  \coordinate (auto_buff_ld_5) at (208bp,202bp);
+  \coordinate (auto_buff_ld_4) at (38bp,226bp);
+  \node (h_st) at (170bp,10bp) [draw=black,rectangle] {ST};
+  \node (add4) at (170bp,34bp) [draw=black,rectangle] {ADD};
+  \node (add3) at (38bp,178bp) [draw=black,rectangle] {ADD};
+  \node (add2) at (152bp,250bp) [draw=black,rectangle] {ADD};
+  \node (add1) at (114bp,274bp) [draw=black,rectangle] {ADD};
+  \node (merge_proc_3) at (114bp,82bp) [draw=black,rectangle] {MERGE PROC};
+  \node (ldi2) at (190bp,298bp) [draw=black,rectangle] {LDI};
+  \node (ldi1) at (114bp,298bp) [draw=black,rectangle] {LDI};
+  \node (buff_ld_1) at (114bp,202bp) [draw=black,rectangle] {BUFFER LD};
+  \node (merge_str_3) at (0bp,106bp) [draw=black,rectangle] {MERGE ST};
+  \draw [->,solid] (add4) -- (h_st);
+  \draw [black,->,solid] (0) -- (2);
+  \draw [->,solid] (merge_ld_3) -- (add4);
+  \draw [->,solid] (ldi1) -- (add1);
+  \draw [black,->,solid] (3) -- (0);
+  \draw [->,solid] (split_ldr_2) -- (merge_str_3);
+  \draw [->,solid] (ldi1) -- (mul1);
+  \draw [solid] (add2) -- (auto_buff_ld_5);
+  \draw [->,solid] (ldb) -- (merge_stbuff_3);
+  \draw [->,solid] (add1) -- (add2);
+  \draw [->,solid] (add2) -- (buff_st_1);
+  \draw [->,solid] (add3) -- (split_st_2);
+  \draw [->,solid] (auto_buff_ld_5) -- (add4);
+  \draw [->,dotted] (split_st_2) -- (split_ldr_2);
+  \draw [->,solid] (ldb) -- (split_st_2);
+  \draw [->,dotted] (merge_str_3) -- (merge_proc_3);
+  \draw [black,->,solid] (0) -- (3);
+  \draw [->,dotted] (merge_stl_3) -- (merge_proc_3);
+  \draw [black,->,solid] (2) -- (3);
+  \draw [->,solid] (split_ldl_2) -- (merge_stl_3);
+  \draw [->,solid] (ldi2) -- (add1);
+  \draw [->,dotted] (split_st_2) -- (split_ldl_2);
+  \draw [->,dotted] (merge_stbuff_3) -- (merge_proc_3);
+  \draw [->,solid] (mul1) -- (add2);
+  \draw [black,->,solid] (0) -- (1);
+  \draw [->,solid] (ldi2) -- (mul1);
+  \draw [->,dotted] (buff_st_1) -- (buff_ld_1);
+  \draw [->,dotted] (merge_proc_3) -- (merge_ld_3);
+  \draw [black,->,solid, very thick] (0) -- (0);
+  \draw [black,->,solid, very thick] (0) -- (0);
+  \draw [->,solid] (auto_buff_ld_4) -- (add3);
+  \draw [solid] (add2) -- (auto_buff_ld_4);
+  \draw [->,solid] (buff_ld_1) -- (add3);
+  \draw [black,->,solid] (1) -- (3);
+%
+\end{tikzpicture}
+
