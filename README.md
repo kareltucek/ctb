@@ -4,6 +4,8 @@ repository hosted at http://ktweb.cz/ctb
 
 alternative mirror is at http://github.com/kareltucek/ctb
 
+For extensive documentation see the later chapters of the thesis, which may be found in the thesis directory.
+
 About
 -----
 
